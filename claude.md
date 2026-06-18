@@ -107,9 +107,15 @@ scripts/      verify-levels.ts —— 对全部关卡跑求解器的自测脚本
 - [x] **阶段 1**：玩法 + 技术栈设计定稿，写入 `claude.md` / `README.md`。
 - [x] **阶段 2**：工程脚手架（package/tsconfig/vite/index.html，Node 24 + Vite 6 + Fastify 5）。
 - [x] **阶段 3**：规则引擎 + 6 关数据 + A\* 求解器 + 自测脚本（`npm run verify` 全绿）。
-- [ ] **阶段 4**：前端渲染与交互。
-- [ ] **阶段 5**：后端（Fastify + SQLite + 校验）。
-- [ ] **阶段 6**：逐关自测、查缺补漏、部署文档、最终 push。
+- [x] **阶段 4**：前端渲染与交互（DOM+CSS 网格、冰滑/沉坑动画、撤销/重开、关卡选择、HUD、过关浮层、键鼠/滑动/方向键输入）。
+- [x] **阶段 5**：后端（Fastify 5 + `node:sqlite`，托管静态 + 关卡目录 / 排行 / **服务端权威校验**）。
+- [ ] **阶段 6**：部署文档（systemd/nginx，已产出）、最终 README/claude.md、收尾 push。
+
+### 阶段 4–5 决策记录
+
+- **前端零框架**：网格用 CSS Grid，玩家/箱子用绝对定位 + `transform` 过渡——走一步是短过渡，冰面滑行是「按距离拉长的缓出过渡」，沉坑是「滑到坑位 → 缩放淡出 → 移除元素 + 坑标记为已填」。产物仅 ~15.6KB JS（gzip 6.5KB）/ 9.8KB CSS，且**不打包求解器**。
+- **服务端权威校验**：`POST /api/scores` 不信任客户端上报的步数，而是用**同一套引擎 `replay()`** 重放提交的移动序列，只有真正通关才入库，步数/推动数以重放结果为准 → 杜绝刷分。
+- **修了一个部署暗坑**：原用 `HOST` 环境变量做绑定地址，但很多 shell 会导出 `HOST=主机名`，导致服务端绑定错地址。改名为 `BIND_HOST`，默认 `0.0.0.0`。
 
 ### 阶段 2–3 决策记录
 
@@ -135,4 +141,19 @@ scripts/      verify-levels.ts —— 对全部关卡跑求解器的自测脚本
 
 ## 4. 自测记录
 
-（每关自测后在此追加：关卡、求解器结论（可解性 / par / 死锁）、手测发现的问题与修复、端口关闭确认。）
+三层自测，命令：`npm run verify`（引擎/关卡）、`npm run smoke:api`（后端逻辑）、`npm run smoke:ui`（真实 UI），外加一次真实端口 HTTP 自测。
+
+### 4.1 `npm run verify` — A\* 求解器对全部关卡
+全部可解，并把求解器自己的解回放进引擎交叉校验一致（见 §3 表）。修复了 L5 角落死箱、L6 过开阔两处设计 bug。
+
+### 4.2 `npm run smoke:api` — 后端逻辑（fastify.inject，无需端口）
+✓ health；✓ levels=6；✓ 六关「真实解」均被接受且服务端重算步数与求解器一致（10/17/32/11/41/26）；✓ 伪造解 400；✓ 未知关 400；✓ 非法方向 400；✓ 排行榜正确回显。
+
+### 4.3 `npm run smoke:ui` — 真实 UI（jsdom，模拟按键打通每关）
+逐关从菜单进入 → 用求解器解法模拟方向键 → 过关浮层出现。六关全过，箱子数 2/2/3/2/3/4 正确，步数计数正确。捕获/验证了输入处理、渲染对账、过关流程、关卡导航。
+
+### 4.4 真实本地服务器 HTTP 自测（端口 8799，已关闭）
+`node dist-server/index.js` 实跑：✓ `GET /api/health`→`{ok,levels:6}`；✓ `GET /api/levels`（含 par）；✓ `GET /` 返回 index.html；✓ 哈希资产 200；✓ 伪造 `POST /api/scores`→400；✓ SPA 回退→200。
+**端口关闭确认**：自测后用 `Get-NetTCPConnection -LocalPort 8799` 定位 OwningProcess 并 `Stop-Process`，复查 `PORT 8799 CLOSED OK`。（首次用 shell `$!` 误杀了 MSYS 壳 PID 而非 node 真 PID，已改为按端口杀进程。）
+
+> 已知良性现象：`node:sqlite` 启动有一行 ExperimentalWarning；不影响功能。

@@ -40,21 +40,49 @@
 
 ## 开发
 
+要求 Node ≥ 22.5（内置 `node:sqlite`；推荐 24.x）。
+
 ```bash
 npm install
-npm run verify     # 对所有关卡跑求解器，确认可解并算出 par
-npm run dev        # 前端开发服务器（Vite）
-npm run dev:server # 后端开发服务器（Fastify + API）
+npm run dev          # 前端开发服务器（Vite，:5173，/api 代理到 :8787）
+npm run dev:server   # 后端开发服务器（Fastify，:8787）
+```
+
+## 自测（三层 + 真实端口）
+
+```bash
+npm run verify    # A* 求解器跑全部关卡：可解性 / par / 死锁；并回放交叉校验引擎
+npm run smoke:api # 后端逻辑（fastify.inject）：合法解入库、伪造/非法解被拒、排行榜
+npm run smoke:ui  # 真实 UI（jsdom）：模拟按键把每关打到过关浮层
+npm run typecheck # 全工程 TS 类型检查
 ```
 
 ## 构建与部署（目标：2 核 8G）
 
 ```bash
-npm run build      # vite build → dist/，并打包服务端 → dist-server/
-node dist-server/index.js   # 单进程：托管 dist/ + 提供 API
+npm run build               # vite build → dist/；esbuild 打包服务端 → dist-server/index.js
+node dist-server/index.js   # 单进程：托管 dist/ + 提供 /api
 ```
 
-详见 `claude.md` 的部署小节与 `deploy/`（后续补充）。
+环境变量：`PORT`（默认 8787）、`BIND_HOST`（默认 `0.0.0.0`）、`DB_FILE`（默认 `data/driftbox.sqlite`）。
+
+服务器上线（示例）：
+
+```bash
+# 1. 取代码到 /opt/driftbox，构建
+git clone https://github.com/Udkam/Game-1.git /opt/driftbox && cd /opt/driftbox
+npm ci && npm run build && npm prune --omit=dev   # 构建后只保留运行期依赖
+
+# 2. systemd 托管（绑定 127.0.0.1，由 nginx 反代）
+sudo cp deploy/driftbox.service /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now driftbox
+
+# 3. nginx：静态直出 + /api 反代（含长缓存与 SPA 回退）
+sudo cp deploy/nginx.conf /etc/nginx/sites-available/driftbox
+sudo ln -s /etc/nginx/sites-available/driftbox /etc/nginx/sites-enabled/ && sudo nginx -s reload
+```
+
+单元文件见 [`deploy/driftbox.service`](./deploy/driftbox.service)，反代见 [`deploy/nginx.conf`](./deploy/nginx.conf)。
 
 ---
 

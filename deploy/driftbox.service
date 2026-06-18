@@ -1,0 +1,29 @@
+# systemd unit for Driftbox. Install to /etc/systemd/system/driftbox.service
+# then:  sudo systemctl daemon-reload && sudo systemctl enable --now driftbox
+#
+# Assumes the repo is built at /opt/driftbox (see deploy notes in README.md) and
+# Node >= 22 is on PATH. node:sqlite needs Node 22.5+ (24.x recommended).
+
+[Unit]
+Description=Driftbox puzzle game
+After=network.target
+
+[Service]
+Type=simple
+User=driftbox
+Group=driftbox
+WorkingDirectory=/opt/driftbox
+Environment=NODE_ENV=production
+Environment=PORT=8787
+Environment=BIND_HOST=127.0.0.1
+Environment=DB_FILE=/opt/driftbox/data/driftbox.sqlite
+ExecStart=/usr/bin/node dist-server/index.js
+Restart=on-failure
+RestartSec=3
+# Harden a little
+NoNewPrivileges=true
+ProtectSystem=full
+ReadWritePaths=/opt/driftbox/data
+
+[Install]
+WantedBy=multi-user.target
