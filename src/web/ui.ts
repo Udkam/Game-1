@@ -93,7 +93,7 @@ export class App {
       { class: 'menu' },
       h('h1', {}, '推移'),
       h('div', { class: 'tagline' }, 'Driftbox'),
-      h('p', { class: 'lede' }, '二十道关卡，六种机制层层叠加。多数关卡没有提示——自己读懂这张棋盘。'),
+      h('p', { class: 'lede' }, '五十一关，九类机制层层叠加。多数关卡没有提示——自己读懂这张棋盘。'),
       help,
     );
 
