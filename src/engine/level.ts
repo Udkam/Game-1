@@ -16,11 +16,15 @@
 //   1..9         pressure plate (group = the digit)
 //   D E F        gate, closed   (controlled by plate group 1 / 2 / 3)
 //   o p q        portal pair    (each letter appears exactly twice; player-only)
+//   > < A V      one-way arrow  (enter only when moving right/left/up/down)
+//   %            cracked floor  (collapses into a pit after the player leaves)
+//   k j          key            (collect to open same-letter locks)
+//   K J          lock           (blocks like a wall until the key is collected)
 //
 // A gate opens when the number of pressed plates in its group reaches the
 // group threshold (default = number of plates in the group, i.e. AND).
 
-import type { Cell, Color, Crate, Level } from './types.js';
+import type { Cell, Color, Crate, Dir, Level } from './types.js';
 
 export interface LevelDef {
   id: string;
@@ -37,9 +41,22 @@ const CRATE_COLOR: Record<string, Color> = { R: 'rose', G: 'sage', B: 'slate', Y
 const GOAL_COLOR: Record<string, Color> = { r: 'rose', g: 'sage', b: 'slate', y: 'amber' };
 const GATE_GROUP: Record<string, string> = { D: '1', E: '2', F: '3' };
 const PORTAL_IDS = new Set(['o', 'p', 'q']);
+const ARROW_DIR: Record<string, Dir> = { '>': 'right', '<': 'left', A: 'up', V: 'down' };
+const KEY_IDS = new Set(['k', 'j']);
+const LOCK_GROUP: Record<string, string> = { K: 'k', J: 'j' };
 
 function blankCell(): Cell {
-  return { terrain: 'floor', goal: null, plateGroup: null, gateGroup: null, portal: null };
+  return {
+    terrain: 'floor',
+    goal: null,
+    plateGroup: null,
+    gateGroup: null,
+    portal: null,
+    arrow: null,
+    cracked: false,
+    key: null,
+    lock: null,
+  };
 }
 
 export function parseLevel(def: LevelDef): Level {
@@ -76,6 +93,14 @@ export function parseLevel(def: LevelDef): Level {
         gateGroups.add(GATE_GROUP[ch]!);
       } else if (PORTAL_IDS.has(ch)) {
         cell.portal = ch;
+      } else if (ARROW_DIR[ch]) {
+        cell.arrow = ARROW_DIR[ch]!;
+      } else if (ch === '%') {
+        cell.cracked = true;
+      } else if (KEY_IDS.has(ch)) {
+        cell.key = ch;
+      } else if (LOCK_GROUP[ch]) {
+        cell.lock = LOCK_GROUP[ch]!;
       }
 
       // Object layer (player / crates).
@@ -144,6 +169,8 @@ export function initialState(level: Level) {
     playerY: level.start.y,
     crates: level.crates.map((c) => ({ ...c })),
     filled: [] as number[],
+    collapsed: [] as number[],
+    keys: [] as string[],
     moves: 0,
     pushes: 0,
   };

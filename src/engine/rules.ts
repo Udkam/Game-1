@@ -49,6 +49,22 @@ function isFilled(state: GameState, index: number): boolean {
   return state.filled.includes(index);
 }
 
+/** A "hole" a crate can fall into / fill and the player can't cross: an unfilled
+ *  pit, or cracked floor that has collapsed (and isn't yet filled). */
+function isHole(level: Level, state: GameState, x: number, y: number): boolean {
+  const i = idx(level, x, y);
+  if (isFilled(state, i)) return false;
+  const cell = cellAt(level, x, y);
+  if (!cell) return false;
+  if (cell.terrain === 'pit') return true;
+  if (cell.cracked && state.collapsed.includes(i)) return true;
+  return false;
+}
+
+function locked(state: GameState, cell: Cell): boolean {
+  return !!cell.lock && !state.keys.includes(cell.lock);
+}
+
 /** Can the player step onto (x, y)? Crates block; pushing is handled separately. */
 export function playerCanEnter(
   level: Level,
@@ -59,13 +75,14 @@ export function playerCanEnter(
 ): boolean {
   const cell = cellAt(level, x, y);
   if (!cell || cell.terrain === 'wall') return false;
-  if (cell.terrain === 'pit' && !isFilled(state, idx(level, x, y))) return false;
+  if (isHole(level, state, x, y)) return false;
   if (cell.gateGroup && !openGates.has(cell.gateGroup)) return false;
+  if (locked(state, cell)) return false;
   if (crateAt(state, x, y)) return false;
   return true;
 }
 
-/** Can a crate (other than the one moving) occupy (x, y)? Pits are enterable (they get filled). */
+/** Can a crate (other than the one moving) occupy (x, y)? Holes are enterable (they get filled). */
 function crateCanEnter(
   level: Level,
   state: GameState,
@@ -78,6 +95,7 @@ function crateCanEnter(
   if (!cell || cell.terrain === 'wall') return false;
   if (cell.portal) return false; // crates can't enter portals (player-only)
   if (cell.gateGroup && !openGates.has(cell.gateGroup)) return false;
+  if (locked(state, cell)) return false;
   const other = state.crates.find((c) => c.x === x && c.y === y && c.id !== movingId);
   if (other) return false;
   return true;
@@ -99,9 +117,17 @@ function resolveCratePush(
   openGates: Set<string>,
 ): PushOutcome {
   const { dx, dy } = DIRS[dir];
+  // A crate may enter (x,y) if it's not blocked AND a one-way arrow there permits `dir`.
+  const mayEnter = (x: number, y: number): boolean => {
+    const cell = cellAt(level, x, y);
+    if (!cell) return false;
+    if (cell.arrow && cell.arrow !== dir) return false;
+    return crateCanEnter(level, state, x, y, openGates, crate.id);
+  };
+
   let nx = crate.x + dx;
   let ny = crate.y + dy;
-  if (!crateCanEnter(level, state, nx, ny, openGates, crate.id)) {
+  if (!mayEnter(nx, ny)) {
     return { moved: false, sank: false, to: { x: crate.x, y: crate.y } };
   }
 
@@ -109,16 +135,15 @@ function resolveCratePush(
   let cy = crate.y;
   // Step the crate forward; keep sliding while it lands on ice and the way is clear.
   for (;;) {
-    const cell = cellAt(level, nx, ny)!;
-    if (cell.terrain === 'pit' && !isFilled(state, idx(level, nx, ny))) {
+    if (isHole(level, state, nx, ny)) {
       return { moved: true, sank: true, to: { x: nx, y: ny }, fillIndex: idx(level, nx, ny) };
     }
     cx = nx;
     cy = ny;
-    if (cell.terrain !== 'ice') break; // landed on solid ground -> stop
+    if (cellAt(level, cx, cy)!.terrain !== 'ice') break; // landed on solid ground -> stop
     const px = cx + dx;
     const py = cy + dy;
-    if (!crateCanEnter(level, state, px, py, openGates, crate.id)) break; // blocked -> stop on ice
+    if (!mayEnter(px, py)) break; // blocked -> stop on ice
     nx = px;
     ny = py;
   }
@@ -135,52 +160,38 @@ export function applyMove(level: Level, state: GameState, dir: Dir): MoveResult 
   const tx = state.playerX + dx;
   const ty = state.playerY + dy;
   const from = { x: state.playerX, y: state.playerY };
+  const targetCell = cellAt(level, tx, ty);
+
+  // A one-way arrow gates entry into (tx,ty) for the player too.
+  if (targetCell?.arrow && targetCell.arrow !== dir) return { changed: false, state };
+
   const target = crateAt(state, tx, ty);
+  let destX = tx;
+  let destY = ty;
+  let teleported = false;
+  let crates = state.crates;
+  let filled = state.filled;
+  let pushes = state.pushes;
+  let effectCrate: MoveEffect['crate'] | undefined;
+  let filledPit: number | undefined;
 
   if (target) {
     const push = resolveCratePush(level, state, target, dir, openGates);
     if (!push.moved) return { changed: false, state };
-
     const slid = !push.sank && manhattan({ x: target.x, y: target.y }, push.to) > 1;
-    let crates: Crate[];
-    let filled = state.filled;
     if (push.sank) {
       crates = state.crates.filter((c) => c.id !== target.id);
       filled = [...state.filled, push.fillIndex!];
+      filledPit = push.fillIndex!;
     } else {
       crates = state.crates.map((c) =>
         c.id === target.id ? { ...c, x: push.to.x, y: push.to.y } : c,
       );
     }
-    const next: GameState = {
-      playerX: tx,
-      playerY: ty,
-      crates,
-      filled,
-      moves: state.moves + 1,
-      pushes: state.pushes + 1,
-    };
-    const effect: MoveEffect = {
-      dir,
-      player: { from, to: { x: tx, y: ty } },
-      crate: {
-        id: target.id,
-        from: { x: target.x, y: target.y },
-        to: push.to,
-        slid,
-        sank: push.sank,
-      },
-    };
-    if (push.sank) effect.filledPit = push.fillIndex!;
-    return { changed: true, state: next, effect };
-  }
-
-  // Portal: stepping onto a portal warps the player to its partner cell.
-  const targetCell = cellAt(level, tx, ty);
-  let destX = tx;
-  let destY = ty;
-  let teleported = false;
-  if (targetCell?.portal) {
+    pushes = state.pushes + 1;
+    effectCrate = { id: target.id, from: { x: target.x, y: target.y }, to: push.to, slid, sank: push.sank };
+  } else if (targetCell?.portal) {
+    // Stepping onto a portal warps the player to its partner cell.
     const partner = level.portalPartner[idx(level, tx, ty)] ?? -1;
     if (partner < 0) return { changed: false, state };
     const wx = partner % level.width;
@@ -193,15 +204,37 @@ export function applyMove(level: Level, state: GameState, dir: Dir): MoveResult 
     return { changed: false, state };
   }
 
+  // Cracked floor under the player collapses into a pit once they step off it.
+  let collapsed = state.collapsed;
+  let collapsedNow: number | undefined;
+  const fromCell = cellAt(level, from.x, from.y);
+  if (fromCell?.cracked) {
+    const fi = idx(level, from.x, from.y);
+    if (!collapsed.includes(fi)) {
+      collapsed = [...collapsed, fi];
+      collapsedNow = fi;
+    }
+  }
+
+  // Collect a key on the destination cell.
+  let keys = state.keys;
+  const destCell = cellAt(level, destX, destY);
+  if (destCell?.key && !keys.includes(destCell.key)) keys = [...keys, destCell.key];
+
   const next: GameState = {
     playerX: destX,
     playerY: destY,
-    crates: state.crates,
-    filled: state.filled,
+    crates,
+    filled,
+    collapsed,
+    keys,
     moves: state.moves + 1,
-    pushes: state.pushes,
+    pushes,
   };
   const effect: MoveEffect = { dir, player: { from, to: { x: destX, y: destY } } };
+  if (effectCrate) effect.crate = effectCrate;
+  if (filledPit !== undefined) effect.filledPit = filledPit;
+  if (collapsedNow !== undefined) effect.collapsed = collapsedNow;
   if (teleported) effect.teleported = true;
   return { changed: true, state: next, effect };
 }
@@ -227,5 +260,7 @@ export function stateKey(state: GameState): string {
     .sort()
     .join('|');
   const fl = [...state.filled].sort((a, b) => a - b).join(',');
-  return `${state.playerX},${state.playerY};${cr};${fl}`;
+  const co = [...state.collapsed].sort((a, b) => a - b).join(',');
+  const ky = [...state.keys].sort().join(',');
+  return `${state.playerX},${state.playerY};${cr};${fl};${co};${ky}`;
 }

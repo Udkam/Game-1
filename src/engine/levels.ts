@@ -379,6 +379,49 @@ export const LEVEL_DEFS: Chaptered[] = [
       '#########',
     ],
   },
+
+  // ───────────── Chapter VII · 诡径 New tricks (intros) ─────────────
+  {
+    id: 'l21',
+    name: '单行',
+    subtitle: 'One Way',
+    chapter: '诡径',
+    par: 9,
+    intro: '单向格（箭头）只能顺着箭头方向进入——逆向进不去。',
+    map: [
+      '#######',
+      '#@    #',
+      '#####V#',
+      '#. $  #',
+      '#######',
+    ],
+  },
+  {
+    id: 'l22',
+    name: '脆地',
+    subtitle: 'Brittle',
+    chapter: '诡径',
+    par: 5,
+    intro: '脆地（裂纹）你一旦离开就塌成深坑，只能走一次；箱子压着它不会塌。',
+    map: [
+      '########',
+      '#@ %% $.#',
+      '########',
+    ],
+  },
+  {
+    id: 'l23',
+    name: '锁钥',
+    subtitle: 'Key & Lock',
+    chapter: '诡径',
+    par: 4,
+    intro: '走到钥匙上即可拾取，同色的锁随之打开（变成可通行）。',
+    map: [
+      '########',
+      '#@k $K.#',
+      '########',
+    ],
+  },
 ];
 
 export const LEVELS = LEVEL_DEFS.map(parseLevel);

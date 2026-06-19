@@ -24,6 +24,9 @@ export class BoardRenderer {
   private pits: { i: number; el: HTMLDivElement }[] = [];
   private gates: { i: number; el: HTMLDivElement; group: string }[] = [];
   private plates: { el: HTMLDivElement; x: number; y: number; group: string }[] = [];
+  private cracks: { i: number; el: HTMLDivElement }[] = [];
+  private keysEls: { i: number; el: HTMLDivElement; group: string }[] = [];
+  private locks: { el: HTMLDivElement; group: string }[] = [];
   private crateEls = new Map<number, HTMLDivElement>();
   private playerEl!: HTMLDivElement;
 
@@ -40,6 +43,9 @@ export class BoardRenderer {
     this.pits = [];
     this.gates = [];
     this.plates = [];
+    this.cracks = [];
+    this.keysEls = [];
+    this.locks = [];
     this.crateEls.clear();
     this.board.style.setProperty('--cols', String(level.width));
     this.board.style.setProperty('--rows', String(level.height));
@@ -55,6 +61,9 @@ export class BoardRenderer {
       if (cell.terrain === 'pit') this.pits.push({ i, el });
       if (cell.gateGroup) this.gates.push({ i, el, group: cell.gateGroup });
       if (cell.plateGroup) this.plates.push({ el, x, y, group: cell.plateGroup });
+      if (cell.cracked) this.cracks.push({ i, el });
+      if (cell.key) this.keysEls.push({ i, el, group: cell.key });
+      if (cell.lock) this.locks.push({ el, group: cell.lock });
     }
 
     // player
@@ -79,6 +88,10 @@ export class BoardRenderer {
     if (cell.plateGroup) parts.push('plate', groupClass(cell.plateGroup));
     if (cell.gateGroup) parts.push('gate', groupClass(cell.gateGroup));
     if (cell.portal) parts.push('portal', `p-${cell.portal}`);
+    if (cell.arrow) parts.push('arrow', `a-${cell.arrow}`);
+    if (cell.cracked) parts.push('cracked');
+    if (cell.key) parts.push('key', `k-${cell.key}`);
+    if (cell.lock) parts.push('lock', `l-${cell.lock}`);
     return parts.join(' ');
   }
 
@@ -152,6 +165,12 @@ export class BoardRenderer {
 
   private updateDynamicCells(state: GameState): void {
     for (const p of this.pits) p.el.classList.toggle('filled', state.filled.includes(p.i));
+    for (const c of this.cracks) {
+      c.el.classList.toggle('collapsed', state.collapsed.includes(c.i));
+      c.el.classList.toggle('filled', state.filled.includes(c.i));
+    }
+    for (const k of this.keysEls) k.el.classList.toggle('taken', state.keys.includes(k.group));
+    for (const l of this.locks) l.el.classList.toggle('open', state.keys.includes(l.group));
     const open = computeOpenGates(this.level, state);
     for (const g of this.gates) g.el.classList.toggle('open', open.has(g.group));
     for (const p of this.plates) {

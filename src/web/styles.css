@@ -379,6 +379,34 @@ button:disabled {
   border-radius: 50%;
   border: 2px solid #6f5b86;
 }
+.legend-ic.ic-arrow::after {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  width: 26%;
+  height: 26%;
+  transform: translate(-60%, -50%) rotate(45deg);
+  border-right: 3px solid var(--accent);
+  border-top: 3px solid var(--accent);
+}
+.legend-ic.ic-cracked::after {
+  content: '';
+  position: absolute;
+  inset: 16%;
+  background:
+    linear-gradient(58deg, transparent 47%, rgba(80, 70, 55, 0.55) 48% 52%, transparent 53%),
+    linear-gradient(-32deg, transparent 46%, rgba(80, 70, 55, 0.4) 47% 53%, transparent 54%);
+}
+.legend-ic.ic-key {
+  background: var(--floor);
+}
+.legend-ic.ic-key::after {
+  content: '';
+  position: absolute;
+  inset: 28%;
+  border-radius: 50% 50% 50% 0;
+  border: 3px solid #c9a227;
+}
 
 .hud {
   width: 100%;
@@ -585,6 +613,95 @@ button:disabled {
   35% { transform: scale(0.2); opacity: 0.5; }
   36% { transform: scale(0.2) rotate(180deg); }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* one-way arrow: a chevron pointing the only allowed direction */
+.cell.arrow::before {
+  content: '';
+  position: absolute;
+  inset: 50%;
+  width: 26%;
+  height: 26%;
+  transform: translate(-50%, -50%) rotate(var(--arot, 0deg));
+  border-right: 3px solid var(--accent);
+  border-top: 3px solid var(--accent);
+  opacity: 0.72;
+}
+.cell.a-up {
+  --arot: -45deg;
+}
+.cell.a-right {
+  --arot: 45deg;
+}
+.cell.a-down {
+  --arot: 135deg;
+}
+.cell.a-left {
+  --arot: -135deg;
+}
+
+/* cracked floor: hairline fractures; collapses to a pit */
+.cell.cracked::after {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  background:
+    linear-gradient(58deg, transparent 47%, rgba(80, 70, 55, 0.5) 48% 52%, transparent 53%),
+    linear-gradient(-32deg, transparent 46%, rgba(80, 70, 55, 0.35) 47% 53%, transparent 54%);
+  opacity: 0.8;
+  transition: opacity 0.18s ease;
+}
+.cell.cracked.collapsed {
+  background: radial-gradient(120% 120% at 50% 35%, #3a352c 0%, var(--pit) 70%);
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.55), inset 0 0 0 1px #1c1914;
+}
+.cell.cracked.collapsed::after {
+  opacity: 0;
+}
+.cell.cracked.filled {
+  background: var(--floor);
+  box-shadow: inset 0 0 0 1px var(--floor-line);
+}
+
+/* key: a small ring-and-stem token; fades when collected */
+.cell.key::after {
+  content: '';
+  position: absolute;
+  inset: 30%;
+  border-radius: 50% 50% 50% 0;
+  border: 3px solid var(--key-color, #c9a227);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.cell.key.k-k {
+  --key-color: #c9a227;
+}
+.cell.key.k-j {
+  --key-color: #5f9c8a;
+}
+.cell.key.taken::after {
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+/* lock: a barred block keyed to a color; opens (vanishes) once the key is taken */
+.cell.lock::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, var(--key-color, #c9a227) 0 5px,
+      color-mix(in srgb, var(--key-color, #c9a227) 55%, #3a3328) 5px 10px);
+  box-shadow: inset 0 0 0 2px #3a3328;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.cell.lock.l-k {
+  --key-color: #c9a227;
+}
+.cell.lock.l-j {
+  --key-color: #5f9c8a;
+}
+.cell.lock.open::after {
+  opacity: 0;
+  transform: scale(0.1);
 }
 
 /* plate / gate group tints */

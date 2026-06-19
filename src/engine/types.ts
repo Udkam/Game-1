@@ -32,6 +32,14 @@ export interface Cell {
   /** Portal pair id, or null. Player-only: stepping onto a portal warps to its
    *  partner; crates treat portals as walls. */
   portal: string | null;
+  /** One-way arrow: a cell can only be entered when moving in this direction. */
+  arrow: Dir | null;
+  /** Cracked floor: collapses into a pit once the player steps off it. */
+  cracked: boolean;
+  /** Key group: stepping here collects the key, opening locks of the same group. */
+  key: string | null;
+  /** Lock group: blocks like a wall until the matching key has been collected. */
+  lock: string | null;
 }
 
 export interface Crate {
@@ -68,8 +76,12 @@ export interface GameState {
   playerX: number;
   playerY: number;
   crates: Crate[];
-  /** Cell indices of pits that have been filled by a sacrificed crate. */
+  /** Cell indices of pits (incl. collapsed cracked floor) filled by a sacrificed crate. */
   filled: number[];
+  /** Cell indices of cracked floor that has collapsed into a pit. */
+  collapsed: number[];
+  /** Key groups the player has collected. */
+  keys: string[];
   moves: number;
   pushes: number;
 }
@@ -91,6 +103,8 @@ export interface MoveEffect {
   };
   /** Cell index of a pit filled by this move, if any. */
   filledPit?: number;
+  /** Cell index of cracked floor that collapsed this move, if any. */
+  collapsed?: number;
 }
 
 export interface MoveResult {

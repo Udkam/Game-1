@@ -130,6 +130,9 @@ export class App {
         row(sw('ic-plate'), '压力板 / 闸门', '重物压住压力板时，同色闸门开启。'),
         row(sw('ic-color'), '颜色匹配', '彩色箱子要送到同色目标点。'),
         row(sw('ic-portal'), '折跃门', '踩上去瞬移到同色的另一扇；箱子过不去。'),
+        row(sw('ic-arrow'), '单向格', '只能顺着箭头方向进入，逆向进不去。'),
+        row(sw('ic-cracked'), '脆地', '离开后塌成深坑，只能走一次。'),
+        row(sw('ic-key'), '钥匙 / 锁', '拾取钥匙打开同色的锁。'),
       ),
       h('p', { class: 'result' }, 'Z 撤销 · R 重开 · Esc 返回。可无限撤销，没有死亡惩罚。'),
       h('div', { class: 'actions' }, (() => {
