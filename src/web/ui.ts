@@ -4,6 +4,7 @@ import type { Dir, Level } from '../engine/types.js';
 import { CHAPTER_OF } from '../engine/levels.js';
 import { Game } from './game.js';
 import { BoardRenderer } from './render.js';
+import { sfx, soundEnabled, setSound } from './sfx.js';
 import {
   loadProgress,
   recordClear,
@@ -164,7 +165,12 @@ export class App {
     back.onclick = () => this.showMenu();
     const helpBtn = h('button', { class: 'ghost', title: '玩法 / 图例' }, '?');
     helpBtn.onclick = () => this.showHelp();
-    const topbar = h('div', { class: 'topbar' }, title, h('div', { class: 'top-actions' }, helpBtn, back));
+    const soundBtn = h('button', { class: 'ghost', title: '音效开关' }, soundEnabled() ? '🔈' : '🔇');
+    soundBtn.onclick = () => {
+      setSound(!soundEnabled());
+      soundBtn.textContent = soundEnabled() ? '🔈' : '🔇';
+    };
+    const topbar = h('div', { class: 'topbar' }, title, h('div', { class: 'top-actions' }, soundBtn, helpBtn, back));
 
     const movesEl = h('b', {}, '0');
     const pushesEl = h('b', {}, '0');
@@ -206,7 +212,9 @@ export class App {
     const [upB, leftB, rightB, downB] = dpad.querySelectorAll('button');
 
     const screen = h('div', { class: 'game' }, topbar, hud);
-    if (!this.progress.completed[id]) screen.append(this.introBanner(level));
+    // Only first-appearance mechanic levels carry an `intro`. Show that one terse
+    // rule line until the level is cleared — never an empty banner.
+    if (level.intro && !this.progress.completed[id]) screen.append(this.introBanner(level));
     screen.append(boardWrap, controls, dpad);
     this.swap(screen);
 
@@ -217,15 +225,37 @@ export class App {
     };
     refreshControls();
 
-    let locked = false; // brief input lock during win sequence
+    let locked = false; // hard lock during win sequence
+    let busy = false; // brief guard so a long slide/warp animation isn't overlapped
     const doMove = (dir: Dir) => {
-      if (locked) return;
+      if (locked || busy) return;
       const res = game.move(dir);
-      if (!res) return;
+      if (!res) {
+        sfx('blocked');
+        return;
+      }
       renderer.update(game.state, res.effect);
       refreshControls();
+
+      const e = res.effect;
+      if (e?.crate?.sank) sfx('fill');
+      else if (e?.teleported) sfx('warp');
+      else if (e?.crate?.slid) sfx('slide');
+      else if (e?.crate) sfx('push');
+      else sfx('move');
+
+      // Briefly ignore input while a long animation plays (state is already
+      // correct — this only avoids visual overlap from mashing keys).
+      if (e?.crate?.slid || e?.teleported || e?.crate?.sank) {
+        busy = true;
+        window.setTimeout(() => {
+          busy = false;
+        }, 180);
+      }
+
       if (game.solved) {
         locked = true;
+        sfx('win');
         const slid = res.effect?.crate?.slid;
         window.setTimeout(() => this.win(level, game), slid ? 460 : 320);
       }

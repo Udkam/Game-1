@@ -27,6 +27,7 @@ export class BoardRenderer {
   private cracks: { i: number; el: HTMLDivElement }[] = [];
   private keysEls: { i: number; el: HTMLDivElement; group: string }[] = [];
   private locks: { el: HTMLDivElement; group: string }[] = [];
+  private goals: { i: number; el: HTMLDivElement; color: Color }[] = [];
   private crateEls = new Map<number, HTMLDivElement>();
   private playerEl!: HTMLDivElement;
 
@@ -46,6 +47,7 @@ export class BoardRenderer {
     this.cracks = [];
     this.keysEls = [];
     this.locks = [];
+    this.goals = [];
     this.crateEls.clear();
     this.board.style.setProperty('--cols', String(level.width));
     this.board.style.setProperty('--rows', String(level.height));
@@ -64,6 +66,7 @@ export class BoardRenderer {
       if (cell.cracked) this.cracks.push({ i, el });
       if (cell.key) this.keysEls.push({ i, el, group: cell.key });
       if (cell.lock) this.locks.push({ el, group: cell.lock });
+      if (cell.goal) this.goals.push({ i, el, color: cell.goal });
     }
 
     // player
@@ -157,14 +160,40 @@ export class BoardRenderer {
         dur = effect.crate.slid ? slideDur(dist) : STEP_MS;
       }
       this.setPos(el, c.x, c.y, dur);
-      el.classList.toggle('seated', seated(this.level.cells[c.y * this.level.width + c.x]!, c));
+      const isSeated = seated(this.level.cells[c.y * this.level.width + c.x]!, c);
+      el.classList.toggle('seated', isSeated);
+      // A little settle bounce the moment a crate lands on its matching goal.
+      if (isSeated && effect?.crate && effect.crate.id === c.id && !effect.crate.sank) {
+        el.classList.remove('land');
+        void el.offsetWidth;
+        el.classList.add('land');
+        window.setTimeout(() => el.classList.remove('land'), 260);
+      }
     }
 
     this.updateDynamicCells(state);
+
+    // One-shot collapse animation when cracked floor gives way this move.
+    if (effect?.collapsed !== undefined) {
+      const c = this.cracks.find((cr) => cr.i === effect.collapsed);
+      if (c) {
+        c.el.classList.remove('collapsing');
+        void c.el.offsetWidth;
+        c.el.classList.add('collapsing');
+        window.setTimeout(() => c.el.classList.remove('collapsing'), 300);
+      }
+    }
   }
 
   private updateDynamicCells(state: GameState): void {
     for (const p of this.pits) p.el.classList.toggle('filled', state.filled.includes(p.i));
+    for (const g of this.goals) {
+      const x = g.i % this.level.width;
+      const y = Math.floor(g.i / this.level.width);
+      const crate = state.crates.find((c) => c.x === x && c.y === y);
+      const sat = !!crate && (g.color === 'natural' || g.color === crate.color);
+      g.el.classList.toggle('satisfied', sat);
+    }
     for (const c of this.cracks) {
       c.el.classList.toggle('collapsed', state.collapsed.includes(c.i));
       c.el.classList.toggle('filled', state.filled.includes(c.i));

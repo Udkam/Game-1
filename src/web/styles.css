@@ -496,20 +496,25 @@ button:disabled {
   background: radial-gradient(120% 120% at 50% 35%, #3a352c 0%, var(--pit) 70%);
   box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.55), inset 0 0 0 1px #1c1914;
 }
-.cell.pit.filled {
-  background: var(--floor);
-  box-shadow: inset 0 0 0 1px var(--floor-line);
+/* filled pit / collapsed-then-filled: a patched, slightly sunken plank — clearly
+   walkable now, but visibly "repaired" rather than pristine floor. */
+.cell.pit.filled,
+.cell.cracked.filled {
+  background: color-mix(in srgb, var(--floor) 85%, var(--crate));
+  box-shadow: inset 0 0 0 1px var(--floor-line), inset 0 2px 5px rgba(0, 0, 0, 0.16);
 }
-.cell.pit.filled::after {
+.cell.pit.filled::after,
+.cell.cracked.filled::after {
   content: '';
   position: absolute;
-  inset: 20%;
+  inset: 16%;
   border-radius: 4px;
-  background: repeating-linear-gradient(45deg, rgba(166, 124, 65, 0.22) 0 6px,
-      transparent 6px 12px);
+  background: repeating-linear-gradient(45deg, rgba(166, 124, 65, 0.3) 0 5px,
+      transparent 5px 10px);
+  box-shadow: inset 0 0 0 1px rgba(166, 124, 65, 0.28);
 }
 
-/* goal: a quiet ring, colored if needed */
+/* goal: a quiet ring, colored if needed; fills softly once satisfied */
 .cell.goal::before {
   content: '';
   position: absolute;
@@ -519,6 +524,13 @@ button:disabled {
   transform: translate(-50%, -50%);
   border-radius: 50%;
   border: 2px solid var(--goal-color, rgba(50, 46, 40, 0.34));
+  transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.cell.goal.satisfied::before {
+  width: 64%;
+  height: 64%;
+  background: color-mix(in srgb, var(--goal-color, #5b6b56) 26%, transparent);
+  border-color: color-mix(in srgb, var(--goal-color, #5b6b56) 80%, transparent);
 }
 .cell.goal.c-rose {
   --goal-color: var(--rose);
@@ -753,23 +765,60 @@ button:disabled {
 }
 .crate.color-rose {
   --c: var(--rose);
+  --seat: var(--rose);
 }
 .crate.color-sage {
   --c: var(--sage);
+  --seat: var(--sage);
 }
 .crate.color-slate {
   --c: var(--slate);
+  --seat: var(--slate);
 }
 .crate.color-amber {
   --c: var(--amber);
+  --seat: var(--amber);
 }
+/* seated = on its matching goal. A soft color-matched halo (not a hard lock); the
+   crate is still freely movable. Natural crates get a quiet success-green. */
 .crate.seated .body {
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.18), 0 0 0 3px rgba(47, 93, 87, 0.28),
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.18),
+    0 0 0 3px color-mix(in srgb, var(--seat, #5b8c5e) 70%, transparent),
+    0 0 10px color-mix(in srgb, var(--seat, #5b8c5e) 45%, transparent),
     0 3px 8px var(--shadow);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+.crate.land .body {
+  animation: land 0.26s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+@keyframes land {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 .crate.sinking .body {
   transform: scale(0.3) rotate(8deg);
   opacity: 0;
+}
+.cell.cracked.collapsing {
+  animation: collapse 0.3s ease;
+}
+@keyframes collapse {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  35% {
+    transform: translateY(2px) scale(0.96);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
 }
 
 .player .body {
