@@ -11,7 +11,7 @@
 //    constant for the whole move resolution, then recomputed for the next move.
 
 import type { Cell, Crate, Dir, GameState, Level, MoveEffect, MoveResult } from './types.js';
-import { DIRS, idx } from './types.js';
+import { DIRS, OPPOSITE, idx } from './types.js';
 
 export function cellAt(level: Level, x: number, y: number): Cell | null {
   if (x < 0 || y < 0 || x >= level.width || y >= level.height) return null;
@@ -274,9 +274,14 @@ function applyTilt(level: Level, state: GameState, dir: Dir): MoveResult {
 
 /** Apply one move. Returns a brand-new immutable state (or the same one if blocked). */
 export function applyMove(level: Level, state: GameState, dir: Dir, pull = false): MoveResult {
-  const { dx, dy } = DIRS[dir];
   const openGates = computeOpenGates(level, state);
   if (level.gravity) return applyTilt(level, state, dir);
+  // Mirror tile: while standing on one, left/right intent is reversed. Derived
+  // from the current cell, so replay/solver stay deterministic (log keeps the
+  // pressed direction; the effect uses the actually-travelled one).
+  const here = cellAt(level, state.playerX, state.playerY);
+  if (here?.mirror && (dir === 'left' || dir === 'right')) dir = OPPOSITE[dir];
+  const { dx, dy } = DIRS[dir];
   if (pull) return applyPull(level, state, dir, openGates);
   const tx = state.playerX + dx;
   const ty = state.playerY + dy;

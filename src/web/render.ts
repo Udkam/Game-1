@@ -117,6 +117,7 @@ export class BoardRenderer {
     if (cell.cracked) parts.push('cracked');
     if (cell.key) parts.push('key', `k-${cell.key}`);
     if (cell.lock) parts.push('lock', `l-${cell.lock}`);
+    if (cell.mirror) parts.push('mirror');
     return parts.join(' ');
   }
 

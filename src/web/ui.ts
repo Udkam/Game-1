@@ -78,6 +78,9 @@ const CODEX: CodexEntry[] = [
   { icon: 'ic-gravity', name: '倾斜 / 重力', anchor: 'grav1',
     rule: '倾斜关没有行走：每按一个方向，整个盘面朝那边倾倒，所有箱子与你一起滑到底、撞墙才停。',
     use: '你也会滑动——把自己滑到合适位置当“挡块”，让箱子停在该停的地方。' },
+  { icon: 'ic-mirror', name: '镜面格', anchor: 'mir1',
+    rule: '站在镜面格（◄►）上时，你的左右被反转：按「左」实际向右、按「右」实际向左；上下不变。',
+    use: '穿越镜面区时反着想——要往左走就按右。推箱方向也跟着反。' },
 ];
 
 export class App {

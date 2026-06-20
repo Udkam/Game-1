@@ -420,6 +420,20 @@ const PARADOX_DEFS: Chaptered[] = [
     ],
     solution: ['right', 'down', 'left', 'up', 'right', 'down', 'left', 'up', 'right'] as MoveToken[],
   },
+  {
+    // Mirror tiles (◄►) reverse left/right while you stand on them. The only path
+    // to the crate's pushable side runs across the mirror row, so you must press
+    // left to go right to get there.
+    id: 'mir1', name: '镜廊', subtitle: 'Looking-Glass', chapter: '悖论', par: 7,
+    intro: '镜面格（◄►）会反转你的左右：站在上面时，按「左」实际向右、按「右」实际向左。',
+    map: [
+      '########',
+      '#@MMM  #',
+      '# . $  #',
+      '########',
+    ],
+    solution: ['right', 'left', 'left', 'left', 'down', 'left', 'left'] as MoveToken[],
+  },
 ];
 
 export const LEVEL_DEFS: Chaptered[] = [...HAND_DEFS, ...GEN_DEFS, ...PARADOX_DEFS, ...CRUCIBLE_DEFS];

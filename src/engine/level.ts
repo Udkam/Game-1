@@ -60,6 +60,7 @@ function blankCell(): Cell {
     cracked: false,
     key: null,
     lock: null,
+    mirror: false,
   };
 }
 
@@ -105,6 +106,8 @@ export function parseLevel(def: LevelDef): Level {
         cell.key = ch;
       } else if (LOCK_GROUP[ch]) {
         cell.lock = LOCK_GROUP[ch]!;
+      } else if (ch === 'M') {
+        cell.mirror = true;
       }
 
       // Object layer (player / crates).

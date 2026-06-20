@@ -46,6 +46,8 @@ export interface Cell {
   key: string | null;
   /** Lock group: blocks like a wall until the matching key has been collected. */
   lock: string | null;
+  /** Mirror tile: while the player stands here, left/right input is reversed. */
+  mirror: boolean;
 }
 
 export interface Crate {
