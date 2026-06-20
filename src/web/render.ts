@@ -3,7 +3,7 @@
 // steps and long ice slides both animate for free. Dynamic tile states (filled
 // pits, open gates, pressed plates, seated crates) are reconciled each update.
 
-import type { Cell, Color, Crate, GameState, Level, MoveEffect } from '../engine/types.js';
+import type { Cell, Color, Crate, Dir, GameState, Level, MoveEffect } from '../engine/types.js';
 import { computeOpenGates } from '../engine/rules.js';
 
 const STEP_MS = 120;
@@ -30,6 +30,9 @@ export class BoardRenderer {
   private goals: { i: number; el: HTMLDivElement; color: Color }[] = [];
   private crateEls = new Map<number, HTMLDivElement>();
   private playerEl!: HTMLDivElement;
+  private facing: Dir = 'down';
+  private lastPX = 0;
+  private lastPY = 0;
 
   constructor(private wrap: HTMLDivElement) {
     this.board = document.createElement('div');
@@ -69,10 +72,14 @@ export class BoardRenderer {
       if (cell.goal) this.goals.push({ i, el, color: cell.goal });
     }
 
-    // player
+    // player — a small geometric figure (head + torso) that faces its last
+    // move direction and leans when pushing.
     this.playerEl = document.createElement('div');
-    this.playerEl.className = 'piece player';
-    this.playerEl.innerHTML = '<div class="body"></div>';
+    this.playerEl.className = 'piece player face-down';
+    this.playerEl.innerHTML = '<div class="body"><span class="head"></span><span class="torso"></span></div>';
+    this.facing = 'down';
+    this.lastPX = level.start.x;
+    this.lastPY = level.start.y;
     this.board.appendChild(this.playerEl);
 
     this.sizeToViewport();
@@ -111,10 +118,39 @@ export class BoardRenderer {
     el.style.setProperty('--py', String(y));
   }
 
+  private setFacing(dir: Dir): void {
+    if (dir === this.facing) return;
+    this.playerEl.classList.remove(`face-${this.facing}`);
+    this.playerEl.classList.add(`face-${dir}`);
+    this.facing = dir;
+  }
+
+  /** Add a one-shot animation class and strip it after `ms` (re-triggerable). */
+  private pulse(cls: string, ms: number): void {
+    this.playerEl.classList.remove(cls);
+    void this.playerEl.offsetWidth;
+    this.playerEl.classList.add(cls);
+    window.setTimeout(() => this.playerEl.classList.remove(cls), ms);
+  }
+
   /** Render a state. Pass `effect` to animate a single move; omit for instant. */
   update(state: GameState, effect?: MoveEffect): void {
     const instant = !effect;
     const stepDur = instant ? 0 : STEP_MS;
+
+    // Face the move direction (only on a real move; not on warp/undo snap-backs).
+    if (effect && !effect.teleported) {
+      const dx = state.playerX - this.lastPX;
+      const dy = state.playerY - this.lastPY;
+      const dir: Dir | null =
+        dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : dy < 0 ? 'up' : null;
+      if (dir) this.setFacing(dir);
+      // A brief push-lean when this move shoved a crate forward.
+      if (effect.crate && !effect.crate.sank) this.pulse('pushing', 180);
+      else this.pulse('stepping', 140);
+    }
+    this.lastPX = state.playerX;
+    this.lastPY = state.playerY;
 
     if (effect?.teleported) {
       // Warp: snap to the partner cell (no slide across the board) with a pulse.

@@ -28,6 +28,10 @@ function h<K extends keyof HTMLElementTagNameMap>(
   return el;
 }
 
+// Level gating is OFF for now (free practice of every level). Flip to true to
+// restore sequential unlocking before a public launch — nothing else changes.
+const LEVELS_LOCKED = false;
+
 const KEY_DIR: Record<string, Dir> = {
   ArrowUp: 'up',
   ArrowDown: 'down',
@@ -110,7 +114,7 @@ export class App {
   // ---------------- menu ----------------
 
   private levelCard(lvl: Level, i: number, current: boolean): HTMLElement {
-    const unlocked = isUnlocked(this.order, lvl.id, this.progress);
+    const unlocked = !LEVELS_LOCKED || isUnlocked(this.order, lvl.id, this.progress);
     const done = !!this.progress.completed[lvl.id];
     const best = this.progress.best[lvl.id];
     const push = this.progress.bestPush[lvl.id];
@@ -161,9 +165,11 @@ export class App {
       h('div', { class: 'menu-actions' }, help, codex),
     );
 
-    // The recommended level: the first unlocked-but-uncleared level in order.
+    // The recommended level: the first reachable-but-uncleared level in order.
     const currentId =
-      this.levels.find((l) => isUnlocked(this.order, l.id, this.progress) && !this.progress.completed[l.id])?.id ?? '';
+      this.levels.find(
+        (l) => (!LEVELS_LOCKED || isUnlocked(this.order, l.id, this.progress)) && !this.progress.completed[l.id],
+      )?.id ?? '';
 
     const stats = chapterStats(this.order, CHAPTER_OF, this.progress);
     const chapters: string[] = [];
