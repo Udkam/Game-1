@@ -5,8 +5,9 @@
 // stored, replay-verified solution).
 //
 // Legend (see level.ts): # wall · space floor · . goal · $ crate · @ player
-//   ~ ice · ^ pit · R/G/B/Y colored crate · r/g/b/y colored goal
-//   1..9 pressure plate · D/E/F gate (group 1/2/3) · o/p/q portal pair
+//   ~ ice · ^ pit · % cracked floor · o/p/q portal pair
+//   (gates/plates, colour-matching, keys/locks and one-way arrows were retired
+//   in the v5 redesign in favour of more creative mechanics.)
 //
 // Most levels carry NO in-game hint — only the first appearance of each mechanic
 // gets one terse line (the rule, never the solution). The rest is for the player
@@ -205,115 +206,7 @@ const HAND_DEFS: Chaptered[] = [
     ],
   },
 
-  // ───────────── Chapter IV · 机关 Mechanisms ─────────────
-  {
-    id: 'l11',
-    name: '顶门',
-    subtitle: 'Doorstop',
-    chapter: '机关',
-    par: 12,
-    intro: '压力板（◇）被重物压住时，同色闸门（▤）开启；你只有一个身位——停一个箱子顶门。',
-    map: [
-      '##########',
-      '#   1    #',
-      '#@$ $ D .#',
-      '#   #  ###',
-      '#   #    #',
-      '##########',
-    ],
-  },
-  {
-    id: 'l12',
-    name: '双枢',
-    subtitle: 'Two Hinges',
-    chapter: '机关',
-    par: 24,
-    intro: '',
-    map: [
-      '###########',
-      '#  1   2  #',
-      '#@ $ D $ E.#',
-      '#  ### ### #',
-      '#         #',
-      '###########',
-    ],
-  },
-  {
-    id: 'l13',
-    name: '连锁',
-    subtitle: 'Interlock',
-    chapter: '机关',
-    par: 21,
-    intro: '',
-    map: [
-      '###########',
-      '#  1   1  #',
-      '#  $   $  #',
-      '#@        #',
-      '##  ###  ##',
-      '#   $   D.#',
-      '#         #',
-      '###########',
-    ],
-  },
-
-  // ───────────── Chapter V · 色彩 Hues ─────────────
-  {
-    id: 'l14',
-    name: '各归其位',
-    subtitle: 'Sort',
-    chapter: '色彩',
-    par: 26,
-    intro: '彩色箱子必须送到同色目标点（任意色目标接受任意箱子）。它们会互相挡道——想好顺序。',
-    map: [
-      '#########',
-      '#       #',
-      '#  R G  #',
-      '#       #',
-      '#   @   #',
-      '#       #',
-      '#  g r  #',
-      '#       #',
-      '#########',
-    ],
-  },
-  {
-    id: 'l15',
-    name: '光谱',
-    subtitle: 'Spectrum',
-    chapter: '色彩',
-    par: 41,
-    intro: '',
-    map: [
-      '#########',
-      '##     ##',
-      '# R G B #',
-      '#       #',
-      '#   @   #',
-      '#       #',
-      '# b g r #',
-      '##     ##',
-      '#########',
-    ],
-  },
-  {
-    id: 'l16',
-    name: '冰彩',
-    subtitle: 'Frozen Hues',
-    chapter: '色彩',
-    par: 15,
-    intro: '',
-    map: [
-      '#########',
-      '#r     b#',
-      '# ~~~~~ #',
-      '#  R B  #',
-      '#   @   #',
-      '#########',
-    ],
-  },
-
-  // ───────────── Chapter VI · 折跃 Portals & 终章 ─────────────
+  // ───────────── Chapter VI · 折跃 Portals ─────────────
   {
     id: 'l17',
     name: '折跃',
@@ -365,41 +258,8 @@ const HAND_DEFS: Chaptered[] = [
       '############',
     ],
   },
-  {
-    id: 'l20',
-    name: '合流',
-    subtitle: 'Confluence',
-    chapter: '折跃',
-    par: 26,
-    intro: '终章：冰、坑、闸门、颜色、折跃齐至。资源恰好够用，每一步都要算清。',
-    map: [
-      '#########',
-      '#  1    #',
-      '# R$ D r#',
-      '#@      #',
-      '# B  ^ b#',
-      '#  $    #',
-      '#       #',
-      '#########',
-    ],
-  },
 
-  // ───────────── Chapter VII · 诡径 New tricks (intros) ─────────────
-  {
-    id: 'l21',
-    name: '单行',
-    subtitle: 'One Way',
-    chapter: '诡径',
-    par: 9,
-    intro: '单向格（箭头）只能顺着箭头方向进入——逆向进不去。',
-    map: [
-      '#######',
-      '#@    #',
-      '#####V#',
-      '#. $  #',
-      '#######',
-    ],
-  },
+  // ───────────── Chapter VII · 诡径 New tricks ─────────────
   {
     id: 'l22',
     name: '脆地',
@@ -410,19 +270,6 @@ const HAND_DEFS: Chaptered[] = [
     map: [
       '########',
       '#@ %% $.#',
-      '########',
-    ],
-  },
-  {
-    id: 'l23',
-    name: '锁钥',
-    subtitle: 'Key & Lock',
-    chapter: '诡径',
-    par: 4,
-    intro: '走到钥匙上即可拾取，同色的锁随之打开（变成可通行）。',
-    map: [
-      '########',
-      '#@k $K.#',
       '########',
     ],
   },
@@ -441,29 +288,12 @@ const GEN_DEFS: Chaptered[] = GENERATED.filter((g) => /[ab]$/.test(g.id)).map((g
   solution: g.solution as Dir[],
 }));
 
-// ───────────── Chapter XI · 淬炼 Crucible ─────────────
-// The closing chapter: no new mechanics, only combinations. Every level is a
-// pure "read the board" puzzle (intro: '') with a single clear core idea —
-// combo, resource trade-off, or spatial scheduling — rising to a finale that
-// folds colour + gate + pit + portal together. Hand-designed levels carry a
-// solver-verified solution; the four 空间调度 levels were produced by the
+// ───────────── Chapter · 淬炼 Crucible ─────────────
+// A combination chapter: no new mechanics, only pit / ice / spatial-scheduling
+// puzzles (intro: ''), each with a single clear core idea. Hand-designed levels
+// carry a solver-verified solution; the four 空间调度 levels were produced by the
 // reverse-pull generator, hand-picked for a non-obvious reorder, then named.
 const CRUCIBLE_DEFS: Chaptered[] = [
-  {
-    // Combo · ice + colour: each crate slides until a wall/centre pillar stops
-    // it, so you must aim each colour at its own row from the right side.
-    id: 'l24', name: '凝光', subtitle: 'Frostlight', chapter: '淬炼', par: 22, intro: '',
-    map: [
-      '#########',
-      '#r  b  g#',
-      '# ~~~~~ #',
-      '# ~~#~~ #',
-      '# R B G #',
-      '#   @   #',
-      '#########',
-    ],
-    solution: ['right','right','up','left','left','down','left','up','left','down','left','up','up','up','right','up','right','down','right','right','up','right'] as Dir[],
-  },
   {
     // Resource · one of the three crates must be spent filling the pit to reach
     // the far goal; pick the wrong one and a target goes unfillable.
@@ -552,36 +382,6 @@ const CRUCIBLE_DEFS: Chaptered[] = [
       '############',
     ],
     solution: ['up','right','right','down','right','right','right','right','right','right','left','left','left','left','up','left','left','left','left','down','right','right','right','right','right','right','right','up','right','down','down'] as Dir[],
-  },
-  {
-    // Combo · colour + gate + pit: park a crate on the plate to hold the gate,
-    // sacrifice one to the pit, then deliver R/B to their own goals.
-    id: 'l31', name: '枢机', subtitle: 'Linchpin', chapter: '淬炼', par: 38, intro: '',
-    map: [
-      '##########',
-      '#  1     #',
-      '# R$ D r #',
-      '#@   #   #',
-      '# B ^  b #',
-      '#  $     #',
-      '##########',
-    ],
-    solution: ['right','right','up','down','left','left','up','right','right','right','right','right','down','down','down','left','left','left','left','up','up','left','up','right','right','right','right','up','right','down','down','right','down','down','left','left','up','right'] as Dir[],
-  },
-  {
-    // Finale · colour + gate + pit + portal all at once: the portal is the only
-    // way to reach a crate's pushable side after the gate is held open.
-    id: 'l32', name: '收束', subtitle: 'Convergence', chapter: '淬炼', par: 37, intro: '',
-    map: [
-      '###########',
-      '#  1    o #',
-      '# R$ D r  #',
-      '#@   #    #',
-      '# B ^  b  #',
-      '#  $   o  #',
-      '###########',
-    ],
-    solution: ['down','right','up','right','up','down','left','left','up','right','right','right','right','right','right','up','right','left','left','left','left','up','up','left','up','right','right','right','right','up','right','down','down','right','right','up','left'] as Dir[],
   },
 ];
 
