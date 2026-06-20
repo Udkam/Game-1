@@ -265,13 +265,14 @@ export class BoardRenderer {
     }
   }
 
-  sizeToViewport(): void {
+  sizeToViewport(availWidth?: number): void {
     if (!this.level) return;
-    const availW = Math.min(window.innerWidth * 0.94, 760) - 28;
+    const availW = (availWidth ?? Math.min(window.innerWidth * 0.94, 760)) - 28;
     const availH = window.innerHeight - 300;
+    const maxCell = availWidth === undefined ? 64 : 48; // smaller cells for diptych boards
     const cell = Math.max(
-      26,
-      Math.floor(Math.min(availW / this.level.width, availH / this.level.height, 64)),
+      22,
+      Math.floor(Math.min(availW / this.level.width, availH / this.level.height, maxCell)),
     );
     this.board.style.setProperty('--cell', `${cell}px`);
   }

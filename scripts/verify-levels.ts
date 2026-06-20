@@ -7,7 +7,7 @@
 // Run with:  npm run verify
 
 import { LEVELS } from '../src/engine/levels.js';
-import { solve, replay } from '../src/engine/solver.js';
+import { solve, replay, replayDiptych } from '../src/engine/solver.js';
 import { initialState } from '../src/engine/level.js';
 import { isSolved } from '../src/engine/rules.js';
 
@@ -18,24 +18,38 @@ const maxStates = Number(process.env.VERIFY_MAX ?? 2_000_000);
 
 for (const level of LEVELS) {
   const start = Date.now();
-  // Generated levels carry a pre-verified optimal solution — replay it instead of
-  // re-running the (potentially slow) solver.
-  const res = level.solution
+  // Diptych levels replay across both boards; other levels with a stored solution
+  // replay it; the rest run the solver.
+  const res = level.twin
     ? (() => {
-        const chk = replay(level, level.solution!);
+        const chk = replayDiptych(level, level.solution!);
         return {
           solvable: chk.solved,
-          moves: chk.state.moves,
-          pushes: chk.state.pushes,
+          moves: level.solution!.length,
+          pushes: chk.a.pushes + chk.b.pushes,
           solution: level.solution!,
           explored: 0,
           truncated: false,
         };
       })()
-    : solve(level, { maxStates });
+    : level.solution
+      ? (() => {
+          const chk = replay(level, level.solution!);
+          return {
+            solvable: chk.solved,
+            moves: chk.state.moves,
+            pushes: chk.state.pushes,
+            solution: level.solution!,
+            explored: 0,
+            truncated: false,
+          };
+        })()
+      : solve(level, { maxStates });
   const ms = Date.now() - start;
 
-  const trivial = isSolved(level, initialState(level));
+  const trivial = level.twin
+    ? isSolved(level, initialState(level)) && isSolved(level.twin, initialState(level.twin))
+    : isSolved(level, initialState(level));
   let ok = res.solvable && !trivial;
   let note = '';
 
@@ -44,8 +58,8 @@ for (const level of LEVELS) {
   } else if (trivial) {
     note = 'TRIVIAL (already solved at start)';
   } else {
-    // Replay the solver's own solution through the engine as a cross-check.
-    const check = replay(level, res.solution);
+    // Replay the solution through the engine as a cross-check.
+    const check = level.twin ? replayDiptych(level, res.solution) : replay(level, res.solution);
     if (!check.solved) {
       ok = false;
       note = 'REPLAY MISMATCH (engine/solver disagree)';

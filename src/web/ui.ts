@@ -2,7 +2,7 @@
 
 import type { Dir, Level } from '../engine/types.js';
 import { CHAPTER_OF } from '../engine/levels.js';
-import { Game } from './game.js';
+import { Game, DiptychGame } from './game.js';
 import { BoardRenderer } from './render.js';
 import {
   loadProgress,
@@ -226,6 +226,10 @@ export class App {
 
   private playLevel(id: string): void {
     const level = this.levels.find((l) => l.id === id)!;
+    if (level.twin) {
+      this.playDiptych(level);
+      return;
+    }
     const game = new Game(level);
 
     const title = h(
@@ -374,6 +378,127 @@ export class App {
     };
   }
 
+  // Diptych: two boards, one input drives both, win only when both are solved.
+  private playDiptych(level: Level): void {
+    const id = level.id;
+    const game = new DiptychGame(level);
+
+    const title = h('div', { class: 'title wordmark' }, level.name, h('small', {}, level.subtitle));
+    const back = h('button', { class: 'ghost' }, '← 关卡');
+    back.onclick = () => this.showMenu();
+    const helpBtn = h('button', { class: 'ghost', title: '机制图鉴' }, '?');
+    helpBtn.onclick = () => this.showCodex();
+    const topbar = h('div', { class: 'topbar' }, title, h('div', { class: 'top-actions' }, helpBtn, back));
+
+    const movesEl = h('b', {}, '0');
+    const pushesEl = h('b', {}, '0');
+    const bestVal = this.progress.best[id];
+    const hud = h(
+      'div',
+      { class: 'hud' },
+      h('span', { class: 'stat' }, '步数 ', movesEl),
+      h('span', { class: 'stat' }, '推动 ', pushesEl),
+      h('span', { class: 'spacer' }),
+      h('span', { class: 'stat' }, `参考 ${level.par ?? '—'}`),
+      h('span', { class: 'stat' }, bestVal !== undefined ? `最佳 ${bestVal}` : ''),
+    );
+
+    const wrapA = h('div', { class: 'board-wrap' });
+    const wrapB = h('div', { class: 'board-wrap' });
+    const rendererA = new BoardRenderer(wrapA);
+    const rendererB = new BoardRenderer(wrapB);
+    rendererA.mount(level);
+    rendererB.mount(level.twin!);
+    rendererA.update(game.a);
+    rendererB.update(game.b);
+    const pair = h('div', { class: 'diptych' }, wrapA, wrapB);
+
+    const undoBtn = h('button', {}, '撤销');
+    const restartBtn = h('button', {}, '重开');
+    const hint = level.mirrorTwin
+      ? '两块棋盘一起动 · 右盘左右相反 · Shift+方向 拉箱 · Z 撤销 · R 重开'
+      : '一次输入，两块棋盘一起动 · 两边都要解开 · Z 撤销 · R 重开';
+    const controls = h('div', { class: 'controls' }, undoBtn, restartBtn,
+      h('span', { class: 'spacer' }), h('span', { class: 'hint-keys' }, hint));
+
+    const dpad = h('div', { class: 'dpad' },
+      h('button', { class: 'up' }, '↑'), h('button', { class: 'left' }, '←'),
+      h('button', { class: 'right' }, '→'), h('button', { class: 'down' }, '↓'));
+    const [upB, leftB, rightB, downB] = dpad.querySelectorAll('button');
+
+    const screen = h('div', { class: 'game' }, topbar, hud);
+    if (level.intro && !this.progress.completed[id]) screen.append(this.introBanner(level));
+    screen.append(pair, controls, dpad);
+    this.swap(screen);
+
+    const refreshControls = () => {
+      (undoBtn as HTMLButtonElement).disabled = !game.canUndo;
+      movesEl.textContent = String(game.moves);
+      pushesEl.textContent = String(game.pushes);
+    };
+    refreshControls();
+
+    let locked = false;
+    const doMove = (dir: Dir, pull = false) => {
+      if (locked) return;
+      const res = game.move(dir, pull);
+      if (!res) return;
+      rendererA.update(game.a, res.a.effect);
+      rendererB.update(game.b, res.b.effect);
+      refreshControls();
+      if (game.solved) {
+        locked = true;
+        window.setTimeout(() => this.win(level, game), 360);
+      }
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key in KEY_DIR) {
+        e.preventDefault();
+        doMove(KEY_DIR[e.key]!, e.shiftKey);
+      } else if (e.key === 'z' || e.key === 'Z') {
+        if (game.undo()) { rendererA.update(game.a); rendererB.update(game.b); refreshControls(); }
+      } else if (e.key === 'r' || e.key === 'R') {
+        game.restart(); rendererA.update(game.a); rendererB.update(game.b); refreshControls();
+      } else if (e.key === 'Escape') {
+        this.showMenu();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+
+    undoBtn.onclick = () => { if (game.undo()) { rendererA.update(game.a); rendererB.update(game.b); refreshControls(); } };
+    restartBtn.onclick = () => { game.restart(); rendererA.update(game.a); rendererB.update(game.b); refreshControls(); };
+    upB!.onclick = () => doMove('up');
+    downB!.onclick = () => doMove('down');
+    leftB!.onclick = () => doMove('left');
+    rightB!.onclick = () => doMove('right');
+
+    let sx = 0, sy = 0;
+    const onTouchStart = (e: TouchEvent) => { const t = e.changedTouches[0]!; sx = t.clientX; sy = t.clientY; };
+    const onTouchEnd = (e: TouchEvent) => {
+      const t = e.changedTouches[0]!;
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+      doMove(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up');
+    };
+    pair.addEventListener('touchstart', onTouchStart, { passive: true });
+    pair.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    const sizeBoth = () => {
+      const half = Math.min(window.innerWidth * 0.94, 720) / 2;
+      rendererA.sizeToViewport(half);
+      rendererB.sizeToViewport(half);
+    };
+    sizeBoth();
+    const onResize = () => sizeBoth();
+    window.addEventListener('resize', onResize);
+
+    this.cleanup = () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', onResize);
+    };
+  }
+
   private introBanner(level: Level): HTMLElement {
     const dismiss = h('button', { class: 'ghost' }, '知道了');
     const banner = h(
@@ -388,7 +513,7 @@ export class App {
 
   // ---------------- win ----------------
 
-  private win(level: Level, game: Game): void {
+  private win(level: Level, game: Game | DiptychGame): void {
     const par = level.par ?? Infinity;
     const outcome = recordClear(this.progress, level.id, {
       moves: game.moves,

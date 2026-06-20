@@ -83,6 +83,11 @@ export interface Level {
   /** Gravity level: there is no walking — each move tilts the whole board and all
    *  crates (and the player, as a blocker) slide maximally that way. */
   gravity?: boolean;
+  /** Diptych: a second board played in parallel. One input drives both boards;
+   *  the level is solved only when both are. (The twin itself has no twin.) */
+  twin?: Level;
+  /** When true, the twin receives mirrored (left/right-flipped) input. */
+  mirrorTwin?: boolean;
 }
 
 /** Mutable game state. Kept deliberately small so undo snapshots are cheap. */

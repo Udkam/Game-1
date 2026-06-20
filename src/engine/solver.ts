@@ -9,7 +9,8 @@
 // crates have all sunk into pits yields +Infinity).
 
 import type { Color, Dir, GameState, Level } from './types.js';
-import { applyMove, applyToken, isSolved, stateKey } from './rules.js';
+import { OPPOSITE } from './types.js';
+import { applyMove, applyToken, parseToken, isSolved, stateKey } from './rules.js';
 import { initialState } from './level.js';
 
 const ALL_DIRS: Dir[] = ['up', 'down', 'left', 'right'];
@@ -187,4 +188,28 @@ export function replay(level: Level, moves: string[]): { solved: boolean; state:
   let state = initialState(level);
   for (const token of moves) state = applyToken(level, state, token).state;
   return { solved: isSolved(level, state), state };
+}
+
+/** Flip a token's horizontal direction (for a mirrored twin board). */
+export function mirrorToken(token: string): string {
+  const p = parseToken(token);
+  if (!p || (p.dir !== 'left' && p.dir !== 'right')) return token;
+  const d = OPPOSITE[p.dir];
+  return p.pull ? `@${d}` : d;
+}
+
+/** Replay a diptych: the same tokens drive both boards (twin input mirrored when
+ *  level.mirrorTwin). Solved only when BOTH boards are solved. */
+export function replayDiptych(level: Level, moves: string[]): {
+  solved: boolean;
+  a: GameState;
+  b: GameState;
+} {
+  let a = initialState(level);
+  let b = initialState(level.twin!);
+  for (const token of moves) {
+    a = applyToken(level, a, token).state;
+    b = applyToken(level.twin!, b, level.mirrorTwin ? mirrorToken(token) : token).state;
+  }
+  return { solved: isSolved(level, a) && isSolved(level.twin!, b), a, b };
 }

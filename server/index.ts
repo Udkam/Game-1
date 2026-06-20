@@ -10,7 +10,7 @@ import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import type { Dir } from '../src/engine/types.js';
 import { getLevel, LEVELS } from '../src/engine/levels.js';
-import { replay } from '../src/engine/solver.js';
+import { replay, replayDiptych } from '../src/engine/solver.js';
 import { Store } from './db.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -66,15 +66,28 @@ export async function buildServer(store: Store) {
       return reply.code(400).send({ ok: false, error: 'invalid solution' });
     }
 
-    // Authoritative replay — the only source of truth for a clear.
-    const result = replay(level, body.solution as string[]);
-    if (!result.solved) {
+    // Authoritative replay — the only source of truth for a clear. Diptych
+    // levels must solve both boards.
+    const sol = body.solution as string[];
+    let solved: boolean;
+    let moves: number;
+    let pushes: number;
+    if (level.twin) {
+      const r = replayDiptych(level, sol);
+      solved = r.solved;
+      moves = sol.length;
+      pushes = r.a.pushes + r.b.pushes;
+    } else {
+      const r = replay(level, sol);
+      solved = r.solved;
+      moves = r.state.moves;
+      pushes = r.state.pushes;
+    }
+    if (!solved) {
       return reply.code(400).send({ ok: false, error: 'solution does not solve the level' });
     }
 
     const name = sanitizeName(body.name);
-    const moves = result.state.moves;
-    const pushes = result.state.pushes;
     store.addScore(levelId, name, moves, pushes);
 
     const best = store.bestMoves(levelId);

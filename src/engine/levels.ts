@@ -436,7 +436,39 @@ const PARADOX_DEFS: Chaptered[] = [
   },
 ];
 
-export const LEVEL_DEFS: Chaptered[] = [...HAND_DEFS, ...GEN_DEFS, ...PARADOX_DEFS, ...CRUCIBLE_DEFS];
+// ───────────── Chapter · 双生 Twins ─────────────
+// Diptych levels: one input drives two boards at once; both must be solved.
+const DIPTYCH_DEFS: Chaptered[] = [
+  {
+    // Twin boards with the player starting in opposite corners: the same input
+    // sequence must bring both players over their crate and push down together.
+    id: 'dip1', name: '双生', subtitle: 'Twin Boards', chapter: '双生', par: 4,
+    intro: '双生关：一次输入会同时驱动左右两块棋盘——两边都解开，才算过关。',
+    map: [
+      '#####',
+      '#@  #',
+      '# $ #',
+      '# . #',
+      '#####',
+    ],
+    twin: [
+      '#####',
+      '#  @#',
+      '# $ #',
+      '# . #',
+      '#####',
+    ],
+    solution: ['left', 'left', 'right', 'down'] as MoveToken[],
+  },
+];
+
+export const LEVEL_DEFS: Chaptered[] = [
+  ...HAND_DEFS,
+  ...GEN_DEFS,
+  ...PARADOX_DEFS,
+  ...DIPTYCH_DEFS,
+  ...CRUCIBLE_DEFS,
+];
 
 export const LEVELS = LEVEL_DEFS.map(parseLevel);
 export const CHAPTER_OF: Record<string, string> = Object.fromEntries(

@@ -518,6 +518,18 @@ button:disabled {
   border-radius: 20px;
   box-shadow: 0 10px 40px var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 }
+
+/* diptych: two boards side by side (wraps to a stack on narrow screens) */
+.diptych {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.diptych .board-wrap {
+  padding: 10px;
+}
 .board {
   position: relative;
   display: grid;

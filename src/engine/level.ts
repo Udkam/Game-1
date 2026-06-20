@@ -39,6 +39,10 @@ export interface LevelDef {
   solution?: MoveToken[];
   /** Gravity level: every move tilts the whole board (see Level.gravity). */
   gravity?: boolean;
+  /** Diptych: a second board map, played in parallel by the same input. */
+  twin?: string[];
+  /** When true, the twin receives mirrored (left/right-flipped) input. */
+  mirrorTwin?: boolean;
 }
 
 const CRATE_COLOR: Record<string, Color> = { R: 'rose', G: 'sage', B: 'slate', Y: 'amber' };
@@ -168,6 +172,10 @@ export function parseLevel(def: LevelDef): Level {
     par: def.par,
     solution: def.solution,
     gravity: def.gravity,
+    twin: def.twin
+      ? parseLevel({ id: `${def.id}#twin`, name: def.name, subtitle: def.subtitle, intro: '', map: def.twin })
+      : undefined,
+    mirrorTwin: def.mirrorTwin,
   };
 }
 
