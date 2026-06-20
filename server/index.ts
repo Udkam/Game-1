@@ -22,6 +22,9 @@ const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.BIND_HOST ?? '0.0.0.0';
 
 const VALID_DIRS = new Set<Dir>(['up', 'down', 'left', 'right']);
+// A move token is a direction, optionally `@`-prefixed for a pull/grab.
+const isToken = (d: unknown): boolean =>
+  typeof d === 'string' && VALID_DIRS.has((d.startsWith('@') ? d.slice(1) : d) as Dir);
 
 export async function buildServer(store: Store) {
   const app = Fastify({ logger: false });
@@ -58,13 +61,13 @@ export async function buildServer(store: Store) {
     if (
       !Array.isArray(body.solution) ||
       body.solution.length > 100_000 ||
-      !body.solution.every((d) => typeof d === 'string' && VALID_DIRS.has(d as Dir))
+      !body.solution.every(isToken)
     ) {
       return reply.code(400).send({ ok: false, error: 'invalid solution' });
     }
 
     // Authoritative replay — the only source of truth for a clear.
-    const result = replay(level, body.solution as Dir[]);
+    const result = replay(level, body.solution as string[]);
     if (!result.solved) {
       return reply.code(400).send({ ok: false, error: 'solution does not solve the level' });
     }

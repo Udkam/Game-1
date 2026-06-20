@@ -13,7 +13,7 @@
 // to read off the board.
 
 import type { LevelDef } from './level.js';
-import type { Dir } from './types.js';
+import type { Dir, MoveToken } from './types.js';
 import { parseLevel } from './level.js';
 import { GENERATED } from './generated.js';
 
@@ -585,7 +585,29 @@ const CRUCIBLE_DEFS: Chaptered[] = [
   },
 ];
 
-export const LEVEL_DEFS: Chaptered[] = [...HAND_DEFS, ...GEN_DEFS, ...CRUCIBLE_DEFS];
+// ───────────── Chapter · 悖论 Paradox ─────────────
+// Levels that overturn a core rule. Each new "heresy" mechanic gets one intro
+// level; depth comes later from combining them. The A* solver doesn't model
+// these, so every level carries a hand-authored, replay-verified solution.
+const PARADOX_DEFS: Chaptered[] = [
+  {
+    // Pull / grab: the crate sits in a top niche — its only free side is below
+    // and the push side is a wall, so it can ONLY be pulled out.
+    id: 'pull1', name: '回拉', subtitle: 'Grab', chapter: '悖论', par: 4,
+    intro: '按住 Shift + 方向（或先点「抓」）可以拉动身后的箱子——有些箱子贴着墙，只能拉、不能推。',
+    map: [
+      '#######',
+      '###$###',
+      '#     #',
+      '#  .  #',
+      '#  @  #',
+      '#######',
+    ],
+    solution: ['up', 'up', '@down', '@down'] as MoveToken[],
+  },
+];
+
+export const LEVEL_DEFS: Chaptered[] = [...HAND_DEFS, ...GEN_DEFS, ...PARADOX_DEFS, ...CRUCIBLE_DEFS];
 
 export const LEVELS = LEVEL_DEFS.map(parseLevel);
 export const CHAPTER_OF: Record<string, string> = Object.fromEntries(

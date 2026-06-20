@@ -85,6 +85,9 @@ const CODEX: CodexEntry[] = [
   { icon: 'ic-key', name: '钥匙 / 锁', anchor: 'l23',
     rule: '走到钥匙上即可拾取，同色的锁随之打开（变成可通行）。',
     use: '先取钥匙再开锁，规划取钥与推箱的先后。' },
+  { icon: 'ic-pull', name: '拉 / 抓', anchor: 'pull1',
+    rule: '按住 Shift + 方向（或先点「抓」）会拉动你正后方的箱子，随你一起后退一格——推翻了「只能推」。',
+    use: '把贴着墙、卡在角落里只能拉不能推的箱子拽出来。' },
 ];
 
 export class App {
@@ -215,6 +218,7 @@ export class App {
         row(sw('ic-arrow'), '单向格', '只能顺着箭头方向进入，逆向进不去。'),
         row(sw('ic-cracked'), '脆地', '离开后塌成深坑，只能走一次。'),
         row(sw('ic-key'), '钥匙 / 锁', '拾取钥匙打开同色的锁。'),
+        row(sw('ic-pull'), '拉 / 抓', '按住 Shift + 方向（或点「抓」）拉动身后的箱子；贴墙的箱子只能拉。'),
       ),
       h('p', { class: 'result' }, 'Z 撤销 · R 重开 · Esc 返回。可无限撤销，没有死亡惩罚。'),
       h('div', { class: 'actions' },
@@ -321,13 +325,15 @@ export class App {
 
     const undoBtn = h('button', {}, '撤销');
     const restartBtn = h('button', {}, '重开');
+    const grabBtn = h('button', { class: 'grab', title: '抓取：开启后移动会拉动身后的箱子（也可按住 Shift + 方向）' }, '抓 ⇲');
     const controls = h(
       'div',
       { class: 'controls' },
       undoBtn,
       restartBtn,
+      grabBtn,
       h('span', { class: 'spacer' }),
-      h('span', { class: 'hint-keys' }, '方向键 / WASD 移动 · Z 撤销 · R 重开'),
+      h('span', { class: 'hint-keys' }, 'WASD/方向键 移动 · Shift+方向 拉 · Z 撤销 · R 重开'),
     );
 
     const dpad = h(
@@ -355,13 +361,14 @@ export class App {
     refreshControls();
 
     let locked = false; // hard lock during win sequence only
-    const doMove = (dir: Dir) => {
+    let grabMode = false; // touch/click grab toggle; Shift also pulls per-move
+    const doMove = (dir: Dir, pull = false) => {
       // No input throttling: the engine is pure/synchronous and renderer.update
       // always reconciles the DOM to the latest state, so rapid or repeated keys
       // can never corrupt state — they just retarget the CSS transition. We only
       // freeze input during the brief win hand-off below.
       if (locked) return;
-      const res = game.move(dir);
+      const res = game.move(dir, pull);
       if (!res) {
         sfx('blocked');
         return;
@@ -387,7 +394,7 @@ export class App {
     const onKey = (e: KeyboardEvent) => {
       if (e.key in KEY_DIR) {
         e.preventDefault();
-        doMove(KEY_DIR[e.key]!);
+        doMove(KEY_DIR[e.key]!, e.shiftKey || grabMode);
       } else if (e.key === 'z' || e.key === 'Z') {
         if (game.undo()) {
           renderer.update(game.state);
@@ -414,10 +421,14 @@ export class App {
       renderer.update(game.state);
       refreshControls();
     };
-    upB!.onclick = () => doMove('up');
-    downB!.onclick = () => doMove('down');
-    leftB!.onclick = () => doMove('left');
-    rightB!.onclick = () => doMove('right');
+    grabBtn.onclick = () => {
+      grabMode = !grabMode;
+      grabBtn.classList.toggle('on', grabMode);
+    };
+    upB!.onclick = () => doMove('up', grabMode);
+    downB!.onclick = () => doMove('down', grabMode);
+    leftB!.onclick = () => doMove('left', grabMode);
+    rightB!.onclick = () => doMove('right', grabMode);
 
     // swipe
     let sx = 0;
@@ -432,7 +443,7 @@ export class App {
       const dx = t.clientX - sx;
       const dy = t.clientY - sy;
       if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
-      doMove(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up');
+      doMove(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up', grabMode);
     };
     boardWrap.addEventListener('touchstart', onTouchStart, { passive: true });
     boardWrap.addEventListener('touchend', onTouchEnd, { passive: true });

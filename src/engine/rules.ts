@@ -153,10 +153,77 @@ function resolveCratePush(
 const manhattan = (a: { x: number; y: number }, b: { x: number; y: number }): number =>
   Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 
+/** Parse a serialized move token (`up` / `@up`) into a direction + pull flag. */
+export function parseToken(token: string): { dir: Dir; pull: boolean } | null {
+  const pull = token.startsWith('@');
+  const d = (pull ? token.slice(1) : token) as Dir;
+  if (d !== 'up' && d !== 'down' && d !== 'left' && d !== 'right') return null;
+  return { dir: d, pull };
+}
+
+/** Apply a serialized token (push/walk or `@`-prefixed pull). Used by replay. */
+export function applyToken(level: Level, state: GameState, token: string): MoveResult {
+  const p = parseToken(token);
+  if (!p) return { changed: false, state };
+  return applyMove(level, state, p.dir, p.pull);
+}
+
+/** Grab/pull: the player steps in `dir` and drags the crate directly behind it
+ *  into its old cell — overturning the push-only rule. One cell, no ice slide
+ *  (deterministic): the crate is set down on the cell the player just vacated. */
+function applyPull(level: Level, state: GameState, dir: Dir, openGates: Set<string>): MoveResult {
+  const { dx, dy } = DIRS[dir];
+  const from = { x: state.playerX, y: state.playerY };
+  const tx = from.x + dx;
+  const ty = from.y + dy;
+  const bx = from.x - dx;
+  const by = from.y - dy;
+
+  // The player must be able to step forward (arrows/gates/locks/holes/crates apply).
+  const destCell = cellAt(level, tx, ty);
+  if (destCell?.arrow && destCell.arrow !== dir) return { changed: false, state };
+  if (destCell?.portal) return { changed: false, state }; // no portal-pull
+  if (!playerCanEnter(level, state, tx, ty, openGates)) return { changed: false, state };
+
+  // There must be a crate directly behind to drag into the player's old cell.
+  const dragged = crateAt(state, bx, by);
+  if (!dragged) return { changed: false, state };
+  const pCell = cellAt(level, from.x, from.y)!;
+  if (pCell.arrow && pCell.arrow !== dir) return { changed: false, state };
+  if (!crateCanEnter(level, state, from.x, from.y, openGates, dragged.id)) return { changed: false, state };
+
+  const crates = state.crates.map((c) =>
+    c.id === dragged.id ? { ...c, x: from.x, y: from.y } : c,
+  );
+  // Cracked floor under `from` does NOT collapse: the dragged crate now rests on
+  // it (a weight holds cracked floor). Key pickup still applies at the destination.
+  let keys = state.keys;
+  if (destCell?.key && !keys.includes(destCell.key)) keys = [...keys, destCell.key];
+
+  const next: GameState = {
+    playerX: tx,
+    playerY: ty,
+    crates,
+    filled: state.filled,
+    collapsed: state.collapsed,
+    keys,
+    moves: state.moves + 1,
+    pushes: state.pushes + 1,
+  };
+  const effect: MoveEffect = {
+    dir,
+    player: { from, to: { x: tx, y: ty } },
+    crate: { id: dragged.id, from: { x: bx, y: by }, to: { x: from.x, y: from.y }, slid: false, sank: false },
+    pulled: true,
+  };
+  return { changed: true, state: next, effect };
+}
+
 /** Apply one move. Returns a brand-new immutable state (or the same one if blocked). */
-export function applyMove(level: Level, state: GameState, dir: Dir): MoveResult {
+export function applyMove(level: Level, state: GameState, dir: Dir, pull = false): MoveResult {
   const { dx, dy } = DIRS[dir];
   const openGates = computeOpenGates(level, state);
+  if (pull) return applyPull(level, state, dir, openGates);
   const tx = state.playerX + dx;
   const ty = state.playerY + dy;
   const from = { x: state.playerX, y: state.playerY };

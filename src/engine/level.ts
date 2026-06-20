@@ -24,7 +24,7 @@
 // A gate opens when the number of pressed plates in its group reaches the
 // group threshold (default = number of plates in the group, i.e. AND).
 
-import type { Cell, Color, Crate, Dir, Level } from './types.js';
+import type { Cell, Color, Crate, Dir, Level, MoveToken } from './types.js';
 
 export interface LevelDef {
   id: string;
@@ -35,8 +35,8 @@ export interface LevelDef {
   /** Override gate thresholds, e.g. { '1': 1 } to make group 1 an OR gate. */
   gateThreshold?: Record<string, number>;
   par?: number;
-  /** A pre-verified solution (used by generated levels). */
-  solution?: Dir[];
+  /** A pre-verified solution (used by generated levels; tokens so pull levels fit). */
+  solution?: MoveToken[];
 }
 
 const CRATE_COLOR: Record<string, Color> = { R: 'rose', G: 'sage', B: 'slate', Y: 'amber' };

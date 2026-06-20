@@ -10,6 +10,12 @@ export const DIRS: Record<Dir, { dx: number; dy: number }> = {
   right: { dx: 1, dy: 0 },
 };
 
+export const OPPOSITE: Record<Dir, Dir> = { up: 'down', down: 'up', left: 'right', right: 'left' };
+
+/** A serialized move: a plain direction (push/walk) or `@dir` for a grab/pull.
+ *  Used in the move log, stored solutions, and server replay. */
+export type MoveToken = Dir | `@${Dir}`;
+
 /**
  * Crate / goal colors. `natural` is the uncolored crate and the "any" goal that
  * accepts a crate of any color. The remaining four are a muted, hand-picked
@@ -69,8 +75,9 @@ export interface Level {
   portalPartner: number[];
   /** Optimal push count, filled in by the solver / cached. */
   par?: number;
-  /** A pre-verified solution (generated levels carry one so tests need not re-solve). */
-  solution?: Dir[];
+  /** A pre-verified solution (generated levels carry one so tests need not re-solve).
+   *  Tokens, so hand-authored pull/grab levels can encode `@dir` moves. */
+  solution?: MoveToken[];
 }
 
 /** Mutable game state. Kept deliberately small so undo snapshots are cheap. */
@@ -107,6 +114,9 @@ export interface MoveEffect {
   filledPit?: number;
   /** Cell index of cracked floor that collapsed this move, if any. */
   collapsed?: number;
+  /** True when this was a pull/grab: the player backed away dragging the crate
+   *  behind it (so the avatar should face opposite its travel direction). */
+  pulled?: boolean;
 }
 
 export interface MoveResult {

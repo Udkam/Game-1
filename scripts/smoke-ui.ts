@@ -66,9 +66,11 @@ for (let i = 0; i < LEVELS.length; i++) {
 
   // Board built?
   const crates = root.querySelectorAll('.board .crate').length;
-  // Play the solution.
-  for (const dir of sol.solution) {
-    w.dispatchEvent(new w.KeyboardEvent('keydown', { key: DIR_KEY[dir], bubbles: true }));
+  // Play the solution. Tokens may be `@dir` (pull) — drive those with Shift held.
+  for (const token of sol.solution) {
+    const pull = token.startsWith('@');
+    const dir = (pull ? token.slice(1) : token) as Dir;
+    w.dispatchEvent(new w.KeyboardEvent('keydown', { key: DIR_KEY[dir], shiftKey: pull, bubbles: true }));
   }
   await sleep(700); // allow the win timeout to fire
 

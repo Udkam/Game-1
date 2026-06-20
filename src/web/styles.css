@@ -407,6 +407,26 @@ button:disabled {
   border-radius: 50% 50% 50% 0;
   border: 3px solid #c9a227;
 }
+/* pull/grab icon: a little crate with a leftward drag arrow */
+.legend-ic.ic-pull::before {
+  content: '';
+  position: absolute;
+  inset: 30% 30% 30% 46%;
+  border-radius: 3px;
+  background: var(--crate);
+  box-shadow: inset 0 0 0 1.5px var(--crate-edge);
+}
+.legend-ic.ic-pull::after {
+  content: '';
+  position: absolute;
+  left: 22%;
+  top: 50%;
+  width: 24%;
+  height: 24%;
+  transform: translateY(-50%) rotate(-135deg);
+  border-left: 2.5px solid var(--accent);
+  border-bottom: 2.5px solid var(--accent);
+}
 
 .hud {
   width: 100%;
@@ -925,6 +945,13 @@ button:disabled {
 }
 .controls .spacer {
   flex: 1;
+}
+/* grab/pull toggle: lit when active so you know the next move will pull */
+.controls .grab.on {
+  background: var(--accent);
+  border-color: var(--accent-deep);
+  color: #fdf8ef;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .hint-keys {
   color: var(--faint);

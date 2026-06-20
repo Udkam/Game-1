@@ -4,6 +4,7 @@
 // pits, open gates, pressed plates, seated crates) are reconciled each update.
 
 import type { Cell, Color, Crate, Dir, GameState, Level, MoveEffect } from '../engine/types.js';
+import { OPPOSITE } from '../engine/types.js';
 import { computeOpenGates } from '../engine/rules.js';
 
 const STEP_MS = 120;
@@ -142,10 +143,12 @@ export class BoardRenderer {
     if (effect && !effect.teleported) {
       const dx = state.playerX - this.lastPX;
       const dy = state.playerY - this.lastPY;
-      const dir: Dir | null =
+      let dir: Dir | null =
         dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : dy < 0 ? 'up' : null;
+      // When pulling, the player backs away facing the crate it's dragging.
+      if (effect.pulled && dir) dir = OPPOSITE[dir];
       if (dir) this.setFacing(dir);
-      // A brief push-lean when this move shoved a crate forward.
+      // A brief lean when this move moved a crate (push or pull).
       if (effect.crate && !effect.crate.sank) this.pulse('pushing', 180);
       else this.pulse('stepping', 140);
     }

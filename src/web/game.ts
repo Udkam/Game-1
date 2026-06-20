@@ -1,7 +1,7 @@
 // Thin stateful wrapper over the pure engine: holds the current level, the live
 // state, an undo stack of snapshots, and the move log (for server validation).
 
-import type { Dir, GameState, Level, MoveResult } from '../engine/types.js';
+import type { Dir, GameState, Level, MoveResult, MoveToken } from '../engine/types.js';
 import { initialState } from '../engine/level.js';
 import { applyMove, isSolved } from '../engine/rules.js';
 
@@ -11,8 +11,8 @@ export class Game {
   solved: boolean;
   private undoStack: GameState[] = [];
   private undos = 0; // count of undo presses this run (for the "clean run" challenge)
-  /** Effective move directions taken (kept in sync with undo). For server replay. */
-  readonly log: Dir[] = [];
+  /** Effective move tokens taken (kept in sync with undo). For server replay. */
+  readonly log: MoveToken[] = [];
 
   constructor(level: Level) {
     this.level = level;
@@ -20,13 +20,14 @@ export class Game {
     this.solved = isSolved(level, this.state);
   }
 
-  /** Attempt a move. Returns the MoveResult if something changed, else null. */
-  move(dir: Dir): MoveResult | null {
+  /** Attempt a move (or a pull/grab when `pull` is set). Returns the MoveResult
+   *  if something changed, else null. */
+  move(dir: Dir, pull = false): MoveResult | null {
     if (this.solved) return null;
-    const res = applyMove(this.level, this.state, dir);
+    const res = applyMove(this.level, this.state, dir, pull);
     if (!res.changed) return null;
     this.undoStack.push(this.state);
-    this.log.push(dir);
+    this.log.push(pull ? `@${dir}` : dir);
     this.state = res.state;
     this.solved = isSolved(this.level, this.state);
     return res;

@@ -9,7 +9,7 @@
 // crates have all sunk into pits yields +Infinity).
 
 import type { Color, Dir, GameState, Level } from './types.js';
-import { applyMove, isSolved, stateKey } from './rules.js';
+import { applyMove, applyToken, isSolved, stateKey } from './rules.js';
 import { initialState } from './level.js';
 
 const ALL_DIRS: Dir[] = ['up', 'down', 'left', 'right'];
@@ -181,9 +181,10 @@ export function solve(level: Level, opts: { maxStates?: number } = {}): SolveRes
   return { solvable: false, moves: -1, pushes: -1, solution: [], explored, truncated: false };
 }
 
-/** Replay a move sequence from the initial state; report whether it solves the level. */
-export function replay(level: Level, moves: Dir[]): { solved: boolean; state: GameState } {
+/** Replay a move token sequence from the initial state; report whether it solves.
+ *  Tokens may be plain dirs (push/walk) or `@dir` (pull/grab). */
+export function replay(level: Level, moves: string[]): { solved: boolean; state: GameState } {
   let state = initialState(level);
-  for (const dir of moves) state = applyMove(level, state, dir).state;
+  for (const token of moves) state = applyToken(level, state, token).state;
   return { solved: isSolved(level, state), state };
 }
