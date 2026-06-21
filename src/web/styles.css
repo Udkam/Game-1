@@ -1132,6 +1132,46 @@ button:disabled {
 .iso-cell.t-mirror .iso-face.top {
   background: linear-gradient(120deg, color-mix(in srgb, var(--slate) 26%, var(--floor)), var(--floor));
 }
+/* ramp: a sloped tile with a bold uphill arrow (direction is unambiguous) */
+.iso-cell.t-ramp .iso-face.top {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--floor) 78%, #2a2018), var(--floor));
+}
+.iso-cell.t-ramp .iso-face.top::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22%;
+  height: 22%;
+  border-right: 3px solid var(--accent);
+  border-top: 3px solid var(--accent);
+  transform: translate(-50%, -50%) rotate(var(--rampRot, -45deg));
+}
+.iso-cell.r-up { --rampRot: -45deg; }
+.iso-cell.r-right { --rampRot: 45deg; }
+.iso-cell.r-down { --rampRot: 135deg; }
+.iso-cell.r-left { --rampRot: -135deg; }
+/* bridge: a plank span (player only) */
+.iso-cell.t-bridge .iso-face.top {
+  background: repeating-linear-gradient(90deg, var(--crate) 0 7px,
+      color-mix(in srgb, var(--crate) 76%, #2a1c10) 7px 9px);
+}
+.iso-cell.t-bridge .iso-face.left { background: color-mix(in srgb, var(--crate) 52%, #2a1c10); }
+.iso-cell.t-bridge .iso-face.right { background: color-mix(in srgb, var(--crate) 70%, #2a1c10); }
+/* lift: a marked platform that glides up/down */
+.iso-cell.t-lift {
+  transition: left 0.2s cubic-bezier(0.22, 0.61, 0.36, 1), top 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.iso-cell.t-lift .iso-face { transition: height 0.2s cubic-bezier(0.22, 0.61, 0.36, 1); }
+.iso-cell.t-lift .iso-face.top {
+  background: color-mix(in srgb, var(--slate) 28%, var(--floor));
+  background-image: repeating-linear-gradient(45deg, transparent 0 6px, rgba(0, 0, 0, 0.08) 6px 7px);
+}
+.iso-cell.t-lift .iso-face.left { background: color-mix(in srgb, var(--slate) 40%, #2a2018); }
+.iso-cell.t-lift .iso-face.right { background: color-mix(in srgb, var(--slate) 55%, #2a2018); }
+.iso-cell.t-lift.raised .iso-face.top {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent);
+}
 
 /* pieces */
 .iso-piece {
@@ -1410,6 +1450,26 @@ button:disabled {
 }
 .chapter-head:first-of-type {
   margin-top: 0.6rem;
+}
+.chapter-divider {
+  margin: 2.6rem 0 0.4rem;
+  text-align: center;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  color: var(--accent-deep);
+  opacity: 0.85;
+}
+.chapter-head.is3d {
+  border-bottom-color: color-mix(in srgb, var(--accent) 45%, var(--floor-line));
+}
+.ch-3d-badge {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  padding: 0.12em 0.5em;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-deep);
+  white-space: nowrap;
 }
 .chapter-head .chapter {
   margin: 0;

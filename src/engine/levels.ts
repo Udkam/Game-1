@@ -462,12 +462,89 @@ const DIPTYCH_DEFS: Chaptered[] = [
   },
 ];
 
+// ───────────── 立体 3D chapters (v6) ─────────────
+// First formal isometric levels. Each carries a `heights` map; all are
+// solver-optimal (solverStatus: optimal). Metadata per level: chapter /
+// usedMechanics / corePuzzle / expectedDifficulty / par / solution.
+const LEVEL3D_DEFS: Chaptered[] = [
+  {
+    // chapter 立体·入门 · mechanics [height] · core: a crate falls when pushed off
+    // a high step — deliver it to the lower goal. difficulty easy. optimal par 3.
+    id: '3d1', name: '台阶', subtitle: 'Step Down', chapter: '立体·入门', par: 3,
+    intro: '立体关：箱子可以从高处推下，但不能从低处往高台上推。先把它推下台阶。',
+    map: ['#######', '#@$  .#', '#######'],
+    heights: ['       ', ' 22    ', '       '],
+    solution: ['right', 'right', 'right'] as MoveToken[],
+  },
+  {
+    // 立体·入门 · [ramp] · core: push the crate UP an east ramp to a high goal.
+    // difficulty easy. optimal par 4.
+    id: '3d2', name: '斜坡', subtitle: 'Ramp', chapter: '立体·入门', par: 4,
+    intro: '斜坡（箭头指向上坡）：你和箱子都能顺着斜坡上高一层，但只能沿坡的方向进出。',
+    map: ['########', '#@$e  .#', '########'],
+    heights: ['        ', '    111 ', '        '],
+    solution: ['right', 'right', 'right', 'right'] as MoveToken[],
+  },
+  {
+    // 立体·入门 · [ramp] · core: approach from below and push the crate up a north
+    // ramp onto the high platform goal. difficulty easy-medium. optimal par 4.
+    id: '3d3', name: '高台', subtitle: 'High Ground', chapter: '立体·入门', par: 4, intro: '',
+    map: ['######', '#  . #', '# #n #', '#  $ #', '#@   #', '######'],
+    heights: ['      ', '   1  ', '      ', '      ', '      ', '      '],
+    solution: ['right', 'right', 'up', 'up'] as MoveToken[],
+  },
+  {
+    // 立体·入门 · [portal] · core: a portal connects ground to a high ledge —
+    // teleport up, then push the crate down to the goal. difficulty medium. par 5.
+    id: '3d4', name: '竖跃', subtitle: 'Up & Over', chapter: '立体·入门', par: 5,
+    intro: '折跃门也能连接不同高度：踩上去把你送到同色的另一扇门，哪怕在高台的另一侧。',
+    map: ['#######', '#@ o  #', '#### ##', '#.  $o#', '#######'],
+    heights: ['       ', '       ', '       ', '    11 ', '       '],
+    solution: ['right', 'right', 'left', 'left', 'left'] as MoveToken[],
+  },
+  {
+    // chapter 立体·架桥升降 · [bridge] · core: a plank bridge bears the player only
+    // — cross it to reach the crate's pushable side. difficulty easy. par 4.
+    id: '3d5', name: '索桥', subtitle: 'Bridge', chapter: '立体·架桥升降', par: 4,
+    intro: '索桥（木板）只承得住你，箱子推不上去——过桥绕到箱子的另一侧去推。',
+    map: ['########', '#@ = $.#', '########'],
+    heights: ['        ', '        ', '        '],
+    solution: ['right', 'right', 'right', 'right'] as MoveToken[],
+  },
+  {
+    // 立体·架桥升降 · [lift] · core: ride the lift up, walk the high platform, push
+    // the crate to the goal. difficulty medium. optimal par 9.
+    id: '3d6', name: '升台', subtitle: 'Lift', chapter: '立体·架桥升降', par: 9,
+    intro: '升降台：你或箱子站上去，它就抬高一层（离开即落下）——踩上去升到高台。',
+    map: ['#######', '#. $  #', '##### #', '#@   T#', '#######'],
+    heights: ['       ', ' 22222 ', '     2 ', '       ', '       '],
+    solution: ['right', 'right', 'right', 'right', 'up', 'up', 'left', 'left', 'left'] as MoveToken[],
+  },
+  {
+    // 立体·架桥升降 · [lift] · core: same idea, mirrored — ride up on the left, push
+    // the crate right to the goal. difficulty medium. optimal par 9.
+    id: '3d7', name: '复台', subtitle: 'Lift II', chapter: '立体·架桥升降', par: 9, intro: '',
+    map: ['#######', '#  $ .#', '# #####', '#T   @#', '#######'],
+    heights: ['       ', ' 22222 ', ' 2     ', '       ', '       '],
+    solution: ['left', 'left', 'left', 'left', 'up', 'up', 'right', 'right', 'right'] as MoveToken[],
+  },
+  {
+    // 立体·架桥升降 · [ramp + bridge] · core: climb a ramp onto a bridge, cross it
+    // (the crate can't), and push from the far side. difficulty medium. par 4.
+    id: '3d8', name: '坡桥', subtitle: 'Ramp & Bridge', chapter: '立体·架桥升降', par: 4, intro: '',
+    map: ['########', '#@e= $.#', '########'],
+    heights: ['        ', '   1111 ', '        '],
+    solution: ['right', 'right', 'right', 'right'] as MoveToken[],
+  },
+];
+
 export const LEVEL_DEFS: Chaptered[] = [
   ...HAND_DEFS,
   ...GEN_DEFS,
   ...PARADOX_DEFS,
   ...DIPTYCH_DEFS,
   ...CRUCIBLE_DEFS,
+  ...LEVEL3D_DEFS,
 ];
 
 export const LEVELS = LEVEL_DEFS.map(parseLevel);

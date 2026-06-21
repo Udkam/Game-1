@@ -191,7 +191,11 @@ export function parseLevel(def: LevelDef): Level {
       ? parseLevel({ id: `${def.id}#twin`, name: def.name, subtitle: def.subtitle, intro: '', map: def.twin })
       : undefined,
     mirrorTwin: def.mirrorTwin,
-    is3D: cells.some((c) => c.height > 0),
+    // Use the isometric renderer when there's any height OR a 3D mechanic
+    // (ramp / bridge / lift), even on an otherwise-flat board.
+    is3D: cells.some(
+      (c) => c.height > 0 || !!c.ramp || c.terrain === 'bridge' || c.terrain === 'lift',
+    ),
   };
 }
 

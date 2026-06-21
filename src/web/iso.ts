@@ -18,13 +18,15 @@ const ZH = 26; // px the tile rises per height layer
 const BASE = 12; // slab thickness for a height-0 tile
 const WALL_RISE = 1.7; // walls stand this many layers above their floor
 const PIT_DROP = 0.55; // pits sink this far
+const LIFT_RISE = 2; // matches the engine: a lift rises this far while occupied
 
 const colorVar = (c: Color) => (c === 'natural' ? '' : `iso-c-${c}`);
 
-/** Visual top layer of a cell (walls rise, pits sink). */
+/** Visual top layer of a cell (walls rise, pits sink, ramps sit mid-slope). */
 function topLayer(cell: Cell): number {
   if (cell.terrain === 'wall') return cell.height + WALL_RISE;
   if (cell.terrain === 'pit') return cell.height - PIT_DROP;
+  if (cell.ramp) return cell.height + 0.5;
   return cell.height;
 }
 
@@ -34,6 +36,7 @@ export class IsoRenderer {
   private level!: Level;
   private cellEls = new Map<number, HTMLDivElement>();
   private goalEls: { i: number; el: HTMLDivElement; color: Color }[] = [];
+  private lifts: { x: number; y: number; el: HTMLDivElement; base: number }[] = [];
   private crateEls = new Map<number, HTMLDivElement>();
   private playerEl!: HTMLDivElement;
   private ghostEl!: HTMLDivElement;
@@ -66,6 +69,7 @@ export class IsoRenderer {
     this.scene.replaceChildren();
     this.cellEls.clear();
     this.goalEls = [];
+    this.lifts = [];
     this.crateEls.clear();
 
     // Centre the board: shift so the projected bounds sit in a positive box.
@@ -97,6 +101,7 @@ export class IsoRenderer {
       this.scene.appendChild(el);
       this.cellEls.set(i, el);
       if (cell.goal) this.goalEls.push({ i, el, color: cell.goal });
+      if (cell.terrain === 'lift') this.lifts.push({ x, y, el, base: cell.height });
     }
 
     // ghost outline (shown when the player is hidden behind a taller tile)
@@ -149,7 +154,10 @@ export class IsoRenderer {
     if (cell.terrain === 'wall') parts.push('t-wall');
     else if (cell.terrain === 'ice') parts.push('t-ice');
     else if (cell.terrain === 'pit') parts.push('t-pit');
+    else if (cell.terrain === 'bridge') parts.push('t-bridge');
+    else if (cell.terrain === 'lift') parts.push('t-lift');
     else parts.push('t-floor');
+    if (cell.ramp) parts.push('t-ramp', `r-${cell.ramp}`);
     if (cell.goal) parts.push('t-goal', cell.goal !== 'natural' ? colorVar(cell.goal) : '');
     if (cell.portal) parts.push('t-portal', `p-${cell.portal}`);
     if (cell.cracked) parts.push('t-cracked');
@@ -198,10 +206,10 @@ export class IsoRenderer {
     this.lastPX = state.playerX;
     this.lastPY = state.playerY;
 
-    const pCell = this.cellAt(state.playerX, state.playerY);
-    this.place(this.playerEl, state.playerX, state.playerY, pCell.height, 2);
+    const pH = this.effHeight(state.playerX, state.playerY);
+    this.place(this.playerEl, state.playerX, state.playerY, pH, 2);
     // lift the player's z so it sits above its own tile
-    this.playerEl.style.zIndex = String(this.depthZ(state.playerX, state.playerY, pCell.height) + 5);
+    this.playerEl.style.zIndex = String(this.depthZ(state.playerX, state.playerY, pH) + 5);
     if (effect?.teleported) {
       this.playerEl.classList.remove('warp');
       void this.playerEl.offsetWidth;
@@ -229,12 +237,14 @@ export class IsoRenderer {
         this.scene.appendChild(el);
         this.crateEls.set(c.id, el);
       }
-      this.place(el, c.x, c.y, cell.height, 1);
-      el.style.zIndex = String(this.depthZ(c.x, c.y, cell.height) + 3);
+      const cH = this.effHeight(c.x, c.y);
+      this.place(el, c.x, c.y, cH, 1);
+      el.style.zIndex = String(this.depthZ(c.x, c.y, cH) + 3);
       const sat = !!cell.goal && (cell.goal === 'natural' || cell.goal === c.color);
       el.classList.toggle('seated', sat);
     }
 
+    this.updateLifts(state);
     this.updateDynamicCells(state);
     this.updateGhost(state);
 
@@ -284,6 +294,25 @@ export class IsoRenderer {
 
   private cellAt(x: number, y: number): Cell {
     return this.level.cells[y * this.level.width + x]!;
+  }
+
+  /** Standing height of a cell for a piece on it (a lift reads raised). */
+  private effHeight(x: number, y: number): number {
+    const c = this.cellAt(x, y);
+    return c.terrain === 'lift' ? c.height + LIFT_RISE : c.height;
+  }
+
+  /** Lifts rise while occupied — reposition their tiles (and side faces) each move. */
+  private updateLifts(state: GameState): void {
+    for (const lf of this.lifts) {
+      const occupied =
+        (state.playerX === lf.x && state.playerY === lf.y) ||
+        state.crates.some((c) => c.x === lf.x && c.y === lf.y);
+      const layer = occupied ? lf.base + LIFT_RISE : lf.base;
+      lf.el.style.setProperty('--ext', `${Math.max(2, layer * ZH + BASE)}px`);
+      this.place(lf.el, lf.x, lf.y, layer);
+      lf.el.classList.toggle('raised', occupied);
+    }
   }
 
   private setFacing(dir: Dir): void {

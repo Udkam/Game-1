@@ -220,9 +220,17 @@ export class App {
       const c = CHAPTER_OF[l.id] ?? '';
       if (!chapters.includes(c)) chapters.push(c);
     }
+    let dividerShown = false;
     for (const ch of chapters) {
       const s = stats[ch];
-      const head = h('div', { class: 'chapter-head' }, h('h2', { class: 'chapter' }, ch));
+      const is3d = ch.startsWith('立体');
+      // a one-time divider before the first 3D chapter separates them from Classic
+      if (is3d && !dividerShown) {
+        menu.append(h('div', { class: 'chapter-divider' }, '— 立体章节 · 2.5D —'));
+        dividerShown = true;
+      }
+      const head = h('div', { class: `chapter-head${is3d ? ' is3d' : ''}` }, h('h2', { class: 'chapter' }, ch));
+      if (is3d) head.append(h('span', { class: 'ch-3d-badge' }, '▲ 3D'));
       if (s) {
         head.append(h('span', { class: 'ch-progress' }, `${s.cleared}/${s.total}`));
         if (s.perfect) head.append(h('span', { class: 'ch-badge perfect', title: '全章达到参考最优' }, '✦ 大师'));
