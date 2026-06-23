@@ -44,6 +44,7 @@ body {
 body {
   font-family: var(--sans);
   color: var(--ink);
+  overflow-x: hidden;
   background:
     linear-gradient(rgba(84, 244, 222, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(84, 244, 222, 0.05) 1px, transparent 1px),
@@ -60,6 +61,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.screen-view.enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.screen-view.enter.entered {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.16s ease, transform 0.16s ease;
 }
 
 button {
@@ -435,8 +447,16 @@ button.command {
   color: #fff4d0;
 }
 
+.intro span {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .intro button {
+  flex: 0 0 auto;
   margin-left: auto;
+  min-width: 88px;
+  white-space: nowrap;
 }
 
 .board-wrap {
@@ -839,6 +859,17 @@ button.command {
 
   .topbar {
     align-items: flex-start;
+  }
+
+  .intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .intro button {
+    align-self: flex-end;
+    margin-left: 0;
   }
 
   .hint-keys {

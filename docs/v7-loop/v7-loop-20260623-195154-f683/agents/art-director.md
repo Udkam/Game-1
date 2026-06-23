@@ -28,13 +28,15 @@ Own sci-fi visual language, character, icons, and screenshot quality.
 
 - Dark UI can lose readability if contrast and target states are not clear.
 - Final font package/license decision is still pending; current CSS falls back to local/system fonts.
-- Real-browser screenshots have not yet replaced visual judgment.
+- Playwright screenshots exist, but they are smoke evidence rather than final art critique.
 
 ## Review notes
 
 - Verify 32px, 48px, and 64px character readability.
 - Stage 3 visibly moves away from paper/wood styling, but the old level semantics remain underneath and need Stage 4+ replacement.
+- Stage 7 screenshots were generated for home, chapter map, mechanism archive, representative mechanism levels, win overlay, mobile home, and mobile level.
+- Stage 7 negative review: screenshots are visually coherent and not blank, but advanced mechanism chapters still need more distinct in-board visual affordances.
 
 ## Next handoff
 
-- Frontend and engine agents implement v7 mechanism states so the art system can expose drone movement, teleport, split, sync, blocked, and win feedback.
+- Frontend and engine agents should add stronger blocked, chain, swap, recursive, and victory state feedback so the quantum-drone language covers every promised state.

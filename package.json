@@ -11,6 +11,10 @@
     "gen": "tsx scripts/gen.ts",
     "smoke:ui": "tsx scripts/smoke-ui.ts",
     "smoke:api": "tsx scripts/smoke-api.ts",
+    "audit:levels": "tsx scripts/audit-levels.ts",
+    "audit:ui": "tsx scripts/audit-ui.ts",
+    "audit:content": "tsx scripts/audit-content.ts",
+    "smoke:visual": "tsx scripts/smoke-visual.ts",
     "typecheck": "tsc --noEmit",
     "build": "vite build && npm run build:server",
     "build:server": "esbuild server/index.ts --bundle --platform=node --format=esm --target=node22 --packages=external --outfile=dist-server/index.js",
@@ -26,6 +30,7 @@
     "@types/node": "^22.10.5",
     "esbuild": "^0.24.2",
     "jsdom": "^25.0.1",
+    "playwright": "^1.61.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "vite": "^6.0.7"

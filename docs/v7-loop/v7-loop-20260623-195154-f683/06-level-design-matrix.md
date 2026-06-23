@@ -1,6 +1,6 @@
 # Level Design Matrix
 
-This file tracks the final 70-level target and the current verified v7 vertical slice.
+This file tracks the final 70-level target, the Stage 5 vertical slice, and the Stage 6 full-catalog buildout.
 
 ## Final 70-Level Structure
 
@@ -36,7 +36,25 @@ This file tracks the final 70-level target and the current verified v7 vertical 
 | v7-014 | 回声转角 | 第 4 章：时间残影 | time-shadow, gate-circuit, misdirection | non-rectangular | 3 | verified-replay | 8 | history-window-replay |
 | v7-015 | 三拍锁 | 第 4 章：时间残影 | time-shadow, gate-circuit, misdirection | narrow | 4 | verified-replay | 8 | history-window-replay |
 
-Stage 5 status: 15/70 levels implemented and verified. This does not satisfy the final 70-level acceptance gate.
+Stage 5 status: 15/70 levels implemented and verified. Historical vertical-slice record only.
+
+## Stage 6 Full Catalog Status
+
+Stage 6 status: 70/70 levels are currently exposed by `src/engine/v7Levels.ts` and pass `npm run verify`.
+
+| Chapter | Current count | Status |
+|---|---:|---|
+| 第 1 章：启动序列 | 8 | count complete |
+| 第 2 章：量子门 | 8 | count complete |
+| 第 3 章：同步体 | 8 | count complete |
+| 第 4 章：时间残影 | 8 | count complete |
+| 第 5 章：空间置换 | 8 | count complete, rule-depth review pending |
+| 第 6 章：递归舱 | 8 | count complete, rule-depth review pending |
+| 第 7 章：连锁实验 | 8 | count complete, rule-depth review pending |
+| 第 8 章：误导协议 | 8 | count complete |
+| 第 9 章：终局收束 | 6 | count complete, boss-depth review pending |
+
+The authoritative per-level metadata lives in `src/engine/v7Levels.ts`. Advanced chapters 5-7 use verified replay candidates with v7 metadata, but concrete spatial-swap, recursive-room, and chain-state rule hooks still require a later QA/design pass before final product acceptance.
 
 ## Required Per-Level Record
 

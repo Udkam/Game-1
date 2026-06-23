@@ -20,11 +20,16 @@ Own solver, replay verification, audit scripts, and validation reporting.
 - Stage 4 distinguishes inferred `optimal`, `verified-replay`, `manual-replay`, `joint-state-replay`, and `history-window-replay` paths.
 - Stage 5 fixed `verify` so declared `optimal` levels must run the solver even when a stored replay exists.
 - Stage 5 fixed `smoke-api` to use the current first level id instead of old `l1`.
+- Stage 6 implemented `audit:levels`, `audit:ui`, and `audit:content`.
+- Stage 7 implemented `smoke:visual` with Playwright screenshots.
 
 ## Files touched
 
 - `scripts/verify-levels.ts`
 - `scripts/smoke-api.ts`
+- `scripts/audit-levels.ts`
+- `scripts/audit-ui.ts`
+- `scripts/audit-content.ts`
 - `src/engine/types.ts`
 - Stage docs and `codex.md`
 
@@ -33,13 +38,19 @@ Own solver, replay verification, audit scripts, and validation reporting.
 - Current verify output claims optimality even when stored solutions are merely replayed.
 - Until v7 `levelDesignNote` is filled for all 70 levels, some verification statuses are inferred from legacy data.
 - Stage 5 only validates 15 current levels; final `audit:levels` must enforce exactly 70.
+- Stage 6 closes the 70-level audit gate, but all current final levels are replay/manual verified rather than solved by mechanism-specific optimal solvers.
+- Replay/manual reliance remains high; deeper solvers for spatial swap, chain-state, and recursive-room behavior are still pending.
 
 ## Review notes
 
 - Verification wording must distinguish solver optimal from replay-only.
 - Stage 4 verification passed and now prints `id/title/chapter/solverStatus/solutionLength/par/validation/pass`.
 - Stage 5 verification passed for the 15-level v7 slice, including solver-backed optimal rows with nonzero explored states.
+- Stage 6 verification passed for all 70 levels and server API accepted all stored solutions.
+- Stage 6 `audit:levels` initially failed duplicate exact signatures; after board/route variation it passed with one retained warning about replay/manual reliance.
+- Stage 6 `audit:ui` and `audit:content` passed after adding explicit transition/mobile/content checks.
+- Stage 7 `smoke:visual` passed and generated all required screenshots.
 
 ## Next handoff
 
-- Stage 5+ must add `audit:levels`, `audit:ui`, `audit:content`, and `smoke:visual` after the v7 vertical slice has concrete screens and data.
+- Build deeper mechanism-specific validation for spatial swap, recursive-room, and chain-state chapters; keep replay/manual warning visible until then.

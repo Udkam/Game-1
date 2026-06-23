@@ -25,6 +25,10 @@ Own UI shell, routes, board rendering, transitions, responsive layout, and visua
 - Stage 5 runtime catalog now exposes 15 v7 levels, and UI smoke plays all of them to win.
 - Stage 5 removed the remaining level-page `IsoRenderer` / demo fallback path from `ui.ts`.
 - Stage 5 moved local progress to `driftbox.progress.v7` and made time-shadow plate pressure visible in the renderer.
+- Stage 6 added testable screen transition classes and a requestAnimationFrame fallback for jsdom.
+- Stage 6 added CSS transition rules and mobile horizontal overflow guards.
+- Stage 6 UI audit now checks command deck, chapter star map, mechanism archive, records, settings, HUD, 2D board, win overlay, transition class, mobile guard, and absence of legacy camera UI.
+- Stage 7 added Playwright visual smoke coverage for home, chapter map, mechanism archive, representative mechanics, win overlay, mobile home, and mobile level views.
 
 ## Files touched
 
@@ -47,6 +51,7 @@ Own UI shell, routes, board rendering, transitions, responsive layout, and visua
 - The new settings and records overlays are product shells; they need deeper persistence/settings behavior in later stages.
 - Blocked-reason data is not yet surfaced in HUD copy or animation.
 - Old 3D demo source remains in the repo as unreachable history; final content audit should decide whether to delete or archive it outside runtime source.
+- Playwright screenshots now exist, but visual smoke is still a rendering gate rather than full UX/design critique.
 
 ## Review notes
 
@@ -55,7 +60,10 @@ Own UI shell, routes, board rendering, transitions, responsive layout, and visua
 - Stage 3 verification passed: `typecheck`, `verify`, `smoke:api`, `smoke:ui`, `build`, and a temporary DOM audit for new home/navigation landmarks.
 - Stage 4 verification passed after renderer support for the time-shadow piece.
 - Stage 5 UI smoke passed for all 15 v7 levels.
+- Stage 6 UI smoke passed for all 70 levels through jsdom.
+- Stage 6 `audit:ui` passed after explicit overlay, transition, and mobile guard checks were added.
+- Stage 7 `smoke:visual` passed and wrote 15 screenshots under `docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/`.
 
 ## Next handoff
 
-- Engine and level agents deliver v7 metadata and mechanism contracts; frontend wires richer state feedback and final `audit:ui` / `smoke:visual` hooks.
+- Continue with deeper UI feedback work: blocked-reason HUD feedback, richer chain-state indicators, and more concrete advanced-mechanic affordances.

@@ -6,33 +6,45 @@ Primary direction: quantum lab sci-fi.
 
 ## Palette
 
-- Base: near-black lab graphite and dark blue-gray neutrals.
+- Base: near-black lab graphite and cool dark neutrals.
 - Primary energy: cyan.
 - Secondary accents: green, magenta, amber, and red for errors.
 - Avoid a one-note purple/blue gradient look.
 
-## Assets
+## Assets And License
 
-- Use custom SVG/CSS/vector assets.
-- Do not use external images, models, audio, or unverified fonts.
-- If Google Fonts are used, self-host and record source plus license.
-- Chinese fallback stack must include `"Noto Sans SC"`, `"Microsoft YaHei"`, `system-ui`, `sans-serif`.
+- Runtime visuals use custom CSS, DOM, and inline SVG authored in this repository.
+- No external images, models, audio, icon packs, or remote font files are used in the current v7 runtime.
+- Font stack is local/system only: `"Oxanium"`, `"Space Grotesk"`, `"Noto Sans SC"`, `"Microsoft YaHei"`, `system-ui`, `sans-serif`.
+- Because no Google Font files are bundled yet, there is no third-party font binary license to record. If Google Fonts are later downloaded/self-hosted, record font name, source URL, and license in this file before final acceptance.
 
-## Character candidates
+## Character Candidates
 
 1. 量子无人机: chosen for clarity, state feedback, and scalable SVG form.
-2. 星舰维修机器人: good personality but risks returning to "little person" silhouette.
+2. 星舰维修机器人: good personality but risks returning to a little-person silhouette.
 3. 数据幽灵 / 光标核心: strong cyber signal but weaker physical push feedback.
 
-## Icon language
+## Implemented Character Direction
+
+The current player piece is a vector quantum drone:
+
+- static state: cyan core with visor-like face detail;
+- movement state: short bob animation;
+- push state: squash/lean pulse;
+- teleport state: warp pulse;
+- time-shadow state: magenta/cyan delayed hologram body;
+- blocked state: engine now exposes `blockedReason`; HUD feedback is still pending;
+- win state: current win overlay, final drone victory animation pending.
+
+## Icon Language
 
 Mechanic icons use consistent line weight and color:
 
-- portal ring
-- sync link
-- echo trail
-- swap diamond
-- recursive chamber
-- chain key
-- misdirection warning
-- target core
+- portal ring;
+- sync link;
+- echo trail;
+- swap diamond;
+- recursive chamber;
+- chain key;
+- misdirection warning;
+- target core.

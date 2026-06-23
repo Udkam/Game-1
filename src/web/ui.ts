@@ -99,7 +99,11 @@ export class App {
   private swap(view: HTMLElement): void {
     this.cleanup?.();
     this.cleanup = null;
+    view.classList.add('screen-view', 'enter');
     this.root.replaceChildren(view);
+    const enter = () => view.classList.add('entered');
+    if (window.requestAnimationFrame) window.requestAnimationFrame(enter);
+    else window.setTimeout(enter, 0);
   }
 
   // ---------------- menu ----------------

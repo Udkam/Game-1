@@ -223,3 +223,116 @@ Next step:
 
 - Commit Stage 5 and push to `origin main`.
 - Begin Stage 6 full 70-level expansion and audit command implementation.
+
+## Stage 6: Full 70-level buildout and non-visual audits
+
+Goal:
+
+- Expand the v7 runtime catalog from the 15-level vertical slice to exactly 70 levels.
+- Cover all requested chapters and mechanism families with complete `levelDesignNote` metadata.
+- Add `audit:levels`, `audit:ui`, and `audit:content` commands.
+- Prove the 70-level catalog works through replay verification, API smoke, UI smoke, and production build before starting real-browser visual smoke.
+
+Actual changes:
+
+- Rebuilt `src/engine/v7Levels.ts` around reusable reviewed pattern helpers plus manually authored boss and misdirection cases.
+- Added the full requested chapter structure: eight 8-level chapters plus a 6-level finale.
+- Added playable candidates for quantum portals, synchronized actors, time shadows, spatial swap scenarios, recursive-room scenarios, chain-state scenarios, misdirection cases, and final multi-mechanic boss levels.
+- Added `scripts/audit-levels.ts`, `scripts/audit-ui.ts`, and `scripts/audit-content.ts`, then wired them into `package.json`.
+- Added screen transition classes and CSS so page changes have a testable animation state.
+- Updated README, `claude.md`, level matrix, art direction, and acceptance status to reflect the 70-level runtime while keeping the final report non-final.
+
+Verification:
+
+- `npm run audit:levels`: passed. Exactly 70 levels, correct chapter counts, required mechanism coverage, complete metadata, no exact duplicate layout signatures, and no obvious post-intro short-level failures. Warning retained: all 70 levels rely on replay/manual status and advanced chapters need sample-play review.
+- `npm run typecheck`: passed.
+- `npm run verify`: passed for all 70 levels, printing id/title/chapter/solverStatus/solutionLength/par/validation/pass.
+- `npm run audit:ui`: passed for command deck, chapter map, mechanism archive, records, settings, HUD, 2D board, win overlay, transition class, mobile CSS guard, and absence of visible 3D camera bar.
+- `npm run audit:content`: passed for README/claude current 70-level status, current RUN_ID, matrix status, art license status, no stale v6/3D completion claims, and v6 treated as retired/archive context.
+- `npm run smoke:api`: passed. `/api/levels` returns 70 levels, all stored solutions are accepted, bogus/unknown/malformed submissions are rejected, and scores list works.
+- `npm run smoke:ui`: passed. All 70 levels play to a win through the real jsdom UI path.
+- `npm run build`: passed.
+
+Failure items:
+
+```text
+[FAIL] Stage 6 initial level audit duplicate scan
+Evidence: audit:levels reported exact layout signature duplicates in portal, sync, and chain candidates.
+Root cause: helper-generated levels reused identical `map` plus rule-config signatures after metadata-only variations.
+Fix plan: vary the board geometry and route lengths for the affected candidates, then rerun audit and replay checks.
+Files to change: src/engine/v7Levels.ts
+Re-test: npm run audit:levels; npm run verify; npm run smoke:ui
+```
+
+```text
+[FAIL] Stage 6 initial UI/content audits
+Evidence: audit:ui initially needed explicit transition/mobile/overlay hooks; audit:content needed current 70-level documentation and license status.
+Root cause: Stage 5 shell did not yet include final audit landmarks or Stage 6 status docs.
+Fix plan: add screen transition class/state, mobile overflow guard, overlay close/route checks, and update README/claude/v7-loop docs.
+Files to change: src/web/ui.ts; src/web/styles.css; README.md; claude.md; docs/v7-loop/v7-loop-20260623-195154-f683/*
+Re-test: npm run audit:ui; npm run audit:content
+```
+
+Carry-forward risk:
+
+- Advanced chapters 5-7 are currently verified replay/manual candidates with metadata and UI signaling, but their deeper mechanism rule hooks still need a follow-up review/fix loop.
+- Visual smoke is handled in the following Stage 7 record.
+
+Next step:
+
+- Begin Stage 7: implement Playwright `smoke:visual`, capture required screenshots, visually review failure items, and patch the UI/levels if screenshots show regressions.
+
+## Stage 7: Playwright visual smoke and screenshot QA
+
+Goal:
+
+- Add the required `npm run smoke:visual` command.
+- Capture the required 15 desktop/mobile screenshots into the active run directory.
+- Verify the new 70-level UI renders in a real browser and does not expose the retired v6 2.5D path.
+
+Actual changes:
+
+- Added `playwright` dev dependency.
+- Added `scripts/smoke-visual.ts`.
+- Added `smoke:visual` npm script.
+- Generated screenshots in `docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/`.
+
+Verification:
+
+- `npm run typecheck`: passed.
+- `npm run verify`: passed for all 70 levels.
+- `npm run audit:levels`: passed; warning remains that all 70 levels rely on replay/manual status and advanced chapters need sample-play review.
+- `npm run audit:ui`: passed.
+- `npm run audit:content`: passed.
+- `npm run smoke:api`: passed; `/api/levels` returns 70 and server replay accepts all 70 stored solutions.
+- `npm run smoke:ui`: passed; all 70 levels play to a win through jsdom UI.
+- `npm run smoke:visual`: passed; 15 screenshots written.
+- `npm run build`: passed.
+
+Screenshot files:
+
+- `01-home.png`
+- `02-chapter-star-map.png`
+- `03-mechanism-archive.png`
+- `04-level-001.png`
+- `05-portal-009.png`
+- `06-sync-017.png`
+- `07-time-shadow-025.png`
+- `08-spatial-swap-033.png`
+- `09-recursive-041.png`
+- `10-chain-state-049.png`
+- `11-misdirection-057.png`
+- `12-finale-boss-070.png`
+- `13-win-overlay.png`
+- `14-mobile-home.png`
+- `15-mobile-level.png`
+
+Failure items:
+
+- No hard Stage 7 command failure after implementation.
+- Carry-forward QA risk: the visual smoke verifies rendering and screenshots, but it does not prove the replay/manual advanced chapters have deep enough concrete mechanics.
+
+Next step:
+
+- Commit and push this Stage 6/7 checkpoint to `origin main`.
+- Continue with rule-depth implementation for spatial swap, recursive room, and chain-state if the loop proceeds.

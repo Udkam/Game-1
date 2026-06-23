@@ -213,3 +213,93 @@ Next steps:
 
 - Commit and push Stage 5.
 - Begin Stage 6 full 70-level buildout and final audit command implementation.
+
+### Stage 6: Full 70-level buildout and non-visual audits
+
+Phase: full catalog expansion and audit hardening.
+
+Actions taken:
+
+- Expanded the exposed v7 runtime catalog to exactly 70 levels across the requested 9-chapter structure.
+- Added complete `levelDesignNote` metadata for every level, including mechanics, core idea, trick, fairness, difficulty, solver status, par, and validation method.
+- Added `npm run audit:levels`, `npm run audit:ui`, and `npm run audit:content`.
+- Added screen transition state/classes and mobile horizontal overflow guards for UI auditability.
+- Updated README, `claude.md`, level matrix, art direction, and acceptance status to match the current 70-level runtime without claiming final visual acceptance.
+- Fixed duplicate helper-generated layout signatures found by `audit:levels`.
+
+Verification commands and results:
+
+- `npm run audit:levels`: passed; warning remains that all 70 levels rely on replay/manual status and advanced chapters need sample-play review.
+- `npm run typecheck`: passed.
+- `npm run verify`: passed for all 70 levels.
+- `npm run audit:ui`: passed.
+- `npm run audit:content`: passed.
+- `npm run smoke:api`: passed; all 70 stored solutions accepted by the server and invalid submissions rejected.
+- `npm run smoke:ui`: passed; all 70 levels play to win through the jsdom UI path.
+- `npm run build`: passed.
+
+Changed files:
+
+- `src/engine/v7Levels.ts`
+- `src/web/ui.ts`
+- `src/web/styles.css`
+- `scripts/audit-levels.ts`
+- `scripts/audit-ui.ts`
+- `scripts/audit-content.ts`
+- `package.json`
+- `README.md`
+- `claude.md`
+- v7 loop docs and agent logs
+- `codex.md`
+
+Risks:
+
+- Spatial swap, recursive room, and chain-state chapters are represented by replay/manual scenarios and metadata, but deeper concrete mechanism hooks still need follow-up review.
+- Real-play puzzle quality sampling is still needed for advanced chapters even though replay/visual gates pass.
+
+Next steps:
+
+- Complete visual smoke implementation and screenshot QA.
+- Commit and push the full Stage 6/7 checkpoint.
+
+### Stage 7: Playwright visual smoke and screenshot QA
+
+Phase: real-browser visual evidence.
+
+Actions taken:
+
+- Added `playwright` as a dev dependency.
+- Added `npm run smoke:visual`.
+- Implemented `scripts/smoke-visual.ts`, which starts Vite, opens the real app in Chromium, captures the required 15 desktop/mobile screenshots, and saves them under the active run directory.
+- Re-ran visual smoke after the 70-level catalog and audit fixes.
+
+Verification commands and results:
+
+- `npm run typecheck`: passed.
+- `npm run verify`: passed for 70/70 levels.
+- `npm run smoke:api`: passed; all 70 stored solutions accepted by server replay.
+- `npm run smoke:ui`: passed; all 70 levels play to win through jsdom UI.
+- `npm run smoke:visual`: passed; 15 screenshots written.
+- `npm run audit:levels`: passed with one warning that all 70 levels rely on replay/manual status and advanced chapters need sample-play review.
+- `npm run audit:ui`: passed.
+- `npm run audit:content`: passed.
+- `npm run build`: passed.
+
+Changed files:
+
+- `package.json`
+- `package-lock.json`
+- `scripts/smoke-visual.ts`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/*.png`
+- v7 loop docs and agent logs
+- `codex.md`
+
+Risks:
+
+- Visual smoke proves pages render and are nonblank, but it is not a design-quality guarantee for the advanced mechanism chapters.
+- Spatial swap, recursive room, and chain-state chapters still require concrete rule-depth follow-up.
+
+Next steps:
+
+- Commit and push this checkpoint.
+- Continue with deeper mechanism implementation/QA loop.

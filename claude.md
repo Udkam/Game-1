@@ -18,9 +18,9 @@ The v7 target is a 70-level 2D sci-fi Sokoban-variant puzzle game with:
 
 Current runtime status:
 
-- Stage 5 has switched the exposed runtime catalog to a 15-level v7 vertical slice.
-- The slice includes startup/core puzzles, quantum portals, synchronized actors, mirrored sync, and time-shadow gate puzzles.
-- It is verified through shared replay/solver paths, but it is not the final 70-level acceptance build.
+- Stage 6 has expanded the exposed runtime catalog to 70 v7 levels.
+- The catalog includes startup/core puzzles, quantum portals, synchronized actors, mirrored sync, time-shadow gate puzzles, and reviewed expansion candidates for spatial swap, recursive room, chain-state, misdirection, and finale chapters.
+- It is verified through shared replay/solver paths and Playwright visual smoke screenshots, but it is not final acceptance until real-play QA sampling and concrete swap/recursive/chain behavior review are complete.
 
 ## Durable loop records
 
