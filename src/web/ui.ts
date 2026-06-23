@@ -1,6 +1,6 @@
 // Screens and interaction. Plain DOM — no framework — kept small and explicit.
 
-import type { Dir, Level, MoveToken } from '../engine/types.js';
+import type { BlockedReason, Dir, Level, MoveToken, V7Mechanic } from '../engine/types.js';
 import { CHAPTER_OF } from '../engine/levels.js';
 import { Game, DiptychGame } from './game.js';
 import { BoardRenderer } from './render.js';
@@ -47,6 +47,36 @@ const KEY_DIR: Record<string, Dir> = {
   D: 'right',
 };
 
+const MECHANIC_LABEL: Record<V7Mechanic, string> = {
+  'core-push': '能量核心',
+  'quantum-portal': '量子门',
+  'sync-actors': '同步体',
+  'time-shadow': '时间残影',
+  'chain-state': '连锁状态',
+  'spatial-swap': '空间置换',
+  'recursive-room': '递归舱',
+  'misdirection': '误导协议',
+  'pull-field': '牵引场',
+  'gravity-field': '重力场',
+  'mirror-field': '镜像场',
+  'ice-vector': '冰轨',
+  'gate-circuit': '门禁电路',
+};
+
+const BLOCKED_TEXT: Record<BlockedReason, string> = {
+  wall: '墙体阻挡',
+  height: '高度不匹配',
+  gate: '量子门未开启',
+  lock: '锁定舱门',
+  hole: '深坑阻挡',
+  crate: '核心无法推动',
+  shadow: '时间残影占位',
+  portal: '折跃出口受阻',
+  pull: '牵引失败',
+  bounds: '越界阻挡',
+  unknown: '路径受阻',
+};
+
 // Mechanic codex. Each entry unlocks once its anchor level (the level that first
 // introduces the mechanic) becomes reachable — rule + typical use, never a
 // per-level solution.
@@ -61,21 +91,33 @@ const CODEX: CodexEntry[] = [
   { icon: 'ic-crate', name: '能量核心', anchor: 'v7-001',
     rule: '把发光能量核心推入同频接口即可完成实验。无人机只能推，不能穿过核心。',
     use: '先判断核心最终落点，再决定从哪一侧进入推线。死角仍然是死角。' },
-  { icon: 'ic-portal', name: '量子门', anchor: 'v7-006',
+  { icon: 'ic-portal', name: '量子门', anchor: 'v7-009',
     rule: '量子门只传送无人机，不传送能量核心。门用于改变无人机的接近侧。',
     use: '当核心的可推侧被隔离时，先折跃到另一舱室，再从新方向施力。' },
-  { icon: 'ic-sync', name: '同步体', anchor: 'v7-009',
+  { icon: 'ic-sync', name: '同步体', anchor: 'v7-017',
     rule: '一次输入会同时驱动多个无人机舱室；所有舱室都达成目标才算通过。',
     use: '不要只看当前舱室。一次无效移动也可能是在给另一个舱室排位。' },
-  { icon: 'ic-mirror', name: '镜像同步', anchor: 'v7-010',
+  { icon: 'ic-mirror', name: '镜像同步', anchor: 'v7-018',
     rule: '镜像同步体会左右反向响应同一次输入，上下保持一致。',
     use: '把输入看成协议而不是方向：右键可能同时代表右推和左推。' },
-  { icon: 'ic-shadow', name: '时间残影', anchor: 'v7-012',
+  { icon: 'ic-shadow', name: '时间残影', anchor: 'v7-025',
     rule: '残影会延迟复制无人机位置。它能压住量子压板，也会成为实体阻挡。',
     use: '先把残影留在需要维持的开关上，再趁门保持开启穿过。' },
-  { icon: 'ic-gate', name: '量子压板', anchor: 'v7-012',
+  { icon: 'ic-gate', name: '量子压板', anchor: 'v7-025',
     rule: '压板被无人机、核心或残影压住时，会打开同组量子门闩。',
     use: '读清压板到门闩之间的距离；时间差本身就是谜题。' },
+  { icon: 'ic-swap', name: '空间置换', anchor: 'v7-033',
+    rule: '置换实验把局部舱段、核心或目标视为可交换对象；当前章节以显式场景 replay 保证确定性。',
+    use: '把被标记的区域当成会换位的实验片段，先确认交换前后哪一侧仍能施力。' },
+  { icon: 'ic-recursive', name: '递归舱', anchor: 'v7-041',
+    rule: '递归舱把核心视为携带内部状态的小房间；外部移动会保留这份内部状态。',
+    use: '同时追踪“核心的位置”和“核心内部已经准备好的状态”，不要只看外壳。' },
+  { icon: 'ic-chain', name: '连锁实验', anchor: 'v7-049',
+    rule: '连锁实验把章节状态显示为星图节点。状态必须可见，不允许制造无提示不可解分支。',
+    use: '先读当前节点标签，再判断本关是重放、回访还是解锁下一段路径。' },
+  { icon: 'ic-misdirect', name: '误导协议', anchor: 'v7-057',
+    rule: '误导路线看似可行，但失败必须能从已公开规则推出，并且可以撤销。',
+    use: '把明显诱人的第一步当成假设来验证：若会把核心送进死角，就换顺序。' },
 ];
 
 export class App {
@@ -341,6 +383,26 @@ export class App {
     this.root.append(overlay);
   }
 
+  private mechanicBar(level: Level): HTMLElement {
+    const mechanics = level.levelDesignNote?.mechanics ?? level.mechanics ?? [];
+    return h(
+      'div',
+      { class: 'mechanic-bar' },
+      ...mechanics.map((m) =>
+        h('span', { class: `mechanic-chip m-${m}` }, MECHANIC_LABEL[m] ?? m),
+      ),
+    );
+  }
+
+  private setBlocked(el: HTMLElement, reason: BlockedReason | null): void {
+    el.textContent = reason ? BLOCKED_TEXT[reason] : '';
+    el.classList.remove('flash');
+    if (reason) {
+      void el.offsetWidth;
+      el.classList.add('flash');
+    }
+  }
+
   // ---------------- game ----------------
 
   private playLevel(id: string, resumeLog?: MoveToken[]): void {
@@ -371,12 +433,14 @@ export class App {
 
     const movesEl = h('b', {}, '0');
     const pushesEl = h('b', {}, '0');
+    const blockedEl = h('span', { class: 'blocked-feedback', 'aria-live': 'polite' } as Partial<HTMLSpanElement>);
     const bestVal = this.progress.best[id];
     const hud = h(
       'div',
       { class: 'hud' },
       h('span', { class: 'stat' }, '步数 ', movesEl),
       h('span', { class: 'stat' }, '推动 ', pushesEl),
+      blockedEl,
       h('span', { class: 'spacer' }),
       h('span', { class: 'stat' }, `参考 ${level.par ?? '—'}`),
       h('span', { class: 'stat' }, bestVal !== undefined ? `最佳 ${bestVal}` : ''),
@@ -411,6 +475,7 @@ export class App {
     const [upB, leftB, rightB, downB] = dpad.querySelectorAll('button');
 
     const screen = h('div', { class: 'game' }, topbar, hud);
+    screen.append(this.mechanicBar(level));
     // Only first-appearance mechanic levels carry an `intro`. Show that one terse
     // rule line until the level is cleared — never an empty banner.
     if (level.intro && !this.progress.completed[id]) screen.append(this.introBanner(level));
@@ -432,7 +497,11 @@ export class App {
       // freeze input during the brief win hand-off below.
       if (locked) return;
       const res = game.move(dir, pull);
-      if (!res) return;
+      if (!res) {
+        this.setBlocked(blockedEl, game.lastBlockedReason);
+        return;
+      }
+      this.setBlocked(blockedEl, null);
       renderer.update(game.state, res.effect);
       refreshControls();
 
@@ -449,11 +518,13 @@ export class App {
         doMove(toLogical(KEY_DIR[e.key]!), e.shiftKey);
       } else if (e.key === 'z' || e.key === 'Z') {
         if (game.undo()) {
+          this.setBlocked(blockedEl, null);
           renderer.update(game.state);
           refreshControls();
         }
       } else if (e.key === 'r' || e.key === 'R') {
         game.restart();
+        this.setBlocked(blockedEl, null);
         renderer.update(game.state);
         refreshControls();
       } else if (e.key === 'Escape') {
@@ -465,12 +536,14 @@ export class App {
 
     undoBtn.onclick = () => {
       if (game.undo()) {
+        this.setBlocked(blockedEl, null);
         renderer.update(game.state);
         refreshControls();
       }
     };
     restartBtn.onclick = () => {
       game.restart();
+      this.setBlocked(blockedEl, null);
       renderer.update(game.state);
       refreshControls();
     };
@@ -523,12 +596,14 @@ export class App {
 
     const movesEl = h('b', {}, '0');
     const pushesEl = h('b', {}, '0');
+    const blockedEl = h('span', { class: 'blocked-feedback', 'aria-live': 'polite' } as Partial<HTMLSpanElement>);
     const bestVal = this.progress.best[id];
     const hud = h(
       'div',
       { class: 'hud' },
       h('span', { class: 'stat' }, '步数 ', movesEl),
       h('span', { class: 'stat' }, '推动 ', pushesEl),
+      blockedEl,
       h('span', { class: 'spacer' }),
       h('span', { class: 'stat' }, `参考 ${level.par ?? '—'}`),
       h('span', { class: 'stat' }, bestVal !== undefined ? `最佳 ${bestVal}` : ''),
@@ -558,6 +633,7 @@ export class App {
     const [upB, leftB, rightB, downB] = dpad.querySelectorAll('button');
 
     const screen = h('div', { class: 'game' }, topbar, hud);
+    screen.append(this.mechanicBar(level));
     if (level.intro && !this.progress.completed[id]) screen.append(this.introBanner(level));
     screen.append(pair, controls, dpad);
     this.swap(screen);
@@ -573,7 +649,11 @@ export class App {
     const doMove = (dir: Dir, pull = false) => {
       if (locked) return;
       const res = game.move(dir, pull);
-      if (!res) return;
+      if (!res) {
+        this.setBlocked(blockedEl, game.lastBlockedReason);
+        return;
+      }
+      this.setBlocked(blockedEl, null);
       rendererA.update(game.a, res.a.effect);
       rendererB.update(game.b, res.b.effect);
       refreshControls();
@@ -588,9 +668,9 @@ export class App {
         e.preventDefault();
         doMove(KEY_DIR[e.key]!, e.shiftKey);
       } else if (e.key === 'z' || e.key === 'Z') {
-        if (game.undo()) { rendererA.update(game.a); rendererB.update(game.b); refreshControls(); }
+        if (game.undo()) { this.setBlocked(blockedEl, null); rendererA.update(game.a); rendererB.update(game.b); refreshControls(); }
       } else if (e.key === 'r' || e.key === 'R') {
-        game.restart(); rendererA.update(game.a); rendererB.update(game.b); refreshControls();
+        game.restart(); this.setBlocked(blockedEl, null); rendererA.update(game.a); rendererB.update(game.b); refreshControls();
       } else if (e.key === 'Escape') {
         saveVisit();
         this.showMenu();
@@ -598,8 +678,8 @@ export class App {
     };
     window.addEventListener('keydown', onKey);
 
-    undoBtn.onclick = () => { if (game.undo()) { rendererA.update(game.a); rendererB.update(game.b); refreshControls(); } };
-    restartBtn.onclick = () => { game.restart(); rendererA.update(game.a); rendererB.update(game.b); refreshControls(); };
+    undoBtn.onclick = () => { if (game.undo()) { this.setBlocked(blockedEl, null); rendererA.update(game.a); rendererB.update(game.b); refreshControls(); } };
+    restartBtn.onclick = () => { game.restart(); this.setBlocked(blockedEl, null); rendererA.update(game.a); rendererB.update(game.b); refreshControls(); };
     upB!.onclick = () => doMove('up');
     downB!.onclick = () => doMove('down');
     leftB!.onclick = () => doMove('left');

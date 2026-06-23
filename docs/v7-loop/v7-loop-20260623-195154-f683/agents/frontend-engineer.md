@@ -29,6 +29,8 @@ Own UI shell, routes, board rendering, transitions, responsive layout, and visua
 - Stage 6 added CSS transition rules and mobile horizontal overflow guards.
 - Stage 6 UI audit now checks command deck, chapter star map, mechanism archive, records, settings, HUD, 2D board, win overlay, transition class, mobile guard, and absence of legacy camera UI.
 - Stage 7 added Playwright visual smoke coverage for home, chapter map, mechanism archive, representative mechanics, win overlay, mobile home, and mobile level views.
+- Stage 7 fixed the mobile intro banner after screenshot QA showed the dismiss button wrapping vertically.
+- Stage 8 added level-page mechanism chips and blocked-move HUD feedback.
 
 ## Files touched
 
@@ -63,6 +65,8 @@ Own UI shell, routes, board rendering, transitions, responsive layout, and visua
 - Stage 6 UI smoke passed for all 70 levels through jsdom.
 - Stage 6 `audit:ui` passed after explicit overlay, transition, and mobile guard checks were added.
 - Stage 7 `smoke:visual` passed and wrote 15 screenshots under `docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/`.
+- Stage 7 screenshot QA failure: `15-mobile-level.png` initially collapsed `知道了` into vertical text; CSS now stacks intro content on mobile and keeps the button on one line.
+- Stage 8 `audit:ui` passed with assertions for advanced mechanism archive entries, mechanism chips, and blocked-feedback text.
 
 ## Next handoff
 

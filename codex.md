@@ -272,6 +272,7 @@ Actions taken:
 - Added `npm run smoke:visual`.
 - Implemented `scripts/smoke-visual.ts`, which starts Vite, opens the real app in Chromium, captures the required 15 desktop/mobile screenshots, and saves them under the active run directory.
 - Re-ran visual smoke after the 70-level catalog and audit fixes.
+- Fixed the mobile intro banner so the `知道了` dismiss button no longer collapses into vertical characters.
 
 Verification commands and results:
 
@@ -291,6 +292,7 @@ Changed files:
 - `package-lock.json`
 - `scripts/smoke-visual.ts`
 - `docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/*.png`
+- `src/web/styles.css`
 - v7 loop docs and agent logs
 - `codex.md`
 
@@ -298,8 +300,50 @@ Risks:
 
 - Visual smoke proves pages render and are nonblank, but it is not a design-quality guarantee for the advanced mechanism chapters.
 - Spatial swap, recursive room, and chain-state chapters still require concrete rule-depth follow-up.
+- Screenshot QA caught and fixed the mobile intro-button layout; keep this check in later visual runs.
 
 Next steps:
 
 - Commit and push this checkpoint.
 - Continue with deeper mechanism implementation/QA loop.
+
+### Stage 8: Mechanism archive, HUD tags, and blocked feedback
+
+Phase: visible mechanism affordances.
+
+Actions taken:
+
+- Expanded the mechanism archive to include spatial swap, recursive room, chain-state, and misdirection entries.
+- Updated v7 archive anchors to the current 70-level catalog IDs.
+- Added a level-page mechanism chip row sourced from each level's v7 metadata.
+- Surfaced `blockedReason` in the HUD as short feedback when movement is denied.
+- Strengthened `audit:ui` so it fails if advanced mechanism archive entries, mechanic chips, or blocked feedback disappear.
+
+Verification commands and results:
+
+- `npm run typecheck`: passed.
+- `npm run audit:ui`: passed, including the new archive/chip/blocked-feedback assertions.
+- `npm run smoke:ui`: passed for all 70 levels.
+- `npm run smoke:visual`: passed and refreshed screenshots.
+- `npm run build`: passed.
+- `npm run audit:content`: passed.
+- `npm run verify`: passed for all 70 levels.
+- `npm run smoke:api`: passed; all 70 stored solutions accepted by server replay.
+- `npm run audit:levels`: passed with the retained replay/manual warning.
+
+Changed files:
+
+- `src/web/ui.ts`
+- `src/web/styles.css`
+- `scripts/audit-ui.ts`
+- refreshed visual screenshots
+- v7 loop docs and `codex.md`
+
+Risks:
+
+- This improves visible feedback but still does not implement deeper concrete gameplay rules for spatial swap, recursive room, or chain-state.
+
+Next steps:
+
+- Commit and push Stage 8.
+- Continue with actual advanced rule-depth work if the loop proceeds.

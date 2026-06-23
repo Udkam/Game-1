@@ -296,6 +296,7 @@ Actual changes:
 - Added `scripts/smoke-visual.ts`.
 - Added `smoke:visual` npm script.
 - Generated screenshots in `docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/`.
+- Fixed mobile intro-banner layout so the `知道了` button stays horizontal and readable.
 
 Verification:
 
@@ -329,10 +330,96 @@ Screenshot files:
 
 Failure items:
 
-- No hard Stage 7 command failure after implementation.
+```text
+[FAIL] Stage 7 mobile level screenshot
+Evidence: `15-mobile-level.png` initially showed the `知道了` intro dismiss button collapsed into vertical characters.
+Root cause: `.intro` stayed as a single horizontal flex row on a narrow viewport, leaving the trailing button too little inline space.
+Fix plan: Give intro text flexible width, prevent button wrapping, and stack the banner content on mobile.
+Files to change: src/web/styles.css
+Re-test: npm run smoke:visual; inspect `15-mobile-level.png`
+```
+
 - Carry-forward QA risk: the visual smoke verifies rendering and screenshots, but it does not prove the replay/manual advanced chapters have deep enough concrete mechanics.
+- Carry-forward QA risk: several advanced screenshots are still conservative corridor/rail boards; Stage 8 must decide whether to deepen rules or rewrite more layouts before final acceptance.
 
 Next step:
 
 - Commit and push this Stage 6/7 checkpoint to `origin main`.
 - Continue with rule-depth implementation for spatial swap, recursive room, and chain-state if the loop proceeds.
+
+## Stage 8: Mechanism archive, HUD tags, and blocked feedback
+
+Goal:
+
+- Close the visible-experience gap where the archive and HUD did not fully expose advanced v7 mechanism families.
+- Surface existing engine `blockedReason` feedback to the player.
+- Strengthen UI audit coverage for these affordances.
+
+Actual changes:
+
+- Added mechanism archive entries for `spatial-swap`, `recursive-room`, `chain-state`, and `misdirection`.
+- Updated mechanism archive anchors to current 70-level IDs.
+- Added a metadata-driven mechanism chip row on level screens.
+- Added HUD blocked feedback for failed movement.
+- Updated `audit:ui` to require advanced archive entries, mechanism chips, and blocked feedback.
+- Refreshed Playwright screenshots.
+
+Verification:
+
+- `npm run typecheck`: passed.
+- `npm run audit:ui`: passed with the new assertions.
+- `npm run smoke:ui`: passed for all 70 levels.
+- `npm run smoke:visual`: passed.
+- `npm run build`: passed.
+- `npm run audit:content`: passed.
+- `npm run verify`: passed for all 70 levels.
+- `npm run smoke:api`: passed.
+- `npm run audit:levels`: passed with the retained replay/manual warning.
+
+Failure items:
+
+- No hard Stage 8 command failure after implementation.
+- Carry-forward QA risk: Stage 8 improves player feedback and mechanism visibility, but spatial swap, recursive room, and chain-state are still not deep concrete rule implementations.
+
+Next step:
+
+- Commit and push Stage 8 to `origin main`.
+- Continue the next loop on actual advanced rule-depth if requested/continued.
+
+## Stage 8: Mechanism affordance and blocked-feedback polish
+
+Goal:
+
+- Close the user-facing feedback gap for blocked moves.
+- Make level HUDs show current mechanism tags, including advanced v7 mechanics.
+- Strengthen UI audit so these affordances cannot silently regress.
+
+Actual changes:
+
+- Added localized mechanic labels and per-level `.mechanic-chip` HUD tags.
+- Added `.blocked-feedback` in level HUDs with `aria-live` feedback for wall, gate, crate, shadow, portal, pull, and other blocked reasons.
+- Added a short blocked-move flash animation.
+- Expanded the mechanism archive to include spatial swap, recursive room, chain-state, and misdirection entries.
+- Expanded `audit:ui` to assert advanced mechanism archive labels, level mechanic chips, and blocked movement feedback.
+
+Verification:
+
+- `npm run typecheck`: passed.
+- `npm run verify`: passed for all 70 levels.
+- `npm run audit:levels`: passed with one replay/manual warning.
+- `npm run audit:ui`: passed, including mechanism chips and blocked-feedback assertions.
+- `npm run audit:content`: passed.
+- `npm run smoke:api`: passed.
+- `npm run smoke:ui`: passed for all 70 levels.
+- `npm run smoke:visual`: passed and regenerated the screenshot set.
+- `npm run build`: passed.
+
+Failure items:
+
+- No hard Stage 8 command failure after implementation.
+- Carry-forward QA risk: this improves feedback/affordance clarity, but deeper concrete rules for spatial swap, recursive room, and chain-state are still not fully resolved.
+
+Next step:
+
+- Commit and push Stage 8 to `origin main`.
+- Continue the v7 loop with advanced mechanism rule-depth work or explicitly record that as the remaining blocker.

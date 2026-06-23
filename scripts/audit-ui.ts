@@ -46,7 +46,10 @@ check(!text().includes('立体演示') && !text().includes('2.5D'), 'no visible 
 
 buttonByText('机制档案')?.click();
 check(!!root.querySelector('.codex'), 'mechanism archive overlay opens');
-check(text().includes('时间残影') && text().includes('量子门'), 'mechanism archive contains v7 mechanisms');
+check(
+  ['时间残影', '量子门', '空间置换', '递归舱', '连锁实验', '误导协议'].every((label) => text().includes(label)),
+  'mechanism archive contains core and advanced v7 mechanisms',
+);
 root.querySelector('.overlay button')?.dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
 root.querySelector('.overlay')?.remove();
 
@@ -64,10 +67,14 @@ const firstCard = root.querySelector('.level-grid .level-card') as HTMLElement |
 firstCard?.click();
 check(!!root.querySelector('.game'), 'level screen opens');
 check(!!root.querySelector('.hud'), 'level HUD exists');
+check(!!root.querySelector('.mechanic-bar .mechanic-chip'), 'level mechanic chips exist');
 check(!!root.querySelector('.board-wrap'), '2D board wrapper exists');
 check(!!buttonByText('撤销') && !!buttonByText('重开'), 'undo and restart controls exist');
 check(!!buttonByText('?'), 'help control exists');
 check(!root.querySelector('.cam-bar'), 'legacy 3D camera bar absent');
+
+w.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+check((root.querySelector('.blocked-feedback')?.textContent ?? '').length > 0, 'blocked movement feedback appears');
 
 for (const token of LEVELS[0]!.solution ?? []) {
   const key = token === 'right' ? 'ArrowRight' : token === 'left' ? 'ArrowLeft' : token === 'up' ? 'ArrowUp' : 'ArrowDown';

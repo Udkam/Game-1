@@ -4,7 +4,7 @@ Status: in progress, not final accepted.
 
 RUN_ID: `v7-loop-20260623-195154-f683`
 
-## Current Stage 7 Status
+## Current Stage 8 Status
 
 - Runtime catalog: 70 v7 levels exposed.
 - Verification: `npm run verify` passes for all 70 levels.
@@ -15,6 +15,7 @@ RUN_ID: `v7-loop-20260623-195154-f683`
 - UI smoke: `npm run smoke:ui` passes and plays all 70 levels to a win through the jsdom UI path.
 - Visual smoke: `npm run smoke:visual` passes and writes 15 screenshots.
 - Build: `npm run build` passes.
+- Stage 8 UI feedback: level HUDs now show mechanism chips and blocked-move feedback; `audit:ui` asserts both.
 - UI direction: 2D sci-fi command deck and 2D board runtime are active.
 - v6 2.5D status: retired from user-facing runtime and treated as failed/archive context.
 
@@ -23,10 +24,11 @@ This report is not final until all v7 acceptance commands pass or blockers are e
 ## Known Non-Final Items
 
 - Advanced chapter rule depth still needs review: spatial swap, recursive room, and chain-state chapters currently use verified replay candidates and metadata, but concrete gameplay rule hooks need a follow-up loop.
-- `audit:levels` retains a warning that all 70 levels rely on replay/manual status; this is acceptable for Stage 6 but must stay visible in final QA unless deeper solvers are added.
+- `audit:levels` retains a warning that all 70 levels rely on replay/manual status; this is acceptable for this checkpoint but must stay visible in final QA unless deeper solvers are added.
+- Stage 7 screenshot QA found and fixed one mobile layout issue: the level intro dismiss button collapsed vertically before the CSS patch.
 - Final commit list is pending until this checkpoint is committed/pushed.
 
-## Stage 7 Verification Snapshot
+## Stage 8 Verification Snapshot
 
 Passed:
 
