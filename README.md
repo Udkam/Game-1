@@ -1,18 +1,37 @@
 # Driftbox
 
-Driftbox is being rebuilt in `v7-loop-20260623-195154-f683` as a 2D sci-fi Sokoban-variant puzzle game.
+Driftbox is in `v7-loop-20260623-195154-f683`.
 
-## Current status
+## Current Status
 
-- The previous v6 2.5D direction is retired from the user-facing mainline.
-- The public runtime currently exposes a 70-level v7 catalog with sci-fi metadata, quantum portals, synchronized actors, time-shadow replay validation, and reviewed expansion candidates for later mechanism chapters.
-- The target v7 release is a complete 70-level 2D sci-fi game with new screens, new visual identity, richer level metadata, replay validation, visual smoke tests, and level/content/UI audits.
-- This is not final acceptance yet: deeper real-play QA for advanced chapters and concrete spatial-swap/recursive/chain rules still need follow-up.
+The previous v6 2.5D route is retired from the user-facing mainline.
+
+The first v7 70-level implementation checkpoint is now product-rejected. It still exists in the runtime until the next implementation stage replaces it, and its technical tests may pass, but it is not accepted as the final direction because the homepage, chapter map, chamber UI, role design, visual language, and level design still read too much like old Driftbox with a sci-fi skin.
+
+The active redesign target is a new 20-level vertical slice called `Driftbox: Worldline Lab`:
+
+- quantum experiment console home;
+- worldline/star graph chapter map;
+- chamber-style level panel;
+- non-human quantum drone character;
+- six core systems: recursive space, worldline split, time echo, spatial swap, multi-drone sync, and rule-block parameters;
+- stored replay validation for every accepted slice level;
+- visual smoke screenshots proving the redesign is not the rejected card/grid route.
 
 The v7 process log is under:
 
 ```text
 docs/v7-loop/v7-loop-20260623-195154-f683/
+```
+
+Key redesign documents:
+
+```text
+docs/v7-loop/v7-loop-20260623-195154-f683/11-reference-study.md
+docs/v7-loop/v7-loop-20260623-195154-f683/12-redesign-spec.md
+docs/v7-loop/v7-loop-20260623-195154-f683/13-puzzle-grammar.md
+docs/v7-loop/v7-loop-20260623-195154-f683/14-ui-redesign-spec.md
+docs/v7-loop/v7-loop-20260623-195154-f683/15-vertical-slice-20-report.md
 ```
 
 ## Development
@@ -25,7 +44,7 @@ npm run dev:server
 
 ## Verification
 
-Current baseline commands:
+Current technical baseline commands:
 
 ```bash
 npm run typecheck
@@ -39,8 +58,4 @@ npm run smoke:visual
 npm run build
 ```
 
-Visual smoke screenshots are written to:
-
-```text
-docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/
-```
+Important: until the redesign implementation lands, these commands validate the rejected checkpoint and the process/documentation guardrails, not final product acceptance.

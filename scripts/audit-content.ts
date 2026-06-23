@@ -8,6 +8,11 @@ const files = {
   report: readFileSync(`docs/v7-loop/${RUN_ID}/10-acceptance-report.md`, 'utf8'),
   art: readFileSync(`docs/v7-loop/${RUN_ID}/07-art-direction.md`, 'utf8'),
   matrix: readFileSync(`docs/v7-loop/${RUN_ID}/06-level-design-matrix.md`, 'utf8'),
+  reference: readFileSync(`docs/v7-loop/${RUN_ID}/11-reference-study.md`, 'utf8'),
+  redesign: readFileSync(`docs/v7-loop/${RUN_ID}/12-redesign-spec.md`, 'utf8'),
+  grammar: readFileSync(`docs/v7-loop/${RUN_ID}/13-puzzle-grammar.md`, 'utf8'),
+  uiRedesign: readFileSync(`docs/v7-loop/${RUN_ID}/14-ui-redesign-spec.md`, 'utf8'),
+  slice20: readFileSync(`docs/v7-loop/${RUN_ID}/15-vertical-slice-20-report.md`, 'utf8'),
 };
 
 let failures = 0;
@@ -26,6 +31,12 @@ check(files.claude.includes('70-level') || files.claude.includes('70 levels'), '
 check(files.claude.includes('v7-loop-20260623-195154-f683'), 'claude.md links current RUN_ID');
 check(files.matrix.includes('Stage 6') || files.matrix.includes('70/70'), 'level matrix records current 70-level buildout status');
 check(files.art.includes('No external images') && files.art.includes('No external'), 'art direction records external asset/license status');
+check(files.report.includes('product-rejected') || files.report.includes('product acceptance'), 'acceptance report records current v7 product rejection/reset');
+check(files.reference.includes("Patrick's Parabox") && files.reference.includes('Baba Is You') && files.reference.includes('茜塔和世界线悖论'), 'reference study covers required games');
+check(files.redesign.includes('20-level vertical slice') && /Six Core Systems/i.test(files.redesign), 'redesign spec records 20-level slice and system scope');
+check(files.grammar.includes('Recursive Space System') && files.grammar.includes('Rule Block / Experiment Parameter System'), 'puzzle grammar covers recursive space and rule blocks');
+check(files.uiRedesign.includes('Quantum Experiment Console') && files.uiRedesign.includes('Worldline Star Graph'), 'UI redesign spec rejects card-grid route');
+check(files.slice20.includes('Status: planned, not implemented') && files.slice20.includes('Runtime still exposes the rejected 70-level checkpoint'), '20-level report honestly records planned/not-implemented status');
 
 const combined = Object.values(files).join('\n');
 check(

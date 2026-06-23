@@ -2,32 +2,50 @@
 
 RUN_ID: `v7-loop-20260623-195154-f683`
 
-## Current direction
+## Current Direction
 
-Driftbox is now in a v7 rebuild loop. The previous v6 2.5D route is considered failed for product acceptance and is no longer the user-facing mainline.
+Driftbox is now in a `v7-rebuild-redesign` loop.
 
-The v7 target is a 70-level 2D sci-fi Sokoban-variant puzzle game with:
+The previous v6 2.5D route is considered failed for product acceptance and is no longer the user-facing mainline.
 
-- redesigned home, chapter star map, game HUD, win flow, mechanism archive, challenge record, settings/help, and chapter progress;
-- quantum-lab visual direction;
-- a new quantum-drone character;
-- new mechanism families: time split, portals, multi-agent sync, chain state, spatial swaps, lightweight recursion, and fair misdirection;
-- structured per-level design notes and verification status;
-- replay validation preserved on the backend;
-- visual screenshots and audits as hard acceptance gates.
+The first v7 70-level implementation checkpoint is also rejected as a product direction. It passed technical gates, but screenshot review found that it still behaves like old Driftbox with a sci-fi skin:
 
-Current runtime status:
+- homepage structure remains too close to title/progress/buttons/cards;
+- chapter selection remains too close to card-grid navigation;
+- chamber UI remains too close to old square Sokoban tiles;
+- role design still inherits small-person/Pip language;
+- levels do not yet prove recursive/worldline/system-puzzle depth.
 
-- Stage 6 has expanded the exposed runtime catalog to 70 v7 levels.
-- The catalog includes startup/core puzzles, quantum portals, synchronized actors, mirrored sync, time-shadow gate puzzles, and reviewed expansion candidates for spatial swap, recursive room, chain-state, misdirection, and finale chapters.
-- It is verified through shared replay/solver paths and Playwright visual smoke screenshots, but it is not final acceptance until real-play QA sampling and concrete swap/recursive/chain behavior review are complete.
+## Active Target
 
-## Durable loop records
+The accepted next target is a new 20-level vertical slice before any renewed 70-level expansion.
+
+The redesign direction is `Driftbox: Worldline Lab`:
+
+- quantum experiment console home;
+- worldline/star graph chapter map;
+- integrated chamber experiment panel;
+- non-human quantum drone state component;
+- recursive space, worldline split, time echo, spatial swap, multi-drone sync, and rule-block parameters;
+- stored solution replay for every accepted slice level;
+- screenshot QA that proves the product no longer resembles the rejected v7 route.
+
+## Durable Loop Records
 
 All current v7 records live in:
 
 ```text
 docs/v7-loop/v7-loop-20260623-195154-f683/
+```
+
+New redesign records:
+
+```text
+11-reference-study.md
+12-redesign-spec.md
+13-puzzle-grammar.md
+14-ui-redesign-spec.md
+15-vertical-slice-20-report.md
 ```
 
 Repo-local stage notes are also maintained in:
@@ -36,6 +54,6 @@ Repo-local stage notes are also maintained in:
 codex.md
 ```
 
-## v6 archival note
+## v6 Archival Note
 
-The v6 2.5D work remains available through git history only as historical context. It must not be described as the current finished direction, and its public runtime entries are being retired during the v7 loop.
+The v6 2.5D work remains available through git history only as historical context. It must not be described as the current finished direction, and its public runtime entries are retired during the v7 loop.

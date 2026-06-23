@@ -57,3 +57,42 @@ Own negative review, evidence requirements, failure loops, and final acceptance.
 ## Next handoff
 
 - Stage 8 may be committed and pushed after final status check. Next loop should focus on concrete rule-depth implementation for spatial swap, recursive room, and chain-state, plus sample-play review of advanced chapters.
+
+## Stage 9 Redesign Reset
+
+Agent: qa-reviewer
+Task clarity: clear
+Capability fit: good
+Questions needed: none
+Assumptions: User screenshot review is authoritative evidence for product failure.
+Proceed decision: proceed
+
+Decisions made:
+
+- Current v7 is failed for product acceptance even though Stage 8 commands passed.
+- Redesign implementation is blocked until reference study and redesign docs are committed.
+- Highest QA standard for the next loop is: 参考优秀系统谜题游戏的设计方法，从机制系统和关卡语言出发，重做 Driftbox，而不是给旧推箱子项目套科幻皮肤。
+
+Files touched:
+
+- `docs/v7-loop/v7-loop-20260623-195154-f683/09-iteration-log.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/10-acceptance-report.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/11-reference-study.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/12-redesign-spec.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/13-puzzle-grammar.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/14-ui-redesign-spec.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/15-vertical-slice-20-report.md`
+
+Risks:
+
+- A docs-only reset can become performative if implementation later mutates the old UI instead of replacing it.
+
+Review notes:
+
+- Negative finding: current homepage, chapter map, chamber board, role, and level language are rejected.
+- Negative finding: current screenshot set is historical evidence only, not acceptance evidence.
+- Gate for next implementation: 20-level slice with real recursive/worldline/time/swap/sync/rule-block coverage and screenshots that no longer resemble the rejected route.
+
+Next handoff:
+
+- Commit and push the Stage 9 reset checkpoint, then begin implementation from the new specs.

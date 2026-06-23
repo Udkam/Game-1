@@ -40,3 +40,35 @@ Own sci-fi visual language, character, icons, and screenshot quality.
 ## Next handoff
 
 - Frontend and engine agents should add stronger blocked, chain, swap, recursive, and victory state feedback so the quantum-drone language covers every promised state.
+
+## Stage 9 Redesign Reset
+
+Agent: art-director
+Task clarity: clear
+Capability fit: good
+Questions needed: none
+Assumptions: Current neon-grid visuals are product-rejected and cannot be treated as the final visual language.
+Proceed decision: proceed
+
+Decisions made:
+
+- Reframed visual direction around a quantum experiment console and worldline lab, not generic dark sci-fi.
+- Re-authored three role candidates: 量子无人机, 数据光标核心, and 星舰维修机器人.
+- Preferred implementation target is 量子无人机 with nine explicit states and a required 32/48/64px state-sheet screenshot.
+
+Files touched:
+
+- `docs/v7-loop/v7-loop-20260623-195154-f683/07-art-direction.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/14-ui-redesign-spec.md`
+
+Risks:
+
+- A drone with too many details can become unreadable at 32px.
+
+Review notes:
+
+- QA must reject any next avatar that still reads as Pip/little-person lineage.
+
+Next handoff:
+
+- Frontend should build the character as repo-native SVG/CSS and add `character-state-sheet.png` to visual smoke.

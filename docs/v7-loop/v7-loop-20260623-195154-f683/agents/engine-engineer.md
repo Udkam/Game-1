@@ -44,3 +44,35 @@ Own state model, actions, deterministic mechanism rules, and server-compatible r
 ## Next handoff
 
 - Level and frontend agents can start the 15-level vertical slice using typed v7 notes and `timeShadow`; engine still owes concrete spatial-swap / recursive / chain rule hooks.
+
+## Stage 9 Redesign Reset
+
+Agent: engine-engineer
+Task clarity: partial
+Capability fit: good
+Questions needed: none
+Assumptions: The redesign slice can cap recursion depth and branch count to keep replay deterministic.
+Proceed decision: proceed
+
+Decisions made:
+
+- Engine implementation must prioritize worldline split, recursive layer path, swap preview, sync conflict, echo queue, and rule socket state.
+- The next runtime target is 20 levels, so engine features should be minimal but real rather than broad and shallow.
+- State keys must include branch, layer path, socket contents, swap state, and echo history where applicable.
+
+Files touched:
+
+- `docs/v7-loop/v7-loop-20260623-195154-f683/12-redesign-spec.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/13-puzzle-grammar.md`
+
+Risks:
+
+- Server replay drift if branch/layer/socket actions are not versioned clearly.
+
+Review notes:
+
+- Do not bypass server replay validation; extend it.
+
+Next handoff:
+
+- Solver engineer should define slice-mode verification before runtime levels are accepted.

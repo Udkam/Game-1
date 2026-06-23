@@ -70,4 +70,38 @@ Own UI shell, routes, board rendering, transitions, responsive layout, and visua
 
 ## Next handoff
 
-- Continue with deeper UI feedback work: blocked-reason HUD feedback, richer chain-state indicators, and more concrete advanced-mechanic affordances.
+- Continue with richer chain-state indicators and more concrete swap/recursive affordances once rule-depth work lands.
+
+## Stage 9 Redesign Reset
+
+Agent: frontend-engineer
+Task clarity: clear
+Capability fit: good
+Questions needed: none
+Assumptions: Existing DOM/CSS can be used as scaffolding, but current home/map/chamber composition is rejected.
+Proceed decision: proceed
+
+Decisions made:
+
+- Next implementation must replace the home with a quantum experiment console.
+- Chapter selection must become an SVG/DOM worldline graph with edges and boss nodes.
+- Chamber view must become an experiment panel with mechanism instruments, not a board card.
+- Visual smoke must replace the old 15-screenshot set with the redesign-specific 13-screenshot set including the character state sheet.
+
+Files touched:
+
+- `docs/v7-loop/v7-loop-20260623-195154-f683/14-ui-redesign-spec.md`
+- `README.md`
+- `claude.md`
+
+Risks:
+
+- Incremental CSS patches are likely to preserve the rejected layout skeleton.
+
+Review notes:
+
+- UI audit must be updated in the implementation stage to fail on card-grid chapter maps.
+
+Next handoff:
+
+- Start from new screen composition and component boundaries before wiring level data.

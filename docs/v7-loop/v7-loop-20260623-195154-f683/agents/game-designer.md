@@ -43,3 +43,37 @@ Own v7 mechanism rules and puzzle identity.
 ## Next handoff
 
 - QA should treat visual smoke as a design review too: any level that looks like a corridor-only helper variation must be sent back for rewrite even if replay verification passes.
+
+## Stage 9 Redesign Reset
+
+Agent: game-designer
+Task clarity: clear
+Capability fit: good
+Questions needed: none
+Assumptions: Reference-study principles are design input, not material to copy.
+Proceed decision: proceed
+
+Decisions made:
+
+- Mechanism work restarts around six systems: recursive space, worldline split, time echo, spatial swap, multi-drone sync, and rule-block parameters.
+- New levels must start from a core question and aha moment, not from a prop checklist.
+- The existing 70-level catalog is product-rejected and should not be expanded.
+
+Files touched:
+
+- `docs/v7-loop/v7-loop-20260623-195154-f683/11-reference-study.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/12-redesign-spec.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/13-puzzle-grammar.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/15-vertical-slice-20-report.md`
+
+Risks:
+
+- Six systems can still become shallow if the slice tries to teach too much per level.
+
+Review notes:
+
+- Every accepted level needs a fairness proof, false path, and "why not boring" note.
+
+Next handoff:
+
+- Level designer should implement only the 20 planned seeds after the engine can express the relevant systems.

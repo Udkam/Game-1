@@ -54,3 +54,35 @@ Own solver, replay verification, audit scripts, and validation reporting.
 ## Next handoff
 
 - Build deeper mechanism-specific validation for spatial swap, recursive-room, and chain-state chapters; keep replay/manual warning visible until then.
+
+## Stage 9 Redesign Reset
+
+Agent: solver-engineer
+Task clarity: clear
+Capability fit: good
+Questions needed: none
+Assumptions: The next accepted checkpoint is 20 redesign levels, not the rejected 70-level catalog.
+Proceed decision: proceed
+
+Decisions made:
+
+- `audit:content` should check the new redesign documents and explicit rejection/reset language.
+- Future `audit:levels` must support a slice gate that expects exactly 20 accepted redesign levels until 70-level expansion is re-approved.
+- Replay verification remains mandatory for every accepted level.
+
+Files touched:
+
+- `scripts/audit-content.ts`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/15-vertical-slice-20-report.md`
+
+Risks:
+
+- Current `audit:levels` still validates the rejected 70-level checkpoint; it must be changed during implementation.
+
+Review notes:
+
+- This stage can pass content/typecheck checks but cannot claim runtime redesign acceptance.
+
+Next handoff:
+
+- Add slice-mode level audit and visual smoke assertions when the new runtime catalog is implemented.

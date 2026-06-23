@@ -97,7 +97,7 @@ Verification:
 
 Failure items:
 
-- Initial temporary DOM audit failed because PowerShell piping converted Chinese regex text into `????`; root cause was ad-hoc script transport encoding, not repo source encoding. Re-ran the same assertions with Unicode escapes and passed.
+- Initial temporary DOM audit failed because PowerShell piping converted Chinese regex text into question-mark placeholders; root cause was ad-hoc script transport encoding, not repo source encoding. Re-ran the same assertions with Unicode escapes and passed.
 - Stage 3 is not final v7 acceptance. It still uses the old 52 exposed level data and old mechanics while establishing the new shell.
 - Carry-forward risk: no real-browser screenshot audit exists yet; `smoke:visual` is still pending for later stages.
 - Carry-forward risk: CSS currently uses local/system font stack names only. Final font decision and license record are still pending.
@@ -423,3 +423,71 @@ Next step:
 
 - Commit and push Stage 8 to `origin main`.
 - Continue the v7 loop with advanced mechanism rule-depth work or explicitly record that as the remaining blocker.
+
+## Stage 9: Redesign Reset
+
+参考优秀系统谜题游戏的设计方法，从机制系统和关卡语言出发，重做 Driftbox，而不是给旧推箱子项目套科幻皮肤。
+
+Goal:
+
+- Stop the rejected v7 skinning route.
+- Record screenshot/product QA failure as the new loop input.
+- Complete reference study before any new implementation.
+- Define the redesigned system, puzzle grammar, UI contract, and 20-level vertical-slice target.
+
+Breakpoint state:
+
+- Local `HEAD` and `origin/main` were both `dcc84fa`.
+- There were no unpushed commits.
+- Two documentation files had minor uncommitted Stage 8 sync edits; they are retained and superseded by this reset record.
+
+Current failure premise:
+
+- The current v7 implementation is not accepted even though technical checks passed.
+- The current homepage still reads as title/progress/buttons/cards.
+- The current chapter selection still reads as a card grid rather than a worldline/star graph.
+- The current chamber page still reads as an old Sokoban board in a web panel.
+- The current role still inherits the small-person/Pip lineage.
+- The current level set does not prove system-puzzle depth.
+- The current art direction is mostly dark grid/neon framing rather than a complete sci-fi interface language.
+- 现有 v7 皮肤化实现不通过。
+
+Actual changes:
+
+- Added `11-reference-study.md` with reference-study notes for Patrick's Parabox, 茜塔和世界线悖论, Baba Is You, Recursed, Portal, Opus Magnum, and Stephen's Sausage Roll.
+- Added `12-redesign-spec.md` defining `Driftbox: Worldline Lab`, reuse boundaries, six core systems, and the 20-level slice reset.
+- Added `13-puzzle-grammar.md` with required mechanism grammar tables and 20 planned level seeds.
+- Added `14-ui-redesign-spec.md` defining the quantum experiment console, worldline star graph, chamber panel, transitions, and character state-sheet requirement.
+- Added `15-vertical-slice-20-report.md` documenting the planned 20-level slice and explicitly marking it not implemented.
+- Updated art direction, acceptance status, top-level docs, content audit, agent logs, and repo-local `codex.md` for the reset.
+
+Verification:
+
+- `npm run audit:content`: passed after updating the audit to check the new redesign documents and reset language.
+- `npm run typecheck`: passed.
+- UTF-8/mojibake marker check over README, claude.md, codex.md, and Stage 9 redesign docs: passed.
+
+Failure items:
+
+```text
+[FAIL] Existing v7 visual/product acceptance
+Evidence: User screenshot review found the homepage, chapter selection, chamber UI, role, levels, and art direction still read as old Driftbox with a sci-fi skin.
+Root cause: The route optimized for passing technical gates and expanding the catalog before proving a new system-puzzle language.
+Fix plan: Stop expanding/polishing this route; first complete reference study and redesign docs, then replace the public runtime with a new 20-level vertical slice.
+Files to change: docs/v7-loop/v7-loop-20260623-195154-f683/09-iteration-log.md; docs/v7-loop/v7-loop-20260623-195154-f683/11-reference-study.md; docs/v7-loop/v7-loop-20260623-195154-f683/12-redesign-spec.md; docs/v7-loop/v7-loop-20260623-195154-f683/13-puzzle-grammar.md; docs/v7-loop/v7-loop-20260623-195154-f683/14-ui-redesign-spec.md; docs/v7-loop/v7-loop-20260623-195154-f683/15-vertical-slice-20-report.md
+Re-test: npm run audit:content; UTF-8/mojibake marker check; QA negative review before implementation
+```
+
+```text
+[FAIL] Stage 9 initial content/encoding verification
+Evidence: `npm run audit:content` initially failed because the redesign-spec check looked for a lowercase phrase that did not match the document heading; the first encoding-check command also failed because the inline regular expression treated `????` as quantifiers.
+Root cause: Verification script/check command defects, not redesign document content.
+Fix plan: Make `audit:content` check the `Six Core Systems` heading case-insensitively; rerun the encoding marker check using explicit string markers instead of a brittle regex; replace the historical `????` mention in `09-iteration-log.md` with a readable phrase.
+Files to change: scripts/audit-content.ts; docs/v7-loop/v7-loop-20260623-195154-f683/09-iteration-log.md
+Re-test: npm run audit:content; npm run typecheck; node -e UTF-8/mojibake marker check
+```
+
+Next step:
+
+- Commit and push this Redesign Reset documentation checkpoint.
+- Begin implementation only after this reference/design checkpoint is pushed.

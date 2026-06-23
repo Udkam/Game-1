@@ -48,3 +48,35 @@ Own 70-level matrix, level notes, difficulty progression, and quality criteria.
 ## Next handoff
 
 - QA must sample-play advanced chapters and record any level that still feels like a metadata-only variation rather than a distinct puzzle.
+
+## Stage 9 Redesign Reset
+
+Agent: level-designer
+Task clarity: clear
+Capability fit: good
+Questions needed: none
+Assumptions: The current 70-level catalog is rejected even if it passes `verify`.
+Proceed decision: proceed
+
+Decisions made:
+
+- Stop expanding or polishing the current 70-level catalog.
+- Restart accepted level work with a 20-level slice: 4 startup, 3 quantum link, 3 sync, 3 time echo, 3 spatial swap, 2 recursive, and 2 misdirection levels.
+- Every new level seed must include core question, aha moment, inference, false path, fairness proof, minimum solution outline, and why it is not boring.
+
+Files touched:
+
+- `docs/v7-loop/v7-loop-20260623-195154-f683/13-puzzle-grammar.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/15-vertical-slice-20-report.md`
+
+Risks:
+
+- The 20-level slice can still fail if it only covers mechanics shallowly.
+
+Review notes:
+
+- The planned slice is not accepted content yet because no runtime replay has been implemented.
+
+Next handoff:
+
+- Engine and frontend should implement enough system support before finalizing level data.

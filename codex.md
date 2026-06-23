@@ -347,3 +347,54 @@ Next steps:
 
 - Commit and push Stage 8.
 - Continue with actual advanced rule-depth work if the loop proceeds.
+
+### Stage 9: Redesign Reset and Reference Study
+
+Phase: product reset, reference study, and redesign documentation.
+
+Actions taken:
+
+- Confirmed local `HEAD` and `origin/main` were both `dcc84fa`, with no unpushed commits.
+- Accepted the user's screenshot QA as a hard failure of the current v7 route.
+- Stopped the current route of homepage/card/board polish and 70-level expansion.
+- Added `11-reference-study.md` before implementation, covering Patrick's Parabox, 茜塔和世界线悖论, Baba Is You, Recursed, Portal, Opus Magnum, and Stephen's Sausage Roll.
+- Added `12-redesign-spec.md`, `13-puzzle-grammar.md`, `14-ui-redesign-spec.md`, and `15-vertical-slice-20-report.md`.
+- Rewrote `07-art-direction.md` with new character candidates and a quantum-drone state-sheet requirement.
+- Rewrote `10-acceptance-report.md`, `README.md`, and `claude.md` to state that the current v7 70-level checkpoint is product-rejected and the next accepted target is a 20-level redesign slice.
+- Expanded `audit:content` so it checks the new redesign documents and rejection/reset status.
+
+Verification commands and results:
+
+- Initial `npm run audit:content`: failed because the redesign-spec check expected a lowercase phrase instead of the actual `Six Core Systems` heading. Fixed `scripts/audit-content.ts`.
+- Initial UTF-8/mojibake marker command: failed because a regex containing `????` was invalid. Replaced it with string-marker checking.
+- `npm run audit:content`: passed after the audit fix.
+- `npm run typecheck`: passed.
+- UTF-8/mojibake marker check over README, claude.md, codex.md, and Stage 9 redesign docs: passed after replacing one historical `????` mention in `09-iteration-log.md` with readable text.
+
+Changed files:
+
+- `README.md`
+- `claude.md`
+- `scripts/audit-content.ts`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/07-art-direction.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/09-iteration-log.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/10-acceptance-report.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/11-reference-study.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/12-redesign-spec.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/13-puzzle-grammar.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/14-ui-redesign-spec.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/15-vertical-slice-20-report.md`
+- v7 agent logs
+
+Risks:
+
+- Runtime still exposes the rejected 70-level checkpoint until the implementation stage replaces it.
+- Historical docs still contain some mojibake in old stage excerpts; new redesign docs must stay clean and should be checked explicitly.
+- `audit:levels` still validates the rejected 70-level checkpoint until slice-mode implementation changes it.
+
+Next steps:
+
+- Finish agent-log reset notes.
+- Run content/encoding/typecheck verification.
+- Commit and push Stage 9.
+- Start implementation of the redesigned 20-level vertical slice only after this reference/design checkpoint is pushed.
