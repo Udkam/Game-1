@@ -473,6 +473,7 @@ Verification commands and results:
 - `npm run smoke:visual`: passed and regenerated 13 redesign screenshots.
 - `npm run build`: passed.
 - Manual screenshot spot-check: home console/worldline graph/character state sheet, level 001, and mobile time-echo chamber were inspected.
+- Follow-up visual QA fixed two screenshot evidence failures: the mobile chamber was initially captured during the transition opacity frame, and the desktop worldline graph initially hid the final nodes outside horizontal overflow. `smoke:visual` was rerun after both fixes.
 
 Changed files:
 

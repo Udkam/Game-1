@@ -60,17 +60,17 @@ All 20 levels carry `levelDesignNote` metadata and stored replay solutions.
 
 ## Verification
 
-Commands run during Stage 10 before final push:
+Commands run during Stage 10 before push:
 
-- `npm run typecheck`: required.
-- `npm run verify`: all 20 levels must pass stored replay validation.
-- `npm run audit:levels`: expects exactly 20 redesign slice levels.
-- `npm run audit:ui`: expects quantum console, worldline graph, chamber HUD, mechanism archive, and character state sheet.
-- `npm run audit:content`: expects docs to describe the 20-level slice honestly.
-- `npm run smoke:api`: API must return 20 levels and accept all stored replays.
-- `npm run smoke:ui`: jsdom UI must play all 20 levels to win.
-- `npm run smoke:visual`: must regenerate the redesign screenshot set.
-- `npm run build`: must pass after the above.
+- `npm run typecheck`: passed.
+- `npm run verify`: passed for all 20 stored replay solutions.
+- `npm run audit:levels`: passed for exactly 20 redesign slice levels, required mechanisms, active swap probe, recursive entry cores, worldline twin state, and duplicate/water-level checks; retained the replay/manual warning.
+- `npm run audit:ui`: passed for quantum console, worldline graph, chamber HUD, mechanism archive, settings/data overlays, transition state, mobile guard, and character state sheet.
+- `npm run audit:content`: passed for README/claude/docs consistency and honest 20-level slice status.
+- `npm run smoke:api`: passed; API returns 20 levels and accepts all stored replays.
+- `npm run smoke:ui`: passed; jsdom UI plays all 20 levels to win.
+- `npm run smoke:visual`: passed; regenerated 13 redesign screenshots after repairing the mobile transition capture and desktop graph coverage.
+- `npm run build`: passed.
 
 ## Non-Final Limits
 

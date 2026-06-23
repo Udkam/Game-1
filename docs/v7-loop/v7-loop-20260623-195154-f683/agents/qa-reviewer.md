@@ -160,3 +160,39 @@ review notes:
 
 next handoff:
 - Do not approve final v7 until 70-level expansion and deeper solver/level-quality gates are completed.
+
+## Stage 10 Final QA Repair Review
+
+Agent: qa-reviewer
+Task clarity: clear
+Capability fit: good
+Questions needed: none
+Assumptions: Screenshots are acceptance evidence and must represent the settled UI state, not a transition frame.
+Proceed decision: proceed
+
+Decisions made:
+
+- Rejected the first mobile chamber screenshot because it was unreadably dark.
+- Rejected the first desktop worldline screenshot because final chapter nodes were hidden outside the initial frame.
+- Accepted the repaired screenshot set after `13-mobile-level.png` became readable and `02-worldline-star-graph.png` showed all 20 nodes.
+
+Files touched:
+
+- `scripts/smoke-visual.ts`
+- `src/web/styles.css`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/09-iteration-log.md`
+- `docs/v7-loop/v7-loop-20260623-195154-f683/10-acceptance-report.md`
+
+Risks:
+
+- The slice still fails final 70-level acceptance by design.
+- Solver-depth remains replay/manual for this checkpoint.
+
+Review notes:
+
+- Evidence for "unlike old project": central experiment core, connected worldline graph, quantum drone state sheet, and chamber panel are visible in the final screenshots.
+- Remaining concern: level depth must be expanded carefully; passing this slice does not authorize filler 70-level expansion.
+
+Next handoff:
+
+- Push Stage 10, then continue only from the Worldline Lab grammar and QA gates.

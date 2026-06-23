@@ -36,13 +36,33 @@ Re-test: npm run audit:content; UTF-8/mojibake marker check; QA negative review;
 
 The current accepted runtime checkpoint is not "70 levels still pass." It is:
 
-- New quantum experiment console home: implemented.
-- New worldline/star graph map: implemented.
-- New chamber experiment panel: implemented.
-- New non-human quantum drone state component and state sheet: implemented.
-- New 20-level vertical slice with stored replay verification: implemented.
+- New quantum experiment console home: implemented and screenshot-reviewed.
+- New worldline/star graph map: implemented; desktop screenshot now shows all 20 slice nodes, with mobile retaining horizontal browse behavior.
+- New chamber experiment panel: implemented and screenshot-reviewed on desktop/mobile.
+- New non-human quantum drone state component and state sheet: implemented with idle/move/push/pull/sync/teleport/split/blocked/victory samples.
+- New 20-level vertical slice with stored replay verification: implemented; all 20 replays pass.
 - At least one accepted level each for recursion, worldline split, time echo, spatial swap, multi-drone sync, and rule blocks: implemented.
-- Updated visual smoke screenshots including a character state sheet: required for final Stage 10 push.
+- Updated visual smoke screenshots including a character state sheet: implemented.
+
+## Stage 10 Verification Results
+
+- `npm run typecheck`: passed.
+- `npm run verify`: passed for 20/20 redesign slice levels.
+- `npm run smoke:api`: passed; `/api/levels` returns 20 and all stored replays are accepted.
+- `npm run smoke:ui`: passed; all 20 levels play to a win through jsdom UI.
+- `npm run smoke:visual`: passed; 13 redesign screenshots regenerated.
+- `npm run audit:levels`: passed with one warning that the slice relies on replay/manual validation.
+- `npm run audit:ui`: passed.
+- `npm run audit:content`: passed.
+- `npm run build`: passed.
+
+## Stage 10 QA Notes
+
+- The previous v7 route remains rejected; this report does not reclassify it as successful.
+- QA negative check found two Stage 10 visual evidence issues and both were repaired before push:
+  - mobile level screenshot was taken during transition opacity, fixed by waiting for `.screen-view.entered`;
+  - desktop worldline screenshot hid final nodes outside overflow, fixed by reducing desktop graph width while preserving mobile browse.
+- Current screenshots show a central experiment core, a connected worldline graph rather than level cards, a non-human quantum drone, and chamber UI rather than the rejected card-grid chapter selector.
 
 ## Known Non-Final Items
 
@@ -59,21 +79,21 @@ The current accepted runtime checkpoint is not "70 levels still pass." It is:
 docs/v7-loop/v7-loop-20260623-195154-f683/screenshots/
 ```
 
-The Stage 10 redesign slice must regenerate:
+The Stage 10 redesign slice regenerated:
 
-- new home console;
-- worldline star graph;
-- level 1;
-- portal/link level;
-- sync level;
-- time echo level;
-- spatial swap level;
-- recursive chamber level;
-- misdirection/worldline level;
-- character state sheet;
-- victory collapse;
-- mobile home;
-- mobile chamber.
+- `01-home-console.png`: new home console.
+- `02-worldline-star-graph.png`: worldline star graph.
+- `03-level-001.png`: level 1.
+- `04-portal-005.png`: portal/link level.
+- `05-sync-008.png`: sync level.
+- `06-time-echo-011.png`: time echo level.
+- `07-spatial-swap-014.png`: spatial swap level.
+- `08-recursive-017.png`: recursive chamber level.
+- `09-misdirection-019.png`: misdirection/worldline level.
+- `10-character-state-sheet.png`: quantum drone state sheet.
+- `11-victory-collapse.png`: victory collapse.
+- `12-mobile-home.png`: mobile home.
+- `13-mobile-level.png`: mobile chamber.
 
 ## Required Final Contents
 
