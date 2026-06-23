@@ -565,8 +565,27 @@ Verification:
 - `npm run smoke:visual`: passed and regenerated the Stage 10 screenshot set.
 - `npm run build`: passed.
 - Manual screenshot spot-check: home/worldline/state sheet, level 001, and mobile time-echo chamber were inspected.
+- Visual repair loop after spot-check: desktop worldline graph now shows all 20 nodes in the first screenshot; mobile chamber screenshot waits for page transition completion and is readable.
 
 Failure items:
+
+```text
+[FAIL] Stage 10 mobile visual evidence
+Evidence: `13-mobile-level.png` initially captured the chamber during the page-transition opacity state, making the mobile level unreadably dark.
+Root cause: `smoke:visual` clicked into a level and took the screenshot as soon as the board existed, before `.screen-view.entered` and the 160ms transition completed.
+Fix plan: Make visual smoke wait for `.screen-view.entered` plus a short settle window before every screenshot; rerun visual smoke and inspect the mobile chamber.
+Files to change: `scripts/smoke-visual.ts`.
+Re-test: npm run smoke:visual; inspect `13-mobile-level.png`.
+```
+
+```text
+[FAIL] Stage 10 worldline graph screenshot coverage
+Evidence: the first Stage 10 worldline screenshot hid the final chapter nodes outside horizontal overflow.
+Root cause: desktop `.worldline-graph` used a 1500px minimum width copied from mobile browsing needs.
+Fix plan: reduce desktop graph width so all 20 nodes fit in the desktop acceptance screenshot; keep mobile horizontal browsing through the mobile media override.
+Files to change: `src/web/styles.css`.
+Re-test: npm run smoke:visual; inspect `02-worldline-star-graph.png`.
+```
 
 ```text
 [FAIL] Final 70-level product acceptance
