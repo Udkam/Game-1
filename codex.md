@@ -42,6 +42,12 @@ Verification commands and results:
 - `git ls-remote --heads origin ...`: confirmed main, backup branch, and failed reboot branch existed before cleanup.
 - `git switch -f main; git pull --ff-only origin main`: switched to `main`; result was already up to date.
 - Path guard before deletion succeeded; wipe command refused to run unless cwd matched the expected `Game-1` absolute path.
+- `git push origin main`: pushed reset commit `d9aaa86` to `origin/main`.
+- `git push origin --delete reboot/parabox-worldline-v8-reboot-parabox-worldline-20260624-023038-2a151f`: deleted the failed remote reboot branch.
+- `git branch -D reboot/parabox-worldline-v8-reboot-parabox-worldline-20260624-023038-2a151f`: deleted the failed local reboot branch.
+- `rg --files`: confirmed the local working tree only contains `README.md`, `codex.md`, `docs/reboot/FAILED_ROUND.md`, and `docs/reboot/CURRENT_STATUS.md`.
+- `git ls-remote --heads origin ...`: confirmed `origin/main` and the backup branch remain, and the failed reboot branch is absent.
+- `git ls-remote --tags origin backup-pre-reboot-v8-reboot-parabox-worldline-20260624-023038-2a151f`: confirmed the backup tag remains on the remote.
 
 Risks:
 - The failed implementation is no longer present on `main`.
@@ -49,6 +55,6 @@ Risks:
 - Backup branch and tag are retained intentionally for provenance unless the user explicitly requests deleting them too.
 
 Next steps:
-- Commit and push this documentation-only reset to `main`.
-- Delete `origin/reboot/parabox-worldline-v8-reboot-parabox-worldline-20260624-023038-2a151f`.
-- Verify `main` contains only the record files.
+- Start any future implementation from the documentation-only `main` baseline.
+- Create a fresh run id and branch for the next reboot.
+- Do not continue from the failed v8 reboot branch.
