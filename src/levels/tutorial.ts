@@ -2,6 +2,12 @@ import type { Direction, LevelDefinition } from "../game";
 
 export interface TutorialLevel extends LevelDefinition {
   lesson: string;
+  subtitle?: string;
+  mechanicTags?: string[];
+  designIntent?: string;
+  parMoves?: number;
+  targetMoves?: number;
+  scriptedSolution?: Direction[];
 }
 
 export const tutorialLevels = [

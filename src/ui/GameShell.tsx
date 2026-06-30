@@ -1,4 +1,5 @@
-import { ChevronRight } from "lucide-react";
+import { Box, ChevronRight, FlaskConical } from "lucide-react";
+import type { CSSProperties } from "react";
 import { getWorldPath, type Direction, type GameState } from "../game";
 import type { TutorialLevel } from "../levels/tutorial";
 import type { ProgressState } from "../progress/storage";
@@ -7,7 +8,6 @@ import DebugPanel from "./debug/DebugPanel";
 import LevelSelect from "./controls/LevelSelect";
 import HelpOverlay from "./help/HelpOverlay";
 import AboutPage from "./pages/AboutPage";
-import HelpPage from "./pages/HelpPage";
 import LevelLibrary from "./pages/LevelLibrary";
 import RecursiveWorldView from "./world/RecursiveWorldView";
 
@@ -18,14 +18,14 @@ interface GameShellProps {
   totalLevels: number;
   levels: TutorialLevel[];
   progress: ProgressState;
-  view: "play" | "levels" | "help" | "about";
+  view: "play" | "levels" | "about";
   canAdvance: boolean;
   onMove: (direction: Direction) => void;
   onUndo: () => void;
   onReset: () => void;
   onNext: () => void;
   onSelectLevel: (index: number) => void;
-  onViewChange: (view: "play" | "levels" | "help" | "about") => void;
+  onViewChange: (view: "play" | "levels" | "about") => void;
   showDebug: boolean;
   onToggleDebug: () => void;
   showHelp: boolean;
@@ -53,54 +53,78 @@ export default function GameShell({
   onToggleHelp,
 }: GameShellProps) {
   const path = getWorldPath(state, state.activeWorldId);
+  const tags = level.mechanicTags ?? [level.lesson];
+  const lastAction = state.lastAction ?? "ready";
 
   return (
-    <main className="game-shell">
-      <header className="game-header">
-        <div>
-          <p className="eyebrow">Recursive Box Lab</p>
-          <h1>{level.title}</h1>
-          <p>{level.lesson}</p>
+    <main className={`game-shell action-${lastAction.replaceAll(":", "-")} ${state.won ? "is-solved" : ""}`}>
+      <header className="game-hud">
+        <div className="hud-title">
+          <div className="game-mark" aria-hidden="true">
+            <FlaskConical size={20} />
+          </div>
+          <div>
+            <p className="eyebrow">Recursive Box Lab</p>
+            <h1>{String(levelIndex + 1).padStart(2, "0")} / {level.title}</h1>
+          </div>
         </div>
-        <div className="level-counter" aria-label="Current level">
-          {levelIndex + 1}
-          <span>/ {totalLevels}</span>
+        <div className="hud-tags" aria-label="Mechanics">
+          {tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+        <div className="hud-readout" aria-label="Run status">
+          <span>Steps <strong>{state.moves}</strong></span>
+          <span className={state.won ? "status-solved" : "status-live"}>{state.won ? "Solved" : "Live"}</span>
         </div>
       </header>
 
-      <nav className="view-tabs" aria-label="Application views">
-        {(["play", "levels", "help", "about"] as const).map((item) => (
-          <button
-            key={item}
-            type="button"
-            className={view === item ? "active" : undefined}
-            onClick={() => onViewChange(item)}
-          >
-            {item === "play" ? "Play" : item === "levels" ? "Levels" : item === "help" ? "Help" : "About"}
-          </button>
-        ))}
-      </nav>
-
       {view === "play" ? (
-      <section className="play-layout" aria-label="Playable puzzle">
-        <div className="board-panel">
-          <div className="world-breadcrumb" aria-label="Current world path">
-            {path.map((world, index) => (
-              <span key={world.id}>
-                {index > 0 ? <ChevronRight size={14} aria-hidden="true" /> : null}
-                {world.name}
-              </span>
-            ))}
-          </div>
-          <RecursiveWorldView state={state} worldId={state.activeWorldId} activeWorldId={state.activeWorldId} />
-          {state.won ? (
-            <div className="win-banner" role="status">
-              Layer solved. Advance when ready.
+      <section className="game-stage-layout" aria-label="Playable puzzle">
+        <section className="stage-column" aria-label="Recursive game stage">
+          <div className="stage-frame">
+            <div className="world-breadcrumb" aria-label="Current world path">
+              {path.map((world, index) => (
+                <span key={world.id}>
+                  {index > 0 ? <ChevronRight size={14} aria-hidden="true" /> : null}
+                  {world.name}
+                </span>
+              ))}
             </div>
-          ) : null}
-        </div>
+            <RecursiveWorldView
+              state={state}
+              worldId={state.activeWorldId}
+              activeWorldId={state.activeWorldId}
+              action={lastAction}
+            />
+            {state.won ? (
+              <div className="win-banner" role="status">
+                Dock array aligned. Experiment complete.
+              </div>
+            ) : null}
+          </div>
+          <section className="recursion-stack" aria-label="Recursive layer stack">
+            <div className="stack-heading">
+              <Box size={16} aria-hidden="true" />
+              <span>Spatial Stack</span>
+            </div>
+            <div className="stack-cards">
+              {path.map((world, index) => (
+                <article
+                  key={world.id}
+                  className={index === path.length - 1 ? "stack-card active" : "stack-card"}
+                  style={{ "--stack-index": index } as CSSProperties}
+                >
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <strong>{world.name}</strong>
+                  <small>{index === 0 ? "root plane" : "contained fold"}</small>
+                </article>
+              ))}
+            </div>
+          </section>
+        </section>
 
-        <aside className="side-panel" aria-label="Controls and level selection">
+        <aside className="instrument-panel" aria-label="Controls and level selection">
           <ControlPanel
             moves={state.moves}
             won={state.won}
@@ -112,6 +136,8 @@ export default function GameShell({
             onNext={onNext}
             onToggleDebug={onToggleDebug}
             onToggleHelp={onToggleHelp}
+            onOpenLevels={() => onViewChange("levels")}
+            onOpenAbout={() => onViewChange("about")}
           />
           {showDebug ? <DebugPanel state={state} /> : null}
           <LevelSelect
@@ -121,8 +147,9 @@ export default function GameShell({
             onSelectLevel={onSelectLevel}
           />
           <section className="mechanic-note" aria-label="Current objective">
-            <h2>Objective</h2>
-            <p>{level.description}</p>
+            <h2>Experiment Goal</h2>
+            <p>{level.subtitle ?? level.description}</p>
+            <small>{level.designIntent ?? "Solve the fold without breaking parent-child space."}</small>
           </section>
         </aside>
       </section>
@@ -133,10 +160,10 @@ export default function GameShell({
           currentIndex={levelIndex}
           progress={progress}
           onSelectLevel={onSelectLevel}
+          onBack={() => onViewChange("play")}
         />
       ) : null}
-      {view === "help" ? <HelpPage /> : null}
-      {view === "about" ? <AboutPage /> : null}
+      {view === "about" ? <AboutPage onBack={() => onViewChange("play")} /> : null}
       {showHelp ? <HelpOverlay onClose={onToggleHelp} /> : null}
     </main>
   );

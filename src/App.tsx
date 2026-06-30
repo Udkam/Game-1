@@ -25,7 +25,7 @@ const KEY_DIRECTIONS: Record<string, Direction> = {
   D: "right",
 };
 
-type ViewMode = "play" | "levels" | "help" | "about";
+type ViewMode = "play" | "levels" | "about";
 
 function levelIndexFromProgress(progress: ProgressState) {
   const index = tutorialLevels.findIndex((level) => level.id === progress.currentLevelId);

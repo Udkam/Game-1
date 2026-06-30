@@ -1,0 +1,65 @@
+:root {
+  color: #f4f7ec;
+  background: #11171f;
+  font-family:
+    "Space Grotesk",
+    "Segoe UI",
+    system-ui,
+    sans-serif;
+
+  --font-display:
+    "Space Grotesk",
+    "Segoe UI",
+    system-ui,
+    sans-serif;
+  --font-mono:
+    "IBM Plex Mono",
+    "Cascadia Mono",
+    Consolas,
+    monospace;
+
+  --bg-void: #0d1118;
+  --bg-deep: #121a25;
+  --bg-panel: rgba(21, 29, 38, 0.88);
+  --bg-panel-strong: rgba(28, 39, 51, 0.96);
+  --surface-glass: rgba(206, 232, 221, 0.12);
+  --surface-glass-strong: rgba(223, 246, 235, 0.18);
+  --surface-board: #233442;
+  --floor-top: #334956;
+  --floor-bottom: #1b2a35;
+  --floor-edge: #0d141c;
+  --ink: #f4f7ec;
+  --ink-soft: #c7d5ce;
+  --muted: #879b9a;
+  --line: rgba(194, 230, 219, 0.22);
+  --line-strong: rgba(220, 255, 241, 0.48);
+  --accent-cyan: #63e6d0;
+  --accent-blue: #4aa3ff;
+  --accent-amber: #ffc857;
+  --accent-pink: #ff6b9a;
+  --accent-green: #8dff8a;
+  --danger: #ff6868;
+  --wall-top: #6e7f8c;
+  --wall-side: #263442;
+  --crate-top: #cf8f42;
+  --crate-side: #6e3f22;
+  --container-top: #44d1c0;
+  --container-side: #176a77;
+  --locked-top: #8f7bd8;
+  --locked-side: #40316f;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --shadow-low: 0 10px 24px rgba(0, 0, 0, 0.28);
+  --shadow-mid: 0 22px 44px rgba(0, 0, 0, 0.36);
+  --shadow-glow: 0 0 28px rgba(99, 230, 208, 0.22);
+  --z-stage: 1;
+  --z-panel: 2;
+  --z-overlay: 20;
+  --motion-tap: 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-move: 160ms cubic-bezier(0.2, 0.9, 0.2, 1.15);
+  --motion-fold: 340ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-eject: 220ms cubic-bezier(0.18, 0.9, 0.32, 1.25);
+}

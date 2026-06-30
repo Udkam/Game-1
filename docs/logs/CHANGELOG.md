@@ -1,5 +1,53 @@
 # Codex Work Log
 
+## 2026-06-30 - Stage 6C Visual Gameplay Shell Rewrite
+
+Phase: stage 6c game-first visual and interaction rewrite.
+
+Time:
+- 2026-06-30 18:30:35 +08:00
+
+Actions taken:
+- Replaced the dashboard-like page chrome with a compact game HUD, central stage, spatial stack, and right-side instrument panel.
+- Added `src/styles/tokens.css` for color, radius, shadow, motion, z-index, and typography tokens.
+- Rebuilt board styling into a darker glass/experiment board with thicker physical cells, shadows, wall blocks, entry/exit markers, and powered dock targets.
+- Replaced lettered player/crate visuals with CSS sprite structures:
+  - player probe with lens and directional nose
+  - normal crate
+  - enterable container with glowing window
+  - container/locked variants
+- Enlarged recursive container previews and made them feel like windows into nested worlds.
+- Reworked Help into an overlay with sprite-based legend.
+- Removed the old separate Help page route.
+- Reworked About into concise project facts with non-affiliation wording.
+- Moved level map and about access into the instrument panel instead of top-level admin tabs.
+- Added movement/fold/dock pulse animation hooks with reduced-motion support.
+
+Verification commands and results:
+- `npm.cmd run typecheck`: passed.
+- `npm.cmd run test`: passed, 4 test files and 16 tests.
+- `npm.cmd run build`: passed.
+
+Changed files:
+- `src/main.tsx`
+- `src/App.tsx`
+- `src/styles/tokens.css`
+- `src/styles.css`
+- `src/ui/GameShell.tsx`
+- `src/ui/controls/ControlPanel.tsx`
+- `src/ui/world/Cell.tsx`
+- `src/ui/world/RecursiveWorldView.tsx`
+- `src/ui/world/EntitySprite.tsx`
+- `src/ui/help/HelpOverlay.tsx`
+- `src/ui/pages/AboutPage.tsx`
+- `src/ui/pages/LevelLibrary.tsx`
+- Deleted `src/ui/pages/HelpPage.tsx`
+- `src/levels/tutorial.ts` interface metadata fields added for Stage 6D
+
+Remaining for Stage 6D:
+- Reduce and curate levels around the first 10 mechanics.
+- Add required level metadata, validator, and scripted solution coverage.
+
 ## 2026-06-30 - Stage 6B Frontend Design Audit
 
 Phase: stage 6b local skill install and human-readable game UI audit.

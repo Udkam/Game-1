@@ -6,6 +6,7 @@ interface LevelLibraryProps {
   currentIndex: number;
   progress: ProgressState;
   onSelectLevel: (index: number) => void;
+  onBack: () => void;
 }
 
 export default function LevelLibrary({
@@ -13,12 +14,16 @@ export default function LevelLibrary({
   currentIndex,
   progress,
   onSelectLevel,
+  onBack,
 }: LevelLibraryProps) {
   return (
     <section className="page-panel level-library" aria-label="Level library">
       <div className="page-heading">
-        <p className="eyebrow">Level Library</p>
-        <h2>Fifteen Original Folds</h2>
+        <div>
+          <p className="eyebrow">Lab Notebook</p>
+          <h2>Experiment Grid</h2>
+        </div>
+        <button type="button" onClick={onBack}>Back to stage</button>
       </div>
       <div className="level-library-grid">
         {levels.map((level, index) => {
@@ -33,8 +38,11 @@ export default function LevelLibrary({
             >
               <span className="library-number">{index + 1}</span>
               <strong>{level.title}</strong>
-              <small>{level.lesson}</small>
-              <em>{completed ? `Complete${best ? ` / best ${best}` : ""}` : "Unsolved"}</em>
+              <small>{level.subtitle ?? level.lesson}</small>
+              <span className="library-tags">
+                {(level.mechanicTags ?? []).map((tag) => <i key={tag}>{tag}</i>)}
+              </span>
+              <em>{completed ? `Complete${best ? ` / best ${best}` : ""}` : index === currentIndex ? "Current" : "Unlocked"}</em>
             </button>
           );
         })}

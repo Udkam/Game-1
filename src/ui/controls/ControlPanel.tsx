@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUp,
+  Box,
   Bug,
   HelpCircle,
   RotateCcw,
@@ -22,6 +23,8 @@ interface ControlPanelProps {
   onNext: () => void;
   onToggleDebug: () => void;
   onToggleHelp: () => void;
+  onOpenLevels: () => void;
+  onOpenAbout: () => void;
 }
 
 export default function ControlPanel({
@@ -35,16 +38,15 @@ export default function ControlPanel({
   onNext,
   onToggleDebug,
   onToggleHelp,
+  onOpenLevels,
+  onOpenAbout,
 }: ControlPanelProps) {
   return (
     <section className="control-panel" aria-label="Puzzle controls">
-      <div className="status-row">
-        <span>Moves</span>
+      <div className="panel-readout">
+        <span>Step Counter</span>
         <strong>{moves}</strong>
-      </div>
-      <div className="status-row">
-        <span>Status</span>
-        <strong>{won ? "Solved" : "In progress"}</strong>
+        <em>{won ? "alignment locked" : "experiment live"}</em>
       </div>
 
       <div className="d-pad" aria-label="Move controls">
@@ -65,7 +67,11 @@ export default function ControlPanel({
       <div className="command-row">
         <button type="button" onClick={onToggleHelp}>
           <HelpCircle size={16} aria-hidden="true" />
-          Help
+          Field Notes
+        </button>
+        <button type="button" onClick={onOpenLevels}>
+          <Box size={16} aria-hidden="true" />
+          Level Map
         </button>
         <button type="button" onClick={onUndo}>
           <Undo2 size={16} aria-hidden="true" />
@@ -82,6 +88,10 @@ export default function ControlPanel({
         <button type="button" onClick={onToggleDebug} aria-pressed={showDebug}>
           <Bug size={16} aria-hidden="true" />
           Debug
+        </button>
+        <button type="button" onClick={onOpenAbout}>
+          <HelpCircle size={16} aria-hidden="true" />
+          About
         </button>
       </div>
     </section>

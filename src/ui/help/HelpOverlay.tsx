@@ -15,24 +15,28 @@ export default function HelpOverlay({ onClose }: HelpOverlayProps) {
         <h2 id="help-title">Recursive Crate Instruments</h2>
         <div className="help-grid">
           <div>
-            <strong>Move</strong>
+            <span className="legend-sprite legend-probe" aria-hidden="true" />
+            <strong>Probe</strong>
             <span>WASD / arrow keys</span>
           </div>
           <div>
-            <strong>Player</strong>
-            <span>Yellow disc</span>
-          </div>
-          <div>
+            <span className="legend-sprite legend-crate" aria-hidden="true" />
             <strong>Cargo</strong>
-            <span>Green block</span>
+            <span>Pushable crate</span>
           </div>
           <div>
-            <strong>Open crate</strong>
-            <span>Interior preview</span>
+            <span className="legend-sprite legend-window" aria-hidden="true" />
+            <strong>Recursive Box</strong>
+            <span>Enter its window</span>
           </div>
           <div>
-            <strong>Receiver</strong>
-            <span>Dashed ring</span>
+            <span className="legend-sprite legend-dock" aria-hidden="true" />
+            <strong>Dock</strong>
+            <span>Power it with the target</span>
+          </div>
+          <div>
+            <strong>Undo</strong>
+            <span>Reverse one accepted move</span>
           </div>
           <div>
             <strong>Reset</strong>
