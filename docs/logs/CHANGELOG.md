@@ -1,5 +1,39 @@
 # Codex Work Log
 
+## 2026-06-30 - Stage 6B Frontend Design Audit
+
+Phase: stage 6b local skill install and human-readable game UI audit.
+
+Time:
+- 2026-06-30 18:21:48 +08:00
+
+Actions taken:
+- Confirmed `.agents/skills/craft-frontend-design` was missing.
+- Copied `craft-frontend-design` from `https://github.com/Udkam/codex-design-skill` commit `a798952effd67ebea39b9732c848e5de89d8263f` into `.agents/skills/craft-frontend-design`.
+- Read the source repository `README.md`, `AGENTS.md`, local `SKILL.md`, and relevant references: interface taxonomy, visual systems, motion and interaction, platform adapters, and quality gates.
+- Ran the skill audit script.
+- Wrote `docs/recursive-box-lab/STAGE6_VISUAL_AUDIT.md` with a concrete human critique.
+
+Audit findings summary:
+- The current UI is playable but visually fails as game UI.
+- The board reads as a pale table/grid, not a physical puzzle object.
+- Lettered entities and small previews fail the recursive spatial promise.
+- Controls and level selection read as admin UI.
+- The rewrite must change shell, board material, sprites, recursion presentation, motion, level curation, and screenshot acceptance.
+
+Verification commands and results:
+- `py -m py_compile .agents\skills\craft-frontend-design\scripts\audit_frontend_design.py`: passed.
+- `py .agents\skills\craft-frontend-design\scripts\audit_frontend_design.py .`: failed because copied skill reference docs intentionally contain placeholder and generic-copy examples used as anti-pattern documentation.
+- `py .agents\skills\craft-frontend-design\scripts\audit_frontend_design.py src`: passed with 0 errors and 0 warnings; info-only note that no visual assets were detected.
+
+Changed files:
+- Added `.agents/skills/craft-frontend-design/`.
+- Added `docs/recursive-box-lab/STAGE6_VISUAL_AUDIT.md`.
+- Updated tracked `docs/logs/CHANGELOG.md`.
+
+Next stage:
+- Stage 6C: rewrite app shell, board, sprites, recursion previews, motion, level select, Help, and About so the experience visibly reads as an original recursive puzzle game.
+
 ## 2026-06-30 - Stage 6 Visual Gameplay Rewrite Started
 
 Phase: stage 6a changelog tracking fix and visual rejection record.

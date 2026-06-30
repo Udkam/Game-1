@@ -1,0 +1,4 @@
+interface:
+  display_name: "Craft Frontend Design"
+  short_description: "Build and review polished frontend experiences"
+  default_prompt: "Use $craft-frontend-design to build or review a polished frontend experience."
