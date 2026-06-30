@@ -1,1 +1,8 @@
 docs/logs/CHANGELOG.md
+node_modules/
+dist/
+coverage/
+.vite/
+.env
+.env.*
+npm-debug.log*
