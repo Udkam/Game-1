@@ -1,20 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { applyMove, createGameState, validateLevelDefinition } from "../game";
+import { applyMove, createGameState } from "../game";
+import { validateTutorialLevel } from "./levelValidation";
 import { tutorialLevels, tutorialSolutions } from "./tutorial";
 
 describe("tutorial levels", () => {
-  it("defines fifteen original tutorial levels", () => {
-    expect(tutorialLevels).toHaveLength(15);
-    expect(new Set(tutorialLevels.map((level) => level.id)).size).toBe(15);
+  it("defines ten curated tutorial levels", () => {
+    expect(tutorialLevels).toHaveLength(10);
+    expect(new Set(tutorialLevels.map((level) => level.id)).size).toBe(10);
   });
 
-  it("passes schema validation", () => {
+  it("passes schema and metadata validation", () => {
     for (const level of tutorialLevels) {
-      expect(validateLevelDefinition(level)).toEqual([]);
+      expect(validateTutorialLevel(level)).toEqual([]);
     }
   });
 
-  it("includes a winning path for every tutorial level", () => {
+  it("includes a winning scripted path for every tutorial level", () => {
     for (const level of tutorialLevels) {
       const solution = tutorialSolutions[level.id];
       expect(solution, level.id).toBeDefined();
@@ -23,6 +24,17 @@ describe("tutorial levels", () => {
         createGameState(level),
       );
       expect(finalState.won, level.id).toBe(true);
+      expect(solution.length, level.id).toBeLessThanOrEqual(level.targetMoves);
     }
+  });
+
+  it("covers the required first-five teaching arc", () => {
+    expect(tutorialLevels.slice(0, 5).map((level) => level.mechanicTags)).toEqual([
+      ["push", "dock"],
+      ["enter", "recursive-room"],
+      ["push-out", "edge-exit"],
+      ["push-into", "container"],
+      ["push-out", "container", "parent-update"],
+    ]);
   });
 });

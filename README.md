@@ -30,11 +30,11 @@ npm run build
 
 - Vite, React, TypeScript, and Vitest.
 - Pure movement engine under `src/game`.
-- Fifteen original tutorial levels under `src/levels/tutorial.ts`.
+- Ten curated original tutorial levels under `src/levels/tutorial.ts`.
 - Keyboard movement with WASD or arrow keys.
 - Undo, reset, next-level controls, and visible world breadcrumb.
 - Nested world preview inside open boxes.
-- Level library, help view, about view, and localStorage progress persistence.
+- Level map, help overlay, about view, and localStorage progress persistence.
 - CI workflow for install, test, typecheck, and build.
 
 ## Static Deployment

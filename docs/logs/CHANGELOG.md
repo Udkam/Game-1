@@ -1,5 +1,63 @@
 # Codex Work Log
 
+## 2026-06-30 - Stage 6D Level Curation and Validation
+
+Phase: stage 6d curate the level set around mechanics and add validation.
+
+Time:
+- 2026-06-30 18:36:11 +08:00
+
+Actions taken:
+- Replaced the previous 15-level quantity-oriented set with 10 curated tutorial experiments.
+- Added required metadata to every level:
+  - `subtitle`
+  - `mechanicTags`
+  - `designIntent`
+  - `parMoves`
+  - `targetMoves`
+  - `scriptedSolution`
+- Added `src/levels/levelValidation.ts` for level-specific validation.
+- Updated `src/levels/tutorial.test.ts` to validate metadata, mechanic tags, and winning scripted solutions.
+- Updated `docs/recursive-box-lab/LEVEL_DESIGN.md` to document the curated 10-level arc.
+- Updated README from 15 levels to 10 curated levels and changed Help wording from page/view to overlay.
+
+Deleted/replaced filler:
+- Removed Stage 5 levels 11-15:
+  - North Exit
+  - South Exit
+  - Inside-to-Outside
+  - Vertical Loader
+  - Deep Egress
+- Reason: they primarily broadened directional coverage or repeated known mechanics instead of improving the first playable teaching arc.
+
+Curated level arc:
+1. L1 basic push
+2. L2 enter box
+3. L3 push out from box
+4. L4 push box into box
+5. L5 move a world-bearing structure from inside to parent
+6. L6 two-layer recursion
+7. L7 cross-world targets
+8. L8 enter then push out
+9. L9 nested box order
+10. L10 composite fold
+
+Verification commands and results:
+- `npm.cmd run test`: passed, 4 test files and 17 tests.
+- `npm.cmd run typecheck`: passed.
+- `npm.cmd run build`: passed.
+
+Changed files:
+- `src/levels/tutorial.ts`
+- `src/levels/levelValidation.ts`
+- `src/levels/tutorial.test.ts`
+- `docs/recursive-box-lab/LEVEL_DESIGN.md`
+- `README.md`
+- `docs/logs/CHANGELOG.md`
+
+Next stage:
+- Stage 6E: add Playwright screenshot script, generate and commit screenshot acceptance artifacts, and run final verification.
+
 ## 2026-06-30 - Stage 6C Visual Gameplay Shell Rewrite
 
 Phase: stage 6c game-first visual and interaction rewrite.
