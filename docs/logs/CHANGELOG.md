@@ -1,5 +1,57 @@
 # Codex Work Log
 
+## 2026-06-30 - Stage 6E Screenshot-Based Visual Acceptance
+
+Phase: stage 6e visual acceptance artifacts and final verification.
+
+Time:
+- 2026-06-30 18:45:00 +08:00
+
+Actions taken:
+- Added Playwright as a dev dependency for deterministic local visual capture.
+- Added `npm run screenshot` through `scripts/capture-stage6-screenshots.mjs`.
+- Generated and committed five Stage 6 acceptance screenshots.
+- Hardened the screenshot script for this Windows project path:
+  - Replaced direct `npm.cmd` child spawning after it failed with `spawn EINVAL`.
+  - Avoided the Windows shell wrapper by launching Vite's Node CLI directly.
+  - Confirmed the script exits cleanly and does not leave port `5173` listening.
+- Inspected the generated home, level map, level 01, recursive-entry, and help screenshots before committing.
+
+Screenshot artifacts:
+- `docs/screenshots/stage6-home.png`
+- `docs/screenshots/stage6-level-select.png`
+- `docs/screenshots/stage6-level-01.png`
+- `docs/screenshots/stage6-recursive-entry.png`
+- `docs/screenshots/stage6-help.png`
+
+Verification commands and results:
+- `npm.cmd run screenshot`: first attempt failed before starting Vite with `spawn EINVAL`; script was patched.
+- `npm.cmd run screenshot`: second attempt produced screenshots but required manual cleanup because the shell wrapper left the Vite child alive; script was patched again.
+- `npm.cmd run screenshot`: passed after direct Vite CLI launch and exited cleanly.
+- `npm.cmd run test`: passed, 4 test files and 17 tests.
+- `npm.cmd run typecheck`: passed.
+- `npm.cmd run build`: passed.
+- `Get-NetTCPConnection -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue`: no listener after screenshot run.
+- `git ls-files docs/logs/CHANGELOG.md`: confirmed the changelog is tracked.
+
+Changed files:
+- `package.json`
+- `package-lock.json`
+- `scripts/capture-stage6-screenshots.mjs`
+- `docs/screenshots/stage6-home.png`
+- `docs/screenshots/stage6-level-select.png`
+- `docs/screenshots/stage6-level-01.png`
+- `docs/screenshots/stage6-recursive-entry.png`
+- `docs/screenshots/stage6-help.png`
+- `docs/logs/CHANGELOG.md`
+
+Risks and limitations:
+- Screenshots are static acceptance evidence; they do not replace human playtesting for motion feel.
+- Playwright captures Chromium only; other browsers should still be checked before a public release.
+
+Next stage:
+- Commit and push Stage 6E acceptance artifacts, then provide the Stage 6F final report.
+
 ## 2026-06-30 - Stage 6D Level Curation and Validation
 
 Phase: stage 6d curate the level set around mechanics and add validation.
