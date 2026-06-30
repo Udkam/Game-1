@@ -1,12 +1,14 @@
 import type { TutorialLevel } from "../../levels/tutorial";
+import type { ProgressState } from "../../progress/storage";
 
 interface LevelSelectProps {
   levels: TutorialLevel[];
   currentIndex: number;
+  progress: ProgressState;
   onSelectLevel: (index: number) => void;
 }
 
-export default function LevelSelect({ levels, currentIndex, onSelectLevel }: LevelSelectProps) {
+export default function LevelSelect({ levels, currentIndex, progress, onSelectLevel }: LevelSelectProps) {
   return (
     <section className="level-select" aria-label="Tutorial levels">
       <h2>Levels</h2>
@@ -19,7 +21,8 @@ export default function LevelSelect({ levels, currentIndex, onSelectLevel }: Lev
             onClick={() => onSelectLevel(index)}
           >
             <span>{index + 1}</span>
-            {level.title}
+            <strong>{level.title}</strong>
+            {progress.completedLevelIds.includes(level.id) ? <em>done</em> : null}
           </button>
         ))}
       </div>

@@ -30,10 +30,24 @@ npm run build
 
 - Vite, React, TypeScript, and Vitest.
 - Pure movement engine under `src/game`.
-- Five original tutorial levels under `src/levels/tutorial.ts`.
+- Fifteen original tutorial levels under `src/levels/tutorial.ts`.
 - Keyboard movement with WASD or arrow keys.
 - Undo, reset, next-level controls, and visible world breadcrumb.
 - Nested world preview inside open boxes.
+- Level library, help view, about view, and localStorage progress persistence.
+- CI workflow for install, test, typecheck, and build.
+
+## Static Deployment
+
+The app is a static Vite build:
+
+```sh
+npm run build
+```
+
+The deployable output is `dist/`. Do not commit `dist/` unless repository policy
+changes. For GitHub Pages, publish the `dist/` output from a CI/deploy workflow
+or upload it through the Pages artifact flow.
 
 ## Historical Reset Notice
 

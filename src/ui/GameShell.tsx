@@ -1,10 +1,14 @@
 import { ChevronRight } from "lucide-react";
 import { getWorldPath, type Direction, type GameState } from "../game";
 import type { TutorialLevel } from "../levels/tutorial";
+import type { ProgressState } from "../progress/storage";
 import ControlPanel from "./controls/ControlPanel";
 import DebugPanel from "./debug/DebugPanel";
 import LevelSelect from "./controls/LevelSelect";
 import HelpOverlay from "./help/HelpOverlay";
+import AboutPage from "./pages/AboutPage";
+import HelpPage from "./pages/HelpPage";
+import LevelLibrary from "./pages/LevelLibrary";
 import RecursiveWorldView from "./world/RecursiveWorldView";
 
 interface GameShellProps {
@@ -13,12 +17,15 @@ interface GameShellProps {
   levelIndex: number;
   totalLevels: number;
   levels: TutorialLevel[];
+  progress: ProgressState;
+  view: "play" | "levels" | "help" | "about";
   canAdvance: boolean;
   onMove: (direction: Direction) => void;
   onUndo: () => void;
   onReset: () => void;
   onNext: () => void;
   onSelectLevel: (index: number) => void;
+  onViewChange: (view: "play" | "levels" | "help" | "about") => void;
   showDebug: boolean;
   onToggleDebug: () => void;
   showHelp: boolean;
@@ -31,12 +38,15 @@ export default function GameShell({
   levelIndex,
   totalLevels,
   levels,
+  progress,
+  view,
   canAdvance,
   onMove,
   onUndo,
   onReset,
   onNext,
   onSelectLevel,
+  onViewChange,
   showDebug,
   onToggleDebug,
   showHelp,
@@ -58,6 +68,20 @@ export default function GameShell({
         </div>
       </header>
 
+      <nav className="view-tabs" aria-label="Application views">
+        {(["play", "levels", "help", "about"] as const).map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={view === item ? "active" : undefined}
+            onClick={() => onViewChange(item)}
+          >
+            {item === "play" ? "Play" : item === "levels" ? "Levels" : item === "help" ? "Help" : "About"}
+          </button>
+        ))}
+      </nav>
+
+      {view === "play" ? (
       <section className="play-layout" aria-label="Playable puzzle">
         <div className="board-panel">
           <div className="world-breadcrumb" aria-label="Current world path">
@@ -93,6 +117,7 @@ export default function GameShell({
           <LevelSelect
             levels={levels}
             currentIndex={levelIndex}
+            progress={progress}
             onSelectLevel={onSelectLevel}
           />
           <section className="mechanic-note" aria-label="Current objective">
@@ -101,6 +126,17 @@ export default function GameShell({
           </section>
         </aside>
       </section>
+      ) : null}
+      {view === "levels" ? (
+        <LevelLibrary
+          levels={levels}
+          currentIndex={levelIndex}
+          progress={progress}
+          onSelectLevel={onSelectLevel}
+        />
+      ) : null}
+      {view === "help" ? <HelpPage /> : null}
+      {view === "about" ? <AboutPage /> : null}
       {showHelp ? <HelpOverlay onClose={onToggleHelp} /> : null}
     </main>
   );

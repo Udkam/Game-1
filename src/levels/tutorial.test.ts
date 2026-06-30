@@ -3,9 +3,9 @@ import { applyMove, createGameState, validateLevelDefinition } from "../game";
 import { tutorialLevels, tutorialSolutions } from "./tutorial";
 
 describe("tutorial levels", () => {
-  it("defines ten original tutorial levels", () => {
-    expect(tutorialLevels).toHaveLength(10);
-    expect(new Set(tutorialLevels.map((level) => level.id)).size).toBe(10);
+  it("defines fifteen original tutorial levels", () => {
+    expect(tutorialLevels).toHaveLength(15);
+    expect(new Set(tutorialLevels.map((level) => level.id)).size).toBe(15);
   });
 
   it("passes schema validation", () => {
