@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUp,
+  Bug,
   RotateCcw,
   SkipForward,
   Undo2,
@@ -13,20 +14,24 @@ interface ControlPanelProps {
   moves: number;
   won: boolean;
   canAdvance: boolean;
+  showDebug: boolean;
   onMove: (direction: Direction) => void;
   onUndo: () => void;
   onReset: () => void;
   onNext: () => void;
+  onToggleDebug: () => void;
 }
 
 export default function ControlPanel({
   moves,
   won,
   canAdvance,
+  showDebug,
   onMove,
   onUndo,
   onReset,
   onNext,
+  onToggleDebug,
 }: ControlPanelProps) {
   return (
     <section className="control-panel" aria-label="Puzzle controls">
@@ -66,6 +71,10 @@ export default function ControlPanel({
         <button type="button" onClick={onNext} disabled={!won || !canAdvance}>
           <SkipForward size={16} aria-hidden="true" />
           Next Level
+        </button>
+        <button type="button" onClick={onToggleDebug} aria-pressed={showDebug}>
+          <Bug size={16} aria-hidden="true" />
+          Debug
         </button>
       </div>
     </section>

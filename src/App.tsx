@@ -21,6 +21,7 @@ const KEY_DIRECTIONS: Record<string, Direction> = {
 export default function App() {
   const [levelIndex, setLevelIndex] = useState(0);
   const [state, setState] = useState(() => createGameState(tutorialLevels[0]));
+  const [showDebug, setShowDebug] = useState(false);
 
   const level = tutorialLevels[levelIndex];
   const canAdvance = levelIndex < tutorialLevels.length - 1;
@@ -61,6 +62,8 @@ export default function App() {
       onNext={() => loadLevel(levelIndex + 1)}
       onSelectLevel={loadLevel}
       onKeyboard={keyboardHandler}
+      showDebug={showDebug}
+      onToggleDebug={() => setShowDebug((current) => !current)}
     />
   );
 }

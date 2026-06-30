@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { getWorldPath, type Direction, type GameState } from "../game";
 import type { TutorialLevel } from "../levels/tutorial";
 import ControlPanel from "./controls/ControlPanel";
+import DebugPanel from "./debug/DebugPanel";
 import LevelSelect from "./controls/LevelSelect";
 import RecursiveWorldView from "./world/RecursiveWorldView";
 
@@ -18,6 +19,8 @@ interface GameShellProps {
   onNext: () => void;
   onSelectLevel: (index: number) => void;
   onKeyboard: (event: React.KeyboardEvent) => void;
+  showDebug: boolean;
+  onToggleDebug: () => void;
 }
 
 export default function GameShell({
@@ -33,6 +36,8 @@ export default function GameShell({
   onNext,
   onSelectLevel,
   onKeyboard,
+  showDebug,
+  onToggleDebug,
 }: GameShellProps) {
   const path = getWorldPath(state, state.activeWorldId);
 
@@ -73,11 +78,14 @@ export default function GameShell({
             moves={state.moves}
             won={state.won}
             canAdvance={canAdvance}
+            showDebug={showDebug}
             onMove={onMove}
             onUndo={onUndo}
             onReset={onReset}
             onNext={onNext}
+            onToggleDebug={onToggleDebug}
           />
+          {showDebug ? <DebugPanel state={state} /> : null}
           <LevelSelect
             levels={levels}
             currentIndex={levelIndex}

@@ -272,10 +272,23 @@ function exitBoxCore(
 }
 
 function setEntityPosition(state: GameCoreState, entity: Entity, position: Entity["position"]) {
-  state.entities[entity.id] = {
+  const nextEntity = {
     ...entity,
     position: { ...position },
   } as Entity;
+
+  state.entities[entity.id] = nextEntity;
+
+  if (nextEntity.type === "box" && nextEntity.innerWorldId) {
+    const innerWorld = state.worlds[nextEntity.innerWorldId];
+    state.worlds[nextEntity.innerWorldId] = {
+      ...innerWorld,
+      parent: {
+        worldId: position.worldId,
+        boxId: nextEntity.id,
+      },
+    };
+  }
 }
 
 export function previewMove(state: GameState, entityId: EntityId, dir: Direction): GameCoreState {
