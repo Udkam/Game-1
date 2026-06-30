@@ -1,4 +1,7 @@
 docs/logs/CHANGELOG.md
+!docs/
+!docs/logs/
+!docs/logs/CHANGELOG.md
 node_modules/
 dist/
 coverage/
