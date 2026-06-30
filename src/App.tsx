@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { applyMove, createGameState, reset, undo, type Direction } from "./game";
 import { tutorialLevels } from "./levels/tutorial";
 import GameShell from "./ui/GameShell";
@@ -22,6 +22,7 @@ export default function App() {
   const [levelIndex, setLevelIndex] = useState(0);
   const [state, setState] = useState(() => createGameState(tutorialLevels[0]));
   const [showDebug, setShowDebug] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const level = tutorialLevels[levelIndex];
   const canAdvance = levelIndex < tutorialLevels.length - 1;
@@ -36,17 +37,29 @@ export default function App() {
     setState((current) => applyMove(current, direction));
   }, []);
 
-  const keyboardHandler = useMemo(
-    () => (event: React.KeyboardEvent) => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (showHelp) {
+        if (event.key === "Escape") {
+          setShowHelp(false);
+        }
+        return;
+      }
+      const target = event.target as HTMLElement | null;
+      if (target?.matches("input, textarea, select")) {
+        return;
+      }
       const direction = KEY_DIRECTIONS[event.key];
       if (!direction) {
         return;
       }
       event.preventDefault();
       move(direction);
-    },
-    [move],
-  );
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [move, showHelp]);
 
   return (
     <GameShell
@@ -61,9 +74,10 @@ export default function App() {
       onReset={() => setState((current) => reset(current))}
       onNext={() => loadLevel(levelIndex + 1)}
       onSelectLevel={loadLevel}
-      onKeyboard={keyboardHandler}
       showDebug={showDebug}
       onToggleDebug={() => setShowDebug((current) => !current)}
+      showHelp={showHelp}
+      onToggleHelp={() => setShowHelp((current) => !current)}
     />
   );
 }

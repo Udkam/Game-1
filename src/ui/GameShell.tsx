@@ -4,6 +4,7 @@ import type { TutorialLevel } from "../levels/tutorial";
 import ControlPanel from "./controls/ControlPanel";
 import DebugPanel from "./debug/DebugPanel";
 import LevelSelect from "./controls/LevelSelect";
+import HelpOverlay from "./help/HelpOverlay";
 import RecursiveWorldView from "./world/RecursiveWorldView";
 
 interface GameShellProps {
@@ -18,9 +19,10 @@ interface GameShellProps {
   onReset: () => void;
   onNext: () => void;
   onSelectLevel: (index: number) => void;
-  onKeyboard: (event: React.KeyboardEvent) => void;
   showDebug: boolean;
   onToggleDebug: () => void;
+  showHelp: boolean;
+  onToggleHelp: () => void;
 }
 
 export default function GameShell({
@@ -35,14 +37,15 @@ export default function GameShell({
   onReset,
   onNext,
   onSelectLevel,
-  onKeyboard,
   showDebug,
   onToggleDebug,
+  showHelp,
+  onToggleHelp,
 }: GameShellProps) {
   const path = getWorldPath(state, state.activeWorldId);
 
   return (
-    <main className="game-shell" tabIndex={0} onKeyDown={onKeyboard}>
+    <main className="game-shell">
       <header className="game-header">
         <div>
           <p className="eyebrow">Recursive Box Lab</p>
@@ -84,6 +87,7 @@ export default function GameShell({
             onReset={onReset}
             onNext={onNext}
             onToggleDebug={onToggleDebug}
+            onToggleHelp={onToggleHelp}
           />
           {showDebug ? <DebugPanel state={state} /> : null}
           <LevelSelect
@@ -91,12 +95,13 @@ export default function GameShell({
             currentIndex={levelIndex}
             onSelectLevel={onSelectLevel}
           />
-          <section className="mechanic-note" aria-label="Keyboard controls">
-            <h2>Controls</h2>
-            <p>Use WASD or arrow keys. Push crates, enter open crates, and watch cargo move between worlds.</p>
+          <section className="mechanic-note" aria-label="Current objective">
+            <h2>Objective</h2>
+            <p>{level.description}</p>
           </section>
         </aside>
       </section>
+      {showHelp ? <HelpOverlay onClose={onToggleHelp} /> : null}
     </main>
   );
 }
