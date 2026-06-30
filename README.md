@@ -1,10 +1,46 @@
-# Game-1 Reset Notice
+# Recursive Box Lab
+
+Recursive Box Lab is a fresh browser demo for an original recursive box puzzle.
+It starts from the documented reset baseline below and does not continue the
+failed v8 implementation branch.
+
+## Local Development
+
+Install dependencies:
+
+```sh
+npm install
+```
+
+Run the playable prototype:
+
+```sh
+npm run dev
+```
+
+Verify the project:
+
+```sh
+npm run test
+npm run typecheck
+npm run build
+```
+
+## Current Demo Features
+
+- Vite, React, TypeScript, and Vitest.
+- Pure movement engine under `src/game`.
+- Five original tutorial levels under `src/levels/tutorial.ts`.
+- Keyboard movement with WASD or arrow keys.
+- Undo, reset, next-level controls, and visible world breadcrumb.
+- Nested world preview inside open boxes.
+
+## Historical Reset Notice
 
 This repository has been intentionally reset after the failed v8 reboot round.
 
-There is no runnable game implementation on `main` right now. The current
-`main` branch keeps only the minimum records needed to explain the failure,
-preserve provenance, and support a clean future restart.
+The `main` branch was documentation-only at the start of this restart. The
+current feature branch contains the new implementation.
 
 ## Current Status
 
