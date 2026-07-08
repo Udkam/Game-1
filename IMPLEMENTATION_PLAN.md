@@ -1,7 +1,7 @@
 # Implementation Plan
 
-Status: approved implementation contract through Stage 4 recursive gameplay
-kernel. Do not proceed to Stage 5 without review.
+Status: approved implementation contract through Stage 5 event-driven game
+feel. Do not proceed to Stage 6 without review.
 
 ## Gate 0: Approval Required
 
@@ -25,7 +25,7 @@ Current forbidden work:
 - React gameplay UI, DOM cells, or DOM entities.
 - Level systems or puzzle content.
 - Level packs, level editor, menus, polish UI, or large content.
-- Proceeding to Stage 5 without explicit review.
+- Proceeding to Stage 6 without explicit review.
 
 ## Evidence Already Collected
 
@@ -128,8 +128,7 @@ Current state before Stage 3A approval:
 | Local visual output has been compared | No local output exists yet, so comparison is impossible. | Deferred until Stage 7 after implementation output exists. |
 | Approval has been granted | Stage 1, Stage 2, and Stage 3A approval messages have been recorded. | Ready for Stage 3A only. |
 
-The next missing decision is Stage 5 approval after Stage 4 gameplay-kernel
-review.
+The next missing decision is Stage 6 approval after Stage 5 game-feel review.
 
 ## Approval Decision Record
 
@@ -138,7 +137,7 @@ entry from the user or a later agent records the exact approval message.
 
 Current decision:
 
-- Status: approved through Stage 4 recursive gameplay kernel only.
+- Status: approved through Stage 5 event-driven game feel only.
 - Stage 1 approval evidence: user message on 2026-07-07:
   `Approved for Stage 1 scaffold: ARCHITECTURE.md, DESIGN_REFERENCE.md, and IMPLEMENTATION_PLAN.md are accepted as the implementation contract.`
 - Stage 2 approval evidence: user-provided objective on 2026-07-07:
@@ -151,12 +150,14 @@ Current decision:
   `Proceed to Stage 3B: Recursive Simulation Core. Stage 3A-Refinement is approved.`
 - Stage 4 approval evidence: user-provided objective on 2026-07-08:
   `Proceed with Stage 4: Recursive Gameplay Kernel. Stage 3B is approved.`
-- Allowed next action: Stage 4 recursive gameplay kernel,
+- Stage 5 approval evidence: user-provided objective on 2026-07-08:
+  `Proceed to Stage 5: Game Feel and Event Driven Rendering. Stage 4 is approved.`
+- Allowed next action: Stage 5 event-driven game feel,
   browser visual QA, screenshot evidence, commit, and main-branch publication.
 - Previous allowed action: Stage 2 renderer foundation, browser visual QA,
   screenshot evidence, commit, and main-branch publication.
 - Forbidden next action: level packs, level editor, menus, polish UI, large
-  content, renderer redesign, React gameplay UI, or Stage 5 work.
+  content, renderer redesign, React gameplay UI, or Stage 6 work.
 
 Approval can be recorded as:
 
@@ -416,24 +417,38 @@ Failure conditions:
 - The stage adds level packs, a level editor, menus, polish UI, or large
   content.
 
-## Stage 5: Input, Commands, And Game Feel
+## Stage 5: Event Driven Game Feel
 
-Goal: make movement feel crisp and readable.
+Goal: convert simulation events into high-fidelity playable feedback without
+adding level content.
 
-Planned modules:
+Implemented modules/artifacts:
 
-- `src/input/InputManager.ts`
-- `src/runtime/CommandQueue.ts`
-- `src/animation/TransitionTimeline.ts`
+- `src/animation/AnimationSystem.ts`
+- `src/animation/Timeline.ts`
 - `src/animation/easing.ts`
-- `src/animation/feedback.ts`
+- `src/animation/transitions.ts`
+- `src/audio/AudioManager.ts`
+- `src/runtime/EventPipeline.ts`
+- `src/runtime/InteractionPrototype.ts`
+- `src/core/replay.ts`
+- `src/render/Camera2D.ts`
+- `src/render/PixiApp.ts`
+- `docs/qa/STAGE5_GAME_FEEL.md`
+- `docs/screenshots/stage5-game-feel.png`
 
 Acceptance:
 
 - Keyboard commands drive the same API used by tests and replays.
-- Movement, push, blocked, enter, exit, undo, and solved feedback are distinct.
-- Input is locked or queued during critical transitions.
-- Reduced-motion mode remains playable.
+- Simulation events flow through `EventPipeline` into animation timelines and
+  Pixi renderer interpolation.
+- Movement, push, blocked, enter, exit, undo, and solved feedback have distinct
+  animation/audio/camera cues.
+- Camera follow, impact, enter, and exit cues remain outside
+  `SimulationState`.
+- Audio foundation exposes replaceable move, push, blocked, enter, exit, and
+  success sound events without final assets.
+- Browser QA captures `docs/screenshots/stage5-game-feel.png`.
 
 Failure conditions:
 
@@ -441,6 +456,7 @@ Failure conditions:
 - Undo/redo uses separate code paths from replay.
 - A move can be accepted while the prior transition is in an undefined
   half-committed state.
+- Stage 5 adds level packs, a level editor, menus, polish UI, or large content.
 
 ## Stage 6: Level Serialization
 

@@ -1,24 +1,25 @@
 # Current Project Status
 
-Status: Stage 4 recursive gameplay kernel implemented and verified after the
-Stage 3B simulation core.
+Status: Stage 5 event-driven game feel implemented and verified after the
+Stage 4 recursive gameplay kernel.
 
 The current workspace is runnable as a React/Vite/PixiJS v8 visual-spatial
-prototype backed by a deterministic TypeScript recursive gameplay kernel. It
-intentionally contains no React gameplay UI, level packs, level editor, menus,
-polish UI, large content, or renderer redesign.
+prototype backed by a deterministic TypeScript recursive gameplay kernel and an
+event-driven animation pipeline. It intentionally contains no React gameplay
+UI, level packs, level editor, menus, polish UI, large content, or renderer
+redesign.
 
 ## Current Workspace
 
 - Current branch: `main`
-- Implementation files in the working tree: Stage 4 recursive gameplay kernel
-  plus prior renderer/prototype stages
+- Implementation files in the working tree: Stage 5 event-driven game feel
+  plus prior renderer/prototype/kernel stages
 - Required records in the working tree: present
 - Draft approval documents in the working tree:
   - `ARCHITECTURE.md`
   - `DESIGN_REFERENCE.md`
   - `IMPLEMENTATION_PLAN.md`
-- Approval status: approved through Stage 4 only
+- Approval status: approved through Stage 5 only
 - Local cleanup state: no generated build output retained; dev server stopped
 
 ## Preserved Records
@@ -40,11 +41,11 @@ failed round.
 
 ## Current Gate
 
-Do not extend beyond the Stage 4 gameplay kernel into React gameplay UI, level
-packs, a level editor, menus, polish UI, large content, renderer redesign, or
-Stage 5 work without explicit review.
+Do not extend beyond Stage 5 event-driven game feel into React gameplay UI,
+level packs, a level editor, menus, polish UI, large content, renderer
+redesign, or Stage 6 work without explicit review.
 
-The current aligned action has been completed as Stage 4:
+The current aligned action has been completed as Stage 5:
 
 - `package.json`
 - `vite.config.ts`
@@ -94,6 +95,14 @@ The current aligned action has been completed as Stage 4:
 - `src/core/systems.ts`
 - `docs/qa/STAGE4_PLAYABLE_CORE.md`
 - `docs/screenshots/stage4-playable-core.png`
+- `src/animation/AnimationSystem.ts`
+- `src/animation/Timeline.ts`
+- `src/animation/transitions.ts`
+- `src/audio/AudioManager.ts`
+- `src/core/replay.ts`
+- `src/runtime/EventPipeline.ts`
+- `docs/qa/STAGE5_GAME_FEEL.md`
+- `docs/screenshots/stage5-game-feel.png`
 
 ## Retained For Audit
 

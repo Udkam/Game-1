@@ -1,4 +1,5 @@
 import { Container, Graphics } from "pixi.js";
+import type { Direction } from "../../core/types";
 import type { Rect2D } from "../../projection/types";
 import type { RenderPalette } from "../palette";
 
@@ -8,7 +9,7 @@ export interface RecursiveContainerPrimitive {
   previewRect: Rect2D;
 }
 
-export function createPlayerPrimitive(rect: Rect2D, palette: RenderPalette) {
+export function createPlayerPrimitive(rect: Rect2D, palette: RenderPalette, facing: Direction = "down") {
   const container = new Container();
   container.label = "player-primitive";
 
@@ -28,19 +29,29 @@ export function createPlayerPrimitive(rect: Rect2D, palette: RenderPalette) {
   });
   body.circle(rect.x + rect.width * 0.32, rect.y + rect.height * 0.43, eyeRadius).fill(palette.playerAccent);
   body.circle(rect.x + rect.width * 0.68, rect.y + rect.height * 0.43, eyeRadius).fill(palette.playerAccent);
-  body
-    .poly([
-      rect.x + rect.width * 0.5,
-      rect.y + rect.height * 0.62,
-      rect.x + rect.width * 0.6,
-      rect.y + rect.height * 0.74,
-      rect.x + rect.width * 0.4,
-      rect.y + rect.height * 0.74,
-    ])
-    .fill({ color: palette.playerAccent, alpha: 0.35 });
+  body.poly(createFacingTriangle(rect, facing)).fill({ color: palette.playerAccent, alpha: 0.35 });
 
   container.addChild(body);
   return container;
+}
+
+function createFacingTriangle(rect: Rect2D, facing: Direction) {
+  const centerX = rect.x + rect.width * 0.5;
+  const centerY = rect.y + rect.height * 0.68;
+  const tip = rect.width * 0.13;
+  const base = rect.width * 0.1;
+
+  if (facing === "up") {
+    return [centerX, centerY - tip, centerX + base, centerY + base, centerX - base, centerY + base];
+  }
+  if (facing === "left") {
+    return [centerX - tip, centerY, centerX + base, centerY - base, centerX + base, centerY + base];
+  }
+  if (facing === "right") {
+    return [centerX + tip, centerY, centerX - base, centerY - base, centerX - base, centerY + base];
+  }
+
+  return [centerX, centerY + tip, centerX + base, centerY - base, centerX - base, centerY - base];
 }
 
 export function createBoxPrimitive(rect: Rect2D, palette: RenderPalette) {

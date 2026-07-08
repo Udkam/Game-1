@@ -1,5 +1,9 @@
 import { Application, Graphics } from "pixi.js";
-import type { Rect2D, Size2D, WorldProjection } from "../projection/types";
+import { AnimationSystem, type AnimationFrameState } from "../animation/AnimationSystem";
+import { lerp } from "../animation/easing";
+import type { AnimationPlan, CameraCue } from "../animation/transitions";
+import type { Direction } from "../core/types";
+import type { EntityProjection, Rect2D, Size2D, WorldProjection } from "../projection/types";
 import { createRecursiveInteractionProjection } from "../projection/worldProjection";
 import { Camera2D } from "./Camera2D";
 import { createRenderLayers, type RenderLayers } from "./layers";
@@ -16,14 +20,24 @@ import { RecursiveTransitionRenderer, type RecursiveTransitionGeometry } from ".
 export class PixiApp {
   private readonly host: HTMLElement;
   private readonly camera = new Camera2D();
+  private readonly animationSystem = new AnimationSystem();
   private readonly worldBounds: Rect2D = { x: 0, y: 0, width: 960, height: 768 };
   private app: Application | null = null;
   private layers: RenderLayers | null = null;
   private transitionRenderer: RecursiveTransitionRenderer | null = null;
   private transitionGeometry: RecursiveTransitionGeometry | null = null;
+  private animatedProjection:
+    | {
+        from: WorldProjection;
+        to: WorldProjection;
+        plan: AnimationPlan;
+        onComplete?: () => void;
+      }
+    | null = null;
   private projection: WorldProjection = createRecursiveInteractionProjection();
   private lastViewport: Size2D = { width: 0, height: 0 };
   private wantsInnerView = false;
+  private readonly facingByEntity = new Map<string, Direction>();
   private readonly tick = () => {
     const app = this.app;
     if (!app) {
@@ -35,6 +49,21 @@ export class PixiApp {
 
     if (resized) {
       this.draw();
+    }
+
+    if (this.animatedProjection) {
+      const frame = this.animationSystem.step(app.ticker.deltaMS);
+      this.camera.stepTransition(app.ticker.deltaMS);
+      this.draw(frame);
+
+      if (!frame.running) {
+        const completed = this.animatedProjection;
+        this.projection = completed.to;
+        this.animatedProjection = null;
+        this.draw();
+        completed.onComplete?.();
+      }
+      return;
     }
 
     if (this.transitionRenderer?.isTransitioning && this.transitionGeometry) {
@@ -75,8 +104,40 @@ export class PixiApp {
   }
 
   render(projection: WorldProjection) {
+    this.animationSystem.cancel();
+    this.animatedProjection = null;
     this.projection = projection;
     this.draw();
+  }
+
+  get isAnimating() {
+    return this.animatedProjection !== null;
+  }
+
+  renderWithAnimation(
+    fromProjection: WorldProjection,
+    toProjection: WorldProjection,
+    plan: AnimationPlan,
+    onComplete?: () => void,
+  ) {
+    this.animationSystem.cancel();
+    this.animatedProjection = {
+      from: fromProjection,
+      to: toProjection,
+      plan,
+      onComplete,
+    };
+    this.projection = toProjection;
+    this.rememberFacing(plan);
+    this.applyCameraCues(plan.cameraCues);
+    const frame = this.animationSystem.start(plan);
+    this.draw(frame);
+
+    if (plan.durationMs <= 0) {
+      this.animatedProjection = null;
+      this.draw();
+      onComplete?.();
+    }
   }
 
   toggleRecursiveTransition() {
@@ -84,8 +145,7 @@ export class PixiApp {
       return;
     }
 
-    this.wantsInnerView = !this.wantsInnerView;
-    this.transitionRenderer.start(this.wantsInnerView ? "enter" : "exit", this.transitionGeometry);
+    this.startRecursiveTransition(this.wantsInnerView ? "exit" : "enter");
   }
 
   destroy() {
@@ -94,6 +154,8 @@ export class PixiApp {
     }
 
     this.app.ticker.remove(this.tick);
+    this.animationSystem.cancel();
+    this.animatedProjection = null;
     this.transitionRenderer?.cancel();
     this.app.destroy({ removeView: true }, { children: true });
     this.app = null;
@@ -102,7 +164,7 @@ export class PixiApp {
     this.transitionGeometry = null;
   }
 
-  private draw() {
+  private draw(animationFrame?: AnimationFrameState) {
     const app = this.app;
     const layers = this.layers;
     if (!app || !layers) {
@@ -120,7 +182,11 @@ export class PixiApp {
 
     this.drawVoid(layers.backgroundLayer, viewport);
 
-    this.renderWorldProjection(this.projection, this.worldBounds, layers.recursiveWorldLayer);
+    const projection = animationFrame && this.animatedProjection
+      ? this.interpolateProjection(this.animatedProjection.from, this.animatedProjection.to, animationFrame)
+      : this.projection;
+
+    this.renderWorldProjection(projection, this.worldBounds, layers.recursiveWorldLayer, animationFrame);
 
     if (this.transitionRenderer && this.transitionGeometry) {
       if (this.transitionRenderer.isTransitioning) {
@@ -128,6 +194,8 @@ export class PixiApp {
       } else {
         this.transitionRenderer.applyRestingCamera(this.transitionGeometry);
       }
+    } else if (this.camera.hasActiveEffects) {
+      this.camera.applyTo(layers.cameraRoot);
     } else {
       this.camera.fitWorld(viewport, this.worldBounds, {
         margin: Math.max(44, Math.min(viewport.width, viewport.height) * 0.08),
@@ -156,17 +224,30 @@ export class PixiApp {
     layer.addChild(backdrop);
   }
 
-  private renderWorldProjection(projection: WorldProjection, rect: Rect2D, parent: RenderLayers["recursiveWorldLayer"]) {
+  private renderWorldProjection(
+    projection: WorldProjection,
+    rect: Rect2D,
+    parent: RenderLayers["recursiveWorldLayer"],
+    animationFrame?: AnimationFrameState,
+  ) {
     const palette = getPalette(projection.world.paletteId);
     const worldFrame = createWorldFrame(rect, palette, projection.depth);
 
     parent.addChild(worldFrame.container);
 
     for (const entityProjection of projection.entities) {
-      const entityRect = this.projectEntityRect(entityProjection.entity.bounds, projection.world.size, worldFrame.interiorRect);
+      const entityRect = this.applyEntityFeedback(
+        entityProjection,
+        this.projectEntityRect(entityProjection.entity.bounds, projection.world.size, worldFrame.interiorRect),
+        projection.world.size,
+        worldFrame.interiorRect,
+        animationFrame,
+      );
 
       if (entityProjection.entity.kind === "player") {
-        worldFrame.contentLayer.addChild(createPlayerPrimitive(entityRect, palette));
+        worldFrame.contentLayer.addChild(
+          createPlayerPrimitive(entityRect, palette, this.facingByEntity.get(entityProjection.entity.id)),
+        );
         continue;
       }
 
@@ -188,6 +269,7 @@ export class PixiApp {
           entityRect,
           palette,
           worldFrame.contentLayer,
+          animationFrame,
         );
       }
     }
@@ -200,6 +282,7 @@ export class PixiApp {
     rect: Rect2D,
     palette: RenderPalette,
     parent: RenderLayers["recursiveWorldLayer"],
+    animationFrame?: AnimationFrameState,
   ) {
     const primitive = createRecursiveContainerPrimitive(rect, palette);
     parent.addChild(primitive.container);
@@ -214,7 +297,7 @@ export class PixiApp {
     }
 
     if (childWorld) {
-      this.renderWorldProjection(childWorld, primitive.previewRect, primitive.previewLayer);
+      this.renderWorldProjection(childWorld, primitive.previewRect, primitive.previewLayer, animationFrame);
     }
   }
 
@@ -226,4 +309,191 @@ export class PixiApp {
       height: (entityBounds.height / worldSize.height) * interiorRect.height,
     };
   }
+
+  private interpolateProjection(
+    fromProjection: WorldProjection,
+    toProjection: WorldProjection,
+    frame: AnimationFrameState,
+  ): WorldProjection {
+    const fromEntities = mapProjectionEntities(fromProjection);
+
+    return {
+      ...toProjection,
+      entities: toProjection.entities.map((entityProjection) => {
+        const fromEntity = fromEntities.get(entityProjection.entity.id);
+        const progress = frame.entityProgress[entityProjection.entity.id];
+        const entity = fromEntity && progress !== undefined
+          ? {
+              ...entityProjection.entity,
+              bounds: interpolateRect(fromEntity.entity.bounds, entityProjection.entity.bounds, progress),
+            }
+          : entityProjection.entity;
+
+        return {
+          entity,
+          childWorld:
+            fromEntity?.childWorld && entityProjection.childWorld
+              ? this.interpolateProjection(fromEntity.childWorld, entityProjection.childWorld, frame)
+              : entityProjection.childWorld,
+        };
+      }),
+    };
+  }
+
+  private applyEntityFeedback(
+    entityProjection: EntityProjection,
+    rect: Rect2D,
+    worldSize: Size2D,
+    interiorRect: Rect2D,
+    animationFrame?: AnimationFrameState,
+  ): Rect2D {
+    const activePlan = this.animatedProjection?.plan;
+    if (!animationFrame || !activePlan) {
+      return rect;
+    }
+
+    const blocked = activePlan.blockedImpacts.find((impact) => impact.actorId === entityProjection.entity.id);
+    if (blocked && animationFrame.blockedImpact > 0) {
+      const gridNudge = directionVector(blocked.direction);
+      const xUnit = interiorRect.width / worldSize.width;
+      const yUnit = interiorRect.height / worldSize.height;
+      return {
+        ...rect,
+        x: rect.x + gridNudge.x * xUnit * 0.16 * animationFrame.blockedImpact,
+        y: rect.y + gridNudge.y * yUnit * 0.16 * animationFrame.blockedImpact,
+      };
+    }
+
+    const motion = activePlan.entityMotions.find((candidate) => candidate.entityId === entityProjection.entity.id);
+    if (motion?.kind === "push") {
+      const progress = animationFrame.entityProgress[motion.entityId] ?? 0;
+      const settle = Math.sin(Math.min(1, progress) * Math.PI);
+      const insetX = rect.width * 0.035 * settle;
+      const insetY = rect.height * 0.035 * settle;
+      return {
+        x: rect.x - insetX,
+        y: rect.y - insetY,
+        width: rect.width + insetX * 2,
+        height: rect.height + insetY * 2,
+      };
+    }
+
+    return rect;
+  }
+
+  private applyCameraCues(cues: readonly CameraCue[]) {
+    const enterExitCue = cues.find((cue) => cue.kind === "enter" || cue.kind === "exit");
+    if (enterExitCue) {
+      this.startRecursiveTransition(enterExitCue.kind === "enter" ? "enter" : "exit");
+      return;
+    }
+
+    const impactCue = cues.find((cue) => cue.kind === "impact");
+    if (impactCue) {
+      const vector = directionVector(impactCue.direction);
+      this.camera.beginImpact(vector.x * (impactCue.strength ?? 6), vector.y * (impactCue.strength ?? 6), impactCue.durationMs);
+      return;
+    }
+
+    const followCue = cues.find((cue) => cue.kind === "follow");
+    if (followCue) {
+      const target = this.findEntityRect(this.projection, followCue.entityId);
+      if (!target) {
+        return;
+      }
+
+      this.camera.beginFollowTransition(
+        this.camera.getFollowState(this.lastViewport, this.worldBounds, target, {
+          margin: Math.max(44, Math.min(this.lastViewport.width, this.lastViewport.height) * 0.08),
+          maxScale: 1.05,
+          followStrength: 0.16,
+        }),
+        followCue.durationMs,
+      );
+    }
+  }
+
+  private startRecursiveTransition(direction: "enter" | "exit") {
+    if (!this.transitionRenderer || !this.transitionGeometry) {
+      return;
+    }
+
+    this.wantsInnerView = direction === "enter";
+    this.transitionRenderer.start(direction, this.transitionGeometry);
+  }
+
+  private rememberFacing(plan: AnimationPlan) {
+    for (const motion of plan.entityMotions) {
+      if (motion.facing) {
+        this.facingByEntity.set(motion.entityId, motion.facing);
+      }
+    }
+  }
+
+  private findEntityRect(projection: WorldProjection, entityId: string | undefined): Rect2D | null {
+    if (!entityId) {
+      return null;
+    }
+
+    const match = projection.entities.find((entityProjection) => entityProjection.entity.id === entityId);
+    if (match) {
+      return {
+        x: (match.entity.bounds.x / projection.world.size.width) * this.worldBounds.width,
+        y: (match.entity.bounds.y / projection.world.size.height) * this.worldBounds.height,
+        width: (match.entity.bounds.width / projection.world.size.width) * this.worldBounds.width,
+        height: (match.entity.bounds.height / projection.world.size.height) * this.worldBounds.height,
+      };
+    }
+
+    for (const entityProjection of projection.entities) {
+      if (entityProjection.childWorld) {
+        const childMatch = this.findEntityRect(entityProjection.childWorld, entityId);
+        if (childMatch) {
+          return childMatch;
+        }
+      }
+    }
+
+    return null;
+  }
+}
+
+function mapProjectionEntities(projection: WorldProjection) {
+  const map = new Map<string, EntityProjection>();
+  collectEntityProjections(projection, map);
+  return map;
+}
+
+function collectEntityProjections(projection: WorldProjection, map: Map<string, EntityProjection>) {
+  for (const entityProjection of projection.entities) {
+    map.set(entityProjection.entity.id, entityProjection);
+    if (entityProjection.childWorld) {
+      collectEntityProjections(entityProjection.childWorld, map);
+    }
+  }
+}
+
+function interpolateRect(from: Rect2D, to: Rect2D, progress: number): Rect2D {
+  return {
+    x: lerp(from.x, to.x, progress),
+    y: lerp(from.y, to.y, progress),
+    width: lerp(from.width, to.width, progress),
+    height: lerp(from.height, to.height, progress),
+  };
+}
+
+function directionVector(direction: Direction | undefined) {
+  if (direction === "left") {
+    return { x: -1, y: 0 };
+  }
+  if (direction === "right") {
+    return { x: 1, y: 0 };
+  }
+  if (direction === "up") {
+    return { x: 0, y: -1 };
+  }
+  if (direction === "down") {
+    return { x: 0, y: 1 };
+  }
+  return { x: 0, y: 0 };
 }
