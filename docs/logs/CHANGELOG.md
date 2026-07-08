@@ -953,3 +953,56 @@ Next steps:
 - Start any future implementation from the documentation-only `main` baseline.
 - Create a fresh run id and branch for the next reboot.
 - Do not continue from the failed v8 reboot branch.
+
+## 2026-07-08 - Stage 5 Event-Driven Game Feel
+
+Phase: Stage 5 implementation.
+
+Actions taken:
+- Re-read the active objective file, approved architecture docs, design
+  reference, Stage 4 QA record, and current source state.
+- Verified Context7 was not exposed as a callable tool in this session.
+- Used official PixiJS, PixiJS Sound, TypeScript, Patrick's Parabox, and GitHub
+  references for architecture ideas before coding.
+- Added failing tests for animation mapping, animation cancellation, replay
+  determinism, event pipeline undo reversal, camera cleanup, and keyboard
+  command mapping.
+- Implemented `EventPipeline`, `AnimationSystem`, generic `Timeline`, event
+  transition mapping, `AudioManager`, replay helper, camera follow/impact
+  behavior, runtime command input, and Pixi projection interpolation.
+
+Changed files:
+- `src/animation/AnimationSystem.ts`
+- `src/animation/Timeline.ts`
+- `src/animation/easing.ts`
+- `src/animation/transitions.ts`
+- `src/audio/AudioManager.ts`
+- `src/core/replay.ts`
+- `src/runtime/EventPipeline.ts`
+- `src/runtime/GameRuntime.ts`
+- `src/runtime/InteractionPrototype.ts`
+- `src/render/Camera2D.ts`
+- `src/render/PixiApp.ts`
+- `src/render/primitives/entityPrimitives.ts`
+- Stage 5 tests and QA docs.
+
+Verification so far:
+- Red test run failed as expected before implementation.
+- Focused Stage 5 tests passed.
+- Full `npm.cmd run test` passed with 30 tests.
+- `npm.cmd run typecheck` passed after a narrowing fix.
+- Browser CDP QA loaded `http://127.0.0.1:5173/`, dispatched movement and
+  recursive-entry keys, captured `docs/screenshots/stage5-game-feel.png`, and
+  reported `canvasCount: 1`, `gameplayDom: 0`, and console problem events `0`.
+- Pixel sample for `stage5-game-feel.png`: `1262x804`, `uniqueColors: 28`,
+  `nonDarkSamples: 1390`, `nonBlank: true`.
+- Final `npm.cmd run typecheck`, `npm.cmd run test`, and `npm.cmd run build`
+  passed; full test suite reported 8 files and 30 tests passing.
+- Boundary checks found no `src/core` imports from animation/render/runtime,
+  no gameplay DOM selectors, and no `src/levels` directory.
+
+Risks:
+- Context7-specific documentation review could not be performed because no
+  Context7 tool was exposed.
+- Vite reports a chunk-size warning after minification; this is pre-existing
+  acceptable for the current prototype scale and does not block Stage 5.
