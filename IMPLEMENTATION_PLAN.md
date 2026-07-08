@@ -1,7 +1,7 @@
 # Implementation Plan
 
-Status: approved implementation contract through Stage 5 event-driven game
-feel. Do not proceed to Stage 6 without review.
+Status: approved implementation contract through Stage 6 renderer fidelity
+alignment. Do not proceed to Stage 7 without review.
 
 ## Gate 0: Approval Required
 
@@ -18,6 +18,8 @@ Current allowed work:
 - Browser/computer visual QA and screenshot evidence for Stage 3A-Refinement.
 - Browser/computer visual QA and screenshot evidence for Stage 3B.
 - Browser/computer visual QA and screenshot evidence for Stage 4.
+- Browser/computer visual QA and screenshot evidence for Stage 5.
+- Browser/computer visual QA and screenshot evidence for Stage 6.
 
 Current forbidden work:
 
@@ -25,7 +27,7 @@ Current forbidden work:
 - React gameplay UI, DOM cells, or DOM entities.
 - Level systems or puzzle content.
 - Level packs, level editor, menus, polish UI, or large content.
-- Proceeding to Stage 6 without explicit review.
+- Proceeding to Stage 7 without explicit review.
 
 ## Evidence Already Collected
 
@@ -128,7 +130,8 @@ Current state before Stage 3A approval:
 | Local visual output has been compared | No local output exists yet, so comparison is impossible. | Deferred until Stage 7 after implementation output exists. |
 | Approval has been granted | Stage 1, Stage 2, and Stage 3A approval messages have been recorded. | Ready for Stage 3A only. |
 
-The next missing decision is Stage 6 approval after Stage 5 game-feel review.
+The next missing decision is Stage 7 approval after Stage 6 renderer-fidelity
+review.
 
 ## Approval Decision Record
 
@@ -137,7 +140,7 @@ entry from the user or a later agent records the exact approval message.
 
 Current decision:
 
-- Status: approved through Stage 5 event-driven game feel only.
+- Status: approved through Stage 6 renderer fidelity alignment only.
 - Stage 1 approval evidence: user message on 2026-07-07:
   `Approved for Stage 1 scaffold: ARCHITECTURE.md, DESIGN_REFERENCE.md, and IMPLEMENTATION_PLAN.md are accepted as the implementation contract.`
 - Stage 2 approval evidence: user-provided objective on 2026-07-07:
@@ -152,12 +155,14 @@ Current decision:
   `Proceed with Stage 4: Recursive Gameplay Kernel. Stage 3B is approved.`
 - Stage 5 approval evidence: user-provided objective on 2026-07-08:
   `Proceed to Stage 5: Game Feel and Event Driven Rendering. Stage 4 is approved.`
-- Allowed next action: Stage 5 event-driven game feel,
+- Stage 6 approval evidence: user-provided objective on 2026-07-08:
+  `Proceed to Stage 6: Renderer Fidelity Pass. Stage 5 approved.`
+- Allowed next action: Stage 6 renderer fidelity alignment,
   browser visual QA, screenshot evidence, commit, and main-branch publication.
 - Previous allowed action: Stage 2 renderer foundation, browser visual QA,
   screenshot evidence, commit, and main-branch publication.
 - Forbidden next action: level packs, level editor, menus, polish UI, large
-  content, renderer redesign, React gameplay UI, or Stage 6 work.
+  content, renderer redesign, React gameplay UI, or Stage 7 work.
 
 Approval can be recorded as:
 
@@ -458,9 +463,48 @@ Failure conditions:
   half-committed state.
 - Stage 5 adds level packs, a level editor, menus, polish UI, or large content.
 
-## Stage 6: Level Serialization
+## Stage 6: Renderer Fidelity Alignment
 
-Goal: make levels data-driven and extensible.
+Goal: fix coordinate consistency and improve Patrick's Parabox-inspired visual
+fidelity without adding level content.
+
+Implemented modules/artifacts:
+
+- `src/render/metrics.ts`
+- `src/render/metrics.test.ts`
+- `src/render/PixiApp.ts`
+- `src/render/materials/worldMaterial.ts`
+- `src/render/primitives/worldFrame.ts`
+- `src/render/primitives/entityPrimitives.ts`
+- `src/projection/simulationProjection.ts`
+- `src/projection/worldProjection.ts`
+- `docs/qa/STAGE6_RENDER_ALIGNMENT.md`
+- `docs/screenshots/stage6-render-fidelity.png`
+
+Acceptance:
+
+- Shared metrics define cell, entity, box, wall, goal, shadow, and recursive
+  depth sizing.
+- Simulation projection hands renderer cell-space bounds only.
+- Renderer owns visual alignment, primitive dimensions, recursive child scaling,
+  shell material, shadows, and camera bounds.
+- Recursive child worlds are depth-scaled and masked through container
+  apertures; they are not manually resized into aperture rectangles.
+- Browser QA captures `docs/screenshots/stage6-render-fidelity.png`.
+
+Failure conditions:
+
+- Stage 6 adds level packs, level serialization, menus, polish UI, large
+  content, or new gameplay rules.
+- Core imports renderer, animation, runtime, PixiJS, DOM, camera, or viewport
+  modules.
+- React renders gameplay cells/entities.
+- Primitive dimensions fall back to scattered pixel constants instead of
+  `src/render/metrics.ts`.
+
+## Stage 7: Level Serialization
+
+Goal: make levels data-driven and extensible after renderer fidelity review.
 
 Planned modules:
 
@@ -483,7 +527,7 @@ Failure conditions:
 - Entity IDs, world IDs, or container edges are inferred from render order.
 - A schema migration path is impossible because no `schemaVersion` exists.
 
-## Stage 7: Visual QA And Reference Comparison
+## Stage 8: Visual QA And Reference Comparison
 
 Goal: prove output is moving toward the requested visual target.
 
@@ -510,7 +554,7 @@ Failure conditions:
 - Canvas pixel checks are omitted or only prove a blank background exists.
 - The first slice does not include any visible recursive-world relationship.
 
-## Stage 8: Content Expansion
+## Stage 9: Content Expansion
 
 Goal: add content only after fidelity, architecture, and game feel are credible.
 

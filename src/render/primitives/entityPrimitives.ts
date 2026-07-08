@@ -1,6 +1,14 @@
 import { Container, Graphics } from "pixi.js";
 import type { Direction } from "../../core/types";
 import type { Rect2D } from "../../projection/types";
+import {
+  ENTITY_SIZE,
+  GOAL_SIZE,
+  WALL_THICKNESS,
+  getContainerPreviewRect,
+  getPrimitiveShadowOffset,
+  scaleMetric,
+} from "../metrics";
 import type { RenderPalette } from "../palette";
 
 export interface RecursiveContainerPrimitive {
@@ -9,15 +17,16 @@ export interface RecursiveContainerPrimitive {
   previewRect: Rect2D;
 }
 
-export function createPlayerPrimitive(rect: Rect2D, palette: RenderPalette, facing: Direction = "down") {
+export function createPlayerPrimitive(rect: Rect2D, palette: RenderPalette, facing: Direction = "down", depth = 0) {
   const container = new Container();
   container.label = "player-primitive";
 
   const body = new Graphics();
-  const radius = Math.max(3, rect.width * 0.08);
-  const eyeRadius = Math.max(2.5, rect.width * 0.075);
+  const shadowOffset = getPrimitiveShadowOffset(depth);
+  const radius = scaleMetric(WALL_THICKNESS * 0.18, depth);
+  const eyeRadius = scaleMetric(ENTITY_SIZE * 0.075, depth);
 
-  body.roundRect(rect.x + rect.width * 0.08, rect.y + rect.height * 0.1, rect.width, rect.height, radius).fill({
+  body.roundRect(rect.x + shadowOffset * 0.7, rect.y + shadowOffset * 0.85, rect.width, rect.height, radius).fill({
     color: palette.shellShadow,
     alpha: 0.65,
   });
@@ -54,15 +63,16 @@ function createFacingTriangle(rect: Rect2D, facing: Direction) {
   return [centerX, centerY + tip, centerX + base, centerY - base, centerX - base, centerY - base];
 }
 
-export function createBoxPrimitive(rect: Rect2D, palette: RenderPalette) {
+export function createBoxPrimitive(rect: Rect2D, palette: RenderPalette, depth = 0) {
   const container = new Container();
   container.label = "box-primitive";
 
   const body = new Graphics();
-  const tab = Math.max(4, rect.width * 0.12);
-  const radius = Math.max(2, rect.width * 0.045);
+  const shadowOffset = getPrimitiveShadowOffset(depth);
+  const tab = scaleMetric(WALL_THICKNESS * 0.24, depth);
+  const radius = scaleMetric(WALL_THICKNESS * 0.1, depth);
 
-  body.roundRect(rect.x + rect.width * 0.08, rect.y + rect.height * 0.08, rect.width, rect.height, radius).fill({
+  body.roundRect(rect.x + shadowOffset * 0.75, rect.y + shadowOffset * 0.75, rect.width, rect.height, radius).fill({
     color: palette.shellShadow,
     alpha: 0.6,
   });
@@ -82,24 +92,33 @@ export function createBoxPrimitive(rect: Rect2D, palette: RenderPalette) {
   return container;
 }
 
-export function createGoalPrimitive(rect: Rect2D, palette: RenderPalette) {
+export function createGoalPrimitive(rect: Rect2D, palette: RenderPalette, depth = 0) {
   const container = new Container();
   container.label = "goal-primitive";
 
   const goal = new Graphics();
-  const strokeWidth = Math.max(3, rect.width * 0.06);
-  const dotRadius = Math.max(3, rect.width * 0.1);
-  const radius = Math.max(2, rect.width * 0.035);
+  const strokeWidth = scaleMetric(WALL_THICKNESS * 0.13, depth);
+  const dotRadius = scaleMetric(GOAL_SIZE * 0.1, depth);
+  const radius = scaleMetric(WALL_THICKNESS * 0.08, depth);
+  const innerSizeGuard = scaleMetric(WALL_THICKNESS * 0.02, depth);
 
   goal.roundRect(rect.x, rect.y, rect.width, rect.height, radius).stroke({
     color: palette.goal,
     width: strokeWidth,
     alpha: 0.95,
   });
-  goal.roundRect(rect.x + strokeWidth * 1.4, rect.y + strokeWidth * 1.4, rect.width - strokeWidth * 2.8, rect.height - strokeWidth * 2.8, radius).fill({
-    color: palette.shellShadow,
-    alpha: 0.18,
-  });
+  goal
+    .roundRect(
+      rect.x + strokeWidth * 1.4,
+      rect.y + strokeWidth * 1.4,
+      Math.max(innerSizeGuard, rect.width - strokeWidth * 2.8),
+      Math.max(innerSizeGuard, rect.height - strokeWidth * 2.8),
+      radius,
+    )
+    .fill({
+      color: palette.shellShadow,
+      alpha: 0.18,
+    });
   goal.circle(rect.x + rect.width * 0.28, rect.y + rect.height * 0.55, dotRadius).fill(palette.goalDot);
   goal.circle(rect.x + rect.width * 0.72, rect.y + rect.height * 0.55, dotRadius).fill(palette.goalDot);
 
@@ -110,6 +129,7 @@ export function createGoalPrimitive(rect: Rect2D, palette: RenderPalette) {
 export function createRecursiveContainerPrimitive(
   rect: Rect2D,
   palette: RenderPalette,
+  depth = 0,
 ): RecursiveContainerPrimitive {
   const container = new Container();
   container.label = "recursive-container-primitive";
@@ -117,24 +137,21 @@ export function createRecursiveContainerPrimitive(
   const body = new Graphics();
   const previewLayer = new Container();
   const mask = new Graphics();
-  const inset = rect.width * 0.12;
-  const radius = Math.max(3, rect.width * 0.05);
-  const previewRect = {
-    x: rect.x + inset,
-    y: rect.y + inset,
-    width: rect.width - inset * 2,
-    height: rect.height - inset * 2,
-  };
+  const previewRect = getContainerPreviewRect(rect, depth);
+  const shadowOffset = getPrimitiveShadowOffset(depth);
+  const tab = scaleMetric(WALL_THICKNESS * 0.28, depth);
+  const radius = scaleMetric(WALL_THICKNESS * 0.12, depth);
+  const rimWidth = scaleMetric(WALL_THICKNESS * 0.08, depth);
 
-  body.roundRect(rect.x + rect.width * 0.09, rect.y + rect.height * 0.1, rect.width, rect.height, radius).fill({
+  body.roundRect(rect.x + shadowOffset * 0.85, rect.y + shadowOffset, rect.width, rect.height, radius).fill({
     color: palette.shellShadow,
     alpha: 0.65,
   });
-  body.roundRect(rect.x - rect.width * 0.12, rect.y + rect.height * 0.38, rect.width * 0.18, rect.height * 0.24, radius).fill({
+  body.roundRect(rect.x - tab, rect.y + rect.height * 0.38, tab * 1.4, rect.height * 0.24, radius).fill({
     color: palette.containerWindow,
     alpha: 0.9,
   });
-  body.roundRect(rect.x + rect.width - rect.width * 0.06, rect.y + rect.height * 0.38, rect.width * 0.18, rect.height * 0.24, radius).fill({
+  body.roundRect(rect.x + rect.width - tab * 0.4, rect.y + rect.height * 0.38, tab * 1.4, rect.height * 0.24, radius).fill({
     color: palette.containerWindow,
     alpha: 0.9,
   });
@@ -143,7 +160,7 @@ export function createRecursiveContainerPrimitive(
   body.roundRect(previewRect.x, previewRect.y, previewRect.width, previewRect.height, radius * 0.5).fill(palette.containerWindow);
   body.roundRect(previewRect.x, previewRect.y, previewRect.width, previewRect.height, radius * 0.5).stroke({
     color: palette.rimBright,
-    width: Math.max(2, rect.width * 0.035),
+    width: rimWidth,
   });
 
   mask.roundRect(previewRect.x, previewRect.y, previewRect.width, previewRect.height, radius * 0.5).fill(0xffffff);

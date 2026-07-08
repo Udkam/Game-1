@@ -14,6 +14,13 @@ import {
   createPlayerPrimitive,
   createRecursiveContainerPrimitive,
 } from "./primitives/entityPrimitives";
+import {
+  getAlignedEntityRect,
+  getContainerPreviewRect,
+  getNestedWorldRect,
+  getWorldCameraBounds,
+  getWorldRenderRect,
+} from "./metrics";
 import { createWorldFrame } from "./primitives/worldFrame";
 import { RecursiveTransitionRenderer, type RecursiveTransitionGeometry } from "./RecursiveTransitionRenderer";
 
@@ -21,7 +28,6 @@ export class PixiApp {
   private readonly host: HTMLElement;
   private readonly camera = new Camera2D();
   private readonly animationSystem = new AnimationSystem();
-  private readonly worldBounds: Rect2D = { x: 0, y: 0, width: 960, height: 768 };
   private app: Application | null = null;
   private layers: RenderLayers | null = null;
   private transitionRenderer: RecursiveTransitionRenderer | null = null;
@@ -35,6 +41,7 @@ export class PixiApp {
       }
     | null = null;
   private projection: WorldProjection = createRecursiveInteractionProjection();
+  private rootWorldBounds: Rect2D = getWorldRenderRect(this.projection.world.size);
   private lastViewport: Size2D = { width: 0, height: 0 };
   private wantsInnerView = false;
   private readonly facingByEntity = new Map<string, Direction>();
@@ -107,6 +114,7 @@ export class PixiApp {
     this.animationSystem.cancel();
     this.animatedProjection = null;
     this.projection = projection;
+    this.rootWorldBounds = getWorldRenderRect(projection.world.size);
     this.draw();
   }
 
@@ -185,8 +193,11 @@ export class PixiApp {
     const projection = animationFrame && this.animatedProjection
       ? this.interpolateProjection(this.animatedProjection.from, this.animatedProjection.to, animationFrame)
       : this.projection;
+    const rootWorldBounds = getWorldRenderRect(projection.world.size, projection.depth);
+    const cameraBounds = getWorldCameraBounds(rootWorldBounds, projection.depth);
 
-    this.renderWorldProjection(projection, this.worldBounds, layers.recursiveWorldLayer, animationFrame);
+    this.rootWorldBounds = rootWorldBounds;
+    this.renderWorldProjection(projection, rootWorldBounds, layers.recursiveWorldLayer, animationFrame);
 
     if (this.transitionRenderer && this.transitionGeometry) {
       if (this.transitionRenderer.isTransitioning) {
@@ -197,7 +208,7 @@ export class PixiApp {
     } else if (this.camera.hasActiveEffects) {
       this.camera.applyTo(layers.cameraRoot);
     } else {
-      this.camera.fitWorld(viewport, this.worldBounds, {
+      this.camera.fitWorld(viewport, cameraBounds, {
         margin: Math.max(44, Math.min(viewport.width, viewport.height) * 0.08),
         maxScale: 1.05,
       });
@@ -238,7 +249,13 @@ export class PixiApp {
     for (const entityProjection of projection.entities) {
       const entityRect = this.applyEntityFeedback(
         entityProjection,
-        this.projectEntityRect(entityProjection.entity.bounds, projection.world.size, worldFrame.interiorRect),
+        getAlignedEntityRect(
+          entityProjection.entity.kind,
+          entityProjection.entity.bounds,
+          projection.world.size,
+          worldFrame.interiorRect,
+          projection.depth,
+        ),
         projection.world.size,
         worldFrame.interiorRect,
         animationFrame,
@@ -246,18 +263,18 @@ export class PixiApp {
 
       if (entityProjection.entity.kind === "player") {
         worldFrame.contentLayer.addChild(
-          createPlayerPrimitive(entityRect, palette, this.facingByEntity.get(entityProjection.entity.id)),
+          createPlayerPrimitive(entityRect, palette, this.facingByEntity.get(entityProjection.entity.id), projection.depth),
         );
         continue;
       }
 
       if (entityProjection.entity.kind === "box") {
-        worldFrame.contentLayer.addChild(createBoxPrimitive(entityRect, palette));
+        worldFrame.contentLayer.addChild(createBoxPrimitive(entityRect, palette, projection.depth));
         continue;
       }
 
       if (entityProjection.entity.kind === "goal") {
-        worldFrame.contentLayer.addChild(createGoalPrimitive(entityRect, palette));
+        worldFrame.contentLayer.addChild(createGoalPrimitive(entityRect, palette, projection.depth));
         continue;
       }
 
@@ -284,30 +301,26 @@ export class PixiApp {
     parent: RenderLayers["recursiveWorldLayer"],
     animationFrame?: AnimationFrameState,
   ) {
-    const primitive = createRecursiveContainerPrimitive(rect, palette);
+    const primitive = createRecursiveContainerPrimitive(rect, palette, projectionDepth);
     parent.addChild(primitive.container);
 
     if (projectionDepth === 0 && entityId === "container-b") {
       this.transitionGeometry = {
         viewport: this.lastViewport,
-        outerWorldBounds: this.worldBounds,
+        outerWorldBounds: getWorldCameraBounds(this.rootWorldBounds),
         containerBounds: rect,
         apertureBounds: primitive.previewRect,
       };
     }
 
     if (childWorld) {
-      this.renderWorldProjection(childWorld, primitive.previewRect, primitive.previewLayer, animationFrame);
+      this.renderWorldProjection(
+        childWorld,
+        getNestedWorldRect(childWorld.world.size, childWorld.depth, primitive.previewRect),
+        primitive.previewLayer,
+        animationFrame,
+      );
     }
-  }
-
-  private projectEntityRect(entityBounds: Rect2D, worldSize: Size2D, interiorRect: Rect2D): Rect2D {
-    return {
-      x: interiorRect.x + (entityBounds.x / worldSize.width) * interiorRect.width,
-      y: interiorRect.y + (entityBounds.y / worldSize.height) * interiorRect.height,
-      width: (entityBounds.width / worldSize.width) * interiorRect.width,
-      height: (entityBounds.height / worldSize.height) * interiorRect.height,
-    };
   }
 
   private interpolateProjection(
@@ -403,7 +416,7 @@ export class PixiApp {
       }
 
       this.camera.beginFollowTransition(
-        this.camera.getFollowState(this.lastViewport, this.worldBounds, target, {
+        this.camera.getFollowState(this.lastViewport, getWorldCameraBounds(this.rootWorldBounds), target, {
           margin: Math.max(44, Math.min(this.lastViewport.width, this.lastViewport.height) * 0.08),
           maxScale: 1.05,
           followStrength: 0.16,
@@ -430,24 +443,48 @@ export class PixiApp {
     }
   }
 
-  private findEntityRect(projection: WorldProjection, entityId: string | undefined): Rect2D | null {
+  private findEntityRect(
+    projection: WorldProjection,
+    entityId: string | undefined,
+    worldRect: Rect2D = getWorldRenderRect(projection.world.size, projection.depth),
+  ): Rect2D | null {
     if (!entityId) {
       return null;
     }
 
+    const interiorRect = {
+      x: worldRect.x,
+      y: worldRect.y,
+      width: worldRect.width,
+      height: worldRect.height,
+    };
     const match = projection.entities.find((entityProjection) => entityProjection.entity.id === entityId);
     if (match) {
-      return {
-        x: (match.entity.bounds.x / projection.world.size.width) * this.worldBounds.width,
-        y: (match.entity.bounds.y / projection.world.size.height) * this.worldBounds.height,
-        width: (match.entity.bounds.width / projection.world.size.width) * this.worldBounds.width,
-        height: (match.entity.bounds.height / projection.world.size.height) * this.worldBounds.height,
-      };
+      return getAlignedEntityRect(
+        match.entity.kind,
+        match.entity.bounds,
+        projection.world.size,
+        interiorRect,
+        projection.depth,
+      );
     }
 
     for (const entityProjection of projection.entities) {
       if (entityProjection.childWorld) {
-        const childMatch = this.findEntityRect(entityProjection.childWorld, entityId);
+        const containerRect = getAlignedEntityRect(
+          entityProjection.entity.kind,
+          entityProjection.entity.bounds,
+          projection.world.size,
+          interiorRect,
+          projection.depth,
+        );
+        const childAperture = getContainerPreviewRect(containerRect, projection.depth);
+        const childWorldRect = getNestedWorldRect(
+          entityProjection.childWorld.world.size,
+          entityProjection.childWorld.depth,
+          childAperture,
+        );
+        const childMatch = this.findEntityRect(entityProjection.childWorld, entityId, childWorldRect);
         if (childMatch) {
           return childMatch;
         }

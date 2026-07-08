@@ -1006,3 +1006,72 @@ Risks:
   Context7 tool was exposed.
 - Vite reports a chunk-size warning after minification; this is pre-existing
   acceptable for the current prototype scale and does not block Stage 5.
+
+## 2026-07-08 - Stage 6 Renderer Fidelity Alignment
+
+Phase: Stage 6 renderer fidelity pass.
+
+Actions taken:
+- Reviewed current renderer output against approved Patrick's Parabox visual
+  references and current Stage 5 screenshot.
+- Used current PixiJS scene graph and Container transform documentation to keep
+  recursive worlds as scene graph transforms rather than aperture-sized clones.
+- Added `src/render/metrics.ts` as the single source for cell, entity, box,
+  wall, goal, shadow, and recursive depth scale values.
+- Changed simulation projection to emit cell-space entity bounds only.
+- Updated Pixi world frame, material, primitive, camera, and recursive preview
+  rendering to derive geometry from shared metrics.
+- Kept recursive children depth-scaled and masked through the container
+  aperture instead of resizing child worlds to the aperture rectangle.
+- Updated Stage 6 QA, current status, implementation plan, screenshot, and this
+  changelog.
+- Did not add levels, level serialization, content, React gameplay DOM, or new
+  gameplay rules.
+
+Verification:
+- Focused red test run failed before implementation because `./metrics` did not
+  exist and projection still emitted visual offsets.
+- Focused tests passed after implementation:
+  `src/render/metrics.test.ts` and
+  `src/projection/simulationProjection.test.ts`.
+- `npm.cmd run typecheck`: passed.
+- `npm.cmd run test`: passed, 9 test files and 35 tests.
+- `npm.cmd run build`: passed. Vite still reports the known chunk-size warning.
+- Browser CDP QA loaded `http://127.0.0.1:5173/`, dispatched movement keys,
+  and captured `docs/screenshots/stage6-render-fidelity.png`.
+- Browser QA results: `canvasCount: 1`, `gameplayDom: 0`,
+  `consoleProblemEvents: 0`, screenshot bytes `9093`.
+- Pixel sample for `stage6-render-fidelity.png`: `1262x804`,
+  `sampled: 4029`, `uniqueColors: 29`, `nonDarkSamples: 2107`,
+  `nonBlank: true`.
+- Boundary checks found no `src/levels` directory, no core imports from
+  renderer/runtime/animation/Pixi/DOM/camera/viewport, and no React gameplay DOM
+  selectors.
+- Dev server was stopped after QA; no listener remained on port `5173`.
+
+Changed files:
+- `src/render/metrics.ts`
+- `src/render/metrics.test.ts`
+- `src/render/PixiApp.ts`
+- `src/render/materials/worldMaterial.ts`
+- `src/render/primitives/worldFrame.ts`
+- `src/render/primitives/entityPrimitives.ts`
+- `src/projection/simulationProjection.ts`
+- `src/projection/simulationProjection.test.ts`
+- `src/projection/worldProjection.ts`
+- `docs/qa/STAGE6_RENDER_ALIGNMENT.md`
+- `docs/screenshots/stage6-render-fidelity.png`
+- `IMPLEMENTATION_PLAN.md`
+- `docs/reboot/CURRENT_STATUS.md`
+- `docs/logs/CHANGELOG.md`
+
+Risks:
+- Decorative proportions inside primitives still use ratios within
+  metric-derived rectangles; these are documented as allowed visual
+  proportions, not independent pixel sizes.
+- Recursive child worlds are intentionally small inside the aperture at the
+  current depth factor; future visual passes can tune the factor after review.
+
+Next stage:
+- Stop for Stage 6 review. Do not add level serialization, level packs, menus,
+  polish UI, or content before explicit approval.

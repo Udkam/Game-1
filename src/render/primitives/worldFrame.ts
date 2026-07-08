@@ -18,52 +18,61 @@ export function createWorldFrame(rect: Rect2D, palette: RenderPalette, depth: nu
   const contentLayer = new Container();
   const mask = new Graphics();
 
-  const metrics = getWorldMaterialMetrics(rect);
-  const inset = metrics.shellInset;
-  const bevel = metrics.bevel;
+  const metrics = getWorldMaterialMetrics(rect, depth);
+  const wall = metrics.wallThickness;
+  const outerX = -wall;
+  const outerY = -wall;
+  const outerWidth = rect.width + wall * 2;
+  const outerHeight = rect.height + wall * 2;
   const interiorRect = getInteriorRect(rect, metrics);
 
   frame
-    .roundRect(metrics.shadowOffset, metrics.shadowOffset * 1.15, rect.width, rect.height, metrics.shellRadius)
+    .roundRect(
+      outerX + metrics.shadowOffset,
+      outerY + metrics.shadowOffset * 1.15,
+      outerWidth,
+      outerHeight,
+      metrics.shellRadius,
+    )
     .fill({ color: palette.shellShadow, alpha: 0.62 });
-  frame.roundRect(0, 0, rect.width, rect.height, metrics.shellRadius).fill(palette.shell);
+  frame.roundRect(outerX, outerY, outerWidth, outerHeight, metrics.shellRadius).fill(palette.shell);
   frame
-    .roundRect(inset, inset, rect.width - inset * 2, rect.height - inset * 2, metrics.trayRadius)
+    .roundRect(-wall * 0.52, -wall * 0.52, rect.width + wall * 1.04, rect.height + wall * 1.04, metrics.trayRadius)
     .fill(palette.shellDark);
   frame
     .poly([
-      inset + bevel,
-      inset,
-      rect.width - inset,
-      inset,
-      rect.width - inset - bevel,
-      inset + bevel,
-      inset + bevel,
-      inset + bevel,
+      outerX,
+      outerY,
+      outerX + outerWidth,
+      outerY,
+      rect.width,
+      0,
+      0,
+      0,
     ])
     .fill(palette.rim);
   frame
     .poly([
-      rect.width - inset,
-      inset,
-      rect.width - inset,
-      rect.height - inset,
-      rect.width - inset - bevel,
-      rect.height - inset - bevel,
-      rect.width - inset - bevel,
-      inset + bevel,
+      rect.width,
+      0,
+      outerX + outerWidth,
+      outerY,
+      outerX + outerWidth,
+      outerY + outerHeight,
+      rect.width,
+      rect.height,
     ])
     .fill(palette.rimBright);
   frame
     .poly([
-      inset,
-      rect.height - inset,
-      rect.width - inset,
-      rect.height - inset,
-      rect.width - inset - bevel,
-      rect.height - inset - bevel,
-      inset + bevel,
-      rect.height - inset - bevel,
+      0,
+      rect.height,
+      rect.width,
+      rect.height,
+      outerX + outerWidth,
+      outerY + outerHeight,
+      outerX,
+      outerY + outerHeight,
     ])
     .fill(palette.rimBright);
   frame

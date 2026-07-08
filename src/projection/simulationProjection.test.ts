@@ -10,8 +10,8 @@ describe("simulation projection handoff", () => {
     const pushedBox = projection.entities.find((entity) => entity.entity.id === "box-a");
 
     expect(projection.world.id).toBe("world-a");
-    expect(player?.entity.bounds.x).toBe(6.1);
-    expect(pushedBox?.entity.bounds.x).toBe(6.75);
+    expect(player?.entity.bounds).toMatchObject({ x: 6, y: 2, width: 1, height: 1 });
+    expect(pushedBox?.entity.bounds).toMatchObject({ x: 7, y: 2, width: 1, height: 1 });
     expect(recursiveContainer?.childWorld?.world.id).toBe("world-c");
   });
 
