@@ -380,3 +380,84 @@ authorization plus independent QA by SHA.
   evidence to either the P0 or frontend verdict.
 - Files changed by this QA follow-up: this `THREAD_LOG.md` only. Follow-up
   commit hash is pending creation and will be reported to the coordinator.
+
+## Entry: independent re-review — R1 Contract Freeze correction
+
+- Workstream thread ID: `019f4e80-1462-7b32-8146-19ded692836c`
+- Coordinator thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`
+- Timestamp: 2026-07-11 Asia/Shanghai
+- Rejected base candidate:
+  `87dfa4517ca668e09e97161405b39949939f2252`.
+- Re-review candidate:
+  `d834f4350fe760e8f2997f0c246fc80e4fe0b69e`.
+- Authority consumed: coordinator R1 scope `218bade` and the authoritative
+  design-reboot/user-scope clarification `f4f3433`. R1 remains
+  documentation-only; Stage 6 remains a historical prototype label and is
+  still release-rejected.
+
+### Scope and authority checks
+
+- The corrected candidate is a direct child of rejected R1 candidate `87dfa45`.
+  Its exact changed paths are only
+  `docs/workstreams/gameplay-rules-engine/RULES_SLICE_R1_CONTRACT.md` and
+  `docs/workstreams/gameplay-rules-engine/THREAD_LOG.md`.
+- `git diff --check` and `git show --check` pass. No production source,
+  package/configuration, frontend, level, serialization, QA document, root
+  changelog, merge, rebase, or push change is present.
+- Delayed duplicate research `d5c36246c59ae9d96525543c0b93fc149db80a15` is
+  not an ancestor of this candidate and is not treated as authority.
+
+### Re-review of the prior blockers
+
+1. **Rejected-command totality is internally consistent.** `StepCommandResult`
+   now has a nonempty ordered attempt trace; a rejected Step ends in terminal
+   `blocked`, including an actor/focus-preflight `step-fallback`. The distinct
+   `NonStepCommandResult` freezes `attempts: []` for Undo/Redo/Reset and one
+   indexed, forward, null-transaction `command-blocked` event. The stress
+   protocol explicitly exercises initial Undo, Redo, and Reset rejections, and
+   applies the corresponding split oracle.
+2. **Rule selection is complete and total.** `ruleEnablement` is a complete
+   map for push/enter/exit, priority contains every and only enabled rule once,
+   and all eight deterministic enablement masks are generated. After walk and
+   every enabled candidate are not applicable, `step-fallback` with
+   `no-enabled-rule-applies` is terminal. This removes the previously undefined
+   priority/enablement and fall-through behavior.
+3. **Exit selection is frozen to declared coordinates.** It resolves the active
+   actor occurrence to canonical `worldId` and compares exact world/x/y values
+   with the port landing. Landing cells are globally unique by
+   `(innerWorldId, x, y)` across all ports, including canonical-world aliases;
+   duplicate landing validation and stress mutations now cover this rule.
+
+### Five R1 requirements
+
+- `Step(direction)` port selection is deterministic, center-anchor-only, and
+  has typed absent/ambiguous terminal rejections.
+- Public discriminated attempt, result, transaction, semantic-event,
+  `WorldAddress`, and `EntityOccurrenceAddress` shapes are explicit. The new
+  `AttemptRule`/`step-fallback` extension preserves the Step/non-Step split.
+- `cycleMode: "forbid"` validates every containment edge in deterministic
+  order, including unreachable components and legacy override rejection.
+- The xorshift32 protocol fixes its master seed, 1,000-case domain, masks,
+  64-command traces, oracle, initial history/reset subcases, and deterministic
+  minimised failure report.
+- C1 core and V1 runtime/render file/test ownership remains disjoint; V1 may
+  consume but not reinterpret C1 semantics.
+
+### QA verdict
+
+**Accept R1 Contract Freeze documentation candidate `d834f43` only.** The
+three blocking contract edits are resolved and the five authorized R1
+requirements are frozen sufficiently for a future, separately authorized C1
+request.
+
+This is not C1 or V1 authority, does not authorize any product source change,
+does not accept Stage 6 or a release, and does not override the requirement for
+a later explicit user development instruction plus a new bounded coordinator
+authorization. After this review, the gameplay workstream is to stop as
+directed.
+
+### Handoff
+
+- Files changed by this QA follow-up: this `THREAD_LOG.md` only.
+- Follow-up commit hash: pending creation; report it with this log path to the
+  coordinator after committing. No push or merge is authorized.
