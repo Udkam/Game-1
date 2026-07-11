@@ -299,3 +299,44 @@ Coordinator decision:
 - Existing workstream task identities, independent QA-by-SHA, clean-room
   boundaries, exact-path staging, and coordinator-only root changelog/push
   ownership remain in force.
+
+## 2026-07-11 - D0 conditional rejection and interface-bridge correction
+
+D0 source candidate:
+
+- `e07808364febb2c6607fb6d962bf53fddd6c2cf3`.
+
+Independent and owner review decisions:
+
+- QA: conditional rejection; no acceptance commit.
+- Gameplay review source:
+  `40e5212cfcc58ff45c8849e94276893a409278f2`.
+- Frontend review source:
+  `3e1ed2ccc82ec933fe72729df2d09b6fbde2dda9`.
+
+Accepted review findings:
+
+- C1 could not replace legacy public command/result/event types while excluding
+  their runtime/animation consumers and still pass whole-repository checks
+  before V1.
+- `CURRENT_TASK.md` and `DESIGN.md` could not outrank or silently weaken the
+  accepted R1 contract and applicable QA gates.
+- V1 ownership omitted `AnimationSystem.ts`, which stores animation progress by
+  canonical entity ID.
+- The locked-input policy had to choose one deterministic queue/reject outcome.
+- V1 desktop continuity could explicitly defer V3 retained-graph/performance
+  and V4 mobile/DPR/reduced-motion/pointer/capture P2 gates, but could not claim
+  those capabilities.
+
+Coordinator correction:
+
+- Add I1 before C1 as a two-owner linear public-interface bridge candidate.
+- Gameplay owns the additive core bridge; frontend starts from that exact SHA
+  and migrates runtime/animation consumers; QA reviews the complete chain.
+- Runtime emits only PublicCommand after I1; directionless legacy Enter/Exit
+  cannot be mapped to Step or select a container/port.
+- C1 then implements the frozen R1 semantics and removes the temporary adapter.
+- V1 owns the required animation files and uses a one-slot FIFO input buffer
+  with deterministic overflow, completion, cancellation, and destroy behavior.
+- No production work begins until the corrected D0 candidate is independently
+  accepted and pushed.

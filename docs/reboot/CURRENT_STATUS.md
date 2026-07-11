@@ -53,10 +53,11 @@ The user explicitly requested continued frontend and game-engine development on
 and `CURRENT_TASK.md` now define the active authority, design target, exact
 slice order, ownership, and QA gates.
 
-The dependency order is D0 documentation, C1 deterministic core safety,
-independent QA-C1, then V1 occurrence-address projection and unified visual
-completion ownership. V2-V4 frontend completion and later gameplay/content
-slices require fresh bounded authorization recorded in `CURRENT_TASK.md`.
+The dependency order is D0 documentation, I1 shared public-interface bridge,
+independent QA-I1, C1 deterministic core safety, independent QA-C1, then V1
+occurrence-address projection and unified visual completion ownership. V2-V4
+frontend completion and later gameplay/content slices require fresh bounded
+authorization recorded in `CURRENT_TASK.md`.
 
 Do not treat this authorization as permission for overlapping workstreams,
 large content, copied assets, unreviewed schema, or a one-shot rewrite. No

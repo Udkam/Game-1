@@ -22,15 +22,28 @@ When documents disagree, use this order:
 
 1. The user's latest explicit instruction.
 2. This `AGENTS.md`.
-3. `CURRENT_TASK.md` for the active bounded slice and file ownership.
-4. `DESIGN.md` for the current product and visual contract.
-5. Accepted slice contracts, especially
+3. Accepted normative slice contracts, especially
    `docs/workstreams/gameplay-rules-engine/RULES_SLICE_R1_CONTRACT.md`.
-6. `ARCHITECTURE.md` and `DESIGN_REFERENCE.md` for enduring architecture and
+4. Applicable independent QA gates in
+   `docs/workstreams/qa-approval/QA_APPROVAL_RUBRIC.md`, with current finding
+   disposition taken from the latest QA `THREAD_LOG.md` decision accepted by
+   the coordinator.
+5. `CURRENT_TASK.md` for active scope, ownership, ordering, and status only.
+6. `DESIGN.md` for the current product and visual contract.
+7. `ARCHITECTURE.md` and `DESIGN_REFERENCE.md` for enduring architecture and
    reference evidence.
-7. Independent QA requirements in
-   `docs/workstreams/qa-approval/QA_APPROVAL_RUBRIC.md`.
 8. Workstream proposals and historical stage documents.
+
+`CURRENT_TASK.md` may narrow an accepted contract or defer an explicitly
+deferrable QA item, but it cannot redefine frozen public semantics, weaken an
+applicable QA gate, or mark a finding resolved. Such a change requires a new
+explicit coordinator authorization, an updated/replacement contract, and an
+independent QA decision accepted by the coordinator.
+
+The QA rubric contains the historical baseline table as well as enduring gate
+definitions. A row's current open/closed disposition comes from the latest
+integrated QA log and coordinator decision, not from stale baseline wording in
+the table alone.
 
 `IMPLEMENTATION_PLAN.md`, the historical stage screenshots, and old Stage 1-6
 reports are evidence, not current authority, unless `CURRENT_TASK.md` adopts a
@@ -155,19 +168,23 @@ random loop.
 - Shared render metrics and authored palette/material tokens are the only
   geometry/color authorities. Do not scatter pixel constants through
   primitives.
-- Support detached-void and cropped-parent-context compositions.
+- By V2 frontend acceptance, support detached-void and
+  cropped-parent-context compositions.
 - A recursive container is a masked world aperture with path identity, not a
   thumbnail or UI card.
 - One accepted command owns one visual completion barrier covering entity,
   projection, camera, aperture, and effects. Input cannot unlock from a shorter
   sub-animation.
-- The scene graph is retained. Do not clear and rebuild every render layer on
-  each animated frame.
-- Cap device-pixel ratio according to `DESIGN.md`; test actual desktop and
-  mobile viewport dimensions.
-- Respect `prefers-reduced-motion` without changing command results or hashes.
-- Pointer/touch and keyboard emit the same commands. Provide visible focus,
-  truthful canvas labeling, and 44 CSS px minimum interactive targets.
+- Before V3 visual/performance acceptance, the scene graph is retained and no
+  render layer is cleared/rebuilt every animated frame. A narrowly scoped V1
+  stability slice may defer this P2 item only when `CURRENT_TASK.md` records it
+  and makes no performance/fidelity-complete claim.
+- Before V4 responsive/frontend acceptance, cap device-pixel ratio according
+  to `DESIGN.md`, test actual desktop/mobile dimensions, respect reduced motion,
+  and route pointer/touch and keyboard through the same commands. A V1 desktop
+  continuity slice may defer these P2 items explicitly.
+- The completed frontend provides visible focus, truthful canvas labeling, and
+  44 CSS px minimum interactive targets.
 - No unexpected browser console warning/error is acceptable.
 
 ## 9. Verification gates
@@ -191,12 +208,11 @@ Core candidates also provide:
 - undo/redo/reset/replay evidence;
 - focus, port, graph, cycle-policy, and 1,000-sequence stress evidence.
 
-Runtime/render candidates also provide deterministic browser evidence at:
-
-- desktop: 1440x900, DPR 1;
-- mobile: 390x844, reported DPR 3 with a documented renderer-resolution cap;
-- enter/exit: start, 50%, and settled frames;
-- reduced motion: equivalent final state and camera target.
+Runtime/render candidates provide the deterministic browser evidence required
+by their active slice. V1 requires desktop 1440x900 DPR 1 enter/exit
+start/50%/settled continuity. V4 additionally requires mobile 390x844 with
+reported DPR 3 and the frozen renderer cap, plus reduced-motion equivalent
+final state and camera target. A candidate cannot claim a deferred capability.
 
 Each browser report includes candidate SHA, browser/OS, exact viewport/DPR,
 command trace and capture time, screenshot dimensions, canvas count, gameplay

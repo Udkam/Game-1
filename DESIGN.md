@@ -260,8 +260,9 @@ audio unless the user changes audio settings.
   recreated every animated tick.
 - Projection recursion is explicitly bounded and exposes visible occurrence
   counts for diagnostics.
-- Renderer resolution is capped at a documented maximum DPR; CSS viewport size
-  and backing resolution are reported separately.
+- Renderer resolution uses `min(window.devicePixelRatio, 2)` unless a later
+  measured contract replaces the cap. CSS viewport size, reported device DPR,
+  effective renderer DPR, and backing resolution are reported separately.
 - Target p95 frame time is <=16.7 ms for the agreed demo on desktop 1440x900
   DPR 1 and mobile 390x844 with reported DPR 3/capped renderer resolution.
 - Thirty enter/exit cycles show no monotonic heap growth.
