@@ -140,3 +140,67 @@
   `019f4deb-7e83-7583-8cd5-8e6f075bc331` and independent QA
   `019f4e80-1462-7b32-8146-19ded692836c`. Await their decision before starting
   any rules/runtime stability work.
+
+## 2026-07-11 - R1 Contract Freeze (documentation only)
+
+- Thread ID: `019f4e82-7cb8-73c1-b4a1-d333273b359f`
+- Coordinator thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`
+- Timestamp: 2026-07-11, Asia/Shanghai
+- Worktree base: `86d02d4498d314fcda9a8d7608509b4e5ba18ca1`
+- Authorization: exactly one documentation-only R1 slice. Allowed paths are
+  `docs/workstreams/gameplay-rules-engine/RULES_SLICE_R1_CONTRACT.md` and this
+  log only. Production code, package/configuration files, frontend, levels,
+  serialization, root changelog, push, and merge remain forbidden.
+
+### Revisions and research consumed read-only
+
+- Coordinator/P0 authority: `218bade` via
+  `git show 218bade:docs/workstreams/coordinator/THREAD_LOG.md`.
+- Independent QA/P0 authority: `1fb6c32` via
+  `git show 1fb6c32:docs/workstreams/qa-approval/THREAD_LOG.md`.
+- Authoritative user scope clarification: `f4f3433` via
+  `git show f4f3433:docs/reboot/CURRENT_STATUS.md` and
+  `git show f4f3433:docs/workstreams/coordinator/THREAD_LOG.md`. It confirms
+  the project is less than 10% complete, Stage 6 is historical only, and this
+  design-reboot round permits no production work without a later explicit user
+  development instruction plus a new bounded coordinator authorization.
+- Canonical planning documents were read from `218bade`, including this
+  workstream's integrated `RULES_ENGINE_AUDIT.md` and log. The canonical audit
+  remains the planning baseline, accepted only as planning direction.
+- Non-authoritative delayed research commit
+  `d5c36246c59ae9d96525543c0b93fc149db80a15` was read with `git show` for
+  `RULES_CONTRACT.md` only. Its duplicate `THREAD_LOG.md` was neither read as
+  authority nor copied, merged, or replaced.
+
+### Decisions
+
+- P0's clean-install acceptance does not release Stage 6 or authorize any
+  source change. R1 freezes documentation before a separate C1 core-safety
+  request can be considered; after QA review, this workstream stops until the
+  later explicit user/coordinator development authorization arrives.
+- R1 defines center-anchor, exactly-one port mapping; full discriminated
+  command/attempt/transaction/event/address shapes; complete
+  `cycleMode: "forbid"` enforcement; and a fixed 1,000-sequence stress
+  protocol.
+- R1 assigns C1 core safety and later V1 runtime/render occurrence-address and
+  visual-lock work to disjoint file/test sets. V1 consumes C1 semantics and
+  cannot silently rewrite them.
+- The delayed duplicate supplied useful research but conflicts on authority,
+  severity, initial cycle policy, and `not-applicable` semantics. R1 retains
+  QA-mandated `cycleMode: "forbid"` and canonical workstream ownership.
+
+### Files changed
+
+- `docs/workstreams/gameplay-rules-engine/RULES_SLICE_R1_CONTRACT.md`
+- `docs/workstreams/gameplay-rules-engine/THREAD_LOG.md`
+
+### Commands, tests, and handoff
+
+- Read-only evidence commands: `git show` for `218bade`, `1fb6c32`, canonical
+  workstream documents, and delayed research `d5c3624`; no merge or rebase.
+- This slice changes no executable code. Verification is scoped to Markdown
+  content, allowed paths, `git diff --check`, and final staged-path review;
+  no product test run is claimed as R1 evidence.
+- Commit: pending scoped documentation-only verification and commit.
+- Send the resulting SHA and this log path to coordinator and independent QA;
+  await QA before requesting C1. No code follows from R1 automatically.
