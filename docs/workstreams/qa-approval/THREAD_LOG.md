@@ -461,3 +461,101 @@ directed.
 - Files changed by this QA follow-up: this `THREAD_LOG.md` only.
 - Follow-up commit hash: pending creation; report it with this log path to the
   coordinator after committing. No push or merge is authorized.
+
+## Entry: independent D0 repository-contract re-review and acceptance
+
+- Workstream thread ID: `019f4e80-1462-7b32-8146-19ded692836c`
+- Coordinator thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`
+- Timestamp: 2026-07-11 Asia/Shanghai
+- Accepted R1/coordinator base reviewed: `fee9c5bd3d4b839df5bd5b148ee0e92145b502eb`.
+- Initial D0 candidate conditionally rejected without a QA acceptance commit:
+  `e07808364febb2c6607fb6d962bf53fddd6c2cf3`.
+- Intermediate correction reviewed read-only and superseded before verdict:
+  `ade2678fbe187b8950f1635b103807a900acc73a`.
+- Second correction reviewed read-only and superseded before verdict:
+  `b96d261641d41800df9101efe634718db8b65d80`.
+- Final D0 candidate reviewed: `15a5443b8f4e93dfa5e063d0a57826394e343f7c`.
+  It is the direct child of `b96d261`, which follows `ade2678` and `e078083`;
+  the full candidate chain is therefore `fee9c5b..15a5443`.
+
+### Scope and repository checks
+
+- The cumulative candidate changes exactly five D0-authorized paths:
+  `AGENTS.md`, `CURRENT_TASK.md`, `DESIGN.md`,
+  `docs/reboot/CURRENT_STATUS.md`, and
+  `docs/workstreams/coordinator/THREAD_LOG.md`. The direct final correction
+  changes only `AGENTS.md` and the coordinator log.
+- `git diff --check fee9c5b..15a5443`, `git diff --check b96d261..15a5443`,
+  and `git show --check 15a5443` pass. The QA worktree remained clean before
+  this log-only update.
+- No production `src/**`, test, package, configuration, asset, root
+  `docs/logs/CHANGELOG.md`, merge, rebase, or push change is present.
+  `package.json` and `package-lock.json` are unchanged from the R1/coordinator
+  base.
+
+### Re-review of the D0 blockers and final correction
+
+1. **Authority and finding disposition are now safe.** `AGENTS.md` places
+   accepted normative contracts above `CURRENT_TASK.md` and `DESIGN.md`, and
+   places applicable independent QA gates above both. It expressly says that a
+   current task cannot redefine frozen semantics, weaken a gate, or close a
+   finding; doing so needs coordinator authorization, a replacement contract,
+   and an independent QA decision accepted by the coordinator. The historical
+   rubric table remains evidence, while the current disposition is explicitly
+   sourced from the latest integrated QA log and coordinator decision.
+2. **I1 removes the C1-to-V1 migration deadlock with a bounded shared chain.**
+   The pre-existing runtime/animation source imports and constructs legacy
+   `Move`/`Enter`/`Exit`/`SimulationCommand` and consumes legacy results/events,
+   while C1 excludes those paths. I1 therefore assigns a gameplay-owned core
+   bridge commit first and a frontend-owned consumer migration commit second,
+   with disjoint exact path sets, no merge/rebase handoff, combined repository
+   verification, and independent QA of the exact two-commit chain before either
+   half can integrate. C1 starts only after that accepted, integrated bridge.
+3. **The final cross-boundary exception closes the prior loophole.** A crossing
+   stops unless all four facts are frozen before the first file change: the
+   shared slice and exact public types are named in `CURRENT_TASK.md`; the
+   coordinator has named owners, disjoint exact paths, and linear order; partial
+   integration is forbidden and the full chain requires whole-repository
+   verification; and the named independent QA task accepts the complete chain
+   by SHA. I1 is the only current exception. A future bridge requires fresh
+   explicit coordinator authorization and a `CURRENT_TASK.md` update before
+   work, so this wording cannot silently widen a workstream's ownership or
+   authorize arbitrary cross-boundary edits.
+4. **Adapter semantics do not reinstate the rejected shortcuts.** I1 confines
+   legacy compatibility to `legacyRuntimeAdapter.ts`; it may atomically call
+   the existing movement resolver and translate its result, but may not select
+   a container, port, recursive destination, or fixture ID. Directionless
+   legacy `Enter`/`Exit` are neither emitted by runtime nor mapped to `Step`.
+   Cases the legacy kernel cannot express return an unchanged-state typed public
+   rejection. Required boundary searches and tests prevent legacy imports in
+   runtime/animation after the consumer half, so the adapter cannot become a
+   second rule resolver.
+5. **V1 ownership, input policy, and deferrals are internally consistent.**
+   V1 now includes `AnimationSystem` and the timeline paths that own visual
+   progress, and it fixes one FIFO policy for all four public commands:
+   one queued command, deterministic overflow drop, exactly-once dispatch after
+   the combined visual barrier, and no reorder/double dispatch on cancellation
+   or destroy. `input-buffer-full` is a runtime input-submission disposition,
+   not a new R1 `Rejection`/`CommandResult` code: it has no core dispatch and
+   must not be implemented as a change to frozen core semantics. QA will test
+   that boundary in V1. V1 expressly cannot claim the retained-graph/performance
+   work assigned to V3 or the mobile/DPR/reduced-motion/pointer/touch,
+   accessibility, and checked-in capture automation assigned to V4.
+
+### QA verdict
+
+**Accept D0 documentation candidate `15a5443` only.** The corrected authority
+order, QA-disposition source, I1 bridge, V1 ownership/input policy, and explicit
+P2 deferrals resolve the conditional-rejection findings without changing product
+code or weakening accepted R1/QA requirements.
+
+This acceptance permits **only I1** to open after the coordinator integrates
+and pushes D0. It does **not** authorize C1, V1, any other production work,
+Stage 6 acceptance, a release, or a completion claim. C1 and V1 retain their
+separate start conditions and each requires later independent QA by SHA.
+
+### Handoff
+
+- Files changed by this QA follow-up: this `THREAD_LOG.md` only.
+- Follow-up commit hash: pending creation; report it with this log path to the
+  coordinator after committing. No push, merge, or rebase is authorized.
