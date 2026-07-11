@@ -353,3 +353,87 @@ green before V1.
   compatibility review, not a production candidate.
 - Commit: pending one log-only review commit. Report its SHA and this log path
   to the coordinator, then stop. This review does not authorize C1.
+
+## 2026-07-11 - Corrected D0/I1 chain re-review (conditional reject)
+
+- Reviewer thread ID: `019f4e82-7cb8-73c1-b4a1-d333273b359f`
+- Coordinator thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`
+- Candidate range reviewed read-only:
+  `e07808364febb2c6607fb6d962bf53fddd6c2cf3..ade2678fbe187b8950f1635b103807a900acc73a`.
+- Candidate HEAD: `ade2678fbe187b8950f1635b103807a900acc73a`
+  (`docs: resolve Phase A migration gates`).
+- Review scope: corrected D0/I1 documentation and real compile-time consumer
+  paths only. No production, package, root-changelog, merge, rebase, or push
+  change was made.
+
+### Verdict
+
+**CONDITIONAL REJECT.** I1 resolves the prior concrete consumer/path deadlock,
+but D0 leaves an unqualified higher-precedence stop condition that orders I1's
+named owners to stop before making the very shared public-interface migration
+that I1 authorizes. One explicit I1 exception is required in `AGENTS.md` before
+the chain is executable without contradictory authority.
+
+### I1 verification
+
+- `CURRENT_TASK.md` lines 95-104 names the gameplay/core owner, frontend
+  consumer owner, and independent QA reviewer. Lines 106-114 require a linear
+  two-commit chain: gameplay creates the bridge first, frontend starts from its
+  exact SHA, and QA reviews the indivisible chain. The core and consumer exact
+  path lists (lines 116-130) are disjoint.
+- Lines 132-156 freeze the correct bridge: runtime-facing code uses only
+  `PublicCommand`/`CommandResult`/`SemanticEvent`; translation is centralized
+  in `src/core/legacyRuntimeAdapter.ts`; it cannot choose a container, port, or
+  destination and carries no fixture ID; and directionless
+  `Enter(containerId)`/`Exit(containerId)` cannot be mapped to `Step`.
+- Lines 158-169 require full-repository typecheck, all Vitest suites, build,
+  boundary searches, diff checks, and independent QA-I1 before C1. Lines
+  190-211 then make C1 consume the already migrated surface, delete the bridge,
+  and perform no second public-type migration.
+- Candidate-tree searches found no missing required I1 consumer path. The
+  legacy imports outside the gameplay half are exactly the listed runtime
+  files/tests and `src/animation/transitions.ts` plus its test. The previously
+  omitted `src/core/systems.ts` is now in the gameplay half. `src/audio/AudioManager.ts`
+  consumes only the internal `AudioCue` plan type, while projection/render
+  consume stable state/direction values; neither must change for this bridge.
+  Legacy internals retained in `movementResolver.ts`, `recursiveTransitions.ts`,
+  and history remain behind the centralized gameplay bridge and are not
+  runtime-facing after I1.
+
+### Remaining authority blocker
+
+- R1 permits a shared public type migration only through a new
+  coordinator-approved slice with named C1/V1 owners (R1 lines 566-571), which
+  I1 substantively supplies. However, candidate `AGENTS.md` has higher
+  precedence than `CURRENT_TASK.md` (lines 19-41) and still says every worker
+  must stop when "a public type change would cross the frozen C1/V1 boundary"
+  (lines 244-255), without an I1 exception.
+- I1 necessarily performs that cross-boundary change: its gameplay half defines
+  the bridge and its frontend half migrates runtime/animation consumers. Under
+  the literal higher-precedence stop condition, each named I1 owner must return
+  to the coordinator instead of editing, even though `CURRENT_TASK.md` lines
+  54-58 and 106-169 authorize the chain. This is a contradictory authority,
+  not a missing source path.
+
+### Required D0 correction
+
+- Amend the `AGENTS.md` stop condition to retain the freeze for all ordinary
+  cross-boundary changes while explicitly allowing the sole
+  coordinator-authorized I1 two-commit chain described in `CURRENT_TASK.md`,
+  provided it has the named gameplay/frontend owners, exact paths, combined QA
+  acceptance, and no C1/V1 semantic redefinition. No other exception should be
+  implied.
+
+### Commands and handoff
+
+- Read the corrected candidate itself with `git show ade2678`, compared the
+  full `e078083..ade2678` range, and verified it remains documentation-only on
+  the same five root/coordinator paths. `git diff --check e078083 ade2678`
+  passed.
+- Searched the candidate source tree with `git grep` for legacy
+  `Move`/`Enter`/`Exit`/`SimulationCommand`/`CommandDispatchResult`/
+  `TransitionEvent` consumers, and inspected `tsconfig.json`, runtime,
+  animation, projection, render, and audio dependencies.
+- No executable tests were run: this is a documentation-only static re-review.
+- Commit: pending one log-only review commit. Report its SHA to the coordinator
+  and stop. I1/C1 code remains unauthorized.
