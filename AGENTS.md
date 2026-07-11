@@ -247,7 +247,9 @@ Stop and return to the coordinator when:
 
 - required authority, file ownership, or contract is missing;
 - the candidate needs a path owned by another active slice;
-- a public type change would cross the frozen C1/V1 boundary;
+- a public type change crosses workstream boundaries without an explicit,
+  coordinator-authorized shared migration contract such as the active I1
+  linear bridge in `CURRENT_TASK.md`;
 - official/copied assets or level data would be required;
 - a clean install, deterministic test, browser capture, or required tool cannot
   be reproduced;

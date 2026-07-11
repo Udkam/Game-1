@@ -338,5 +338,8 @@ Coordinator correction:
 - C1 then implements the frozen R1 semantics and removes the temporary adapter.
 - V1 owns the required animation files and uses a one-slot FIFO input buffer
   with deterministic overflow, completion, cancellation, and destroy behavior.
+- The general cross-boundary stop condition explicitly permits only a named,
+  coordinator-authorized shared migration contract such as I1; unplanned public
+  type crossings still stop.
 - No production work begins until the corrected D0 candidate is independently
   accepted and pushed.
