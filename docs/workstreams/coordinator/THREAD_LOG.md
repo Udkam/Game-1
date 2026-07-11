@@ -278,3 +278,24 @@ Gate decision:
   development instruction and a new bounded coordinator authorization.
 - Overall project completion remains below 10% relative to the intended
   high-fidelity playable target.
+
+## 2026-07-11 - Phase A development requested; D0 contracts opened
+
+User instruction:
+
+- Resume development toward a complete frontend and game engine.
+- Write repository contracts and constraints first, including `AGENTS.md`,
+  `DESIGN.md`, and `CURRENT_TASK.md`.
+
+Coordinator decision:
+
+- Open D0 as a documentation-only candidate owned by the coordinator.
+- D0 may add the three root contracts and align this log plus
+  `docs/reboot/CURRENT_STATUS.md`.
+- Production source remains unchanged until gameplay, frontend, and independent
+  QA review the D0 candidate and the coordinator integrates it.
+- After D0, execute C1 deterministic core safety before V1 runtime/render
+  occurrence addressing because V1 consumes the accepted C1 public contract.
+- Existing workstream task identities, independent QA-by-SHA, clean-room
+  boundaries, exact-path staging, and coordinator-only root changelog/push
+  ownership remain in force.

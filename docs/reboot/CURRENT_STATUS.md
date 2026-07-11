@@ -1,7 +1,9 @@
 # Current Project Status
 
-Status: design-reboot coordination after the historical Stage 6 renderer
-prototype. The user assesses the overall target as less than 10% complete.
+Status: Phase A recursive-foundation rebuild authorized after the design reboot.
+The D0 repository-contract slice is active; production source edits remain
+paused until D0 is independently reviewed and integrated. The user assesses the
+overall target as less than 10% complete.
 
 `Stage 6` is a historical implementation label only. It does not mean that the
 visual design, recursive rules, gameplay depth, runtime stability, content, or
@@ -23,7 +25,8 @@ menus, polish UI, large content, or new gameplay rules.
   - `ARCHITECTURE.md`
   - `DESIGN_REFERENCE.md`
   - `IMPLEMENTATION_PLAN.md`
-- Approval status: approved through Stage 6 only
+- Approval status: R1 documentation contract accepted; D0 repository contracts
+  are the active candidate. Historical Stage numbers are not current authority.
 - Local cleanup state: no generated build output retained; dev server stopped
 
 ## Preserved Records
@@ -45,16 +48,25 @@ failed round.
 
 ## Current Gate
 
-The current multi-thread round is limited to design reboot, contract freezing,
-audit, and risk cleanup. Production implementation resumes only after the user
-explicitly requests development progress and the coordinator opens a bounded
-slice.
+The user explicitly requested continued frontend and game-engine development on
+2026-07-11, with repository contracts written first. `AGENTS.md`, `DESIGN.md`,
+and `CURRENT_TASK.md` now define the active authority, design target, exact
+slice order, ownership, and QA gates.
 
-Do not extend beyond Stage 6 renderer fidelity alignment into React gameplay UI,
-level packs, a level editor, menus, polish UI, large content, renderer
-redesign, level serialization, or Stage 7 work without explicit review.
+The dependency order is D0 documentation, C1 deterministic core safety,
+independent QA-C1, then V1 occurrence-address projection and unified visual
+completion ownership. V2-V4 frontend completion and later gameplay/content
+slices require fresh bounded authorization recorded in `CURRENT_TASK.md`.
 
-The current aligned action has been completed as Stage 6:
+Do not treat this authorization as permission for overlapping workstreams,
+large content, copied assets, unreviewed schema, or a one-shot rewrite. No
+production source change begins until D0 is accepted and pushed.
+
+## Historical Prototype Inventory
+
+The following files are retained from the historical Stage 1-6 implementation
+passes. This is an inventory of the starting codebase, not an active-stage or
+completion claim:
 
 - `package.json`
 - `vite.config.ts`
