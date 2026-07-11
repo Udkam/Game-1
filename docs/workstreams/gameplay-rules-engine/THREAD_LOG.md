@@ -246,3 +246,110 @@
 - Commit: pending one scoped follow-up documentation commit. Report its SHA to
   coordinator and independent QA, then stop; a conditional-reject repair does
   not authorize C1, V1, Stage 6, release, or production development.
+
+## 2026-07-11 - D0 repository-contract review (conditional reject)
+
+- Reviewer thread ID: `019f4e82-7cb8-73c1-b4a1-d333273b359f`
+- Coordinator thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`
+- Candidate reviewed read-only: `e07808364febb2c6607fb6d962bf53fddd6c2cf3`
+  (`docs: define Phase A implementation contracts`) on `main`.
+- Review scope: gameplay/engine contract, path ownership, and core-to-runtime
+  migration only. No production, root-contract, package, root-changelog,
+  merge, rebase, or push change was made.
+
+### Verdict
+
+**CONDITIONAL REJECT.** D0 must add a bounded, coordinator-authorized shared
+public-contract migration gate before C1 can be accepted for implementation.
+Without it, the required frozen public-command/result/event migration cannot
+both honor C1's exact excluded paths and leave the repository typecheck/build
+green before V1.
+
+### Evidence and findings
+
+1. `CURRENT_TASK.md` requires C1 to migrate the public API to
+   `Step`/`Undo`/`Redo`/`Reset` and typed total
+   attempt/result/rejection/transaction/event values (lines 102-112), yet
+   excludes all projection, runtime, animation, and render paths (lines
+   114-119). It still makes whole-repository typecheck, all Vitest suites, and
+   build mandatory C1 evidence (lines 121-127), while V1 production edits are
+   prohibited until after QA-C1 (lines 48-50 and 137).
+2. The accepted R1 contract freezes `PublicCommand` as exactly
+   `Step | Undo | Redo | Reset` (R1 lines 73-80), its discriminated
+   `CommandResult` (lines 281-337), and `SemanticEvent` values with occurrence
+   addresses (lines 359-421). R1 assigns the legacy-consuming runtime,
+   animation, projection, and render paths to V1 (lines 561-564) and states
+   that a shared type migration is allowed only through a new
+   coordinator-approved slice with named C1 and V1 owners (lines 566-571).
+3. The candidate's unchanged source tree has direct compile-time consumers
+   outside C1 ownership:
+   - `src/runtime/EventPipeline.ts` imports `SimulationCommand`, dispatches
+     the old reducer result, exposes `accepted`/free-form `reason`, and passes
+     legacy `TransitionEvent[]` to animation.
+   - `src/runtime/GameRuntime.ts` and `src/runtime/InteractionPrototype.ts`
+     import and emit `Move`/`Enter`/`Exit`/`SimulationCommand`; both retain
+     `container-b`-based recursive commands.
+   - `src/animation/transitions.ts` and its test import legacy
+     `TransitionEvent` and discriminate `move`/`push`/`blocked`/
+     `enterWorld`/`exitWorld` rather than the frozen semantic events.
+   - `src/core/systems.ts`, which is included by `tsconfig.json` but absent
+     from C1's owned paths, imports `Move`, `SimulationCommand`, and
+     `CommandDispatchResult`.
+   `tsconfig.json` includes all of `src`, so removing or replacing the legacy
+   exports to satisfy the frozen public contract makes these consumers fail
+   typecheck before V1 is permitted to change them.
+4. A C1-only legacy adapter is not a sound escape hatch. `Move(direction)` can
+   map to `Step(direction)`, but legacy `Enter(containerId)` and
+   `Exit(containerId)` carry a fixture/container choice rather than the
+   `Step(direction)` required by R1's exact port and address selection. Such
+   an adapter would either preserve an uncontracted public command or put port
+   selection back into runtime, contradicting R1's deterministic selection
+   rules.
+5. The remaining gameplay rules are internally consistent. `AGENTS.md` lines
+   121-130 and 134-149 require total non-throwing typed dispatch, deterministic
+   `Step`, full `cycleMode: "forbid"` validation, and the fixed stress oracle;
+   these agree with `CURRENT_TASK.md` lines 104-112 and R1's result semantics
+   (lines 200-203 and 340-357), complete containment validation (lines
+   430-464), and 1,000-sequence generator/oracle (lines 466-554). C1's
+   explicit exclusion of push-in/out and cyclic gameplay matches R1 and
+   introduces no additional contradiction.
+6. `DESIGN.md` does not leak rule implementation into presentation. It keeps
+   camera/pixels outside canonical state (lines 95-117), requires a visual
+   completion barrier only for accepted commands (lines 200-223), and assigns
+   shell UI to React and gameplay visuals to PixiJS (lines 225-235). Its
+   renderer-only blocked feedback is compatible with R1's typed blocked event:
+   presentation consumes the event and never creates history.
+
+### Required D0 correction before C1 authorization
+
+- Insert a named, coordinator-approved compatibility/migration slice before
+  C1 (or revise the sequence equivalently) with both the gameplay/C1 and
+  frontend/V1 owners named, as R1 requires. It must state that it is the only
+  permitted shared public-type boundary migration and must obtain independent
+  QA review before C1 begins.
+- Give that slice exact minimum source/test ownership for every legacy consumer
+  it must update: `src/core/systems.ts`; `src/runtime/EventPipeline.ts`,
+  `GameRuntime.ts`, and `InteractionPrototype.ts`; `src/animation/transitions.ts`;
+  and their affected tests. Add projection files only if the selected C1 state
+  representation makes them compile-time consumers. Do not authorize V1
+  occurrence-address projection, visual-lock, rendering, level, or content
+  work in this compatibility slice.
+- Freeze an adapter policy: runtime input must emit only `PublicCommand`; no
+  `Enter(containerId)`/`Exit(containerId)` compatibility path may choose ports,
+  containers, or directions. The migrated event pipeline/animation adapter
+  must consume frozen `CommandResult`/`SemanticEvent` without redefining core
+  rules. The slice must prove `npm.cmd run typecheck`, all Vitest suites, and
+  `npm.cmd run build` before C1 is allowed to start.
+
+### Commands and handoff
+
+- Read the candidate itself with `git show e078083`; its diff was verified as
+  documentation-only and `git diff --check e078083^ e078083` passed.
+- Inspected the candidate's `AGENTS.md`, `CURRENT_TASK.md`, `DESIGN.md`,
+  `docs/reboot/CURRENT_STATUS.md`, accepted R1 contract, `tsconfig.json`, and
+  the referenced core/runtime/animation/projection source with `git show`,
+  `git grep`, and `git ls-tree`.
+- No executable tests were run: this is a documentation-only static
+  compatibility review, not a production candidate.
+- Commit: pending one log-only review commit. Report its SHA and this log path
+  to the coordinator, then stop. This review does not authorize C1.
