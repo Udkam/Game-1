@@ -385,3 +385,37 @@ I1 authorization boundary:
   I1 chain.
 - C1, V1, frontend visual implementation, levels, release, and completion
   claims remain unauthorized.
+
+## 2026-07-12 - I1 accepted; C1 opened and level work frozen
+
+Accepted implementation chain:
+
+- gameplay/core bridge source `a4633c2bbdd4c1780b7396bff5dff9c2d245d16a`,
+  integrated as `c4d8240`;
+- corrected frontend consumer source
+  `ef27c9c57baf940ceec3c693cfc537cba93cc6be`, integrated as `085cfeb`;
+- independent QA verdict source `9579446`, integrated as `b68201a`.
+
+Independent evidence:
+
+- clean `npm.cmd ci --no-audit --no-fund` installed 64 packages;
+- typecheck and build passed with only the existing Pixi/Vite chunk advisory;
+- Vitest passed 10 files / 50 tests;
+- runtime/animation legacy command/result/event, `container-b`, and fixture
+  boundary searches returned no matches;
+- push feedback is singular, Undo keeps rebound order/endpoints, and reset no
+  longer emits a success cue.
+
+Coordinator decision:
+
+- I1 is an accepted interface milestone only, not frontend or engine
+  completion and not a release claim.
+- C1 becomes the sole active production slice after this integration/status
+  commit is pushed.
+- The user clarified that the required prior phase is the complete frontend
+  replication framework plus game-engine framework. Therefore V1-V4 remain in
+  the required sequence and all level design/content/serialization/solver work
+  is frozen until C1 and V1-V4 are independently accepted and integrated.
+- `docs/logs/CHANGELOG.md` is intentionally unchanged at this checkpoint; the
+  coordinator will update it only when the complete frontend-and-engine
+  framework milestone is accepted.

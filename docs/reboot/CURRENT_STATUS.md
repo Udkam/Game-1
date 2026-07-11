@@ -26,9 +26,10 @@ menus, polish UI, large content, or new gameplay rules.
   - `ARCHITECTURE.md`
   - `DESIGN_REFERENCE.md`
   - `IMPLEMENTATION_PLAN.md`
-- Approval status: R1 and D0 documentation contracts accepted. I1 is the only
-  active implementation authorization; historical Stage numbers are not
-  current authority.
+- Approval status: R1 and D0 documentation contracts accepted. The complete I1
+  public-interface chain is independently accepted and integrated; C1 is the
+  next active implementation slice. Historical Stage numbers are not current
+  authority.
 - Local cleanup state: no generated build output retained; dev server stopped
 
 ## Preserved Records
@@ -55,15 +56,19 @@ The user explicitly requested continued frontend and game-engine development on
 and `CURRENT_TASK.md` now define the active authority, design target, exact
 slice order, ownership, and QA gates.
 
-The dependency order is D0 documentation, I1 shared public-interface bridge,
-independent QA-I1, C1 deterministic core safety, independent QA-C1, then V1
-occurrence-address projection and unified visual completion ownership. V2-V4
-frontend completion and later gameplay/content slices require fresh bounded
-authorization recorded in `CURRENT_TASK.md`.
+The dependency order is D0 documentation, accepted I1 shared public-interface
+bridge, C1 deterministic core safety, V1 occurrence-address projection and
+unified visual completion ownership, then V2 composition/material, V3 retained
+rendering/performance, and V4 responsive input/accessibility/capture. Every
+implementation slice requires independent QA before the next starts.
+
+Per the user's 2026-07-12 clarification, no level design, serialization,
+authored test level, solver, or campaign content begins until the complete C1
+and V1-V4 frontend-and-engine framework is accepted and integrated.
 
 Do not treat this authorization as permission for overlapping workstreams,
-large content, copied assets, unreviewed schema, or a one-shot rewrite. No
-production source change begins until D0 is accepted and pushed.
+large content, copied assets, unreviewed schema, or a one-shot rewrite. C1 is
+the sole active production slice after the integrated I1 checkpoint is pushed.
 
 ## Historical Prototype Inventory
 

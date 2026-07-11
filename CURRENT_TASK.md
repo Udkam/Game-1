@@ -63,7 +63,7 @@ adds occurrence-addressed rendering and visual completion ownership after
 QA-C1. Frontend design/test planning may proceed during C1, but V1 production
 edits begin only after QA-C1.
 
-## 3. D0 — repository contracts (active now)
+## 3. D0 — repository contracts (completed)
 
 Owner: coordinator.
 
@@ -94,7 +94,9 @@ D0 acceptance gate:
 
 ## 4. I1 — shared public-interface bridge
 
-Status: planned; starts only after D0 is accepted and pushed.
+Status: independently accepted and integrated. Final accepted chain:
+`0b7ebc3 -> a4633c2 -> ef27c9c`, with QA verdict integrated from source
+`9579446`.
 
 Named owners:
 
@@ -304,7 +306,10 @@ V1 acceptance evidence:
 
 ## 7. Later frontend completion slices
 
-These are planned, not yet authorized for production edits.
+The user has authorized this frontend-and-engine framework sequence as the
+current development objective. Each slice remains gated by its declared start
+condition, exact-path coordinator authorization, and independent QA; this
+authorization does not permit overlapping implementation.
 
 ### V2 — composition and material system
 
@@ -329,6 +334,14 @@ These are planned, not yet authorized for production edits.
 
 Each later slice requires a fresh coordinator path authorization and
 independent QA review.
+
+### Level and content freeze
+
+Level design, serialization, authored test fixtures, solver work, and campaign
+content remain frozen until C1, V1, V2, V3, and V4 are all independently
+accepted, integrated, and verified together. Documentation research must not
+be turned into level layouts before that gate. This prevents an incorrect rule
+engine or incomplete renderer from becoming the de facto level contract.
 
 ## 8. Known baseline defects to eliminate
 
@@ -366,19 +379,20 @@ timeout, copied scene, or visual effect.
 
 ## 10. Phase completion definition
 
-Phase A is not complete until I1, C1, and V1 are independently accepted,
-integrated, and verified together from a clean install. At that point:
+The frontend-and-engine framework phase is not complete until I1, C1, V1, V2,
+V3, and V4 are independently accepted, integrated, and verified together from
+a clean install. At that point:
 
 - core commands are total, deterministic, and stress-tested;
 - renderer/runtime use occurrence addresses and no fixed IDs;
 - one visual transaction barrier protects recursive motion;
 - deterministic middle-frame evidence proves continuous spatial context;
 - `docs/logs/CHANGELOG.md` records the integrated implementation;
-- remaining V2-V4 and gameplay-depth work is explicitly listed without a false
-  stage-completion claim.
+- both authored composition modes, retained recursive rendering, performance
+  evidence, responsive input, accessibility, and deterministic capture are
+  accepted without a false stage-completion claim.
 
-Current checkpoint: **D0 has been independently accepted and integrated. After
-this accepted documentation baseline is pushed, only the gameplay/core half of
-I1 is authorized to start. The frontend half must wait for the coordinator to
-scope-review the gameplay candidate SHA. C1, V1, and all later slices remain
-closed.**
+Current checkpoint: **D0 and the complete I1 chain are independently accepted
+and integrated. After this status update is pushed, C1 is the only active
+production slice. V1-V4 remain dependency-gated, and all level/content work is
+frozen until the complete frontend-and-engine framework gate passes.**
