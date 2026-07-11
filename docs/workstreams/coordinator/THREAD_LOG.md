@@ -100,3 +100,57 @@ Gate decision:
 - Rules/runtime production work, frontend production work, level
   serialization, and level content remain frozen until QA accepts the P0
   candidate.
+
+## 2026-07-11 - Planning proposals independently accepted
+
+Independent QA review:
+
+- QA follow-up source commit:
+  `b10537e90e869153be0d86d08e9eddddf5356db3`.
+- Integrated QA follow-up commit:
+  `423fff9 docs(qa): review rules and level proposals`.
+- Stage 6 remains rejected for release. The verdicts below accept planning
+  direction only and grant no production, serialization, or content authority.
+
+Gameplay-rules planning direction:
+
+- Source proposal: `175ca5e3b251c0485f9603925b0cfda221c11aa1`.
+- Integrated commit: `16d26b8 docs: audit recursive gameplay rules engine`.
+- QA accepted the acyclic, address-aware direction, typed rejections,
+  transactional updates, replay enrichment, and dependency-ordered stability
+  sequence as planning guidance.
+- Before implementation approval, the contract must define deterministic
+  direction-to-port mapping, exact public result/event/address shapes,
+  load-time `cycleMode: "forbid"` enforcement, and the seeded/domain-reported
+  1,000-sequence stress-test protocol.
+
+Level-design planning direction:
+
+- Source chain:
+  - `42f9ca197905e3363551c25e91faa8a6ed25527e`
+  - `fa4d0ef1906098a332e515ba96cede5f600ac4f7`
+  - `2f421646aea3a24f578d927718d730a30e59cfe8`
+- Integrated chain:
+  - `dc15913 docs: add level design audit proposal`
+  - `6f04174 docs: record level design handoff`
+  - `af2cbd6 docs: record coordinator P0 decision`
+- QA accepted the four-level campaign as a provisional teaching direction
+  only. No schema, coordinates, fixtures, solver claim, or runtime level is
+  authorized.
+- Before authoring, the workstream must consume accepted rules and
+  serialization contracts, formalize solver cost/bounds/milestone
+  equivalence, and consume approved frontend desktop/mobile/transition staging
+  criteria.
+
+Frontend-design proposal intake:
+
+- Source chain received and routed to independent QA:
+  - `2ac2ed058af4ac49d7f5821f64d416b608ed845a`
+  - `be0b9e79bb6e84683b4c55b9f1bfad48ac91ca45`
+- The frontend proposal is not integrated pending QA verdict.
+
+Active gate:
+
+- P0 lockfile reproducibility remains the only authorized implementation
+  candidate.
+- All other workstreams remain audit/design-only or idle.
