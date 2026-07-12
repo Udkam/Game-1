@@ -720,3 +720,45 @@ gaps without starting production work.
   V4 mobile/accessibility/general automation, levels, serialization, and
   showcase work remain excluded. No R2 source implementation is authorized by
   this acceptance; independent QA must review the complete documentation chain.
+
+## 2026-07-13 — R2I evidence candidate
+
+- Frontend owner: `019f4e80-145a-7520-81e1-41a45b2bec13`; coordinator:
+  `019f4deb-7e83-7583-8cd5-8e6f075bc331`; independent QA reviewer:
+  `019f4e80-1462-7b32-8146-19ded692836c`.
+- Evidence authority: exact accepted R2I frontend source candidate
+  `4c102b04a775d9ad2583f6edc03eb39dd1501387`, whose parent is corrected core
+  `13980b18ee7cc61b11b78be08f09e03b185f0812`. This commit contains evidence
+  only; no TypeScript, core, package/config, root document, or changelog path
+  was edited.
+- Commands, once each in the prescribed order: `npm.cmd ci --no-audit
+  --no-fund` passed in 11 seconds; `npm.cmd run typecheck` passed; direct
+  single-worker Vitest JSON-reporter run passed with 40/40 suites and 120/120
+  tests; `npm.cmd run build` passed (only the existing Vite chunk advisory).
+  The terminal wrapper detached for Vitest, but its persisted JSON report at
+  `C:/Users/Alex Chen/AppData/Local/Temp/game1-r2i-evidence-vitest-9397e4b4fdc74114b5b13fadb647a92a.json`
+  confirmed exit success and zero failures; no replacement exhaustive run was
+  launched.
+- Browser evidence used one owned local Vite server, stopped after capture,
+  and fresh system-Chrome `150.0.7871.115` contexts at `1440x900`, DPR and
+  renderer resolution `1`. All 12 real-command R2 QA captures published ready
+  after explicit manual render with stopped ticker, one canvas, zero gameplay
+  DOM, zero console/page/request/WebGL problem events, accepted transactions,
+  structural transfer addresses, and no stale duplicate occurrence records.
+- At every midpoint, exactly one filled transfer carrier and one aggregate
+  impact rendered at the exact event-port aperture; source/destination endpoint
+  payload primitives were non-renderable. Parent shell, child rim/floor,
+  aperture, actor, carrier, and carried-world geometry had clipped authored
+  raster proof. All six forward/Undo endpoint/midpoint continuity pairs passed
+  the `<=0.5 CSS px` gate (largest observed delta `1.14e-13`).
+- Evidence files are `docs/qa/R2_BROWSER_EVIDENCE.md`,
+  `docs/qa/r2-browser-evidence.json`, and the 12 approved PNGs under
+  `docs/screenshots/r2/`; the JSON records source SHA, evidence-SHA placeholder,
+  command/result/transaction/hashes, structured geometry/raster metrics,
+  continuity comparisons, and PNG SHA-256 values. The evidence SHA cannot be
+  embedded in its own commit and is therefore deliberately represented by the
+  frozen self-reference placeholder.
+- Deferred unchanged: V2 material/composition, V3 retained/performance, V4
+  mobile/DPR/reduced-motion/pointer/touch/accessibility/general automation,
+  levels/content, serialization, showcase, release, and completion claims.
+  Candidate awaits independent QA review; this workstream does not self-approve.
