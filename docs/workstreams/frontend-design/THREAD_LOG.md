@@ -685,3 +685,38 @@ gaps without starting production work.
   reduced-motion, pointer/touch, accessibility, and general capture automation
   remain explicitly deferred. These synthetic non-level QA states make no V2,
   content, release, or completion claim.
+
+## 2026-07-13 — R2D replacement frontend compatibility acceptance
+
+- Frontend owner task `019f4e80-145a-7520-81e1-41a45b2bec13` was blocked by a
+  host approval/ACL mismatch before it could inspect replacement candidate
+  `59b1ae64b2b5344e45b58a456b82ce7b7979e086`. The coordinator moved the clean
+  existing frontend worktree to that exact SHA without changing content.
+  Recovery lineage `019f4e80-145a-7520-81e1-41a45b2bec13` ->
+  `019f57d3-0b09-70e1-b4cf-044235ec54fc` ->
+  `019f57d4-514c-7441-94cd-4862f76d2222` then completed the same bounded
+  frontend compatibility review. The final reviewer used no tools or file
+  writes; the coordinator records its verdict verbatim in substance because
+  the task family could not write shared Git metadata.
+- Verdict: **ACCEPT R2D frontend compatibility only**. The additive
+  `EntityTransferredEvent` compiles through unchanged non-exhaustive consumers,
+  and its occurrence, port, endpoint, and carried-subtree roots are sufficient
+  for addressed prefix rebasing without entity-ID fallback.
+- `push-resolved` remains the sole aggregate push impact/audio source. The
+  actor's existing `entity-moved(cause:"push")` is motion-only, and Undo events
+  are already reversed by core, so frontend never reverses event order or
+  endpoints a second time.
+- The existing single controller and controller-owned global `frame.progress`
+  are sufficient for one p=1 completion barrier across same-world shifts,
+  cross-world payload/carried subtree, aperture, projection, camera, and
+  effects. `AnimationSystem` remains read-only; no second clock is required.
+- The finite core/frontend/evidence commit allowlists are minimal and
+  sufficient. `GameCanvasHost` plus the separate R2 QA scenario/source test
+  belong to frontend implementation; the third commit contains only Markdown,
+  JSON, twelve PNG captures, and this frontend log, with no behavior change.
+- The twelve 1440x900 DPR1 forward/Undo captures specify adequate midpoint
+  coexistence, structural-address/no-stale-duplicate, explicit-render, and
+  locked-until-p1 evidence. V2 material/composition, V3 retained/performance,
+  V4 mobile/accessibility/general automation, levels, serialization, and
+  showcase work remain excluded. No R2 source implementation is authorized by
+  this acceptance; independent QA must review the complete documentation chain.
