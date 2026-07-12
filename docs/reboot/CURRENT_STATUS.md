@@ -1,11 +1,12 @@
 # Current Project Status
 
 Status: Phase A recursive-foundation rebuild is active after the design reboot.
-D0, the complete I1 interface bridge, C1 deterministic core, and V1
-occurrence-addressed rendering/visual-transaction barrier are independently
-accepted and integrated. The next and only active slice is R2D, a
-documentation-only contract freeze for original acyclic recursive transfers.
-The user assesses the overall target as less than 10% complete.
+D0, the complete I1 interface bridge, C1 deterministic core, V1
+occurrence-addressed rendering/visual-transaction barrier, and the R2D acyclic
+recursive-transfer contract are independently accepted and integrated. After
+the coordinator pushes the exact authorization, R2I-core is the next and only
+active implementation slice. The user assesses the overall target as less
+than 10% complete.
 
 `Stage 6` is a historical implementation label only. It does not mean that the
 visual design, recursive rules, gameplay depth, runtime stability, content, or
@@ -28,11 +29,12 @@ or cyclic gameplay.
   - `ARCHITECTURE.md`
   - `DESIGN_REFERENCE.md`
   - `IMPLEMENTATION_PLAN.md`
-- Approval status: R1 and D0 contracts, the complete I1 public-interface chain,
-  C1 deterministic core, and V1 are independently accepted and integrated.
+- Approval status: R1, D0, the complete I1 public-interface chain, C1
+  deterministic core, V1, and R2D are independently accepted and integrated.
   V1's accepted implementation/evidence/QA chain is
-  `cef6ab2 -> 5bb6a73 -> 4df4528`. Historical Stage numbers are not current
-  authority.
+  `cef6ab2 -> 5bb6a73 -> 4df4528`; R2D's accepted contract/frontend/QA chain
+  is `59b1ae6 -> f1466fe -> c180c2b`. Historical Stage numbers are not
+  current authority.
 - Local cleanup state: no generated build output retained; dev server stopped
 
 ## Preserved Records
@@ -60,12 +62,12 @@ and `CURRENT_TASK.md` now define the active authority, design target, exact
 slice order, ownership, and QA gates.
 
 The completed dependency order so far is D0 documentation, accepted I1 shared
-public-interface bridge, C1 deterministic core safety, and V1 occurrence-
-address projection/unified visual completion ownership. The next gate is R2D
-contract freeze, followed only after its acceptance by exact R2 implementation
-slices. V2 composition/material, V3 retained rendering/performance, and V4
-responsive input/accessibility/capture follow. Every implementation slice
-requires independent QA before the next starts.
+public-interface bridge, C1 deterministic core safety, V1 occurrence-address
+projection/unified visual completion ownership, and accepted R2D. The next
+gate is the indivisible R2I core -> frontend -> browser-evidence chain for
+original acyclic push-in/push-out. V2 composition/material, V3 retained
+rendering/performance, and V4 responsive input/accessibility/capture follow.
+Every implementation slice requires independent QA before integration.
 
 Per the user's 2026-07-12 clarification, no level design, serialization,
 authored test level, solver, or campaign content begins until C1, accepted R2
@@ -74,9 +76,10 @@ After that gate, the first content slice is one original showcase acceptance
 level; test-level expansion starts only after the user accepts that showcase.
 
 Do not treat this authorization as permission for overlapping workstreams,
-large content, copied assets, unreviewed schema, or a one-shot rewrite. R2D may
-change only its two gameplay documentation paths. R2 production, V2-V4, and all
-level/content work remain frozen.
+large content, copied assets, unreviewed schema, or a one-shot rewrite. R2I
+uses the exact finite paths and linear order in `CURRENT_TASK.md`; no partial
+core/frontend/evidence commit is integrated or pushed. V2-V4 and all level/
+content work remain frozen.
 
 ## Historical Prototype Inventory
 

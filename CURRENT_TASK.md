@@ -48,7 +48,16 @@ R2D acyclic recursive-transfer contract freeze (documentation only)
 QA-R2D independent acceptance
         |
         v
-R2 implementation slices named by the accepted contract
+R2I-core deterministic recursive transfers
+        |
+        v
+R2I-frontend addressed transfer presentation
+        |
+        v
+R2I-evidence deterministic forward/Undo frames
+        |
+        v
+QA-R2I whole-chain independent acceptance
         |
         v
 V2 composition/material frontend rebuild
@@ -72,12 +81,12 @@ adds occurrence-addressed rendering and visual completion ownership after
 QA-C1. Frontend design/test planning may proceed during C1, but V1 production
 edits begin only after QA-C1.
 
-V1 is now independently accepted and integrated. The next gate is R2D, a
-documentation-only contract freeze for original acyclic push-in/push-out and
-world-bearing-container transfer semantics. R2D must finish and receive both
-frontend compatibility review and independent QA acceptance before any R2
-production path is authorized. V2-V4 and all content remain frozen during
-R2D.
+V1 and R2D are now independently accepted and integrated. After this exact
+authorization is pushed, R2I-core is the sole active implementation slice for
+original acyclic push-in/push-out and world-bearing-container transfers. The
+frontend and evidence commits start only from their exact coordinator-reviewed
+parent candidate, and independent QA reviews the complete chain before any
+part is integrated. V2-V4 and all content remain frozen during R2I.
 
 ## 3. D0 — repository contracts (completed)
 
@@ -433,9 +442,10 @@ Frontend compatibility reviewer: frontend/visual/runtime task
 Independent reviewer: QA task
 `019f4e80-1462-7b32-8146-19ded692836c`.
 
-Status: authorized as the next and only workstream slice after V1 integration.
-R2D is documentation only. It does not authorize core, runtime, projection,
-render, package, serialization, level, or content edits.
+Status: accepted and integrated. The exact accepted documentation chain is
+`d4d9991 -> 59b1ae6 -> f1466fe -> c180c2b`. R2D remains documentation only;
+its acceptance does not itself authorize source, package, serialization,
+level, or content edits.
 
 Owned paths:
 
@@ -467,17 +477,165 @@ Required contract result:
   for implementation. No partial integration or compile-dead intermediate
   state is allowed.
 
-R2D acceptance gate:
+R2D acceptance evidence:
 
-- gameplay owner commits only the two owned documentation paths;
-- frontend owner performs a read-only compatibility review of command/result/
-  event, projection, animation, and visual-transaction consequences;
-- independent QA accepts the exact complete documentation chain by SHA;
-- the coordinator integrates and pushes the accepted contract, then amends
-  this file with the finite implementation allowlists before any R2 source
-  work begins.
+- gameplay contract: `59b1ae64b2b5344e45b58a456b82ce7b7979e086`;
+- frontend compatibility acceptance:
+  `f1466fedbc9676355ee725ea6579cbdebcb20ce1`;
+- independent QA acceptance:
+  `c180c2b997286653b9d9d0ff478b91cf18933f99`;
+- exact linear ancestry, three-path scope, and diff/show checks passed;
+- superseded `59b2db05` has no verdict or authority.
 
-## 8. Later frontend completion slices
+## 8. R2I — acyclic recursive-transfer implementation
+
+Status: authorized as the sole active implementation slice only after the
+coordinator commits and pushes this exact authorization. The implementation
+baseline is the pushed `origin/main` SHA supplied to both owners by the
+coordinator. No worker may infer a different base.
+
+Owners:
+
+- core: gameplay rules/engine task
+  `019f4e82-7cb8-73c1-b4a1-d333273b359f`;
+- frontend implementation and evidence: frontend task
+  `019f4e80-145a-7520-81e1-41a45b2bec13`;
+- whole-chain reviewer: independent QA task
+  `019f4e80-1462-7b32-8146-19ded692836c`;
+- integration/push: coordinator
+  `019f4deb-7e83-7583-8cd5-8e6f075bc331`.
+
+### Frozen public crossing
+
+The only shared public-type migration is the additive
+`EntityTransferredEvent` member of `SemanticEvent`. `PublicCommand`,
+`CommandResult`, rejection, attempt, transaction, address, state, rule, and
+hash shapes remain R1. The event and every consumer must use complete
+root-plus-container-path occurrence addresses; entity-ID fallback and
+delimiter-built identity are forbidden.
+
+Any transfer-specific `AnimationPlan` field must remain optional and backward
+compatible because `src/animation/AnimationSystem.test.ts` constructs a plan
+literal and is read-only in R2I. If implementation proves that a required plan
+field is unavoidable, stop: a fresh coordinator authorization must add that
+test path before editing. `AnimationSystem` remains a read-only sampler of the
+one controller-owned global progress source and may not gain a second clock.
+
+### Indivisible linear commit chain
+
+R2I is one shared migration exception under `AGENTS.md`. All three commits are
+required, must have the exact parent order below, and may not be integrated or
+pushed separately.
+
+1. **R2I-core**, directly atop the pushed authorization baseline. Exact
+   gameplay writable paths:
+   - `src/core/types.ts`;
+   - `src/core/movementResolver.ts`;
+   - new `src/core/recursiveTransfers.ts`;
+   - `src/core/ports.ts`;
+   - `src/core/reducer.ts`;
+   - `src/core/core.test.ts`;
+   - `src/core/replay.test.ts`;
+   - `src/core/ports.test.ts`;
+   - `src/core/validation.test.ts`;
+   - `src/core/stress.test.ts`;
+   - new `src/core/recursiveTransfers.test.ts`;
+   - `docs/workstreams/gameplay-rules-engine/THREAD_LOG.md`.
+2. **R2I-frontend**, directly atop the exact core candidate after coordinator
+   scope review. Exact frontend writable paths:
+   - `src/animation/transitions.ts`;
+   - `src/animation/transitions.test.ts`;
+   - `src/runtime/GameRuntime.ts`;
+   - `src/runtime/GameRuntime.test.ts`;
+   - `src/runtime/EventPipeline.test.ts`;
+   - `src/runtime/VisualTransactionController.test.ts`;
+   - new `src/runtime/r2QaScenario.ts`;
+   - new `src/runtime/r2QaScenario.test.ts`;
+   - `src/render/PixiApp.ts`;
+   - `src/render/PixiApp.test.ts`;
+   - `src/render/RecursiveTransitionRenderer.ts`;
+   - `src/render/RecursiveTransitionRenderer.test.ts`;
+   - `src/projection/simulationProjection.test.ts`;
+   - `src/projection/worldProjection.test.ts`;
+   - `src/app/GameCanvasHost.tsx`.
+3. **R2I-evidence**, directly atop the exact frontend candidate and captured
+   from that frontend SHA. Exact writable paths:
+   - `docs/qa/R2_BROWSER_EVIDENCE.md`;
+   - `docs/qa/r2-browser-evidence.json`;
+   - `docs/screenshots/r2/push-in-00.png`;
+   - `docs/screenshots/r2/push-in-50.png`;
+   - `docs/screenshots/r2/push-in-100.png`;
+   - `docs/screenshots/r2/undo-push-in-00.png`;
+   - `docs/screenshots/r2/undo-push-in-50.png`;
+   - `docs/screenshots/r2/undo-push-in-100.png`;
+   - `docs/screenshots/r2/push-out-00.png`;
+   - `docs/screenshots/r2/push-out-50.png`;
+   - `docs/screenshots/r2/push-out-100.png`;
+   - `docs/screenshots/r2/undo-push-out-00.png`;
+   - `docs/screenshots/r2/undo-push-out-50.png`;
+   - `docs/screenshots/r2/undo-push-out-100.png`;
+   - `docs/workstreams/frontend-design/THREAD_LOG.md`.
+
+Read-only verification consumers are exactly those named in section I of the
+accepted R2 contract. They are not writable ownership. In particular,
+`src/core/validation.ts`, `worldGraph.ts`, `history.ts`, `replay.ts`,
+`collision.ts`, `hash.ts`, `win.ts`, production projection modules,
+`EventPipeline.ts`, `VisualTransactionController.ts`, `v1QaScenario.ts`,
+`AnimationSystem.ts` and its test, and `Camera2D.ts` remain unchanged.
+
+### Core result and guards
+
+- implement push-out -> push-in receiver -> local-push classification in the
+  exact accepted order; a reserved transfer failure never falls through;
+- move exactly one terminal payload across one addressed port, shift only the
+  specified same-world chain, and preserve actor focus;
+- keep world-bearing payload identity/components and emit addressed subtree
+  root rebasing without cloning canonical state;
+- validate port geometry, occupancy, aliases, focus, and the complete derived
+  graph with `cycleMode:"forbid"` before one atomic commit;
+- explicitly reverse transfer mode, occurrences, cells, endpoints, and carried
+  roots in `reducer.ts`; a generic event reversal is insufficient;
+- authenticate stored transfer events/history and retain deterministic replay,
+  hashes, win crossings, sequence, and unchanged-state rejection behavior;
+- create no fixture/profile/fixed-ID rule branch and no push-in/out public rule.
+
+### Frontend result and guards
+
+- `push-resolved` remains the sole aggregate push impact/audio source;
+- `entity-transferred` drives only addressed payload, carried-subtree,
+  aperture/projection, and any required camera sampling; actor push motion is
+  singular and Undo is never reversed a second time;
+- the existing `VisualTransactionController` remains the sole progress,
+  completion, one-slot buffer, cancel, and destroy owner; input unlocks only at
+  the complete p=1 transaction;
+- forward and Undo frames preserve parent/child/aperture context and update
+  every aliased occurrence by structural path with no stale duplicate;
+- QA scenario selection remains strict dev-only application composition, not
+  a level, schema, production fixture selector, or general V4 automation.
+
+### Verification and handoff
+
+- during core/frontend implementation, run only focused tests needed for the
+  edited behavior plus typecheck; do not repeatedly run the 1,000-case suite;
+- the complete three-commit candidate runs one clean
+  `npm.cmd ci --no-audit --no-fund`, typecheck, full test, and build gate. The
+  full test contains one combined 1,000-fixture x 64-command R2-superset run
+  plus the frozen 3,000 non-Step subcases, never a second exhaustive R1 suite;
+- browser evidence uses exact 1440x900 DPR/resolution 1 normalized progress
+  0/0.5/1 forward and Undo captures, structural addresses, <=0.5 CSS-pixel
+  continuity, one canvas, zero gameplay DOM/problems, explicit render, and
+  barrier locked before p=1;
+- independent QA reviews the complete core -> frontend -> evidence SHA chain,
+  reproduces the contracted clean gates once, and accepts by SHA before the
+  coordinator integrates or pushes any R2I commit;
+- each owner commits only its exact paths, reports its SHA, and stops. Workers
+  never merge, rebase, push, edit root CHANGELOG, or start the next slice.
+
+Explicitly excluded: V2-V4, package/config changes, audio implementation,
+levels, schema, serialization, solver, campaign/showcase content, cycles,
+self-containment, copied official material, release, Stage 6, and completion.
+
+## 9. Later frontend completion slices
 
 The user has authorized this frontend-and-engine framework sequence as the
 current development objective. Each slice remains gated by its declared start
@@ -516,7 +674,7 @@ accepted, integrated, and verified together. Documentation research must not
 be turned into level layouts before that gate. This prevents an incorrect rule
 engine or incomplete renderer from becoming the de facto level contract.
 
-## 9. Known baseline defects to eliminate
+## 10. Known baseline defects to eliminate
 
 Current source evidence at phase start:
 
@@ -536,7 +694,7 @@ Current source evidence at phase start:
 No later slice may hide these defects with a special fixture, longer arbitrary
 timeout, copied scene, or visual effect.
 
-## 10. Repository and handoff rules for this phase
+## 11. Repository and handoff rules for this phase
 
 - Workstreams use `gpt-5.6-terra`, `xhigh` reasoning effort, standard speed.
 - Every candidate report uses task ID and candidate SHA as its identity.
@@ -550,7 +708,7 @@ timeout, copied scene, or visual effect.
   local logs remain untracked/unstaged.
 - `git add .` is forbidden.
 
-## 11. Phase completion definition
+## 12. Phase completion definition
 
 The frontend-and-engine framework phase is not complete until I1, C1, V1, the
 R2 implementation defined by an accepted R2D contract, V2, V3, and V4 are
@@ -568,8 +726,8 @@ At that point:
   evidence, responsive input, accessibility, and deterministic capture are
   accepted without a false stage-completion claim.
 
-Current checkpoint: **D0, I1, C1, and V1 are independently accepted and
-integrated. R2D is the sole active documentation slice. No R2 production code
-is authorized until its contract, frontend compatibility review, and
-independent QA gate are accepted and integrated. V2-V4 and all level/content
-work remain frozen until their declared gates pass.**
+Current checkpoint: **D0, I1, C1, V1, and R2D are independently accepted and
+integrated. After this authorization commit is pushed, R2I-core is the sole
+active implementation slice. R2I-frontend and evidence remain sequentially
+closed until their exact parent candidate is coordinator-reviewed. V2-V4 and
+all level/content work remain frozen until their declared gates pass.**

@@ -553,3 +553,53 @@ Coordinator decision:
   release, and overall completion remain closed;
 - `docs/logs/CHANGELOG.md` remains unchanged until the complete frontend-and-
   engine framework milestone is accepted, matching the user's gate.
+
+## 2026-07-13 - R2D accepted and integrated; exact R2I chain authorized
+
+Accepted R2D documentation chain:
+
+- acyclic recursive-transfer contract:
+  `59b1ae64b2b5344e45b58a456b82ce7b7979e086`;
+- frontend compatibility acceptance:
+  `f1466fedbc9676355ee725ea6579cbdebcb20ce1`;
+- independent QA acceptance recorded from task
+  `019f4e80-1462-7b32-8146-19ded692836c`:
+  `c180c2b997286653b9d9d0ff478b91cf18933f99`.
+
+Acceptance evidence and decision:
+
+- ancestry is exactly `d4d9991 -> 59b1ae6 -> f1466fe -> c180c2b`;
+- cumulative contract/review scope is four workstream documentation paths and
+  contains no product, package, root changelog, level, or evidence change;
+- the accepted contract preserves R1 public commands/results/rules/state and
+  adds only addressed `EntityTransferredEvent` to `SemanticEvent`;
+- it freezes deterministic push-out -> push-in receiver -> local-push
+  classification, atomic candidate validation, full-graph cycle rejection,
+  aliases/world-bearing transfers, history/replay/win, one combined stress
+  protocol, one visual barrier, and an indivisible three-commit implementation;
+- repeated host approval failures were resolved without a duplicate QA task:
+  QA issued a no-tool final ACCEPT from the already consumed contract, source,
+  diff, and frontend evidence; the coordinator recorded its verdict verbatim
+  in substance in the QA log;
+- two coordinator support audits independently found no R2D blocker. They
+  require the later authorization to name the exact public crossing, keep new
+  `AnimationPlan` transfer data optional unless its literal test is owned, and
+  explicitly reverse transfer events in `reducer.ts`.
+
+R2I authorization:
+
+- `CURRENT_TASK.md` now names `SemanticEvent` plus additive
+  `EntityTransferredEvent`, exact disjoint core/frontend/evidence paths, owners,
+  parent order, no-partial-integration rule, clean whole-chain gate, and final
+  independent QA;
+- R2I-core becomes the sole active source slice only after this authorization
+  commit is pushed and its exact SHA is sent to the gameplay owner;
+- frontend work begins only directly atop the coordinator-reviewed core SHA;
+  evidence begins only directly atop the reviewed frontend SHA;
+- focused tests are used during implementation. The complete candidate runs
+  one clean full gate containing one combined R2-superset stress suite; no
+  redundant exhaustive R1 suite or redundant Redo capture set is allowed;
+- V2-V4, package/config, levels, serialization, solver, showcase, cycles,
+  copied content, release, Stage 6, and completion remain closed;
+- the root `docs/logs/CHANGELOG.md` remains unchanged because the complete
+  frontend-and-engine framework milestone is not yet accepted.

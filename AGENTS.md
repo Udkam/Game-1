@@ -256,9 +256,11 @@ Stop and return to the coordinator when:
   3. the contract forbids partial integration and requires the complete linear
      chain to pass whole-repository verification;
   4. the named independent QA task accepts the complete chain by SHA.
-  The only currently authorized exception is I1 in `CURRENT_TASK.md`. Any
-  future shared bridge requires a fresh explicit coordinator authorization and
-  `CURRENT_TASK.md` update before work begins;
+  I1 is the completed historical exception. R2I in `CURRENT_TASK.md` is the
+  only currently active exception and is valid only as its exact indivisible
+  core -> frontend -> evidence chain. Any future shared bridge requires a
+  fresh explicit coordinator authorization and `CURRENT_TASK.md` update before
+  work begins;
 - official/copied assets or level data would be required;
 - a clean install, deterministic test, browser capture, or required tool cannot
   be reproduced;
