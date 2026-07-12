@@ -560,6 +560,60 @@ separate start conditions and each requires later independent QA by SHA.
 - Follow-up commit hash: pending creation; report it with this log path to the
   coordinator after committing. No push, merge, or rebase is authorized.
 
+## 2026-07-13 — Independent R2D documentation acceptance
+
+- QA task: `019f4e80-1462-7b32-8146-19ded692836c`.
+- Coordinator: `019f4deb-7e83-7583-8cd5-8e6f075bc331`.
+- Exact reviewed chain:
+  `d4d99911576ba8217ed905f52c7d53e94fb39c2c` ->
+  `59b1ae64b2b5344e45b58a456b82ce7b7979e086` ->
+  `f1466fedbc9676355ee725ea6579cbdebcb20ce1`.
+- Superseded `59b2db05c2d8bf66310d53357337cc3c2022d486`
+  received no verdict and is not authority.
+- The cumulative candidate changes only the R2 contract, gameplay workstream
+  log, and frontend workstream log. Ancestry, path scope, and diff/show
+  whitespace checks were independently consumed before the final verdict.
+- Repeated host approval failures prevented the QA task from writing its own
+  one-file verdict commit. The task therefore issued a no-tool final verdict
+  from the already consumed contracts, source consumers, diffs, and frontend
+  acceptance; the coordinator records that verdict here without changing its
+  substance.
+
+### Verdict: ACCEPT
+
+1. R1 commands, results, rules, state, hashes, and rejection shapes remain
+   stable; `EntityTransferredEvent` is the sole additive public event and
+   carries full addressed identity.
+2. Push-out -> push-in receiver -> local-push ordering is deterministic,
+   gap-safe, prevents fallthrough, and reserves transfer-boundary failures.
+3. Transfers are atomic across port geometry, occupancy, focus, aliases,
+   containment, complete-graph cycle validation, history/replay, and win.
+4. `push-resolved` remains the only aggregate impact/audio source; actor motion
+   is singular and Undo/Redo inversion is specified without a second frontend
+   reversal.
+5. The one combined R2 stress protocol replaces a duplicate exhaustive R1
+   run and retains deterministic coverage, forgery, and replay requirements.
+6. R2I has finite core -> frontend -> evidence ownership, no partial
+   integration, and bounded forward/Undo browser evidence. Frontend acceptance
+   `f1466fe` is log-only and claims no implementation authority.
+
+### Required later `CURRENT_TASK` guards
+
+- Name `SemanticEvent` and additive `EntityTransferredEvent` as the exact R2I
+  public crossing; every consumer uses occurrence addresses without entity-ID
+  fallback.
+- Keep any new `AnimationPlan` transfer field optional unless every literal-
+  construction test is included in the same authorized slice.
+- Preserve one controller-owned global progress source; do not add a second
+  `AnimationSystem` clock or ownership path.
+- Require the indivisible core -> frontend -> evidence chain and independent
+  whole-repository QA before integration.
+
+This verdict authorizes only coordinator recording and integration of R2D. It
+does not authorize R2 source work until a later exact `CURRENT_TASK`
+authorization, and it does not accept V2-V4, levels, serialization, showcase
+content, Stage 6, release, or project completion.
+
 ## Entry: independent QA-V1 implementation and browser-evidence acceptance
 
 - Workstream thread ID: `019f4e80-1462-7b32-8146-19ded692836c`.
