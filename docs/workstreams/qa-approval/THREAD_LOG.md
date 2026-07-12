@@ -560,6 +560,89 @@ separate start conditions and each requires later independent QA by SHA.
 - Follow-up commit hash: pending creation; report it with this log path to the
   coordinator after committing. No push, merge, or rebase is authorized.
 
+## Entry: independent QA-C1 re-review and acceptance
+
+- Workstream thread ID: `019f4e80-1462-7b32-8146-19ded692836c`
+- Coordinator thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`
+- Timestamp: 2026-07-12 Asia/Shanghai
+- Exact C1 parent/base: `d3552c81894a43805854611822bcfab86e993538`.
+- Prior rejected C1 head, with no QA verdict commit:
+  `d6677c9e2a6d2818f898fbf97f7b2d123546b522`.
+- Reviewed superseding C1 candidate:
+  `63750f9d1e9bf53b90074d9c341e8c5eec6f5f7a`.
+
+### Scope, ancestry, and boundary review
+
+- The candidate is a direct child of the exact C1 base. Its full diff retains
+  exactly the 24 C1-owned paths: gameplay log plus the approved `src/core/**`
+  implementation/test paths. No projection, runtime, animation, render,
+  package, configuration, root documentation/changelog, level, serialization,
+  or QA path is in the candidate.
+- `git diff --check` for the full range and correction delta, plus `git show
+  --check` for the candidate, pass. The detached candidate worktree stayed
+  clean after verification and began with no `node_modules`.
+- The R1 public `PublicCommand`/`CommandResult`/`SemanticEvent`/address/
+  transaction/`dispatchPublicCommand` boundary remains runtime-compatible;
+  I1 adapter and all legacy core command/result/event/wrapper exports are
+  removed. Core searches find no legacy bridge symbols, presentation imports,
+  fixed-ID rule resolution, or random/time/locale nondeterminism.
+
+### C1 contract and sequence-authentication re-review
+
+1. **Deterministic rules and validation hold.** The candidate uses explicit
+   rule enablement/priority, exact addressed enter/exit port mapping, atomic
+   candidate validation, typed unchanged rejections, runtime-versus-initial
+   landing validation, full-graph `cycleMode: "forbid"` validation including
+   unreachable components, and canonical goal/hash/replay behavior. Stored
+   transactions authenticate full root/path/table/port/inner-world/landing/
+   outer-approach geometry before Undo/Redo; direction, event ordering,
+   `sourceTransactionId`, reset, and win traces are covered by the C1 tests.
+2. **The prior P1 sequence forgery is resolved.** Dispatch now rejects a
+   negative, fractional, `NaN`, or infinite `publicTransactionSequence` before
+   transaction creation/replay and returns the frozen unchanged Step or
+   non-Step rejection shape. A selected history source must have an integer
+   sequence in `[1, currentSessionSequence]` before synthetic reproduction.
+   Rewritten past Undo and future Redo source/event IDs at sequence `999`
+   reject unchanged; legitimate older source sequence `1` continues through
+   Undo/Redo. Nested `push-resolved.moved` transaction IDs are also verified.
+3. **Stress proof remains frozen and total.** The xorshift32 seed/anchors,
+   1,000 fixtures × 64 commands, three initial non-Step subcases per fixture,
+   all enablement masks/weights, and 240,000 ms limit are unchanged. The oracle
+   validates session/source sequence ranges and top-level/nested event IDs,
+   uses a single direct/replay pass on success, localizes only failures, keeps
+   empty traces valid, locates first replay/length/final mismatches, and either
+   produces a same-code 1-minimal trace or emits a distinct minimizer failure.
+
+### Independent clean-candidate verification
+
+- Environment: Node `v24.12.0`; npm `11.6.2`.
+- `npm.cmd ci --no-audit --no-fund`: passed from an absent-`node_modules`
+  precondition; added 64 packages.
+- `npm.cmd run typecheck`: passed.
+- Exactly one full `npm.cmd run test` invocation ran, including stress. Its
+  npm debug record reports authoritative exit `0`; independent discovery
+  confirms the expected **12 test files / 70 test cases**.
+- `npm.cmd run build`: passed. The only warning is the existing Vite >500 kB
+  chunk advisory (main chunk `545.93 kB` minified); it remains outside C1 and
+  is not acceptance evidence.
+
+### QA verdict
+
+**Accept C1 candidate `63750f9` only.** The 24-path implementation now meets
+the accepted R1 deterministic-core contract and corrects the rejected stored-
+history sequence-authentication flaw. No P0 or C1-scope P1 blocker remains.
+
+This is not V1/V2-V4 authority, frontend/level/serialization work, Stage 6
+acceptance, release authority, or a target-completion claim. The coordinator
+must integrate and push this exact accepted chain before considering a later,
+separately authorized slice and its own independent QA review.
+
+### Handoff
+
+- Files changed by this QA follow-up: this `THREAD_LOG.md` only.
+- Follow-up commit hash: pending creation; report it with this log path to the
+  coordinator after committing. No push, merge, or rebase is authorized.
+
 ## Entry: independent QA-I1 replacement-chain review and acceptance
 
 - Workstream thread ID: `019f4e80-1462-7b32-8146-19ded692836c`
