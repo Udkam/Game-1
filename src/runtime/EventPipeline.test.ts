@@ -4,6 +4,7 @@ import { createSimulationSession } from "../core/history";
 import type { SimulationState } from "../core/types";
 import { createSimulationState, createStage3BSimulationState } from "../core/worldGraph";
 import { EventPipeline } from "./EventPipeline";
+import { parseR2QaQuery } from "./r2QaScenario";
 
 describe("EventPipeline", () => {
   it("forwards an accepted public Step transaction without reinterpretation", () => {
@@ -90,6 +91,26 @@ describe("EventPipeline", () => {
     });
     expect(redone.events[0]).toMatchObject({ type: "entity-moved", direction: "forward" });
     expect(reset.events).toEqual([expect.objectContaining({ type: "reset", direction: "forward" })]);
+  });
+
+  it("forwards an additive addressed transfer event by reference without reconstructing its subtree roots", () => {
+    const scenario = parseR2QaQuery("?qa=r2&case=push-in&progress=0.5", true);
+    if (scenario.kind !== "scenario") throw new Error("Expected R2 QA scenario.");
+    const result = new EventPipeline().dispatch(scenario.session, scenario.commands[0]);
+    expect(result.result.kind).toBe("accepted");
+    if (result.result.kind !== "accepted") throw new Error("Expected accepted transfer.");
+    expect(result.events).toBe(result.result.transaction.events);
+    const transfer = result.events.find((event) => event.type === "entity-transferred");
+    expect(transfer).toMatchObject({
+      mode: "push-in",
+      entityBefore: { world: { rootWorldId: "r2-root", containerPath: [] }, entityId: "r2-payload" },
+      entityAfter: { world: { rootWorldId: "r2-root", containerPath: ["r2-receiver"] }, entityId: "r2-payload" },
+      carriedSubtree: {
+        beforeRoot: { rootWorldId: "r2-root", containerPath: ["r2-payload"] },
+        afterRoot: { rootWorldId: "r2-root", containerPath: ["r2-receiver", "r2-payload"] },
+      },
+    });
+    expect(result.animationPlan.transferTransitions?.[0]).toMatchObject({ entityBefore: transfer && transfer.type === "entity-transferred" ? transfer.entityBefore : undefined });
   });
 });
 

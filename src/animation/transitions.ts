@@ -4,6 +4,7 @@ import type {
   Direction,
   EntityMovedEvent,
   EntityOccurrenceAddress,
+  EntityTransferredEvent,
   PortOccurrenceAddress,
   SemanticEvent,
   WorldAddress,
@@ -53,6 +54,23 @@ export interface PortalTransition {
   readonly to: CellAddress;
 }
 
+/**
+ * One addressed payload crossing.  This deliberately stays separate from
+ * EntityMotion: the two endpoint occurrences belong to different worlds and
+ * must be bridged by their complete paths rather than by an entity-id key.
+ */
+export interface TransferTransition {
+  readonly mode: "push-in" | "push-out";
+  readonly direction: AnimationDirection;
+  readonly entityBefore: EntityOccurrenceAddress;
+  readonly entityAfter: EntityOccurrenceAddress;
+  readonly from: CellAddress;
+  readonly to: CellAddress;
+  readonly via: PortOccurrenceAddress;
+  readonly carriedSubtree: EntityTransferredEvent["carriedSubtree"];
+  readonly durationMs: number;
+}
+
 export interface AudioCue {
   readonly kind: AudioCueKind;
   readonly volume: number;
@@ -65,6 +83,8 @@ export interface AnimationPlan {
   readonly blockedImpacts: readonly BlockedImpact[];
   readonly cameraCues: readonly CameraCue[];
   readonly portalTransitions: readonly PortalTransition[];
+  /** Optional so the read-only AnimationSystem plan fixtures remain valid. */
+  readonly transferTransitions?: readonly TransferTransition[];
   readonly audioCues: readonly AudioCue[];
 }
 
@@ -74,6 +94,7 @@ const DURATION = {
   blocked: 95,
   enter: 560,
   exit: 500,
+  transfer: 360,
 } as const;
 
 export function createAnimationPlan(
@@ -89,6 +110,7 @@ export function createAnimationPlan(
   const blockedImpacts: BlockedImpact[] = [];
   const cameraCues: CameraCue[] = [];
   const portalTransitions: PortalTransition[] = [];
+  const transferTransitions: TransferTransition[] = [];
   const audioCues: AudioCue[] = [];
 
   for (const event of events) {
@@ -112,6 +134,11 @@ export function createAnimationPlan(
       }
       cameraCues.push({ kind: "impact", direction: event.directionMoved, strength: 7, durationMs: 80 });
       audioCues.push({ kind: "push", volume: 0.56 });
+      continue;
+    }
+
+    if (event.type === "entity-transferred") {
+      transferTransitions.push(transferTransitionFromEvent(event));
       continue;
     }
 
@@ -164,12 +191,27 @@ export function createAnimationPlan(
 
   return {
     direction,
-    durationMs: getPlanDuration(entityMotions, blockedImpacts, cameraCues),
+    durationMs: getPlanDuration(entityMotions, blockedImpacts, cameraCues, transferTransitions),
     entityMotions,
     blockedImpacts,
     cameraCues,
     portalTransitions,
+    transferTransitions,
     audioCues,
+  };
+}
+
+function transferTransitionFromEvent(event: EntityTransferredEvent): TransferTransition {
+  return {
+    mode: event.mode,
+    direction: event.direction,
+    entityBefore: event.entityBefore,
+    entityAfter: event.entityAfter,
+    from: event.from,
+    to: event.to,
+    via: event.via,
+    carriedSubtree: event.carriedSubtree,
+    durationMs: DURATION.transfer,
   };
 }
 
@@ -220,8 +262,9 @@ function getPlanDuration(
   motions: readonly EntityMotion[],
   impacts: readonly BlockedImpact[],
   cameraCues: readonly CameraCue[],
+  transfers: readonly TransferTransition[] = [],
 ) {
-  if (motions.length === 0 && impacts.length === 0 && cameraCues.length === 0) {
+  if (motions.length === 0 && impacts.length === 0 && cameraCues.length === 0 && transfers.length === 0) {
     return 0;
   }
   return Math.max(
@@ -229,6 +272,7 @@ function getPlanDuration(
     ...motions.map((motion) => motion.durationMs),
     ...impacts.map((impact) => impact.durationMs),
     ...cameraCues.map((cue) => cue.durationMs),
+    ...transfers.map((transfer) => transfer.durationMs),
   );
 }
 

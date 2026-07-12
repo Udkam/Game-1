@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Step } from "../core/commands";
-import type { EntityMovedEvent, SemanticEvent } from "../core/types";
+import type { EntityMovedEvent, EntityTransferredEvent, SemanticEvent } from "../core/types";
 import { createAnimationPlan } from "./transitions";
 
 const transactionId = { initialStateHash: "initial", sequence: 1 } as const;
@@ -154,6 +154,59 @@ describe("semantic animation mapping", () => {
     expect(plan.audioCues.map((cue) => cue.kind)).toEqual(["enter", "exit"]);
   });
 
+  it("maps one forward world-bearing transfer without duplicating push feedback or actor motion", () => {
+    const actor = moved("actor", 1, 2, "push", root);
+    const transfer = transferred("push-in", "forward");
+    const plan = createAnimationPlan([
+      pushResolved(undefined, "right", "forward"),
+      transfer,
+      actor,
+    ]);
+
+    expect(plan.entityMotions).toEqual([
+      expect.objectContaining({ occurrence: actor.occurrence, kind: "move", from: actor.from, to: actor.to }),
+    ]);
+    expect(plan.transferTransitions).toEqual([
+      expect.objectContaining({
+        mode: "push-in",
+        direction: "forward",
+        entityBefore: transfer.entityBefore,
+        entityAfter: transfer.entityAfter,
+        carriedSubtree: transfer.carriedSubtree,
+      }),
+    ]);
+    expect(plan.cameraCues.filter((cue) => cue.kind === "impact")).toHaveLength(1);
+    expect(plan.audioCues).toEqual([{ kind: "push", volume: 0.56 }]);
+    expect(plan.durationMs).toBeGreaterThanOrEqual(360);
+  });
+
+  it("preserves core-supplied Undo transfer endpoints and reverse direction without a second reversal", () => {
+    const actor = moved("actor", 2, 1, "push", root, "reverse");
+    const transfer = transferred("push-out", "reverse", {
+      entityBefore: { world: nested, entityId: "crate|one" },
+      entityAfter: { world: root, entityId: "crate|one" },
+      from: { world: nested, x: 2, y: 2 },
+      to: { world: root, x: 2, y: 2 },
+      carriedSubtree: {
+        innerWorldId: "carried",
+        beforeRoot: { rootWorldId: "root", containerPath: ["receiver", "crate|one"] },
+        afterRoot: { rootWorldId: "root", containerPath: ["crate|one"] },
+      },
+    });
+    const plan = createAnimationPlan([actor, transfer, pushResolved(undefined, "left", "reverse")]);
+
+    expect(plan.direction).toBe("reverse");
+    expect(plan.transferTransitions?.[0]).toMatchObject({
+      mode: "push-out",
+      direction: "reverse",
+      from: transfer.from,
+      to: transfer.to,
+      entityBefore: transfer.entityBefore,
+      entityAfter: transfer.entityAfter,
+    });
+    expect(plan.audioCues).toEqual([{ kind: "push", volume: 0.56 }]);
+  });
+
   it("emits success only for a solved win, never reset", () => {
     const reset = createAnimationPlan([
       { type: "reset", transactionId, eventIndex: 0, direction: "forward" },
@@ -168,7 +221,7 @@ describe("semantic animation mapping", () => {
 });
 
 function pushResolved(
-  pushed: EntityMovedEvent,
+  pushed: EntityMovedEvent | undefined,
   directionMoved: "left" | "right",
   direction: EntityMovedEvent["direction"],
 ): SemanticEvent {
@@ -179,7 +232,33 @@ function pushResolved(
     direction,
     actor: { world: root, entityId: "actor" },
     directionMoved,
-    moved: [pushed],
+    moved: pushed ? [pushed] : [],
+  };
+}
+
+function transferred(
+  mode: EntityTransferredEvent["mode"],
+  direction: EntityTransferredEvent["direction"],
+  overrides: Partial<Omit<EntityTransferredEvent, "type" | "transactionId" | "eventIndex" | "direction" | "mode">> = {},
+): EntityTransferredEvent {
+  const entityBefore = overrides.entityBefore ?? { world: root, entityId: "crate|one" };
+  const entityAfter = overrides.entityAfter ?? { world: nested, entityId: "crate|one" };
+  return {
+    type: "entity-transferred",
+    transactionId,
+    eventIndex: 1,
+    direction,
+    mode,
+    entityBefore,
+    entityAfter,
+    from: overrides.from ?? { world: entityBefore.world, x: 2, y: 2 },
+    to: overrides.to ?? { world: entityAfter.world, x: 2, y: 2 },
+    via: overrides.via ?? { container: { world: root, entityId: "receiver" }, portId: "in|port" },
+    carriedSubtree: overrides.carriedSubtree ?? {
+      innerWorldId: "carried",
+      beforeRoot: { rootWorldId: "root", containerPath: ["crate|one"] },
+      afterRoot: { rootWorldId: "root", containerPath: ["receiver", "crate|one"] },
+    },
   };
 }
 

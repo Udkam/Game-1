@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createStage3BSimulationState } from "../core/worldGraph";
+import { EventPipeline } from "../runtime/EventPipeline";
+import { parseR2QaQuery } from "../runtime/r2QaScenario";
 import { entityOccurrenceKey, worldAddressKey, type EntityProjection, type WorldProjection } from "./types";
 import { projectWorldOccurrence } from "./worldProjection";
 
@@ -32,21 +34,34 @@ describe("world occurrence projection", () => {
       },
     };
     const projection = projectWorldOccurrence(state, { rootWorldId: "world-a", containerPath: [] }, 0, 3);
-    const first = projection.entities.find((entity) => entity.occurrence.entityId === "container-b")?.childWorld;
+    const firstContainer = projection.entities.find((entity) => entity.childWorld && entity.occurrence.entityId !== "container--b");
+    const first = firstContainer?.childWorld;
     const second = projection.entities.find((entity) => entity.occurrence.entityId === "container--b")?.childWorld;
     const nested = first?.entities.find((entity) => entity.occurrence.entityId === "nested")?.childWorld;
     if (!first || !second || !nested) throw new Error("Expected addressed nested projections.");
 
     expect(first.world.id).toBe(second.world.id);
     expect(first.projectionId).not.toBe(second.projectionId);
-    expect(worldAddressKey(first.address)).toBe('["world-a","container-b"]');
+    expect(worldAddressKey(first.address)).toBe(JSON.stringify(["world-a", firstContainer.occurrence.entityId]));
     expect(worldAddressKey(second.address)).toBe('["world-a","container--b"]');
-    expect(nested.address).toEqual({ rootWorldId: "world-a", containerPath: ["container-b", "nested"] });
+    expect(nested.address).toEqual({ rootWorldId: "world-a", containerPath: [...first.address.containerPath, "nested"] });
 
     const map = projectionEntityMap(projection);
     const aliases = [...map.values()].filter((entry) => entry.occurrence.entityId === "box-c");
     expect(aliases).toHaveLength(2);
     expect(new Set(aliases.map((entry) => entityOccurrenceKey(entry.occurrence))).size).toBe(2);
+  });
+
+  it("projects the carried subtree at its rebased full path after a world-bearing transfer", () => {
+    const scenario = parseR2QaQuery("?qa=r2&case=push-in&progress=0.5", true);
+    if (scenario.kind !== "scenario") throw new Error("Expected R2 scenario.");
+    const handoff = new EventPipeline().dispatch(scenario.session, scenario.commands[0]);
+    const projection = projectWorldOccurrence(handoff.session.present, { rootWorldId: "r2-root", containerPath: [] }, 0, 3);
+    const receiver = projection.entities.find((entity) => entity.occurrence.entityId === "r2-receiver");
+    const payload = receiver?.childWorld?.entities.find((entity) => entity.occurrence.entityId === "r2-payload");
+    expect(payload?.occurrence.world).toEqual({ rootWorldId: "r2-root", containerPath: ["r2-receiver"] });
+    expect(payload?.childWorld?.address).toEqual({ rootWorldId: "r2-root", containerPath: ["r2-receiver", "r2-payload"] });
+    expect(worldAddressKey(payload?.childWorld?.address ?? { rootWorldId: "missing", containerPath: [] })).toBe('["r2-root","r2-receiver","r2-payload"]');
   });
 });
 
