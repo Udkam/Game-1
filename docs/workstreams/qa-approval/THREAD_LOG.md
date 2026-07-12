@@ -560,6 +560,125 @@ separate start conditions and each requires later independent QA by SHA.
 - Follow-up commit hash: pending creation; report it with this log path to the
   coordinator after committing. No push, merge, or rebase is authorized.
 
+## Entry: independent QA-V1 implementation and browser-evidence acceptance
+
+- Workstream thread ID: `019f4e80-1462-7b32-8146-19ded692836c`.
+- Coordinator thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`.
+- Timestamp: 2026-07-12 Asia/Shanghai.
+- Pushed integration baseline:
+  `e45d2ea3c5880bd59cc80417aa2272da4976e16a`.
+- Reviewed implementation candidate:
+  `cef6ab2b2f45e6a7f7e70579f5ddc951f9380074`.
+- Reviewed evidence head:
+  `5bb6a734efb670b37cf8577b40b5cde4cd13c789`.
+
+### Scope, ancestry, and hygiene
+
+- The required direct chain is exact:
+  `e45d2ea -> cef6ab2 -> 5bb6a73`. A fresh detached QA worktree was created
+  directly at `5bb6a73`, started without `node_modules`, and stayed clean until
+  this verdict.
+- The implementation commit changes exactly 24 V1-owned source/test paths:
+  the named projection/runtime/animation/render/app implementation surface and
+  its approved tests. It changes no core, package, configuration, level,
+  root-contract, or root-changelog path.
+- The evidence commit changes only the frontend log,
+  `docs/qa/V1_BROWSER_EVIDENCE.md`, `docs/qa/v1-browser-evidence.json`, and
+  the seven declared V1 PNGs. No source, package, config, core, level, or root
+  document changes occur in the evidence pass.
+- Full-range and per-commit `git diff --check` / `git show --check` pass.
+  Candidate status is clean apart from this deliberate QA-log update.
+
+### Source and contract review
+
+1. **Address identity and projection are complete.** Projection re-exports the
+   C1 `WorldAddress` and `EntityOccurrenceAddress` shapes, derives structural
+   JSON keys without delimiter joining, carries the full root-plus-container
+   path through nested world/entity projections, and copies canonical focus
+   into `activeAddress`. Source/tests cover repeated canonical IDs,
+   delimiter-like IDs, nested focus, sibling/nested portal selection, and
+   root-space diagnostics while each nested world still draws in its immediate
+   parent-local coordinates.
+2. **No production selection workaround remains.** Candidate searches find no
+   production fixed container/world/fixture or legacy command/result/event
+   selection below the application composition boundary. The narrow QA parser
+   is the only synthetic-state selector, lives at `GameCanvasHost` composition,
+   rejects duplicate/extra/non-exact query values before runtime or Pixi
+   construction, and dispatches real C1 public commands through `EventPipeline`.
+3. **The visual barrier is singular and total.**
+   `VisualTransactionController` alone owns normalized progress, completion,
+   one-slot FIFO admission, non-destroy cancellation, destroy, and zero-duration
+   behavior. `AnimationSystem`, camera, and recursive transition renderer only
+   sample that progress. Controller/runtime tests cover Step/Undo/Redo/Reset
+   buffering, overflow without core dispatch, re-entrant completion, and audio
+   re-entry reservation; controller destruction prevents a late drain.
+4. **Semantic feedback is preserved.** Transition mapping uses full occurrence
+   and cell addresses for push de-duplication, retains core-provided Undo
+   direction/endpoints without a second reverse, sends push impact/audio only
+   from `push-resolved`, and emits success only for solved win rather than reset.
+
+### Independent clean verification
+
+- Environment: Node `v24.12.0`; npm `11.6.2`.
+- `npm.cmd ci --no-audit --no-fund`: passed from an absent-`node_modules`
+  precondition; added 64 packages.
+- `npm.cmd run typecheck`: passed.
+- Exactly one `npm.cmd run test` invocation was started. Its worktree-owned
+  Vitest worker exited; the npm debug record reports authoritative `exit 0`.
+  The terminal lost Vitest's final reporter line after the runner detached, so
+  no second run was made. Independent source inventory confirms 18 test files
+  and 91 declared `it`/`test` cases; no test failure was reported.
+- `npm.cmd run build`: passed. The only notice is the existing Vite >500 kB
+  advisory (`553.09 kB` minified main chunk), which remains V3 performance work
+  and is not credited as V1 evidence.
+
+### Independent desktop browser and artifact review
+
+- A clean system-Chrome `150.0.7871.115` run used one fresh 1440x900 DPR-1
+  context/page for each of the seven valid V1 URLs and three fresh contexts for
+  the duplicate-parameter, extra-parameter, and `progress=0.50` invalid probes.
+  The real manual controller had its Pixi ticker stopped and issued an explicit
+  render for every valid capture.
+- All valid current structured snapshots exactly match the checked-in JSON:
+  one host-descendant canvas and zero gameplay DOM/problem events; accepted
+  C1 transaction/result/event traces; current, unique structured occurrence,
+  world, aperture, and port data; manual progress/revision stability; correct
+  1440x900 CSS/backing dimensions and renderer resolution 1.
+- Move-50 keeps the actor strictly between its source/destination centers and
+  the addressed-root camera stable. The enter/exit world-address sets are
+  identical; `enter-100 == exit-00`, `enter-50 == exit-50`, and
+  `enter-00 == exit-100` geometry/camera comparisons are within 0.5 CSS px.
+  At both midpoints, actual diagnostics show four nonzero ancestor-plus-viewport
+  clipped rim segments for the true parent outer shell, child rim/floor, and
+  aperture stroke; the matching checked-in raster regions contain authored
+  pixels. All seven images were visually inspected.
+- The three invalid probes publish `invalid-query`, construct neither runtime
+  nor canvas, leave the host empty, and report zero browser problem events.
+- JSON, Markdown, and all seven checked-in PNG SHA-256 entries agree exactly.
+  Six independently recaptured PNGs match byte-for-byte. Fresh `move-50` has
+  the identical structured state/geometry and differs only in 24 pixels by one
+  RGB least-significant bit (a one-row antialias variance); it does not affect
+  any V1 geometry, address, raster-region, or continuity hard gate. Byte-stable
+  generic capture automation remains explicitly deferred to V4 and is not
+  claimed or accepted here.
+
+### QA verdict
+
+**Accept the exact complete V1 chain ending at `5bb6a73`.** No P0 or V1-scope
+P1 blocker remains. The one-LSB fresh WebGL raster variance is recorded as a
+non-blocking deferred V4 capture-automation observation, not V1 completion
+evidence.
+
+This accepts V1 only after the coordinator integrates and pushes this exact QA
+decision. It does not authorize V2-V4, levels/content, serialization, Stage 6,
+release, root changelog work, or any project-completion claim.
+
+### Handoff
+
+- Files changed by this QA follow-up: this `THREAD_LOG.md` only.
+- Follow-up commit hash: pending creation; report it with this log path to the
+  coordinator after committing. No push, merge, or rebase is authorized.
+
 ## Entry: independent QA review and acceptance of the V1 authorization documents
 
 - Workstream thread ID: `019f4e80-1462-7b32-8146-19ded692836c`.
