@@ -5,7 +5,7 @@ import { createSimulationSession } from "./history";
 import { nextPosition } from "./grid";
 import { dispatchPublicCommand } from "./reducer";
 import { replayPublicCommands } from "./replay";
-import type { CommandResult, Direction, SemanticEvent, SimulationState, Transaction, WorldAddress } from "./types";
+import type { CommandResult, Direction, RuleSetR1, SemanticEvent, SimulationState, Transaction, WorldAddress } from "./types";
 import { activeWorldAddress } from "./ports";
 import { isWinSatisfied } from "./win";
 import { createStage3BSimulationState, isPositionInsideWorld, loadSimulationState, resolveWorldAddress } from "./worldGraph";
@@ -13,23 +13,105 @@ import { opposite, validateSimulationState } from "./validation";
 
 const MASTER_SEED = 0x51CEB00C;
 
-describe("R1 core safety stress", () => {
+describe("R2 acyclic recursive-transfer stress", () => {
   it("uses the frozen xorshift32 anchors", () => {
     expect(xorshift32(MASTER_SEED ^ 0)).toBe(2116095627);
     expect(xorshift32(MASTER_SEED ^ 1)).toBe(2116365994);
     expect(xorshift32(MASTER_SEED ^ 999)).toBe(1908512370);
   });
 
+  it("counts R2 transfer profiles only from generated forward runtime commands", () => {
+    const profiles = selectR2Profiles();
+    const coverage = createR2Coverage();
+    expect([...profiles.values()].map((profile) => profile.kind).sort()).toEqual(["candidate-cycle", "gap", "missing-port", "occupied-destination", "ordinary-in", "ordinary-out", "world-in", "world-out"]);
+    for (const [caseIndex, profile] of profiles) {
+      const caseSeed = xorshift32(MASTER_SEED ^ caseIndex);
+      const commands = generateCommands(caseSeed);
+      const first = commands[profile.firstStepIndex];
+      expect(first).toMatchObject({ type: "step" });
+      if (!first || first.type !== "step") continue;
+      const prepared = createR2ProfileFixture(caseIndex, generateFixture(caseIndex, caseSeed).ruleSet, first.direction, profile, commands);
+      expect(safeLoad(prepared.state).kind).toBe("accepted");
+      expect(hashState(createSimulationSession(prepared.state).initialState), profile.kind).toBe(hashState(prepared.state));
+      const direct = runDirectOracle(prepared.state, commands.slice(0, profile.outcomeIndex + 1));
+      expect(direct.code, profile.kind).toBeUndefined();
+      recordR2Coverage(coverage, caseIndex, prepared, direct.results);
+      if (profile.kind === "ordinary-out" || profile.kind === "world-out" || profile.kind === "occupied-destination") {
+        const localPush = direct.results[profile.firstStepIndex];
+        const focused = { rootWorldId: `r2-root-${caseIndex}`, containerPath: [`r2-receiver-${caseIndex}`] };
+        expect(localPush).toMatchObject({
+          kind: "accepted",
+          command: { type: "step", direction: first.direction },
+          transaction: {
+            rule: "push",
+            activeAddressBefore: focused,
+            activeAddressAfter: focused,
+            events: [{ type: "push-resolved" }, { type: "entity-moved", cause: "push" }],
+          },
+        });
+        if (localPush?.kind === "accepted") {
+          expect(localPush.transaction.events.some((event) => event.type === "entity-transferred" || event.type === "portal-traversed" || event.type === "focus-changed")).toBe(false);
+        }
+        if (profile.kind === "world-out") {
+          const priority = generateFixture(caseIndex, caseSeed).ruleSet.interactionPriority;
+          expect(priority.indexOf("push")).toBeLessThan(priority.indexOf("enter"));
+        }
+      }
+      const outcome = direct.results[profile.outcomeIndex];
+      if (profile.kind === "ordinary-out" || profile.kind === "world-out") {
+        if (outcome?.kind !== "accepted" || outcome.command.type !== "step" || outcome.command.direction !== first.direction) throw new Error(`${profile.kind}/${caseIndex}/${JSON.stringify(direct.results)}`);
+        expect(outcome?.kind === "accepted" && outcome.transaction.events.some((event) => event.type === "entity-transferred" && event.mode === "push-out"), `${profile.kind}/${caseIndex}/${JSON.stringify(direct.results)}`).toBe(true);
+      }
+      if (profile.kind === "occupied-destination") {
+        expect(outcome).toMatchObject({ kind: "rejected", rejection: { code: "port-parent-destination-occupied" }, activeAddressBefore: { containerPath: [`r2-receiver-${caseIndex}`] }, activeAddressAfter: { containerPath: [`r2-receiver-${caseIndex}`] } });
+      }
+      if (profile.kind === "candidate-cycle") {
+        expect(outcome?.kind).toBe("rejected");
+      }
+    }
+    expectR2TransferCoverage(coverage);
+  });
+
+  it("does not count reverse transfer history toward runtime focus coverage", () => {
+    const [caseIndex, profile] = [...selectR2Profiles()].find(([, candidate]) => candidate.kind === "world-out")!;
+    const caseSeed = xorshift32(MASTER_SEED ^ caseIndex);
+    const commands = generateCommands(caseSeed);
+    const first = commands[profile.firstStepIndex]!;
+    if (first.type !== "step") throw new Error("selected world-out profile has no Step");
+    const prepared = createR2ProfileFixture(caseIndex, generateFixture(caseIndex, caseSeed).ruleSet, first.direction, profile, commands);
+    const direct = runDirectOracle(prepared.state, [...commands.slice(0, profile.outcomeIndex + 1), Undo()]);
+    expect(direct.code).toBeUndefined();
+    const coverage = createR2Coverage();
+    recordR2Coverage(coverage, caseIndex, prepared, direct.results);
+    expect(coverage.worldPushOut).toBe(1);
+    expect(coverage.unchangedFocus).toBe(1);
+  });
+
   it("runs 1,000 deterministic fixtures, 3,000 initial-command subcases, and reusable 64-command traces", () => {
     let subcases = 0;
+    const profiles = selectR2Profiles();
+    const coverage = createR2Coverage();
+    if (profiles.size !== 8) {
+      throw new Error(`R2 profile selection failed: ${profiles.size}/8`);
+    }
     for (let caseIndex = 0; caseIndex < 1000; caseIndex += 1) {
       const caseSeed = xorshift32(MASTER_SEED ^ caseIndex);
-      let fixture: SimulationState;
+      const commands = generateCommands(caseSeed);
+      const firstStep = commands.find((command): command is Extract<PublicCommand, { readonly type: "step" }> => command.type === "step");
+      if (!firstStep) {
+        failStress(caseIndex, caseSeed, { caseIndex, caseSeed }, commands, [], [], "trace-has-no-step", undefined, [], 0);
+      }
+      let prepared: R2PreparedFixture;
       try {
-        fixture = generateFixture(caseIndex, caseSeed);
+        const base = generateFixture(caseIndex, caseSeed);
+        const profile = profiles.get(caseIndex);
+        prepared = profile && firstStep
+          ? createR2ProfileFixture(caseIndex, base.ruleSet, firstStep.direction, profile, commands)
+          : { state: base, profile: undefined };
       } catch {
         failStress(caseIndex, caseSeed, { caseIndex, caseSeed }, [], [], [], "generated-fixture-threw", undefined, [], 0);
       }
+      const fixture = prepared!.state;
       const loaded = safeLoad(fixture);
       if (loaded.kind !== "accepted") {
         failStress(caseIndex, caseSeed, fixture, [], [], [], loaded.kind === "threw" ? "generated-fixture-load-threw" : "generated-fixture-invalid", undefined, [], 0);
@@ -48,7 +130,6 @@ describe("R1 core safety stress", () => {
           diagnostics: invalidLoaded.kind === "rejected" ? invalidLoaded.diagnostics : [],
         }, [], 0);
       }
-
       for (const command of [Undo(), Redo(), Reset()] as const) {
         const trace = evaluateFixture(fixture, [command]);
         subcases += 1;
@@ -58,14 +139,18 @@ describe("R1 core safety stress", () => {
         }
       }
 
-      const commands = generateCommands(caseSeed);
+      if (!commands.some((command) => command.type === "step")) {
+        failStress(caseIndex, caseSeed, fixture, commands, [], [], "trace-has-no-step", undefined, [], 0);
+      }
       const evaluation = evaluateFixture(fixture, commands);
       if (evaluation.code) {
         const prefix = commands.slice(0, (evaluation.failureIndex ?? commands.length - 1) + 1);
         failStress(caseIndex, caseSeed, fixture, commands, evaluation.results, evaluation.replayTrace, evaluation.code, undefined, prefix, evaluation.failureIndex ?? commands.length - 1);
       }
+      recordR2Coverage(coverage, caseIndex, prepared!, evaluation.results);
     }
     expect(subcases).toBe(3000);
+    expectR2Coverage(coverage);
   }, 240000);
 
   it("minimizes the first failing prefix against the same failure class", () => {
@@ -128,6 +213,28 @@ describe("R1 core safety stress", () => {
     const wrongOuter = transaction.events.map((event) => event.type === "portal-traversed" ? { ...event, from: { ...event.from, y: event.from.y - 1 } } : event) as readonly SemanticEvent[];
     expect(validateEventTrace(wrongRoot, before.present, entered.session.present, transaction, Step("down"))).toBe(false);
     expect(validateEventTrace(wrongOuter, before.present, entered.session.present, transaction, Step("down"))).toBe(false);
+  });
+
+  it("rejects wrong transfer mode and a different valid port in the independent oracle", () => {
+    const [caseIndex, profile] = [...selectR2Profiles()].find(([, candidate]) => candidate.kind === "ordinary-in")!;
+    const caseSeed = xorshift32(MASTER_SEED ^ caseIndex);
+    const commands = generateCommands(caseSeed);
+    const command = commands[profile.firstStepIndex]!;
+    if (command.type !== "step") throw new Error("selected ordinary-in profile has no Step");
+    const initial = createR2ProfileFixture(caseIndex, generateFixture(caseIndex, caseSeed).ruleSet, command.direction, profile, commands).state;
+    const before = createSimulationSession(initial);
+    const accepted = dispatchPublicCommand(before, command);
+    expect(accepted.result.kind).toBe("accepted");
+    if (accepted.result.kind !== "accepted") return;
+    const transaction = accepted.result.transaction;
+    const transfer = transaction.events.find((event): event is Extract<SemanticEvent, { readonly type: "entity-transferred" }> => event.type === "entity-transferred");
+    expect(transfer).toBeDefined();
+    if (!transfer) return;
+    const wrongMode = transaction.events.map((event) => event.type === "entity-transferred" ? { ...event, mode: "push-out" as const } : event) as readonly SemanticEvent[];
+    const wrongPort = transaction.events.map((event) => event.type === "entity-transferred" ? { ...event, via: { ...event.via, portId: `r2-entry-${caseIndex}` } } : event) as readonly SemanticEvent[];
+    expect(validateEventTrace(transaction.events, before.present, accepted.session.present, transaction, command)).toBe(true);
+    expect(validateEventTrace(wrongMode, before.present, accepted.session.present, transaction, command)).toBe(false);
+    expect(validateEventTrace(wrongPort, before.present, accepted.session.present, transaction, command)).toBe(false);
   });
 
   it("requires the exact exhausted-priority fallback code and reason, including zero enabled rules", () => {
@@ -292,6 +399,308 @@ function generateCommands(seed: number): readonly PublicCommand[] {
     return Reset();
   });
 }
+
+type R2Profile =
+  | "ordinary-in"
+  | "world-in"
+  | "ordinary-out"
+  | "world-out"
+  | "occupied-destination"
+  | "missing-port"
+  | "candidate-cycle"
+  | "gap";
+
+interface R2ProfilePlan {
+  readonly kind: R2Profile;
+  readonly firstStepIndex: number;
+  /** The generated command whose runtime result is eligible for counting. */
+  readonly outcomeIndex: number;
+}
+
+interface R2PreparedFixture {
+  readonly state: SimulationState;
+  readonly profile: R2ProfilePlan | undefined;
+}
+
+interface R2Coverage {
+  ordinaryPushIn: number;
+  worldPushIn: number;
+  ordinaryPushOut: number;
+  worldPushOut: number;
+  occupiedDestination: number;
+  missingPort: number;
+  candidateCycle: number;
+  gapLocalPush: number;
+  unchangedFocus: number;
+  readonly masks: number[];
+}
+
+function selectR2Profiles(): ReadonlyMap<number, R2ProfilePlan> {
+  const selected = new Map<number, R2ProfilePlan>();
+  const choose = (kind: R2Profile, build: (commands: readonly PublicCommand[], firstStepIndex: number) => R2ProfilePlan | undefined) => {
+    for (let caseIndex = 0; caseIndex < 1000; caseIndex += 1) {
+      if (selected.has(caseIndex)) continue;
+      const seed = xorshift32(MASTER_SEED ^ caseIndex);
+      const commands = generateCommands(seed);
+      const firstStepIndex = commands.findIndex((command) => command.type === "step");
+      const first = commands[firstStepIndex];
+      const ruleSet = generateFixture(caseIndex, seed).ruleSet;
+      const needsPushFirst = kind === "world-in" || kind === "world-out" || kind === "candidate-cycle";
+      if (!first || first.type !== "step" || ruleSet.ruleEnablement.push !== "enabled" ||
+        (needsPushFirst && ruleSet.ruleEnablement.enter !== "enabled") ||
+        (needsPushFirst && ruleSet.interactionPriority.indexOf("push") > ruleSet.interactionPriority.indexOf("enter"))) continue;
+      const plan = build(commands, firstStepIndex);
+      if (plan) {
+        selected.set(caseIndex, plan);
+        return;
+      }
+    }
+  };
+  choose("ordinary-out", (commands, first) => focusedPushOutPlan("ordinary-out", commands, first));
+  choose("world-out", (commands, first) => focusedPushOutPlan("world-out", commands, first));
+  choose("occupied-destination", (commands, first) => focusedPushOutPlan("occupied-destination", commands, first));
+  for (const kind of ["ordinary-in", "world-in", "missing-port", "candidate-cycle", "gap"] as const) {
+    choose(kind, (_, first) => ({ kind, firstStepIndex: first, outcomeIndex: first }));
+  }
+  return selected;
+}
+
+function focusedPushOutPlan(
+  kind: Extract<R2Profile, "ordinary-out" | "world-out" | "occupied-destination">,
+  commands: readonly PublicCommand[],
+  firstStepIndex: number,
+): R2ProfilePlan | undefined {
+  const first = commands[firstStepIndex];
+  const next = commands[firstStepIndex + 1];
+  return first?.type === "step" && next?.type === "step" && next.direction === first.direction
+    ? { kind, firstStepIndex, outcomeIndex: firstStepIndex + 1 }
+    : undefined;
+}
+
+function createR2ProfileFixture(
+  caseIndex: number,
+  ruleSet: RuleSetR1,
+  direction: Direction,
+  profile: R2ProfilePlan,
+  commands: readonly PublicCommand[],
+): R2PreparedFixture {
+  if (profile.kind === "ordinary-out" || profile.kind === "world-out" || profile.kind === "occupied-destination") {
+    return createFocusedPushOutFixture(caseIndex, ruleSet, direction, profile);
+  }
+  const root = `r2-root-${caseIndex}`;
+  const inside = `r2-inside-${caseIndex}`;
+  const carried = `r2-carried-${caseIndex}`;
+  const actorId = `r2-actor-${caseIndex}`;
+  const receiverId = `r2-receiver-${caseIndex}`;
+  const payloadId = `r2-payload-${caseIndex}`;
+  const actor = { worldId: root, x: 15, y: 15 };
+  const payload = nextPosition(actor, direction);
+  const receiver = profile.kind === "gap"
+    ? nextPosition(nextPosition(payload, direction), direction)
+    : nextPosition(payload, direction);
+  const worldBearing = profile.kind === "world-in" || profile.kind === "candidate-cycle";
+  const incoming = profile.kind === "missing-port" ? opposite(direction) : direction;
+  const entryDirection = clockwise(direction);
+  const incomingLanding = { x: 2, y: 2 };
+  const entryLanding = { x: 1, y: 1 };
+  const entities: Record<string, SimulationState["entities"][string]> = {
+    [actorId]: { id: actorId },
+    [receiverId]: { id: receiverId },
+    [payloadId]: { id: payloadId },
+  };
+  const positions: Record<string, SimulationState["components"]["positions"][string]> = {
+    [actorId]: actor,
+    [receiverId]: receiver,
+    [payloadId]: payload,
+  };
+  const containers: Record<string, { readonly innerWorldId: string }> = { [receiverId]: { innerWorldId: inside } };
+  const portTables: Array<SimulationState["portTables"][number]> = [{
+    containerId: receiverId,
+    ports: [
+      { id: `r2-entry-${caseIndex}`, outerApproach: entryDirection, innerLanding: entryLanding, innerExit: opposite(entryDirection) },
+      { id: `r2-in-${caseIndex}`, outerApproach: incoming, innerLanding: incomingLanding, innerExit: opposite(incoming) },
+    ],
+  }];
+  const worlds: Record<string, SimulationState["worlds"][string]> = {
+    [root]: { id: root, paletteId: "void-lab", size: { width: 31, height: 31 } },
+    [inside]: { id: inside, paletteId: "inner-mint", size: { width: 5, height: 5 } },
+  };
+  if (worldBearing) {
+    worlds[carried] = { id: carried, paletteId: "void-lab", size: { width: 3, height: 3 } };
+    containers[payloadId] = { innerWorldId: carried };
+    portTables.push({ containerId: payloadId, ports: [{ id: `r2-payload-port-${caseIndex}`, outerApproach: opposite(direction), innerLanding: { x: 1, y: 1 }, innerExit: direction }] });
+  }
+  if (profile.kind === "candidate-cycle") {
+    const linkId = `r2-cycle-link-${caseIndex}`;
+    entities[linkId] = { id: linkId };
+    positions[linkId] = { worldId: carried, x: 0, y: 0 };
+    containers[linkId] = { innerWorldId: inside };
+    portTables.push({ containerId: linkId, ports: [{ id: `r2-cycle-port-${caseIndex}`, outerApproach: "up", innerLanding: { x: 0, y: 0 }, innerExit: "down" }] });
+  }
+  const payloadIds = [payloadId];
+  const state: SimulationState = {
+    version: 1,
+    rootWorldId: root,
+    activeWorldId: root,
+    playerId: actorId,
+    focusPath: [],
+    ruleSet,
+    portTables: [...portTables].sort((left, right) => left.containerId < right.containerId ? -1 : left.containerId > right.containerId ? 1 : 0),
+    worlds,
+    entities,
+    components: {
+      positions,
+      containers,
+      solids: {
+        [actorId]: { blocksMovement: true },
+        [receiverId]: { blocksMovement: true },
+        ...Object.fromEntries(payloadIds.map((id) => [id, { blocksMovement: true }])),
+        ...(profile.kind === "candidate-cycle" ? { [`r2-cycle-link-${caseIndex}`]: { blocksMovement: true } } : {}),
+      },
+      pushables: Object.fromEntries(payloadIds.map((id) => [id, { pushable: true }])),
+      players: { [actorId]: { controlled: true } },
+      goals: {},
+      visuals: {},
+    },
+  };
+  return { state, profile };
+}
+
+function createFocusedPushOutFixture(
+  caseIndex: number,
+  ruleSet: RuleSetR1,
+  direction: Direction,
+  profile: R2ProfilePlan,
+): R2PreparedFixture {
+  const root = `r2-root-${caseIndex}`;
+  const inside = `r2-inside-${caseIndex}`;
+  const carried = `r2-carried-${caseIndex}`;
+  const actorId = `r2-actor-${caseIndex}`;
+  const containerId = `r2-receiver-${caseIndex}`;
+  const payloadId = `r2-payload-${caseIndex}`;
+  const blockerId = `r2-parent-blocker-${caseIndex}`;
+  const anchor = { worldId: root, x: 3, y: 3 };
+  const landing = { worldId: inside, x: 3, y: 3 };
+  const payload = nextPosition(landing, opposite(direction));
+  const actor = nextPosition(payload, opposite(direction));
+  const worldBearing = profile.kind === "world-out";
+  const entities: Record<string, SimulationState["entities"][string]> = {
+    [actorId]: { id: actorId },
+    [containerId]: { id: containerId },
+    [payloadId]: { id: payloadId },
+    ...(profile.kind === "occupied-destination" ? { [blockerId]: { id: blockerId } } : {}),
+  };
+  const positions: Record<string, SimulationState["components"]["positions"][string]> = {
+    [actorId]: actor,
+    [containerId]: anchor,
+    [payloadId]: payload,
+    ...(profile.kind === "occupied-destination" ? { [blockerId]: nextPosition(anchor, direction) } : {}),
+  };
+  const containers: Record<string, { readonly innerWorldId: string }> = {
+    [containerId]: { innerWorldId: inside },
+    ...(worldBearing ? { [payloadId]: { innerWorldId: carried } } : {}),
+  };
+  const portTables: Array<SimulationState["portTables"][number]> = [
+    {
+      containerId,
+      ports: [{ id: `r2-focused-out-${caseIndex}`, outerApproach: opposite(direction), innerLanding: { x: landing.x, y: landing.y }, innerExit: direction }],
+    },
+    ...(worldBearing ? [{ containerId: payloadId, ports: [{ id: `r2-carried-port-${caseIndex}`, outerApproach: opposite(direction), innerLanding: { x: 1, y: 1 }, innerExit: direction }] }] : []),
+  ];
+  const state: SimulationState = {
+    version: 1,
+    rootWorldId: root,
+    activeWorldId: inside,
+    playerId: actorId,
+    focusPath: [containerId],
+    ruleSet,
+    portTables: [...portTables].sort((left, right) => left.containerId < right.containerId ? -1 : left.containerId > right.containerId ? 1 : 0),
+    worlds: {
+      [root]: { id: root, paletteId: "void-lab", size: { width: 7, height: 7 } },
+      [inside]: { id: inside, paletteId: "inner-mint", size: { width: 7, height: 7 } },
+      ...(worldBearing ? { [carried]: { id: carried, paletteId: "void-lab", size: { width: 3, height: 3 } } } : {}),
+    },
+    entities,
+    components: {
+      positions,
+      containers,
+      solids: {
+        [actorId]: { blocksMovement: true },
+        [containerId]: { blocksMovement: true },
+        [payloadId]: { blocksMovement: true },
+        ...(profile.kind === "occupied-destination" ? { [blockerId]: { blocksMovement: true } } : {}),
+      },
+      pushables: { [payloadId]: { pushable: true } },
+      players: { [actorId]: { controlled: true } },
+      goals: {},
+      visuals: {},
+    },
+  };
+  return { state, profile };
+}
+
+function createR2Coverage(): R2Coverage {
+  return { ordinaryPushIn: 0, worldPushIn: 0, ordinaryPushOut: 0, worldPushOut: 0, occupiedDestination: 0, missingPort: 0, candidateCycle: 0, gapLocalPush: 0, unchangedFocus: 0, masks: Array.from({ length: 8 }, () => 0) };
+}
+
+function recordR2Coverage(coverage: R2Coverage, caseIndex: number, prepared: R2PreparedFixture, results: readonly CommandResult[]): void {
+  coverage.masks[caseIndex & 7] = (coverage.masks[caseIndex & 7] ?? 0) + 1;
+  const profile = prepared.profile;
+  if (profile) {
+    const outcome = results[profile.outcomeIndex];
+    const setupAccepted = results.slice(profile.firstStepIndex, profile.outcomeIndex).every((result) => result?.kind === "accepted");
+    const transferred = (result: CommandResult | undefined, mode: "push-in" | "push-out", carried: boolean) => result?.kind === "accepted" && result.command.type === "step" && result.transaction.events.some((event) => event.type === "entity-transferred" && event.mode === mode && Boolean(event.carriedSubtree) === carried);
+    if (profile.kind === "ordinary-in" && transferred(outcome, "push-in", false)) coverage.ordinaryPushIn += 1;
+    if (profile.kind === "world-in" && transferred(outcome, "push-in", true)) coverage.worldPushIn += 1;
+    // The profile's later generated Step is the only push-out counter source:
+    // Undo/reverse history events and load-time mutations never qualify.
+    if (profile.kind === "ordinary-out" && setupAccepted && transferred(outcome, "push-out", false)) coverage.ordinaryPushOut += 1;
+    if (profile.kind === "world-out" && setupAccepted && transferred(outcome, "push-out", true)) coverage.worldPushOut += 1;
+    if (profile.kind === "occupied-destination" && setupAccepted && outcome?.kind === "rejected" && outcome.command.type === "step" && outcome.rejection.code === "port-parent-destination-occupied") coverage.occupiedDestination += 1;
+    if (profile.kind === "missing-port" && outcome?.kind === "rejected" && outcome.command.type === "step" && outcome.rejection.code === "port-absent") coverage.missingPort += 1;
+    if (profile.kind === "candidate-cycle" && outcome?.kind === "rejected" && outcome.command.type === "step" && outcome.rejection.code === "cycle-forbidden") coverage.candidateCycle += 1;
+    if (profile.kind === "gap" && outcome?.kind === "accepted" && outcome.transaction.rule === "push" && !outcome.transaction.events.some((event) => event.type === "entity-transferred")) coverage.gapLocalPush += 1;
+  }
+  for (const result of results) {
+    if (result.kind === "accepted" && result.command.type === "step") {
+      const transferred = result.transaction.events.find((event): event is Extract<SemanticEvent, { readonly type: "entity-transferred" }> => event.type === "entity-transferred");
+      if (transferred) {
+      if (sameAddress(result.transaction.activeAddressBefore, result.transaction.activeAddressAfter)) coverage.unchangedFocus += 1;
+      }
+    }
+  }
+}
+
+function expectR2Coverage(coverage: R2Coverage): void {
+  expectR2TransferCoverage(coverage);
+  expect(coverage.masks.every((count) => count > 0)).toBe(true);
+}
+
+function expectR2TransferCoverage(coverage: R2Coverage): void {
+  expect(coverage.ordinaryPushIn).toBeGreaterThan(0);
+  expect(coverage.worldPushIn).toBeGreaterThan(0);
+  expect(coverage.ordinaryPushOut).toBeGreaterThan(0);
+  expect(coverage.worldPushOut).toBeGreaterThan(0);
+  expect(coverage.occupiedDestination).toBeGreaterThan(0);
+  expect(coverage.missingPort).toBeGreaterThan(0);
+  expect(coverage.candidateCycle).toBeGreaterThan(0);
+  expect(coverage.gapLocalPush).toBeGreaterThan(0);
+  expect(coverage.unchangedFocus).toBeGreaterThan(0);
+}
+
+function clockwise(direction: Direction): Direction {
+  return direction === "up" ? "right" : direction === "right" ? "down" : direction === "down" ? "left" : "up";
+}
+
+function directionVector(direction: Direction): readonly [number, number] {
+  return direction === "up" ? [0, -1] : direction === "right" ? [1, 0] : direction === "down" ? [0, 1] : [-1, 0];
+}
+
+function add(left: readonly [number, number], right: readonly [number, number]): readonly [number, number] { return [left[0] + right[0], left[1] + right[1]]; }
+function subtract(left: readonly [number, number], right: readonly [number, number]): readonly [number, number] { return [left[0] - right[0], left[1] - right[1]]; }
+function scale(value: readonly [number, number], multiplier: number): readonly [number, number] { return [value[0] * multiplier, value[1] * multiplier]; }
+function sameVector(left: readonly [number, number], right: readonly [number, number]): boolean { return left[0] === right[0] && left[1] === right[1]; }
+function vectorKey(value: readonly [number, number]): string { return `${value[0]},${value[1]}`; }
 
 interface ExpectedDiagnostic { readonly code: "invalid-level-data" | "cycle-forbidden"; readonly message: string; readonly witness?: readonly string[]; }
 interface InvalidMutation { readonly name: string; readonly state: SimulationState; readonly expected: ExpectedDiagnostic; }
@@ -696,20 +1105,35 @@ function acceptedRuleAndEventContract(
     return JSON.stringify(transaction.events.map((event) => event.type)) === JSON.stringify(expectedHistoryTypes);
   }
   const base = transaction.events.filter((event) => event.type !== "win-changed").map((event) => event.type);
-  const expectedBase = transaction.rule === "walk" ? ["entity-moved"] : transaction.rule === "push" ? ["push-resolved", "entity-moved"] : transaction.rule === "enter" || transaction.rule === "exit" ? ["portal-traversed", "focus-changed"] : transaction.rule === "reset" ? ["reset"] : [];
-  if (JSON.stringify(base) !== JSON.stringify(expectedBase)) return false;
+  const expectedBase = transaction.rule === "walk" ? ["entity-moved"] : transaction.rule === "enter" || transaction.rule === "exit" ? ["portal-traversed", "focus-changed"] : transaction.rule === "reset" ? ["reset"] : [];
+  if (transaction.rule === "push") {
+    const validPushBase = JSON.stringify(base) === JSON.stringify(["push-resolved", "entity-moved"]) || JSON.stringify(base) === JSON.stringify(["push-resolved", "entity-transferred", "entity-moved"]);
+    if (!validPushBase) return false;
+  } else if (JSON.stringify(base) !== JSON.stringify(expectedBase)) return false;
   const changed = isWinSatisfied(before) !== isWinSatisfied(after);
-  const expectedTypes = [...expectedBase, ...(changed ? ["win-changed"] : [])];
+  const expectedTypes = [...base, ...(changed ? ["win-changed"] : [])];
   if (JSON.stringify(transaction.events.map((event) => event.type)) !== JSON.stringify(expectedTypes)) return false;
   return true;
 }
 
 function validateEventTrace(events: readonly SemanticEvent[], before: SimulationState, after: SimulationState, transaction: { readonly id: { readonly initialStateHash: string; readonly sequence: number }; readonly rule: string }, command: PublicCommand): boolean {
+  const aggregate = events.find((event): event is Extract<SemanticEvent, { readonly type: "push-resolved" }> => event.type === "push-resolved");
   return events.every((event, index) => {
     const expectedDirection = command.type === "undo" ? "reverse" : "forward";
     if (!sameTransaction(event.transactionId, transaction.id) || event.eventIndex !== index || event.direction !== expectedDirection) return false;
     if (event.type === "entity-moved") return occurrenceAtCell(before, event.occurrence, event.from) && occurrenceAtCell(after, event.occurrence, event.to);
     if (event.type === "push-resolved") return occurrenceResolves(before, event.actor) && event.moved.every((moved) => sameTransaction(moved.transactionId, transaction.id) && moved.eventIndex === index && moved.direction === event.direction && occurrenceAtCell(before, moved.occurrence, moved.from) && occurrenceAtCell(after, moved.occurrence, moved.to));
+    if (event.type === "entity-transferred") {
+      const forward = command.type === "undo" ? forwardTransferForOracle(event) : event;
+      const forwardBefore = command.type === "undo" ? after : before;
+      const forwardAfter = command.type === "undo" ? before : after;
+      const movementDirection = command.type === "step"
+        ? command.direction
+        : command.type === "undo"
+          ? (aggregate ? opposite(aggregate.directionMoved) : undefined)
+          : aggregate?.directionMoved;
+      return transferRelation(forward, forwardBefore, forwardAfter, movementDirection);
+    }
     if (event.type === "portal-traversed") return occurrenceAtCell(before, event.actorBefore, event.from) && occurrenceAtCell(after, event.actorAfter, event.to) && portResolves(before, event.port) && portResolves(after, event.port) && portalRelation(event, before, after);
     if (event.type === "focus-changed") return sameAddress(event.before, activeWorldAddress(before) ?? { rootWorldId: before.rootWorldId, containerPath: before.focusPath }) && sameAddress(event.after, activeWorldAddress(after) ?? { rootWorldId: after.rootWorldId, containerPath: after.focusPath }) && (!event.via || (portResolves(before, event.via) && portResolves(after, event.via)));
     if (event.type === "reset") return (command.type === "reset" || transaction.rule === "undo" || transaction.rule === "redo") && hashState(before) !== hashState(after);
@@ -748,10 +1172,19 @@ function cellResolves(state: SimulationState, cell: { readonly world: WorldAddre
 }
 
 function portResolves(state: SimulationState, port: { readonly container: { readonly world: WorldAddress; readonly entityId: string }; readonly portId: string }): boolean {
+  return resolvedStressPort(state, port) !== undefined;
+}
+
+function resolvedStressPort(
+  state: SimulationState,
+  port: { readonly container: { readonly world: WorldAddress; readonly entityId: string }; readonly portId: string },
+): { readonly parentWorldId: string; readonly innerWorldId: string; readonly innerLanding: { readonly x: number; readonly y: number }; readonly outerApproach: Direction; readonly innerExit: Direction; readonly anchor: { readonly worldId: string; readonly x: number; readonly y: number } } | undefined {
   const container = state.components.containers[port.container.entityId];
   const position = state.components.positions[port.container.entityId];
   const parentWorld = resolveWorldAddress(state, port.container.world.containerPath);
-  return Boolean(port.container.world.rootWorldId === state.rootWorldId && container && state.worlds[container.innerWorldId] && position && parentWorld === position.worldId && state.portTables.find((table) => table.containerId === port.container.entityId)?.ports.some((entry) => entry.id === port.portId));
+  const entry = state.portTables.find((table) => table.containerId === port.container.entityId)?.ports.find((candidate) => candidate.id === port.portId);
+  if (!container || !position || !parentWorld || position.worldId !== parentWorld || port.container.world.rootWorldId !== state.rootWorldId || !state.worlds[container.innerWorldId] || !entry) return undefined;
+  return { parentWorldId: parentWorld, innerWorldId: container.innerWorldId, innerLanding: entry.innerLanding, outerApproach: entry.outerApproach, innerExit: entry.innerExit, anchor: position };
 }
 
 function portalRelation(event: Extract<SemanticEvent, { readonly type: "portal-traversed" }>, before: SimulationState, after: SimulationState): boolean {
@@ -765,6 +1198,59 @@ function portalRelation(event: Extract<SemanticEvent, { readonly type: "portal-t
   const parentCell = nextPosition(anchor, opposite(port.outerApproach));
   if (event.mode === "enter") return beforeWorld === anchor.worldId && afterWorld === container.innerWorldId && sameCell(event.from, event.port.container.world, parentCell.x, parentCell.y) && sameCell(event.to, event.actorAfter.world, port.innerLanding.x, port.innerLanding.y);
   return beforeWorld === container.innerWorldId && afterWorld === anchor.worldId && sameCell(event.from, event.actorBefore.world, port.innerLanding.x, port.innerLanding.y) && sameCell(event.to, event.port.container.world, parentCell.x, parentCell.y);
+}
+
+function transferRelation(
+  event: Extract<SemanticEvent, { readonly type: "entity-transferred" }>,
+  before: SimulationState,
+  after: SimulationState,
+  movementDirection: Direction | undefined,
+): boolean {
+  if (event.entityBefore.entityId !== event.entityAfter.entityId || !sameAddress(event.from.world, event.entityBefore.world) || !sameAddress(event.to.world, event.entityAfter.world)) return false;
+  if (!occurrenceAtCell(before, event.entityBefore, event.from) || !occurrenceAtCell(after, event.entityAfter, event.to)) return false;
+  const beforePort = resolvedStressPort(before, event.via);
+  const afterPort = resolvedStressPort(after, event.via);
+  if (!beforePort || !afterPort || beforePort.innerWorldId !== afterPort.innerWorldId || beforePort.outerApproach !== afterPort.outerApproach || beforePort.innerExit !== afterPort.innerExit || movementDirection === undefined) return false;
+  const id = event.entityBefore.entityId;
+  const beforeContainer = before.components.containers[id];
+  const afterContainer = after.components.containers[id];
+  if (Boolean(beforeContainer) !== Boolean(afterContainer)) return false;
+  if (!beforeContainer) {
+    if (event.carriedSubtree !== null) return false;
+  } else if (!afterContainer || !event.carriedSubtree || event.carriedSubtree.innerWorldId !== beforeContainer.innerWorldId || afterContainer.innerWorldId !== beforeContainer.innerWorldId ||
+    !sameAddress(event.carriedSubtree.beforeRoot, { rootWorldId: event.entityBefore.world.rootWorldId, containerPath: [...event.entityBefore.world.containerPath, id] }) ||
+    !sameAddress(event.carriedSubtree.afterRoot, { rootWorldId: event.entityAfter.world.rootWorldId, containerPath: [...event.entityAfter.world.containerPath, id] })) return false;
+
+  if (event.mode === "push-in") {
+    const child: WorldAddress = { rootWorldId: event.via.container.world.rootWorldId, containerPath: [...event.via.container.world.containerPath, event.via.container.entityId] };
+    return movementDirection === beforePort.outerApproach &&
+      sameAddress(event.entityBefore.world, event.via.container.world) &&
+      sameAddress(event.entityAfter.world, child) &&
+      sameCell(event.to, child, beforePort.innerLanding.x, beforePort.innerLanding.y);
+  }
+  const parentDestination = nextPosition(beforePort.anchor, opposite(beforePort.outerApproach));
+  const child: WorldAddress = { rootWorldId: event.via.container.world.rootWorldId, containerPath: [...event.via.container.world.containerPath, event.via.container.entityId] };
+  return movementDirection === beforePort.innerExit &&
+    sameAddress(event.entityBefore.world, child) &&
+    sameAddress(event.entityAfter.world, event.via.container.world) &&
+    sameCell(event.from, child, beforePort.innerLanding.x, beforePort.innerLanding.y) &&
+    sameCell(event.to, event.via.container.world, parentDestination.x, parentDestination.y);
+}
+
+function forwardTransferForOracle(event: Extract<SemanticEvent, { readonly type: "entity-transferred" }>): Extract<SemanticEvent, { readonly type: "entity-transferred" }> {
+  return {
+    ...event,
+    mode: event.mode === "push-in" ? "push-out" : "push-in",
+    entityBefore: event.entityAfter,
+    entityAfter: event.entityBefore,
+    from: event.to,
+    to: event.from,
+    carriedSubtree: event.carriedSubtree && {
+      innerWorldId: event.carriedSubtree.innerWorldId,
+      beforeRoot: event.carriedSubtree.afterRoot,
+      afterRoot: event.carriedSubtree.beforeRoot,
+    },
+  };
 }
 
 function sameTransaction(left: unknown, right: { readonly initialStateHash: string; readonly sequence: number }): boolean {

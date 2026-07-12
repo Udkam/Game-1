@@ -1181,3 +1181,128 @@ blocker without weakening the ordinary cross-workstream public-type freeze.
   global progress is sufficient; transfer interpolation consumes that value
   from the owned transition/Pixi/recursive-renderer paths without a second
   clock.
+
+## 2026-07-13 — R2I core acyclic recursive transfers
+
+- Gameplay task: `019f4e82-7cb8-73c1-b4a1-d333273b359f`; coordinator:
+  `019f4deb-7e83-7583-8cd5-8e6f075bc331`. Authorized detached base and exact
+  parent: `4b2016f5a577c66c44e551ead79accaf90043c4d`. Work remained in the
+  isolated worktree; no merge, rebase, push, branch creation, frontend/QA
+  notification, levels, serialization, package/config, root documentation, or
+  root changelog change was made.
+- Consumed before editing: `AGENTS.md`, `CURRENT_TASK.md` section 8, the full
+  accepted R2 and R1 contracts, relevant `DESIGN.md` motion/presentation
+  boundary, latest owner log, current core source/tests, and unchanged I1
+  runtime/animation consumers. UTF-8 reads used `read_game1_utf8.py`; `rg`
+  inspected legacy/public consumers and installed TypeScript/Vitest tooling.
+  Frozen assumptions: `EntityTransferredEvent` is the only additive public
+  union member; public command/result/address/transaction/rule/hash shapes
+  remain R1; and push-in/out remain internal `push` submodes.
+
+### Core decisions
+
+- Added deterministic `resolveRecursiveTransfer` behind the movement resolver.
+  It scans a contiguous solid+pushable chain, proves a focused landing payload
+  is terminal before reserving push-out, otherwise reserves a solid receiver
+  as push-in before evaluating its pushable flag, and leaves a gap/local chain
+  to the R1 resolver. A farther-payload regression proves an inner-landing
+  payload cannot transfer early.
+- Push-in/out move exactly the farthest payload across one addressed port,
+  shift remaining same-world payloads far-to-near, and move the actor once.
+  World-bearing payloads preserve entity/component/inner-world identity and
+  emit carried-subtree roots; no world state is cloned or reparented.
+  `push-resolved` holds only same-world shifts; `entity-transferred` is only
+  the cross-world terminal payload; actor motion remains final
+  `entity-moved(cause:"push")`.
+- Reducer forward transfer events are `[push-resolved, entity-transferred,
+  entity-moved]`; reverse events explicitly swap transfer endpoints, cells,
+  mode, and carried roots. Stored history now authenticates the complete
+  sequence: first previous state equals session initial state, each later
+  previous equals the prior next, and present equals the final past state.
+  Recomputed-hash/port-geometry first-record and adjacent-link transfer
+  forgeries reject unchanged invalid-level-data.
+- The R2 stress generator retains all 64 weighted draws. Focused push-out
+  profiles begin in a valid focused inner occurrence: first generated Step is
+  a local push onto an initially empty landing; the next same-direction Step
+  is the counted forward push-out or occupied-parent rejection. This preserves
+  R1 initial-landing validation with no prelude/redraw/reorder. The
+  world-bearing profile selects `push < enter`; the provenance test verifies
+  local push/no portal-or-focus event, unchanged focus, and the exact later
+  forward outcome.
+
+### Exact paths and verification
+
+- Changed paths: `src/core/types.ts`, `src/core/movementResolver.ts`, new
+  `src/core/recursiveTransfers.ts`, `src/core/reducer.ts`, new
+  `src/core/recursiveTransfers.test.ts`, `src/core/stress.test.ts`, and this
+  owner log. No other candidate-tree path is changed.
+- Focused provenance test passed: `src/core/stress.test.ts` with
+  `-t "counts R2|does not count reverse"` — 2 passed, 10 skipped. It covers
+  all eight required profile counters without running the 1,000-case body and
+  proves an Undo reverse transfer cannot increment `unchangedFocus`; that
+  mandatory runtime counter now accepts only an accepted forward `Step`.
+- Focused deterministic core suite passed: `src/core/recursiveTransfers.test.ts`,
+  `core.test.ts`, `replay.test.ts`, `ports.test.ts`, and `validation.test.ts`
+  — 5 files / 47 tests passed.
+- `npm.cmd run typecheck` passed. `npm.cmd run build` passed; the pre-existing
+  Vite >500 kB chunk advisory remains. Per R2I core efficiency authority,
+  `npm.cmd ci` was not repeated because `node_modules` already existed, and
+  the 1,000 fixtures × 64 commands plus 3,000 initial-subcase stress gate was
+  deliberately not run; the complete core→frontend→evidence chain owns that
+  single exhaustive candidate run.
+- `git diff --check` passed. Exact-path audit returned only the seven paths
+  above. Searches returned zero for legacy core command/event/wrapper names,
+  `legacyRuntimeAdapter`, fixture/container selection in the new resolver and
+  reducer, and `Math.random`/time APIs in stress/transfer/reducer code.
+
+### Candidate and handoff
+
+- Candidate commit is the commit containing this log; resolve its exact SHA
+  with `git rev-parse HEAD`. Its message is
+  `phase a r2i: implement acyclic recursive transfers`. No independent QA
+  verdict exists and this log is not self-approval.
+- Dependencies: coordinator scope review of the exact SHA, then the named
+  frontend commit directly atop it for transfer presentation/controller work,
+  then evidence-only commit and complete-chain independent QA. Stop after
+  coordinator handoff; do not begin frontend/evidence work.
+
+## 2026-07-13 — R2I core P1 stored-chain and stress-oracle amendment
+
+- Coordinator-authorized in-place amendment of candidate
+  `8ae5c2e179167a67c0c21cc127e56bc5e6f072c0`, retaining exact parent
+  `4b2016f5a577c66c44e551ead79accaf90043c4d`, the same commit message, and
+  no frontend/QA contact, push, merge, rebase, or scope expansion. This P1
+  changes only `src/core/reducer.ts`, `src/core/recursiveTransfers.test.ts`,
+  `src/core/stress.test.ts`, and this owner log within the existing R2I
+  allowlist.
+- `historyChainAuthenticates` now invokes deterministic source reproduction
+  for every chronological past+future record after structural validation and
+  canonical previous/next linkage. It still admits only source Step/Reset
+  records, seeds reproduction without history to avoid Undo/Redo recursion,
+  preserves transaction sequence and initial-hash checks, and binds present to
+  the final past state. A forged earlier transfer record can no longer hide
+  behind a self-consistent later Reset.
+- Focused regression: create real transfer R1, forge only R1 next-state valid
+  non-event canonical world palette plus its recomputed hash, link a real
+  accepted Reset R2 whose previous state is forged R1.next, then select
+  Undo(R2). Existing selected-transfer port-geometry forgery coverage remains
+  separate. The result is typed unchanged `invalid-level-data`; the supplied
+  session, history, hash, focus, and sequence remain byte-for-byte unchanged.
+- The independent stress oracle now resolves each transfer `via` to exact
+  root/parent/container/port geometry and checks mode-specific endpoint worlds
+  and cells. Push-in requires Step/aggregate direction equal to
+  `outerApproach`, parent→addressed child, and exact inner landing; push-out
+  requires `innerExit`, addressed child→parent, inner-landing source, and
+  exact parent destination. Undo reverse transfers are normalized to their
+  forward relation before this check. Cheap injected wrong-mode and
+  different-valid-port traces both fail the oracle.
+- Verification: initial targeted transfer/history and oracle selection passed
+  **2 files / 5 tests**; after the regression was corrected to a
+  non-event-canonical mutation, final targeted selection passed **2 files / 2
+  tests** and `npm.cmd run typecheck` passed. The bounded
+  `recursiveTransfers`, core, replay, ports, and validation suite passed
+  **5 files / 48 tests**. No exhaustive 1,000×64 stress run, clean install,
+  browser run, or unrelated build was repeated for this narrow amendment.
+- Candidate SHA: pending staged/show checks and one in-place amend. After the
+  replacement SHA is reported to coordinator, stop; frontend/evidence work and
+  independent QA remain coordinator-routed dependencies.

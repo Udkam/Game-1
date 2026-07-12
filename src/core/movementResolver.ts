@@ -1,6 +1,7 @@
 import { setEntityPosition } from "./components";
 import { resolvePushChain } from "./collision";
 import { nextPosition } from "./grid";
+import { resolveRecursiveTransfer, type RecursiveTransfer } from "./recursiveTransfers";
 import type { CellAddress, Direction, EntityId, GridPosition, Rejection, SimulationState } from "./types";
 
 export type MovementResolution =
@@ -12,6 +13,7 @@ export type MovementResolution =
       readonly actorFrom: GridPosition;
       readonly actorTo: GridPosition;
       readonly pushed: readonly { readonly entityId: EntityId; readonly from: GridPosition; readonly to: GridPosition }[];
+      readonly transfer?: RecursiveTransfer;
     };
 
 export function resolveMovement(
@@ -21,6 +23,20 @@ export function resolveMovement(
   direction: Direction,
   attemptedCell: CellAddress,
 ): MovementResolution {
+  const transfer = resolveRecursiveTransfer(state, actorId, actorPosition, direction, attemptedCell);
+  if (transfer.kind === "blocked") {
+    return transfer;
+  }
+  if (transfer.kind === "accepted") {
+    return {
+      kind: "accepted",
+      state: transfer.state,
+      actorFrom: transfer.actorFrom,
+      actorTo: transfer.actorTo,
+      pushed: transfer.shifted,
+      transfer: transfer.transfer,
+    };
+  }
   const target = nextPosition(actorPosition, direction);
   const chain = resolvePushChain(state, target, direction, actorId);
   if (chain.kind === "not-applicable") {

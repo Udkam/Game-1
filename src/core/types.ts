@@ -231,6 +231,22 @@ export interface PushResolvedEvent extends EventBase {
   readonly moved: readonly EntityMovedEvent[];
 }
 
+/** One terminal payload crossing an addressed port during the public push rule. */
+export interface EntityTransferredEvent extends EventBase {
+  readonly type: "entity-transferred";
+  readonly mode: "push-in" | "push-out";
+  readonly entityBefore: EntityOccurrenceAddress;
+  readonly entityAfter: EntityOccurrenceAddress;
+  readonly from: CellAddress;
+  readonly to: CellAddress;
+  readonly via: PortOccurrenceAddress;
+  readonly carriedSubtree: {
+    readonly innerWorldId: WorldId;
+    readonly beforeRoot: WorldAddress;
+    readonly afterRoot: WorldAddress;
+  } | null;
+}
+
 export interface PortalTraversedEvent extends EventBase {
   readonly type: "portal-traversed";
   readonly mode: "enter" | "exit";
@@ -265,6 +281,7 @@ export interface CommandBlockedEvent extends EventBase {
 export type SemanticEvent =
   | EntityMovedEvent
   | PushResolvedEvent
+  | EntityTransferredEvent
   | PortalTraversedEvent
   | FocusChangedEvent
   | WinChangedEvent

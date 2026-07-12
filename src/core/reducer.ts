@@ -5,6 +5,7 @@ import { nextPosition } from "./grid";
 import { commitHistoricalTraversal, commitTransaction, type HistoryRecord, type SimulationSession } from "./history";
 import { hashState } from "./hash";
 import { resolveMovement } from "./movementResolver";
+import type { RecursiveTransfer } from "./recursiveTransfers";
 import { activeWorldAddress, cellAddress, selectEntryPort, selectExitPort } from "./ports";
 import { opposite, validateInitialSimulationState, validateSimulationState, validationRejection } from "./validation";
 import { isWinSatisfied } from "./win";
@@ -15,6 +16,7 @@ import type {
   CommandBlockedEvent,
   CommandResult,
   Direction,
+  EntityTransferredEvent,
   EntityMovedEvent,
   NonStepCommand,
   Rejection,
@@ -97,10 +99,21 @@ function dispatchStep(session: SimulationSession, command: StepCommand): PublicD
             cellAddress(preflight.address, entry.to.x, entry.to.y),
             "push",
           ));
-          return appendWinChanged(session.present, resolution.state, transactionId, [
+          const events: SemanticEvent[] = [
             { type: "push-resolved", transactionId, eventIndex: 0, direction: "forward", actor, directionMoved: command.direction, moved: pushed },
-            entityMoved(transactionId, 1, actor, cellAddress(preflight.address, resolution.actorFrom.x, resolution.actorFrom.y), cellAddress(preflight.address, resolution.actorTo.x, resolution.actorTo.y), "push"),
-          ]);
+          ];
+          if (resolution.transfer) {
+            events.push(entityTransferred(transactionId, events.length, resolution.transfer));
+          }
+          events.push(entityMoved(
+            transactionId,
+            events.length,
+            actor,
+            cellAddress(preflight.address, resolution.actorFrom.x, resolution.actorFrom.y),
+            cellAddress(preflight.address, resolution.actorTo.x, resolution.actorTo.y),
+            "push",
+          ));
+          return appendWinChanged(session.present, resolution.state, transactionId, events);
         });
       }
       if (rule === "enter") {
@@ -479,6 +492,26 @@ function entityMoved(
   return { type: "entity-moved", transactionId, eventIndex, direction: "forward", occurrence, from, to, cause };
 }
 
+function entityTransferred(
+  transactionId: TransactionId,
+  eventIndex: number,
+  transfer: RecursiveTransfer,
+): EntityTransferredEvent {
+  return {
+    type: "entity-transferred",
+    transactionId,
+    eventIndex,
+    direction: "forward",
+    mode: transfer.mode,
+    entityBefore: transfer.entityBefore,
+    entityAfter: transfer.entityAfter,
+    from: transfer.from,
+    to: transfer.to,
+    via: transfer.via,
+    carriedSubtree: transfer.carriedSubtree,
+  };
+}
+
 function appendWinChanged(
   before: SimulationState,
   after: SimulationState,
@@ -512,6 +545,26 @@ function replayEvents(events: readonly SemanticEvent[], transactionId: Transacti
             moved: event.moved.map((moved) => ({ ...moved, transactionId, eventIndex, direction, from: moved.to, to: moved.from })),
           };
     }
+    if (event.type === "entity-transferred") {
+      return direction === "forward"
+        ? { ...event, transactionId, eventIndex, direction }
+        : {
+            ...event,
+            transactionId,
+            eventIndex,
+            direction,
+            mode: event.mode === "push-in" ? "push-out" : "push-in",
+            entityBefore: event.entityAfter,
+            entityAfter: event.entityBefore,
+            from: event.to,
+            to: event.from,
+            carriedSubtree: event.carriedSubtree && {
+              innerWorldId: event.carriedSubtree.innerWorldId,
+              beforeRoot: event.carriedSubtree.afterRoot,
+              afterRoot: event.carriedSubtree.beforeRoot,
+            },
+          };
+    }
     if (event.type === "portal-traversed") {
       return direction === "forward"
         ? { ...event, transactionId, eventIndex, direction }
@@ -530,6 +583,14 @@ function replayEvents(events: readonly SemanticEvent[], transactionId: Transacti
 }
 
 function validHistoricalRecord(session: SimulationSession, candidate: unknown, traversal: "undo" | "redo"): candidate is HistoryRecord {
+  if (!historyChainAuthenticates(session)) return false;
+  if (!historicalRecordStructureValid(session, candidate)) return false;
+  const record = candidate as HistoryRecord;
+  if (traversal === "undo" ? hashState(session.present) !== record.transaction.stateHashAfter : hashState(session.present) !== record.transaction.stateHashBefore) return false;
+  return reproducesSourceRecord(session, record.previousState, record.transaction);
+}
+
+function historicalRecordStructureValid(session: SimulationSession, candidate: unknown): candidate is HistoryRecord {
   if (!object(candidate)) return false;
   const record = candidate as { readonly transaction?: unknown; readonly previousState?: unknown; readonly nextState?: unknown };
   if (validateSimulationState(record.previousState).kind !== "valid" || validateSimulationState(record.nextState).kind !== "valid" || !object(record.transaction)) return false;
@@ -540,12 +601,32 @@ function validHistoricalRecord(session: SimulationSession, candidate: unknown, t
   const id = transaction.id as Record<string, unknown>;
   if (typeof id.initialStateHash !== "string" || !Number.isInteger(id.sequence) || (id.sequence as number) <= 0 || (id.sequence as number) > session.publicTransactionSequence || id.initialStateHash !== hashState(session.initialState)) return false;
   if (transaction.stateHashBefore !== hashState(previousState) || transaction.stateHashAfter !== hashState(nextState)) return false;
-  if (traversal === "undo" ? hashState(session.present) !== transaction.stateHashAfter : hashState(session.present) !== transaction.stateHashBefore) return false;
   if (!isSourceTransaction(transaction.command, transaction.rule) || transaction.sourceTransactionId !== undefined) return false;
   if (!sameAddress(transaction.activeAddressBefore, resultAddress(previousState)) || !sameAddress(transaction.activeAddressAfter, resultAddress(nextState))) return false;
   if (!Array.isArray(transaction.events) || !transaction.events.every((event, index) => isStoredSemanticEvent(event, transaction.id, index))) return false;
   const typedTransaction = transaction as unknown as Transaction;
-  return storedEventsMatch(previousState, nextState, typedTransaction) && reproducesSourceRecord(session, previousState, typedTransaction);
+  return storedEventsMatch(previousState, nextState, typedTransaction);
+}
+
+function historyChainAuthenticates(session: SimulationSession): boolean {
+  try {
+    const records = [...session.history.past, ...session.history.future];
+    let expected = session.initialState;
+    for (const record of records) {
+      if (!historicalRecordStructureValid(session, record) ||
+        !sameCanonicalState(record.previousState, expected) ||
+        !reproducesSourceRecord(session, record.previousState, record.transaction)) return false;
+      expected = record.nextState;
+    }
+    const presentExpected = session.history.past.at(-1)?.nextState ?? session.initialState;
+    return sameCanonicalState(session.present, presentExpected);
+  } catch {
+    return false;
+  }
+}
+
+function sameCanonicalState(left: SimulationState, right: SimulationState): boolean {
+  return hashState(left) === hashState(right) && JSON.stringify(left) === JSON.stringify(right);
 }
 
 function isSourceTransaction(command: PublicCommand, rule: string): boolean {
@@ -562,6 +643,7 @@ function isStoredSemanticEvent(value: unknown, transactionId: unknown, index: nu
   if (!object(value) || !sameTransactionId(value.transactionId, transactionId) || value.eventIndex !== index || value.direction !== "forward") return false;
   if (value.type === "entity-moved") return occurrenceShape(value.occurrence) && cellShape(value.from) && cellShape(value.to) && (value.cause === "walk" || value.cause === "push");
   if (value.type === "push-resolved") return occurrenceShape(value.actor) && isDirection(value.directionMoved) && Array.isArray(value.moved) && value.moved.every((moved) => object(moved) && sameTransactionId(moved.transactionId, transactionId) && moved.eventIndex === index && moved.direction === "forward" && occurrenceShape(moved.occurrence) && cellShape(moved.from) && cellShape(moved.to) && (moved.cause === "walk" || moved.cause === "push"));
+  if (value.type === "entity-transferred") return (value.mode === "push-in" || value.mode === "push-out") && occurrenceShape(value.entityBefore) && occurrenceShape(value.entityAfter) && cellShape(value.from) && cellShape(value.to) && portShape(value.via) && (value.carriedSubtree === null || carriedSubtreeShape(value.carriedSubtree));
   if (value.type === "portal-traversed") return (value.mode === "enter" || value.mode === "exit") && occurrenceShape(value.actorBefore) && occurrenceShape(value.actorAfter) && portShape(value.port) && cellShape(value.from) && cellShape(value.to);
   if (value.type === "focus-changed") return addressShape(value.before) && addressShape(value.after) && (value.via === undefined || portShape(value.via));
   if (value.type === "win-changed") return typeof value.solved === "boolean";
@@ -576,6 +658,7 @@ function addressShape(value: unknown): value is WorldAddress { return object(val
 function occurrenceShape(value: unknown): boolean { return object(value) && typeof value.entityId === "string" && addressShape(value.world); }
 function cellShape(value: unknown): boolean { return object(value) && addressShape(value.world) && Number.isInteger(value.x) && Number.isInteger(value.y); }
 function portShape(value: unknown): boolean { return object(value) && typeof value.portId === "string" && occurrenceShape(value.container); }
+function carriedSubtreeShape(value: unknown): boolean { return object(value) && typeof value.innerWorldId === "string" && addressShape(value.beforeRoot) && addressShape(value.afterRoot); }
 
 function storedEventsMatch(previous: SimulationState, next: SimulationState, transaction: Transaction): boolean {
   const baseEvents = transaction.events.filter((event) => event.type !== "win-changed");
@@ -585,8 +668,17 @@ function storedEventsMatch(previous: SimulationState, next: SimulationState, tra
   if (winEvents.length > 0 && transaction.events.at(-1)?.type !== "win-changed") return false;
   if (transaction.rule === "walk") return transaction.command.type === "step" && baseEvents.length === 1 && baseEvents[0]?.type === "entity-moved" && baseEvents[0].cause === "walk" && movedMatchesStates(baseEvents[0], previous, next);
   if (transaction.rule === "push") {
-    const [aggregate, actor] = baseEvents;
-    return transaction.command.type === "step" && aggregate?.type === "push-resolved" && actor?.type === "entity-moved" && actor.cause === "push" && baseEvents.length === 2 && aggregate.directionMoved === transaction.command.direction && sameOccurrence(aggregate.actor, actor.occurrence) && movedMatchesStates(actor, previous, next) && aggregate.moved.length > 0 && aggregate.moved.every((moved) => movedMatchesStates(moved, previous, next));
+    const [aggregate, second, third] = baseEvents;
+    if (transaction.command.type !== "step" || aggregate?.type !== "push-resolved" || aggregate.directionMoved !== transaction.command.direction) return false;
+    if (second?.type === "entity-transferred") {
+      return third?.type === "entity-moved" && third.cause === "push" && baseEvents.length === 3 &&
+        sameOccurrence(aggregate.actor, third.occurrence) && movedMatchesStates(third, previous, next) &&
+        aggregate.moved.every((moved) => moved.cause === "push" && movedMatchesStates(moved, previous, next) && moved.occurrence.entityId !== second.entityBefore.entityId) &&
+        transferMatchesStates(second, aggregate, previous, next);
+    }
+    return second?.type === "entity-moved" && second.cause === "push" && baseEvents.length === 2 &&
+      sameOccurrence(aggregate.actor, second.occurrence) && movedMatchesStates(second, previous, next) &&
+      aggregate.moved.length > 0 && aggregate.moved.every((moved) => movedMatchesStates(moved, previous, next));
   }
   if (transaction.rule === "enter" || transaction.rule === "exit") {
     const [portal, focus] = baseEvents;
@@ -627,19 +719,57 @@ function portalMatchesStates(event: Extract<SemanticEvent, { readonly type: "por
     : beforeWorld === port.innerWorldId && afterWorld === port.parentWorldId && sameCell(event.from, event.actorBefore.world, port.innerLanding.x, port.innerLanding.y) && sameCell(event.to, event.port.container.world, parentCell.x, parentCell.y);
 }
 
+function transferMatchesStates(
+  event: EntityTransferredEvent,
+  aggregate: Extract<SemanticEvent, { readonly type: "push-resolved" }>,
+  previous: SimulationState,
+  next: SimulationState,
+): boolean {
+  if (event.entityBefore.entityId !== event.entityAfter.entityId || !sameAddress(event.from.world, event.entityBefore.world) || !sameAddress(event.to.world, event.entityAfter.world)) return false;
+  if (!occurrenceAtCell(previous, event.entityBefore, event.from) || !occurrenceAtCell(next, event.entityAfter, event.to)) return false;
+  const beforePort = resolvedPort(previous, event.via);
+  const afterPort = resolvedPort(next, event.via);
+  if (!beforePort || !afterPort || beforePort.innerWorldId !== afterPort.innerWorldId || beforePort.outerApproach !== afterPort.outerApproach || beforePort.innerExit !== afterPort.innerExit) return false;
+  const entityId = event.entityBefore.entityId;
+  const beforeContainer = previous.components.containers[entityId];
+  const afterContainer = next.components.containers[entityId];
+  if (Boolean(beforeContainer) !== Boolean(afterContainer)) return false;
+  if (!beforeContainer) {
+    if (event.carriedSubtree !== null) return false;
+  } else {
+    if (!afterContainer || !event.carriedSubtree || beforeContainer.innerWorldId !== afterContainer.innerWorldId || event.carriedSubtree.innerWorldId !== beforeContainer.innerWorldId) return false;
+    const beforeRoot: WorldAddress = { rootWorldId: event.entityBefore.world.rootWorldId, containerPath: [...event.entityBefore.world.containerPath, entityId] };
+    const afterRoot: WorldAddress = { rootWorldId: event.entityAfter.world.rootWorldId, containerPath: [...event.entityAfter.world.containerPath, entityId] };
+    if (!sameAddress(event.carriedSubtree.beforeRoot, beforeRoot) || !sameAddress(event.carriedSubtree.afterRoot, afterRoot)) return false;
+  }
+  if (event.mode === "push-in") {
+    const expectedChild: WorldAddress = { rootWorldId: event.via.container.world.rootWorldId, containerPath: [...event.via.container.world.containerPath, event.via.container.entityId] };
+    return aggregate.directionMoved === beforePort.outerApproach &&
+      sameAddress(event.entityBefore.world, event.via.container.world) &&
+      sameAddress(event.entityAfter.world, expectedChild) &&
+      sameCell(event.to, expectedChild, beforePort.innerLanding.x, beforePort.innerLanding.y);
+  }
+  const expectedParentCell = nextPosition(beforePort.anchor, opposite(beforePort.outerApproach));
+  return aggregate.directionMoved === beforePort.innerExit &&
+    sameAddress(event.entityBefore.world, { rootWorldId: event.via.container.world.rootWorldId, containerPath: [...event.via.container.world.containerPath, event.via.container.entityId] }) &&
+    sameAddress(event.entityAfter.world, event.via.container.world) &&
+    sameCell(event.from, event.entityBefore.world, beforePort.innerLanding.x, beforePort.innerLanding.y) &&
+    sameCell(event.to, event.via.container.world, expectedParentCell.x, expectedParentCell.y);
+}
+
 function occurrenceAtCell(state: SimulationState, occurrence: { readonly world: WorldAddress; readonly entityId: string }, cell: CellAddress): boolean {
   const worldId = resolveWorldAddress(state, occurrence.world.containerPath);
   const position = state.components.positions[occurrence.entityId];
   return occurrence.world.rootWorldId === state.rootWorldId && sameAddress(occurrence.world, cell.world) && worldId !== undefined && position?.worldId === worldId && position.x === cell.x && position.y === cell.y;
 }
 
-function resolvedPort(state: SimulationState, address: { readonly container: { readonly world: WorldAddress; readonly entityId: string }; readonly portId: string }): { readonly parentWorldId: string; readonly innerWorldId: string; readonly innerLanding: { readonly x: number; readonly y: number }; readonly outerApproach: Direction; readonly anchor: { readonly worldId: string; readonly x: number; readonly y: number } } | undefined {
+function resolvedPort(state: SimulationState, address: { readonly container: { readonly world: WorldAddress; readonly entityId: string }; readonly portId: string }): { readonly parentWorldId: string; readonly innerWorldId: string; readonly innerLanding: { readonly x: number; readonly y: number }; readonly outerApproach: Direction; readonly innerExit: Direction; readonly anchor: { readonly worldId: string; readonly x: number; readonly y: number } } | undefined {
   const parentWorldId = resolveWorldAddress(state, address.container.world.containerPath);
   const position = state.components.positions[address.container.entityId];
   const container = state.components.containers[address.container.entityId];
   const port = state.portTables.find((table) => table.containerId === address.container.entityId)?.ports.find((entry) => entry.id === address.portId);
   if (!parentWorldId || !position || !container || !state.worlds[container.innerWorldId] || !port || address.container.world.rootWorldId !== state.rootWorldId || position.worldId !== parentWorldId) return undefined;
-  return { parentWorldId, innerWorldId: container.innerWorldId, innerLanding: port.innerLanding, outerApproach: port.outerApproach, anchor: position };
+  return { parentWorldId, innerWorldId: container.innerWorldId, innerLanding: port.innerLanding, outerApproach: port.outerApproach, innerExit: port.innerExit, anchor: position };
 }
 
 function sameOccurrence(left: { readonly world: WorldAddress; readonly entityId: string }, right: { readonly world: WorldAddress; readonly entityId: string }): boolean { return left.entityId === right.entityId && sameAddress(left.world, right.world); }
