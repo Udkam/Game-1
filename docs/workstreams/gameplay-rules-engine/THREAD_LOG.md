@@ -1060,3 +1060,124 @@ blocker without weakening the ordinary cross-workstream public-type freeze.
   with only the existing Vite advisory. Final correction paths are this log,
   `src/core/core.test.ts`, `src/core/reducer.ts`, and `src/core/stress.test.ts`;
   amend, coordinator-only report, then stop.
+
+## 2026-07-12 — R2D acyclic recursive-transfer contract freeze
+
+- Coordinator `019f4deb-7e83-7583-8cd5-8e6f075bc331` authorized exactly one
+  documentation-only R2D slice for gameplay task
+  `019f4e82-7cb8-73c1-b4a1-d333273b359f`, on detached origin/main baseline
+  `d4d99911576ba8217ed905f52c7d53e94fb39c2c`. The worktree was clean before
+  checkout and remains limited to this log plus new
+  `RULES_SLICE_R2_CONTRACT.md`. No source/test/package/config/root-doc/log
+  outside this owner, fixtures/levels/schema/solver/assets, merge/rebase/push,
+  or branch creation is authorized.
+- Sources and read-only tools consumed: root `AGENTS.md`, `CURRENT_TASK.md`
+  R2D section, relevant `DESIGN.md` gameplay/motion boundary, accepted R1
+  contract and rules audit, latest coordinator/gameplay/frontend/QA logs, and
+  the accepted C1/V1 type/consumer inventory. `rg` inspected core public
+  surfaces and projection/runtime/animation/render consumers. Official public
+  comparison evidence was limited to <https://www.patricksparabox.com/>,
+  <https://www.patricksparabox.com/press/>,
+  <https://store.steampowered.com/app/1260520/Patricks_Parabox/>, and the
+  non-normative official custom-level page
+  <https://www.patricksparabox.com/custom-levels/>. The last visibly exposes
+  `attempt_order` and `inner_push`, but its format/content is not copied. No
+  official code, assets, levels, text, audio, or community custom-level
+  material was consumed as implementation input.
+- Contract decisions: preserve `PublicCommand`, the stable public reducer
+  entry, all R1 rule/version/priority/attempt/transaction shapes, R1/V1 state
+  literals, and accepted hashes. Push-in/out are internal deterministic
+  addressed submodes of public `push`, never new priority items. Add only the
+  additive `entity-transferred` event; no command/rule/rejection/state union
+  changes. R2 freezes walk-first R1 priority, push-submode
+  reservation/order, exact addressed contiguous source-chain push-in/out with
+  one terminal crossing/no parent-side chain, component-driven world-bearing container movement,
+  unchanged actor focus, alias-safe derived containment, candidate graph
+  validation, and cycleMode forbid.
+- The contract freezes aggregate transfer event ordering, V1 single-barrier
+  and no-double-feedback handoff, reverse/replay/history/win authentication,
+  1,000-fixture/64-command/3,000-initial-subcase xorshift stress extension
+  with the unchanged eight R1 masks plus deterministic push submodes, and a
+  240,000 ms measured-timeout policy. It also names R2I as a mandatory
+  core-first/frontend-directly-atop linear public migration with no temporary
+  adapter, no partial integration, complete-chain verification, and later
+  independent QA.
+- Verification is documentation-only: read-only consumer searches plus
+  `git diff --check`, staged diff check, `git show --check`, exact-parent/path
+  audit, and clean status are required before the single scoped commit. npm,
+  typecheck, Vitest, build, and browser capture are deliberately not run.
+- Open dependencies/stop: frontend must perform read-only compatibility review
+  of the exact candidate SHA; independent QA then reviews the documentation
+  chain; coordinator alone may integrate/push and later create finite R2I
+  source allowlists. This candidate authorizes neither R2 implementation nor
+  V2-V4, levels, serialization, solver, release, or a completion claim.
+- Coordinator pre-commit correction identified two blockers after the initial
+  documentation candidate object existed locally. The final candidate is
+  therefore amended in place on the same exact d4d9991 parent, not made a
+  second commit: the false custom-level-evidence assertion is corrected and
+  the undefined RuleSetR2/load-upgrade/public-rule migration is removed. Only
+  documentation scope checks are rerun; implementation remains stopped.
+- Final QA-preflight correction further freezes contiguous source-chain
+  transfers: terminal/farthest Q crosses exactly one port, remaining Q entries
+  shift far-to-near, actor enters the nearest former cell, and no destination/
+  parent-side chain or transfer fallthrough is allowed. It preserves R1
+  load-time empty-landing validation; push-out sources arise only by accepted
+  gameplay runtime occupancy.
+- Event/feedback correction: `push-resolved` remains the sole aggregate
+  impact/audio event and holds only same-world shifted payload motions;
+  `entity-transferred` represents exactly one cross-world terminal payload with
+  mode, addressed endpoints, port, and optional carried subtree. Actor remains
+  the existing `entity-moved(cause:"push")`; forward and reverse ordering,
+  transaction/event/source identity, stored history authentication, and replay
+  requirements are explicitly frozen.
+- Stress correction: one combined R2-superset 1,000-fixture/64-command run
+  replaces any separate R1 run; it retains master seed `0x51CEB00C`, anchors,
+  3,000 initial subcases, minimizer/failure schema, and eight R1 masks.
+  Mandatory coverage counters require local and ordinary/world-bearing transfer
+  success plus every named blocked/cycle branch, gap-no-transfer regression,
+  all eight masks, and unchanged/resolvable focus assertions; a zero counter
+  fails the candidate. Malformed focus remains a targeted invalid-data test,
+  not an unreachable valid-transfer branch. Transfer stored-history forgeries
+  are separate targeted tests, including recomputed-hash state/port geometry
+  attacks.
+- R2I now names a core commit, frontend consumer/runtime/render commit, and
+  evidence-only direct child. `GameCanvasHost` plus new `r2QaScenario` and its
+  test (not V1's scenario) belong to the frontend implementation commit. The
+  third commit contains only exact R2 Markdown/JSON, 12 PNG evidence files, and
+  the frontend log; it changes no behavior. Evidence uses 1440x900 DPR1
+  forward/Undo midpoint comparisons and no redundant Redo capture. General
+  capture automation remains V4. The candidate stays documentation-only, must
+  be amended in place on d4d9991, and stops for frontend read-only review and
+  independent QA after coordinator routing.
+
+## 2026-07-13 — R2D coordinator recovery amendment
+
+- After quota reset, the gameplay owner resumed but entered a local tool-
+  approval wait before changing any file and then stopped on coordinator
+  supersession. A bounded recovery amended the same documentation candidate in
+  place, on the same `d4d9991` parent and the same two gameplay-owned docs
+  paths. This is candidate recovery only; frontend compatibility review and
+  independent QA remain mandatory, and no later production ownership changes.
+- The push classifier is now executable: it reserves exact focused-landing
+  push-out first, classifies the first solid container after a nonempty
+  contiguous payload chain as push-in receiver before that receiver's pushable
+  flag, and otherwise resolves ordinary local push. A gap cannot be skipped
+  and no fixture/profile branch exists at runtime.
+- Unreachable transfer-specific focus/ancestor public codes, reason, and
+  counters were removed. Existing invalid-data/focus/cycle outcomes remain;
+  every candidate preserves and re-resolves the exact unchanged focus.
+- The combined stress trace preserves all 64 existing weighted draws and
+  locates the first generated Step without inserting slot zero or mutating the
+  seed stream. The additive transfer event freezes entity/cell equality,
+  exact carried-subtree prefix rebasing, and no ID fallback.
+- A lightweight read-only reproduction of the existing xorshift command draw
+  over all 1,000 frozen case seeds found no trace without a Step; the latest
+  first Step was slot 6 (`0:620`, `1:244`, `2:97`, `3:24`, `4:10`, `5:4`,
+  `6:1`). This validates the contract assertion without changing the generator
+  or running the exhaustive suite during a documentation-only slice.
+- The three-commit boundary is corrected: R2 QA host/scenario source and test
+  belong to frontend implementation, while the third commit is evidence-only.
+  `AnimationSystem` remains read-only because its existing controller-owned
+  global progress is sufficient; transfer interpolation consumes that value
+  from the owned transition/Pixi/recursive-renderer paths without a second
+  clock.
