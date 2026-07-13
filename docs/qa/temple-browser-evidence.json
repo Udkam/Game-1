@@ -1,0 +1,1826 @@
+{
+  "generatedAt": "2026-07-13T10:23:40.814Z",
+  "baseUrl": "http://127.0.0.1:5173/",
+  "browser": "150.0.7871.115",
+  "records": [
+    {
+      "id": "ready-desktop",
+      "scenario": "ready",
+      "screenshot": "docs/screenshots/temple/final/ready-desktop.png",
+      "screenshotSha256": "0334271c45bc6ac5349e5bc64b9cb8bb31005812ca22dfd0cc9d969df402ad34",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        },
+        {
+          "selector": ".settings",
+          "left": 1242.5625,
+          "top": 830,
+          "right": 1416,
+          "bottom": 878,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "6a1eb96c",
+        "frozen": true,
+        "previousDistance": 0,
+        "previousLanePosition": 0,
+        "status": "ready",
+        "tick": 0,
+        "distance": 0,
+        "sectionIndex": 0,
+        "sectionDistance": 0,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 0,
+        "shards": 0,
+        "failureReason": null,
+        "events": []
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 0,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 720,
+          "y": 746.2940272573074,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.350045558757283,
+          "z": 7.200020248336571,
+          "fov": 46.99999999999998,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "running-desktop",
+      "scenario": "running",
+      "screenshot": "docs/screenshots/temple/final/running-desktop.png",
+      "screenshotSha256": "0b347e1614eea46ace849aa4359aaf5d189cbb058bffbf30a33af22844143dc1",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "3486deec",
+        "frozen": true,
+        "previousDistance": 0,
+        "previousLanePosition": 0,
+        "status": "running",
+        "tick": 0,
+        "distance": 0,
+        "sectionIndex": 0,
+        "sectionDistance": 0,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 0,
+        "shards": 0,
+        "failureReason": null,
+        "events": []
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 0,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 720,
+          "y": 746.3053622552499,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.350266656912911,
+          "z": 7.200118514183515,
+          "fov": 46.99999999999998,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "lane-mid",
+      "scenario": "lane-mid",
+      "screenshot": "docs/screenshots/temple/final/lane-mid.png",
+      "screenshotSha256": "4e4961d0a3115179fb4fca62b86f0eb2124aee196673f69c7918b0712d1b6efe",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "8596c8a5",
+        "frozen": true,
+        "previousDistance": 0.6000600026667111,
+        "previousLanePosition": 0.4,
+        "status": "running",
+        "tick": 5,
+        "distance": 0.7501000066668889,
+        "sectionIndex": 0,
+        "sectionDistance": 0.7501000066668889,
+        "lanePosition": 0.5,
+        "targetLane": 1,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 7,
+        "shards": 0,
+        "failureReason": null,
+        "events": [
+          {
+            "type": "lane-shifted",
+            "tick": 0,
+            "from": 0,
+            "to": 1
+          }
+        ]
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 0.7501000066668889,
+        "presentedLanePosition": 0.5,
+        "runnerWorld": {
+          "x": 1.175,
+          "y": 0,
+          "z": -0.7501000066668889,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 754.3220490664347,
+          "y": 733.899270483696,
+          "visible": true
+        },
+        "camera": {
+          "x": 0.76467243310285,
+          "y": 4.350238465074571,
+          "z": 6.694748453932711,
+          "fov": 47.000971550141415,
+          "yaw": 0
+        },
+        "lanePosition": 0.5,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "lane-end",
+      "scenario": "lane-mid",
+      "screenshot": "docs/screenshots/temple/final/lane-end.png",
+      "screenshotSha256": "d373c3563f833eba53c6716289c450a97d32b9431ec75bfbcd9ff2dfa4b362a7",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "6b435cfa",
+        "frozen": true,
+        "previousDistance": 1.3503600560056004,
+        "previousLanePosition": 0.9,
+        "status": "running",
+        "tick": 10,
+        "distance": 1.500450080009334,
+        "sectionIndex": 0,
+        "sectionDistance": 1.500450080009334,
+        "lanePosition": 1,
+        "targetLane": 1,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 15,
+        "shards": 0,
+        "failureReason": null,
+        "events": []
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 1.500450080009334,
+        "presentedLanePosition": 1,
+        "runnerWorld": {
+          "x": 2.35,
+          "y": 0,
+          "z": -1.500450080009334,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 789.2861330653668,
+          "y": 720.0492408974287,
+          "visible": true
+        },
+        "camera": {
+          "x": 1.4785967210560478,
+          "y": 4.350235856333133,
+          "z": 6.222771850671431,
+          "fov": 47.001866607337014,
+          "yaw": 0
+        },
+        "lanePosition": 1,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "jump-apex",
+      "scenario": "jump-apex",
+      "screenshot": "docs/screenshots/temple/final/jump-apex.png",
+      "screenshotSha256": "d76dd2408c9322cfe0c6a08a8a5a3660539b0b96fd41460f8a0a6fe842c1f8af",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "47b5ae59",
+        "frozen": true,
+        "previousDistance": 3.0019007602153787,
+        "previousLanePosition": 0,
+        "status": "running",
+        "tick": 21,
+        "distance": 3.1521008869327263,
+        "sectionIndex": 0,
+        "sectionDistance": 3.1521008869327263,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 1.8900000000000008,
+        "grounded": false,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 31,
+        "shards": 0,
+        "failureReason": null,
+        "events": [
+          {
+            "type": "jump-started",
+            "tick": 0
+          }
+        ]
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 3.1521008869327263,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 1.8900000000000008,
+          "z": -3.1521008869327263,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 720,
+          "y": 596.840907524838,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.579512214690259,
+          "z": 5.075427615170629,
+          "fov": 47.004085072248316,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "jump",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "slide-mid",
+      "scenario": "slide-mid",
+      "screenshot": "docs/screenshots/temple/final/slide-mid.png",
+      "screenshotSha256": "2a5023b56ab32c5e6128f1fe7782b01d6b7726d6c07bbd610449dd4d2ad6a1c6",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "bc932917",
+        "frozen": true,
+        "previousDistance": 2.1009102427111612,
+        "previousLanePosition": 0,
+        "status": "running",
+        "tick": 15,
+        "distance": 2.251050303394009,
+        "sectionIndex": 0,
+        "sectionDistance": 2.251050303394009,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 16,
+        "shieldCharges": 0,
+        "score": 22,
+        "shards": 0,
+        "failureReason": null,
+        "events": [
+          {
+            "type": "slide-started",
+            "tick": 0
+          }
+        ]
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 2.251050303394009,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": -2.251050303394009,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 720,
+          "y": 705.8764684197786,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.285119815794296,
+          "z": 5.735190385027387,
+          "fov": 47.002795659461505,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "slide",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "turn-mid",
+      "scenario": "turn-mid",
+      "screenshot": "docs/screenshots/temple/final/turn-mid.png",
+      "screenshotSha256": "b7ae835ef1c9dcca31b02f8a6c0cae46d043775d89f56e7b3307b6fbb2eac178",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "cf1def72",
+        "frozen": true,
+        "previousDistance": 117.9625,
+        "previousLanePosition": 0,
+        "status": "running",
+        "tick": 1,
+        "distance": 118.12036416666668,
+        "sectionIndex": 1,
+        "sectionDistance": 0.12036416666667549,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 1181,
+        "shards": 0,
+        "failureReason": null,
+        "events": [
+          {
+            "type": "turned",
+            "tick": 1,
+            "fromSectionId": "section-0-d54e6cda",
+            "toSectionId": "section-1-cffb3025",
+            "direction": "right"
+          }
+        ]
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 118.12036416666668,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0.33349999999999996,
+          "y": 0,
+          "z": -117.6665,
+          "yaw": -0.7853981633974483
+        },
+        "runnerScreen": {
+          "x": 751.0073144248585,
+          "y": 750.5537977329822,
+          "visible": true
+        },
+        "camera": {
+          "x": -4.94899980177372,
+          "y": 4.35,
+          "z": -112.87841242567045,
+          "fov": 47.12621355019376,
+          "yaw": -0.7853981633974483
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0",
+          "section-6-935c64e2"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5914,
+        "turnProgress": 0.5,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "turn-lane-change",
+      "scenario": "turn-mid",
+      "screenshot": "docs/screenshots/temple/final/turn-lane-change.png",
+      "screenshotSha256": "4a659cb5687b5b4502b7045e43290bdab41450396de39b2cffecd4e2c7f205a8",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "6e952e74",
+        "frozen": true,
+        "previousDistance": 118.75192608312753,
+        "previousLanePosition": 0.4,
+        "status": "running",
+        "tick": 6,
+        "distance": 118.90984287819974,
+        "sectionIndex": 1,
+        "sectionDistance": 0.9098428781997476,
+        "lanePosition": 0.5,
+        "targetLane": 1,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 1189,
+        "shards": 0,
+        "failureReason": null,
+        "events": []
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 118.90984287819974,
+        "presentedLanePosition": 0.5,
+        "runnerWorld": {
+          "x": 1.3478993018613594,
+          "y": 0,
+          "z": -116.8267281354984,
+          "yaw": -1.427609469460184
+        },
+        "runnerScreen": {
+          "x": 613.7993128048299,
+          "y": 749.61044005421,
+          "visible": true
+        },
+        "camera": {
+          "x": -5.4900674895973,
+          "y": 4.35,
+          "z": -114.62913183820991,
+          "fov": 47.13256535171334,
+          "yaw": -1.427609469460184
+        },
+        "lanePosition": 0.5,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0",
+          "section-6-935c64e2"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5914,
+        "turnProgress": 0.8137389235171544,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "collision",
+      "scenario": "collision",
+      "screenshot": "docs/screenshots/temple/final/collision.png",
+      "screenshotSha256": "9b54de5f21f0b89595df9ffc92f929da886f44f3b14ebbd2ccd95b40e72794f3",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        },
+        {
+          "selector": ".settings",
+          "left": 1242.5625,
+          "top": 830,
+          "right": 1416,
+          "bottom": 878,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "cd55f019",
+        "frozen": true,
+        "previousDistance": 26.925,
+        "previousLanePosition": 0,
+        "status": "game-over",
+        "tick": 1,
+        "distance": 27.076795,
+        "sectionIndex": 0,
+        "sectionDistance": 27.076795,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 270,
+        "shards": 0,
+        "failureReason": {
+          "kind": "hazard-collision",
+          "sectionId": "section-0-d54e6cda",
+          "eventId": "section-0:column-center",
+          "hazard": "column"
+        },
+        "events": [
+          {
+            "type": "collision",
+            "tick": 1,
+            "sectionId": "section-0-d54e6cda",
+            "eventId": "section-0:column-center",
+            "hazard": "column"
+          },
+          {
+            "type": "run-failed",
+            "tick": 1,
+            "reason": {
+              "kind": "hazard-collision",
+              "sectionId": "section-0-d54e6cda",
+              "eventId": "section-0:column-center",
+              "hazard": "column"
+            }
+          }
+        ]
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 27.076795,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": -27.076795,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 722.14909152091,
+          "y": 745.5950156929754,
+          "visible": true
+        },
+        "camera": {
+          "x": -0.02457898784411483,
+          "y": 4.339728504985462,
+          "z": -19.876795,
+          "fov": 47.03509110540717,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 17,
+        "drawCalls": 29,
+        "triangles": 5390,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "pause-high-contrast",
+      "scenario": "running",
+      "screenshot": "docs/screenshots/temple/final/pause-high-contrast.png",
+      "screenshotSha256": "87edb7e1bd8b239fcacb8d188eee7f2d21953e87b45116f02c763294dadb6494",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": true,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        },
+        {
+          "selector": ".settings",
+          "left": 1242.5625,
+          "top": 830,
+          "right": 1416,
+          "bottom": 878,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "f02c291f",
+        "frozen": true,
+        "previousDistance": 0,
+        "previousLanePosition": 0,
+        "status": "paused",
+        "tick": 0,
+        "distance": 0,
+        "sectionIndex": 0,
+        "sectionDistance": 0,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 0,
+        "shards": 0,
+        "failureReason": null,
+        "events": [
+          {
+            "type": "paused",
+            "tick": 0
+          }
+        ]
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": true,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 0,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 720,
+          "y": 746.296715502432,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.350097993667744,
+          "z": 7.20004355274122,
+          "fov": 46.99999999999998,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "mobile-portrait",
+      "scenario": "running",
+      "screenshot": "docs/screenshots/temple/final/mobile-portrait.png",
+      "screenshotSha256": "02d14f3def6f5fcf1a9683af7c2559f773d1dcf0ff85db789254e3893df7b94b",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "devicePixelRatio": 3
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 14,
+          "top": 12,
+          "right": 142.8125,
+          "bottom": 42,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 14,
+          "top": 62,
+          "right": 376,
+          "bottom": 103,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 334,
+          "top": 12,
+          "right": 378,
+          "bottom": 56,
+          "insideViewport": true
+        },
+        {
+          "selector": ".gesture-hint",
+          "left": 97.5,
+          "top": 127.109375,
+          "right": 292.5,
+          "bottom": 151.109375,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "3486deec",
+        "frozen": true,
+        "previousDistance": 0,
+        "previousLanePosition": 0,
+        "status": "running",
+        "tick": 0,
+        "distance": 0,
+        "sectionIndex": 0,
+        "sectionDistance": 0,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 0,
+        "shards": 0,
+        "failureReason": null,
+        "events": []
+      },
+      "render": {
+        "canvas": {
+          "width": 390,
+          "height": 844,
+          "resolution": 1.75
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 0,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 195,
+          "y": 623.7724705146337,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.580088234921968,
+          "z": 8.639502675894363,
+          "fov": 46.99999999999997,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 31,
+        "triangles": 5578,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "mobile-landscape",
+      "scenario": "running",
+      "screenshot": "docs/screenshots/temple/final/mobile-landscape.png",
+      "screenshotSha256": "177fa67a43638835aa855d30e39ea68d81e012d85e0f94cb18409567ce3d8ab2",
+      "viewport": {
+        "width": 844,
+        "height": 390,
+        "devicePixelRatio": 3
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": false
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 10,
+          "top": 8,
+          "right": 147.609375,
+          "bottom": 38,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 185.6875,
+          "top": 9,
+          "right": 658.3125,
+          "bottom": 42,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 790,
+          "top": 8,
+          "right": 834,
+          "bottom": 52,
+          "insideViewport": true
+        },
+        {
+          "selector": ".gesture-hint",
+          "left": 324.140625,
+          "top": 356.890625,
+          "right": 519.859375,
+          "bottom": 368.890625,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "3486deec",
+        "frozen": true,
+        "previousDistance": 0,
+        "previousLanePosition": 0,
+        "status": "running",
+        "tick": 0,
+        "distance": 0,
+        "sectionIndex": 0,
+        "sectionDistance": 0,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 0,
+        "shards": 0,
+        "failureReason": null,
+        "events": []
+      },
+      "render": {
+        "canvas": {
+          "width": 844,
+          "height": 390,
+          "resolution": 1.75
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": false,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 0,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 422,
+          "y": 323.3958202618947,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.350123960487018,
+          "z": 7.200055093549785,
+          "fov": 46.99999999999998,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 29,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "reduced-motion",
+      "scenario": "running",
+      "screenshot": "docs/screenshots/temple/final/reduced-motion.png",
+      "screenshotSha256": "f1ff2e421ee524f0ceff32f6532983488e160dd6be4c8c6e51a2b79c9af95d94",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "devicePixelRatio": 1
+      },
+      "dom": {
+        "canvasCount": 1,
+        "gameplayEntityCount": 0,
+        "overflowX": 0
+      },
+      "appearance": {
+        "highContrast": false,
+        "reducedMotion": true
+      },
+      "safeAreas": [
+        {
+          "selector": ".brandbar",
+          "left": 24,
+          "top": 18,
+          "right": 224.015625,
+          "bottom": 57,
+          "insideViewport": true
+        },
+        {
+          "selector": ".hud",
+          "left": 360,
+          "top": 20,
+          "right": 1080,
+          "bottom": 71,
+          "insideViewport": true
+        },
+        {
+          "selector": ".pause-control",
+          "left": 1368,
+          "top": 22,
+          "right": 1416,
+          "bottom": 70,
+          "insideViewport": true
+        },
+        {
+          "selector": ".touch-controls",
+          "left": 16,
+          "top": 830,
+          "right": 272,
+          "bottom": 882,
+          "insideViewport": true
+        }
+      ],
+      "simulation": {
+        "seed": 1414087749,
+        "hash": "3486deec",
+        "frozen": true,
+        "previousDistance": 0,
+        "previousLanePosition": 0,
+        "status": "running",
+        "tick": 0,
+        "distance": 0,
+        "sectionIndex": 0,
+        "sectionDistance": 0,
+        "lanePosition": 0,
+        "targetLane": 0,
+        "height": 0,
+        "grounded": true,
+        "slideTicksRemaining": 0,
+        "shieldCharges": 0,
+        "score": 0,
+        "shards": 0,
+        "failureReason": null,
+        "events": []
+      },
+      "render": {
+        "canvas": {
+          "width": 1440,
+          "height": 900,
+          "resolution": 1
+        },
+        "options": {
+          "highContrast": false,
+          "reducedMotion": true,
+          "seed": 1414087749,
+          "audioEnabled": true
+        },
+        "presentationAlpha": 1,
+        "presentedDistance": 0,
+        "presentedLanePosition": 0,
+        "runnerWorld": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "yaw": 0
+        },
+        "runnerScreen": {
+          "x": 720,
+          "y": 746.3040606204826,
+          "visible": true
+        },
+        "camera": {
+          "x": 0,
+          "y": 4.350241266676145,
+          "z": 7.200107229633843,
+          "fov": 46.99999999999998,
+          "yaw": 0
+        },
+        "lanePosition": 0,
+        "posture": "run",
+        "visibleSectionIds": [
+          "section-0-d54e6cda",
+          "section-1-cffb3025",
+          "section-2-38bf6ccb",
+          "section-3-67adb2c2",
+          "section-4-467f2a66",
+          "section-5-ca7fdac0"
+        ],
+        "visibleObstacleCount": 18,
+        "drawCalls": 28,
+        "triangles": 5418,
+        "turnProgress": null,
+        "contextLossCount": 0
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "real-desktop-input",
+      "state": {
+        "status": "paused",
+        "targetLane": -1,
+        "grounded": false,
+        "verticalVelocity": 12
+      },
+      "actions": [
+        {
+          "input": "Begin relay",
+          "hash": "800365f7",
+          "status": "running",
+          "events": []
+        },
+        {
+          "input": "ArrowLeft",
+          "hash": "dece20b1",
+          "status": "running",
+          "events": [
+            {
+              "type": "lane-shifted",
+              "tick": 4,
+              "from": 0,
+              "to": -1
+            }
+          ]
+        },
+        {
+          "input": "Space",
+          "hash": "97b639ac",
+          "status": "running",
+          "events": [
+            {
+              "type": "jump-started",
+              "tick": 5
+            }
+          ]
+        },
+        {
+          "input": "Escape",
+          "hash": "87786601",
+          "status": "paused",
+          "events": [
+            {
+              "type": "paused",
+              "tick": 5
+            }
+          ]
+        }
+      ],
+      "activeElement": "CANVAS",
+      "consoleProblems": []
+    },
+    {
+      "id": "real-touch-input",
+      "state": {
+        "status": "running",
+        "targetLane": -1,
+        "lanePosition": -0.3
+      },
+      "swipe": {
+        "beforeHash": "91f15541",
+        "afterHash": "b79a6b5d",
+        "events": [
+          {
+            "type": "lane-shifted",
+            "tick": 6,
+            "from": 0,
+            "to": -1
+          }
+        ]
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "dpr": 3
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "desktop-scene-benchmark",
+      "iterations": 180,
+      "limitMs": 8,
+      "benchmark": {
+        "meanMs": 0.04499999988410208,
+        "p95Ms": 0.10000000894069672,
+        "maxMs": 0.30000001192092896
+      },
+      "consoleProblems": []
+    },
+    {
+      "id": "mobile-scene-benchmark",
+      "iterations": 180,
+      "limitMs": 12,
+      "benchmark": {
+        "meanMs": 0.07833333330021965,
+        "p95Ms": 0.20000000298023224,
+        "maxMs": 0.5999999940395355
+      },
+      "consoleProblems": []
+    }
+  ]
+}

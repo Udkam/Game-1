@@ -3,6 +3,7 @@ dist/
 coverage/
 .playwright-mcp/
 .vite/
+docs/screenshots/temple/*-dev*.png
 
 *.log
 npm-debug.log*
