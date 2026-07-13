@@ -4,7 +4,7 @@
 
 Branch: `codex/tetris`
 
-Status: implementation and final local acceptance complete; awaiting coordinator review, commit, and push.
+Status: independently accepted and coordinator-approved for push on 2026-07-14.
 
 ### Delivered outcome
 
@@ -40,5 +40,10 @@ Status: implementation and final local acceptance complete; awaiting coordinator
 - Race mode selection and its first counted lock passed.
 - Game over persisted exactly one valid local leaderboard record.
 - Pixi scene-preparation benchmark: 0.20 ms p95 across 160 samples.
+- Independent QA candidate: `b2075ba5093defee1c397b9e2b48bceaa0e92962`.
+- Independent QA acceptance log: `c13961d9a079c7d6928471b7cb32ee0700d408c0`.
+- Independent clean install, live Playwright desktop/portrait/landscape review, and all
+  checked-in screenshot hashes passed.
 
-After coordinator commit and push, stop for the Tetris branch review before any Temple Run work.
+The Tetris implementation slice stops after push. Temple work progresses independently
+in `E:\Proj\Game-1-temple` and does not consume or modify this branch.
