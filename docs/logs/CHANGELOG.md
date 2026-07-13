@@ -1,5 +1,28 @@
 # Codex Work Log
 
+## 2026-07-13 - Patrick's Parabox study archived
+
+The user ended the current clean-room recursive-puzzle direction and reserved
+`main` for a different future game. The complete research/prototype state is
+preserved on `archive/patricks-parabox-2026-07-13`.
+
+Preserved final chain:
+
+- `13980b18` - deterministic acyclic recursive push-in/push-out core;
+- `4c102b04` - occurrence-addressed recursive-transfer rendering;
+- `dd6e95d` - R2I browser evidence, JSON manifest, workstream log, and 12
+  forward/Undo screenshots.
+
+The R2I evidence candidate had owner-side clean install, typecheck, 40-suite /
+120-test verification, build, and deterministic Chrome capture evidence. Its
+independent QA run was intentionally stopped by the archival decision, so this
+entry does not claim R2I acceptance, release readiness, or completion.
+
+Unfinished scope includes V2 composition/material, V3 retained rendering and
+performance, V4 responsive/accessibility/input work, production level schema,
+serialization, loader/validator, showcase content, and test levels. Overall
+target completion remained below 10%.
+
 ## 2026-07-07 - Stage 3A Recursive Space Interaction Prototype
 
 Phase: approved Stage 3A visual-spatial validation.

@@ -1,6 +1,22 @@
 # Current Project Status
 
-Status: Phase A recursive-foundation rebuild is active after the design reboot.
+## Archived on 2026-07-13
+
+The Patrick's Parabox clean-room study has been frozen on
+`archive/patricks-parabox-2026-07-13`. Its latest preserved chain ends at R2I
+browser evidence commit `dd6e95d`, directly after core `13980b18` and frontend
+`4c102b04`.
+
+Independent QA of that final R2I chain was deliberately stopped when the user
+changed the repository direction. No acceptance, release, Stage 6 completion,
+or overall completion claim is made. V2-V4 and all production level/schema
+work remain unimplemented. The repository `main` branch is reserved as a
+minimal neutral starting point for a different future game.
+
+The status below is retained as historical context only.
+
+Historical status before archival: Phase A recursive-foundation rebuild was
+active after the design reboot.
 D0, the complete I1 interface bridge, C1 deterministic core, V1
 occurrence-addressed rendering/visual-transaction barrier, and the R2D acyclic
 recursive-transfer contract are independently accepted and integrated. After

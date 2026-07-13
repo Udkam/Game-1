@@ -1,5 +1,23 @@
 # Coordinator Thread Log
 
+## 2026-07-13 - Project direction archived
+
+- User decision: stop the Patrick's Parabox clean-room study and preserve the
+  current work on a dedicated archive branch.
+- Archive branch: `archive/patricks-parabox-2026-07-13`.
+- Preserved experimental chain:
+  `4b2016f5 -> 13980b18 -> 4c102b04 -> dd6e95d`.
+- `dd6e95d` contains the R2I browser-evidence report, JSON manifest, owner log,
+  and 12 forward/Undo screenshots at 1440x900 DPR 1.
+- The in-progress independent QA run was told to stop. No QA acceptance or
+  release claim was manufactured after the direction change.
+- V2-V4, level schema/serialization, showcase content, and test levels were not
+  started.
+- Coordinator action: add this archive record, push the archive branch, then
+  return `main` to a minimal neutral repository for the next game.
+
+This is an archival milestone, not an implementation acceptance milestone.
+
 ## 2026-07-11 - Multi-thread workstream initialization
 
 - Thread ID: `019f4deb-7e83-7583-8cd5-8e6f075bc331`

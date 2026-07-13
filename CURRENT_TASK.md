@@ -1,6 +1,26 @@
 # Current Task: Phase A Recursive Foundation Rebuild
 
-Status: active. User development instruction received on 2026-07-11.
+## Archived direction — 2026-07-13
+
+The Patrick's Parabox clean-room study is archived on
+`archive/patricks-parabox-2026-07-13`. There is no active implementation slice
+on this branch and every Parabox workstream has been instructed to stop.
+
+The final preserved experimental chain is:
+
+`4b2016f5 -> 13980b18 -> 4c102b04 -> dd6e95d`.
+
+R2I browser evidence exists, but the independent QA run was intentionally
+stopped after the user chose archival. R2I is not recorded as independently
+accepted or release-ready. V2, V3, V4, level schema/serialization, showcase
+content, and test-level implementation were not started.
+
+This archived status supersedes every active-slice statement below. The
+remaining document is retained only as the historical scope and handoff
+record.
+
+Historical status before archival: active development instruction received on
+2026-07-11.
 
 Coordinator task: `019f4deb-7e83-7583-8cd5-8e6f075bc331`.
 
