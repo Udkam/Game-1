@@ -1,10 +1,12 @@
 # Current Task
 
-## Active slice: TR2 — Humanized runner refinement
+## Accepted slice: TR2 — Humanized runner refinement
 
 Branch: `codex/temple-run`
 
-Status: candidate verified; independent QA and coordinator acceptance are pending. The slice is not yet accepted.
+Status: accepted. Candidate `c5b3db041175c19c71bd0086baf1e034fc97caf0` passed independent QA in log-only commit `b974810fc4b0ba93fb5ed7d6012e22c67b0606a5` and was integrated by the coordinator.
+
+The next visual-restart activity is design-only. It may study and prototype a more distinctive mobile-first presentation, runner gait, pursuer pressure, obstacle language, HUD, and milestone composition, but it has no authority to modify production code until its design candidate is reviewed and a bounded implementation slice is approved.
 
 ### Required outcome
 
@@ -47,3 +49,4 @@ TR2 is complete only after typecheck, one final full test suite, production buil
 - Command-derived beam/ring/column/gap previews replayed to their recorded hashes with positive clipped areas of 18,510.5 / 25,497.2 / 2,952.2 / 29,607.6 CSS px². Each record retains its full accepted public-command trace and matching replay hash.
 - Scene preparation benchmarks: desktop p95 0.10 ms (limit 8 ms), mobile p95 0.10 ms (limit 12 ms). Real keyboard left/jump/pause and real DPR3 touch swipe each produced one semantic action trace.
 - Visual review completed against `milestone.png`, `chase-close.png`, `gap-preview.png`, and `ring-preview.png` under `docs/screenshots/temple/final/`. They show the canonical HUD, visible close pursuers, readable gap lips/far edge, and mobile ring silhouette.
+- Independent QA reproduced the clean install, typecheck, complete 11-file / 47-test Vitest suite, and production build; independently audited all 23 evidence records and all 19 committed PNG hashes; and accepted the rule, input, cleanup, reduced-motion, canonical replay, pursuer, HUD, and obstacle gates. Its isolated fresh capture attempt produced no new artifacts after one safe retry, so the accepted QA log records that environment limitation rather than overstating fresh-capture coverage.

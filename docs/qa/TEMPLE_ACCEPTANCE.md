@@ -53,7 +53,7 @@
 
 ## Current result
 
-Result: **TR2 candidate verified; independent QA and coordinator acceptance pending.**
+Result: **TR2 accepted.**
 
 - Final verification: `npm.cmd run typecheck`, `npm.cmd run test` (11 files / 47 tests), and `npm.cmd run build` passed. The build's only advisory is Vite's non-blocking 500 kB chunk warning.
 - Official Chrome 150.0.7871.115 evidence pass produced 23 records and 19 screenshots. Every capture recorded one canvas, zero gameplay DOM entities, no horizontal overflow, zero console/page errors, zero context losses, and render budgets no higher than 56 draw calls / 9,040 triangles.
@@ -62,4 +62,8 @@ Result: **TR2 candidate verified; independent QA and coordinator acceptance pend
 - Desktop and mobile scene-preparation p95 values are both 0.10 ms, within the 8 ms and 12 ms limits. Keyboard and DPR3 CDP touch evidence each show one semantic input event.
 - Evidence manifest: `docs/qa/temple-browser-evidence.json`; reviewed captures: `docs/screenshots/temple/final/milestone.png`, `docs/screenshots/temple/final/chase-close.png`, `docs/screenshots/temple/final/gap-preview.png`, and `docs/screenshots/temple/final/ring-preview.png`.
 
-TR1 evidence remains historical only; this candidate's counts, screenshots, command traces, and hashes are the sole TR2 evidence. This document deliberately does not claim final acceptance.
+TR1 evidence remains historical only; this candidate's counts, screenshots, command traces, and hashes are the sole TR2 evidence.
+
+Independent QA accepted candidate `c5b3db041175c19c71bd0086baf1e034fc97caf0` in log-only commit `b974810fc4b0ba93fb5ed7d6012e22c67b0606a5`. QA reproduced clean install, typecheck, the complete 11-file / 47-test suite, and build; matched all 19 PNG hashes; and independently audited the 23 structured browser records, rules, public-command traces, canonical HUD, pursuer visibility, obstacle bounds, cleanup, input, and reduced-motion behavior. Its isolated fresh-capture attempt generated no artifacts after one safe retry; that environment-only limitation is recorded in the QA log and is not presented as fresh browser evidence.
+
+Acceptance freezes this commit as the stable TR2 rules/engine baseline. It does not approve the separate visual-restart design work or authorize production visual changes.
