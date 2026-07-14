@@ -55,3 +55,17 @@ Candidate none; evidence no QA run under the current wait instruction.
 Blocker awaiting a new Tetris candidate SHA from coordinator `019f4deb-7e83-7583-8cd5-8e6f075bc331`.
 Next: on candidate instruction, begin `TETRIS-QA-001`; otherwise remain idle.
 Log `docs/workstreams/tetris-qa/THREAD_LOG.md`.
+
+## 2026-07-14 — TETRIS-T3R-QA-002 replacement acceptance
+
+REPORT TETRIS-T3R-QA TETRIS-T3R-QA-002 ACCEPTED
+HEAD `a096d96056457ebd2158bb6955cf7760fc36e238`; PARENT `e96f759006a953def64ebf6cceb680272021fb8f`; QA_SHA pending log-only commit.
+SCOPE direct delta is exactly `docs/workstreams/tetris-t3-rules/tests/campaign.verifier.test.ts` and `docs/workstreams/tetris-t3-rules/THREAD_LOG.md`; whitespace clean, no product/Temple/root/package delta.
+FIX only the required fail-closed threshold changed: levels 4–6 now require `distinctLandingXs >= 3`; stored replay values remain `5/4/3`, with no other weakening.
+DEPENDENCIES fresh detached worktree lacked `node_modules`; authorized `npm.cmd ci --no-audit --no-fund` ran once and added 105 packages.
+GATES exactly one targeted `npm.cmd run test -- docs/workstreams/tetris-t3-rules/tests/campaign.verifier.test.ts` passed: 1 file / 18 tests; no full test/typecheck/build/browser/capture.
+REUSED QA-001 static review for unchanged contract/levels/replays/visual handoff and the 20-line Race requirement.
+D5 `e31a0b665ff0864a0af35ab05dde4072bc96bbf5` is a separate divergent design-chain QA commit; it is neither integrated nor authorized by this acceptance.
+RESIDUAL this accepts design/rules evidence only and grants no production implementation authority.
+NEXT coordinator integration decision only; QA does not push.
+LOG `docs/workstreams/tetris-qa/THREAD_LOG.md` only.
