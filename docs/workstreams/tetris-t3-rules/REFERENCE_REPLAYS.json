@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "semantics": {
+    "commandSource": "Every listed command is passed to the current public core dispatch function after workstream-local authored initialization.",
+    "finalHash": "currentEngineStateHash is the existing core stateHash result. It intentionally cannot distinguish all proposed campaign levels until the documented production delta adds level identity and queue index to canonical state."
+  },
+  "replays": [
+    {
+      "levelId": "t3r-shaft-01",
+      "commands": [
+        {"type":"start"}, {"type":"rotate","direction":-1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"rotate","direction":-1}, {"type":"move","dx":-1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"rotate","direction":1}, {"type":"move","dx":1}, {"type":"hard-drop"}
+      ],
+      "commandCount": 21,
+      "lockedPieces": 3,
+      "clearedLines": 4,
+      "finalOccupiedCells": 0,
+      "finalState": "finished",
+      "currentEngineStateHash": "68f86f9f"
+    },
+    {
+      "levelId": "t3r-shaft-02",
+      "commands": [
+        {"type":"start"}, {"type":"rotate","direction":1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"rotate","direction":-1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"rotate","direction":-1}, {"type":"move","dx":-1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"rotate","direction":1}, {"type":"move","dx":1}, {"type":"hard-drop"}
+      ],
+      "commandCount": 28,
+      "lockedPieces": 4,
+      "clearedLines": 4,
+      "finalOccupiedCells": 0,
+      "finalState": "finished",
+      "currentEngineStateHash": "f839a801"
+    },
+    {
+      "levelId": "t3r-shaft-03",
+      "commands": [
+        {"type":"start"}, {"type":"move","dx":-1}, {"type":"rotate","direction":-1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"rotate","direction":-1}, {"type":"hard-drop"},
+        {"type":"tick"}, {"type":"tick"}, {"type":"tick"},
+        {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"}
+      ],
+      "commandCount": 26,
+      "lockedPieces": 4,
+      "clearedLines": 4,
+      "finalOccupiedCells": 0,
+      "finalState": "finished",
+      "currentEngineStateHash": "f839a801"
+    },
+    {
+      "levelId": "t3r-well-04",
+      "commands": [
+        {"type":"start"}, {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"hard-drop"},
+        {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"},
+        {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"move","dx":-1}, {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"}
+      ],
+      "commandCount": 17,
+      "lockedPieces": 3,
+      "clearedLines": 4,
+      "finalOccupiedCells": 0,
+      "finalState": "finished",
+      "currentEngineStateHash": "1652d858"
+    },
+    {
+      "levelId": "t3r-well-05",
+      "commands": [
+        {"type":"start"}, {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"},
+        {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"},
+        {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"}
+      ],
+      "commandCount": 10,
+      "lockedPieces": 3,
+      "clearedLines": 4,
+      "finalOccupiedCells": 0,
+      "finalState": "finished",
+      "currentEngineStateHash": "3532001d"
+    },
+    {
+      "levelId": "t3r-well-06",
+      "commands": [
+        {"type":"start"}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"},
+        {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"},
+        {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"move","dx":1}, {"type":"rotate","direction":1}, {"type":"rotate","direction":1}, {"type":"hard-drop"}
+      ],
+      "commandCount": 22,
+      "lockedPieces": 3,
+      "clearedLines": 4,
+      "finalOccupiedCells": 0,
+      "finalState": "finished",
+      "currentEngineStateHash": "3532001d"
+    }
+  ]
+}
