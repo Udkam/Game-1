@@ -55,7 +55,7 @@ claims, or scope drift stay `BLOCKED`; silence is never acknowledgement.
 | Temple TR3 A4 | `019f6049-a53a-7001-9620-686ea9bad061` | `E:\Proj\Game-1-temple` / `codex/temple-run` | Closed without a candidate. The one offline clay batch and combined verifier/manual gate are consumed. Existing Temple dirt, A3 evidence, and the unexpected A3 Python cache artifact remain preserved; no retry, cleanup, integration, QA, commit, or push is open. | `ACK-TEMPLE-A4-BLOCKED-003`: see the terminal acknowledgement below; all strict verifier failures remain blocking. |
 | Temple TR3 A5 visual review | `019f607b-f5f5-7e31-9d2b-8c8a1578a9c8` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except its own workstream docs | Complete planning review; no rendering or production edits occurred. | `ACK-TEMPLE-A5-VISUAL-001`: verified its corrected protocol report and the root-cause contract. Its raster/depth/editability/first-glance gates are binding for A5. |
 | Temple TR3 A5 technical review | `019f607c-2f12-7242-b396-9643d50e9ac3` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except its own workstream docs | Complete planning review; no rendering or production edits occurred. | `ACK-TEMPLE-A5-TECH-001`: verified its corrected protocol report and recovery plan. Geometry recovery is necessary; camera-only repair is prohibited. |
-| Temple TR3 A5 implementation | `019f6086-028d-7560-8f3f-eddfda489694` | `E:\Proj\Game-1-temple` via `E:\Proj` / `codex/temple-run` | Active one-batch offline clay proof. Its writer alone may append the four Temple contracts and add only A5 generator/evaluator/output paths; it cannot touch production/runtime, old A3/A4 evidence, Git state, or QA. | Awaiting one fixed-format `BLOCKED` or `READY_FOR_VISUAL_REVIEW` report. A visual-review pass, not QA, is the only possible follow-up. |
+| Temple TR3 A5 implementation | `019f6086-028d-7560-8f3f-eddfda489694` | `E:\Proj\Game-1-temple` via `E:\Proj` / `codex/temple-run` | Closed without a candidate. The sole offline Blender batch emitted image passes but failed before metadata; the fail-closed evaluator and manual visual gate both blocked the proof. A5 evidence and inherited Temple dirt are preserved unchanged. | `ACK-TEMPLE-A5-BLOCKED-004`: corrected terminal report, artifact hashes, missing metadata, and preservation snapshot were independently verified. No retry, metadata reconstruction, export, integration, QA, commit, or push is open. |
 
 ## Terminal acknowledgement: Temple TR3 A4
 
@@ -74,6 +74,33 @@ verifier/manual-review allowance are consumed. No value may be rounded or
 visually waived. Existing Temple worktree changes, the A3 evidence, and the
 unexpected A3 Python cache file remain preserved. No retry, cleanup,
 integration, QA, commit, or push is authorized by this acknowledgement.
+
+## Terminal acknowledgement: Temple TR3 A5
+
+ACK-TEMPLE-A5-BLOCKED-004 — 2026-07-14T20:36:00+08:00
+
+The coordinator verified the corrected A5 terminal report, its exact path
+boundary, the terminal thread state, and the declared proof artifacts against
+base `52ae9ae`. The tree contains thirteen image passes; the four beauty-image
+and verifier hashes match the report. `a5-clay-metadata.json` is absent: the
+single Blender 4.5.5 process emitted its image passes, then ended on
+`KeyError: materialValues`; the single evaluator correctly fail-closed on that
+missing metadata. The log records the one permitted manual inspection, and the
+coordinator independently confirmed its visual result.
+
+The inherited-dirty snapshot lists 111 paths. Its four permitted appended
+contract files were excluded from preservation comparison; all remaining 107
+non-contract paths were rehashed with zero missing or mismatched files. The
+visual gate is independently blocked: the route reads as disconnected,
+featureless slabs, the pursuer is not legible as behind the courier on the same
+route, and the distant arch is undersized. The scene is a clay blockout, not a
+shipping-quality canyon composition.
+
+A5 is closed without a candidate. Its Blender and evaluator allowances are
+consumed. Do not rerun either, reconstruct metadata from PNGs, export, integrate
+runtime code, stage, commit, push, or route the proof to QA. Only a separately
+authorized A6 no-render preflight and composition-reconstruction contract may
+resume Temple work; it must pass before another render batch is authorized.
 
 ## Coordinator polling rule
 
