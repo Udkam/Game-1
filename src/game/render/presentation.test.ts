@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { approachPresentationPoint, lineClearCellProgress } from './presentation';
+import { approachPresentationPoint, lineClearCellProgress, nextPreviewPiece } from './presentation';
+import { createInitialState, dispatch } from '../core';
 
 describe('presentation interpolation', () => {
   it('approaches repeated soft-drop targets continuously without overshooting them', () => {
@@ -28,5 +29,15 @@ describe('presentation interpolation', () => {
     expect(center).toBeGreaterThan(edge);
     expect(lineClearCellProgress(1, 0, 10)).toBe(1);
     expect(lineClearCellProgress(1, 9, 10)).toBe(1);
+  });
+
+  it('uses exactly the authored canonical next item for Puzzle and no terminal preview', () => {
+    const ready = createInitialState(9, 'puzzle', 't3r-cascade-06');
+    const playing = dispatch(ready, { type: 'start' }).state;
+    expect(nextPreviewPiece(playing)).toBe('I');
+
+    const afterFirstLock = dispatch(playing, { type: 'hard-drop' }).state;
+    expect(nextPreviewPiece(afterFirstLock)).toBe('I');
+    expect(nextPreviewPiece({ ...afterFirstLock, status: 'finished' })).toBeNull();
   });
 });

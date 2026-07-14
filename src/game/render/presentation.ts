@@ -25,3 +25,11 @@ export function lineClearCellProgress(phaseProgress: number, column: number, wid
   const centerDistance = Math.abs(column - (width - 1) / 2) / ((width - 1) / 2);
   return Math.max(0, Math.min(1, phaseProgress * 1.5 - centerDistance * 0.5));
 }
+
+/** The renderer has one preview surface; Puzzle reads its authored canonical queue. */
+export function nextPreviewPiece(state: GameState): PieceType | null {
+  if (state.status === 'ready' || state.status === 'finished' || state.status === 'game-over') return null;
+  if (state.mode === 'puzzle') return state.puzzleQueue?.[state.puzzleQueueIndex] ?? null;
+  return state.queue[0] ?? null;
+}
+import type { GameState, PieceType } from '../core';

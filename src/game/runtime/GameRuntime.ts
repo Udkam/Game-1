@@ -20,6 +20,10 @@ export interface RuntimeOptions {
 export interface RuntimeQaSurface {
   getState: () => GameState;
   getRendererSnapshot: () => RendererSnapshot;
+  start: () => void;
+  selectMode: (mode: GameMode) => void;
+  selectPuzzle: (puzzleId: PuzzleId) => void;
+  restart: () => void;
   action: (action: InputAction) => void;
   release: (action: InputAction) => void;
   advanceTicks: (ticks: number) => void;
@@ -73,6 +77,10 @@ export class GameRuntime {
       window.__SIGNAL_FOUNDRY_QA__ = {
         getState: () => structuredClone(this.state),
         getRendererSnapshot: () => this.renderer.getSnapshot(),
+        start: () => this.start(),
+        selectMode: (mode) => this.selectMode(mode),
+        selectPuzzle: (puzzleId) => this.selectPuzzle(puzzleId),
+        restart: () => this.restart(),
         action: (action) => this.handleAction(action, false),
         release: (action) => this.input?.release(action),
         advanceTicks: (ticks) => {
@@ -126,6 +134,13 @@ export class GameRuntime {
   selectMode(mode: GameMode): void {
     if (this.state.status !== 'ready' && this.state.status !== 'game-over' && this.state.status !== 'finished') return;
     this.apply({ type: 'restart', seed: this.state.seed, mode });
+    this.input?.clearHeld();
+  }
+
+  /** Selects a validated authored Puzzle level through the public restart command. */
+  selectPuzzle(puzzleId: PuzzleId): void {
+    if (this.state.status !== 'ready' && this.state.status !== 'game-over' && this.state.status !== 'finished') return;
+    this.apply({ type: 'restart', seed: this.state.seed, mode: 'puzzle', puzzleId });
     this.input?.clearHeld();
   }
 

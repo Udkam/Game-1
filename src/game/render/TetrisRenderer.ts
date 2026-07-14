@@ -13,7 +13,7 @@ import {
   type PieceType,
 } from '../core';
 import { COLORS, PIECE_MATERIALS } from './theme';
-import { approachPresentationPoint, lineClearCellProgress } from './presentation';
+import { approachPresentationPoint, lineClearCellProgress, nextPreviewPiece } from './presentation';
 
 interface RenderOptions {
   reducedMotion: boolean;
@@ -78,7 +78,7 @@ export class TetrisRenderer {
   private readonly labels = new Container();
   private readonly nextLabel = new Text({
     text: '下一个方块',
-    style: { fontFamily: 'Microsoft YaHei, sans-serif', fontSize: 11, fill: COLORS.muted },
+    style: { fontFamily: 'Microsoft YaHei, sans-serif', fontSize: 12, fill: COLORS.muted },
   });
 
   private frameCallback: ((deltaMs: number) => void) | null = null;
@@ -236,21 +236,24 @@ export class TetrisRenderer {
     const graphics = this.boardGraphics;
     graphics.clear();
     const pulse = this.options.reducedMotion ? 0 : this.impact;
-    const railInset = 2 + pulse * 2;
+    const foot = Math.max(4, layout.cell * 0.22);
     graphics
-      .rect(layout.x + 5, layout.y + 5, layout.width, layout.height)
-      .fill({ color: 0x4767a7, alpha: 0.92 });
+      .rect(layout.x, layout.y, layout.width, layout.height)
+      .fill({ color: COLORS.mineralHighlight, alpha: 1 });
     graphics
-      .rect(layout.x + 2, layout.y + 2, layout.width, layout.height)
-      .fill({ color: COLORS.danger, alpha: 0.94 });
+      .rect(layout.x + 1, layout.y + 1, layout.width - foot - 2, layout.height - foot - 2)
+      .fill({ color: COLORS.well, alpha: 1 });
     graphics
-      .rect(layout.x - railInset, layout.y - railInset, layout.width + railInset * 2, layout.height + railInset * 2)
-      .fill({ color: COLORS.edge, alpha: 0.94 + pulse * 0.04 });
-    graphics.rect(layout.x, layout.y, layout.width, layout.height).fill({ color: COLORS.well, alpha: 1 });
+      .rect(layout.x, layout.y + layout.height - foot, layout.width - foot, foot)
+      .fill({ color: COLORS.danger, alpha: 0.94 + pulse * 0.04 });
+    graphics
+      .rect(layout.x + layout.width - foot, layout.y + foot, foot, layout.height - foot)
+      .fill({ color: COLORS.signal, alpha: 0.94 + pulse * 0.04 });
+    graphics.rect(layout.x, layout.y, layout.width - foot, layout.height - foot).stroke({ color: COLORS.edge, width: 1 });
     this.scrimBounds = null;
     if (state.status === 'paused' || state.status === 'game-over' || state.status === 'finished' || this.options.modeSwitch) {
-      const alpha = state.status === 'paused' ? 0.58 : this.options.modeSwitch ? 0.62 : 0.46;
-      graphics.rect(layout.x, layout.y, layout.width, layout.height).fill({ color: 0x101819, alpha });
+      const alpha = state.status === 'paused' ? 0.22 : this.options.modeSwitch ? 0.38 : 0.16;
+      graphics.rect(layout.x, layout.y, layout.width - foot, layout.height - foot).fill({ color: COLORS.mineralDeep, alpha });
       this.scrimBounds = { x: layout.x, y: layout.y, width: layout.width, height: layout.height };
     }
   }
@@ -357,25 +360,23 @@ export class TetrisRenderer {
     const scaleInset = (layout.cell - gap * 2 - size) / 2;
     const x = layout.x + gridX * layout.cell + gap + scaleInset + offsetX;
     const y = layout.y + gridY * layout.cell + gap + scaleInset + offsetY;
-    const radius = Math.max(1.5, layout.cell * 0.055);
-
     if (ghost) {
       graphics
-        .roundRect(x, y, size, size, radius)
+        .rect(x, y, size, size)
         .fill({ color: material.outer, alpha: alpha * 0.08 })
         .stroke({ color: material.inner, alpha, width: Math.max(1, layout.cell * 0.045) });
       return;
     }
 
-    const shadowOffset = Math.max(2, layout.cell * 0.14);
-    graphics.roundRect(x + shadowOffset, y + shadowOffset, size, size, radius).fill({ color: 0x071013, alpha: alpha * 0.24 });
-    graphics.roundRect(x, y, size, size, radius).fill({ color: material.outer, alpha });
+    const shadowOffset = Math.max(1, layout.cell * 0.09);
+    graphics.rect(x + shadowOffset, y + shadowOffset, size, size).fill({ color: COLORS.mineralDeep, alpha: alpha * 0.46 });
+    graphics.rect(x, y, size, size).fill({ color: material.outer, alpha });
     const inset = Math.max(2, layout.cell * 0.09);
     graphics
-      .roundRect(x + inset, y + inset, size - inset * 2, size - inset * 2, Math.max(1.5, radius * 0.56))
+      .rect(x + inset, y + inset, size - inset * 2, size - inset * 2)
       .fill({ color: material.inner, alpha: alpha * 0.28 });
     graphics
-      .roundRect(x + inset, y + inset, size - inset * 2, Math.max(1, layout.cell * 0.055), radius * 0.4)
+      .rect(x + inset, y + inset, size - inset * 2, Math.max(1, layout.cell * 0.055))
       .fill({ color: material.highlight, alpha: alpha * 0.66 });
 
   }
@@ -404,7 +405,7 @@ export class TetrisRenderer {
         const x = layout.x + cell.x * layout.cell + layout.cell * 0.06;
         const y = layout.y + (cell.y - VISIBLE_START_ROW) * layout.cell + layout.cell * 0.06;
         graphics
-          .roundRect(x, y, layout.cell * 0.88, layout.cell * 0.88, layout.cell * 0.12)
+          .rect(x, y, layout.cell * 0.88, layout.cell * 0.88)
           .stroke({ color: material.highlight, alpha, width: Math.max(1, layout.cell * 0.06) });
       }
     }
@@ -415,7 +416,7 @@ export class TetrisRenderer {
     this.previewBounds = null;
     this.previewLayerVisible = false;
     this.previewPiece = null;
-    if (state.status === 'ready') {
+    if (state.status === 'ready' || state.status === 'finished' || state.status === 'game-over') {
       this.nextLabel.visible = false;
       this.previewClearBounds = null;
       this.previewClearPiece = null;
@@ -439,7 +440,7 @@ export class TetrisRenderer {
       const x = slot.left - hostBounds.left;
       const y = slot.top - hostBounds.top;
       this.nextLabel.position.set(x, y + 2);
-      const next = state.queue[0];
+      const next = nextPreviewPiece(state);
       if (next) this.drawPreviewPiece(graphics, next, x + slot.width / 2, y + Math.min(slot.height - 14, 43), Math.max(6, Math.min(14, slot.width / 5)));
       this.previewBounds = { x, y, width: slot.width, height: slot.height };
       this.previewLayerVisible = next !== undefined;
@@ -453,7 +454,7 @@ export class TetrisRenderer {
       const topY = Math.max(7, layout.y - Math.min(92, layout.cell * 4.7));
       const unit = Math.max(4, Math.min(8, layout.cell * 0.24));
       const previewCenterX = layout.x + layout.cell * 2.5;
-      const next = state.queue[0];
+      const next = nextPreviewPiece(state);
       if (next) this.drawPreviewPiece(graphics, next, previewCenterX, topY + 25, unit);
       this.nextLabel.position.set(layout.x, topY);
       this.previewBounds = { x: layout.x, y: topY, width: layout.cell * 5, height: Math.max(42, layout.cell * 4) };
@@ -465,7 +466,7 @@ export class TetrisRenderer {
       const sideWidth = Math.max(92, (width - layout.width) / 2 - 22);
       const leftX = Math.max(12, layout.x - sideWidth - 14);
       const cardWidth = Math.max(78, sideWidth);
-      const next = state.queue[0];
+      const next = nextPreviewPiece(state);
       if (next) this.drawPreviewPiece(graphics, next, leftX + cardWidth / 2, layout.y + layout.cell * 2.2, Math.min(14, layout.cell * 0.48));
       this.nextLabel.position.set(leftX, layout.y);
       this.previewBounds = { x: leftX, y: layout.y, width: cardWidth, height: Math.max(52, layout.cell * 4) };
@@ -488,8 +489,8 @@ export class TetrisRenderer {
     for (const cell of shape) {
       const x = centerX - width / 2 + (cell.x - minX) * unit;
       const y = centerY - height / 2 + (cell.y - minY) * unit;
-      graphics.roundRect(x + 0.7, y + 0.7, unit - 1.4, unit - 1.4, Math.max(1.5, unit * 0.16)).fill({ color: material.outer, alpha: 0.94 });
-      graphics.roundRect(x + unit * 0.24, y + unit * 0.24, unit * 0.52, unit * 0.52, Math.max(1, unit * 0.08)).fill({ color: material.inner, alpha: 0.8 });
+      graphics.rect(x + 0.7, y + 0.7, unit - 1.4, unit - 1.4).fill({ color: material.outer, alpha: 0.94 });
+      graphics.rect(x + unit * 0.24, y + unit * 0.24, unit * 0.52, unit * 0.52).fill({ color: material.inner, alpha: 0.8 });
     }
   }
 

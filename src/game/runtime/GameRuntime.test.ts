@@ -31,4 +31,16 @@ describe('GameRuntime public state boundary', () => {
     expect(onState).toHaveBeenCalledTimes(1);
     expect(onState.mock.calls[0]?.[0].elapsedTicks).toBeGreaterThanOrEqual(5);
   });
+
+  it('selects a real authored Puzzle level only through the restart boundary', () => {
+    const runtime = new GameRuntime({ seed: 123, audioEnabled: false });
+    runtime.selectPuzzle('t3r-cascade-06');
+
+    const state = runtime.getState();
+    expect(state.status).toBe('ready');
+    expect(state.mode).toBe('puzzle');
+    expect(state.puzzleId).toBe('t3r-cascade-06');
+    expect(state.puzzleQueue).toEqual(['I', 'I', 'O', 'I', 'O']);
+    expect(state.puzzleCompletion).toBe('active');
+  });
 });

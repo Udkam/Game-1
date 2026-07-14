@@ -4,58 +4,32 @@ import {
   type GameEvent,
   type GameMode,
   type GameState,
+  type PuzzleId,
   createInitialState,
 } from './game/core';
 import { type InputAction } from './game/input/InputController';
 import { GameRuntime } from './game/runtime/GameRuntime';
 import {
-  LEADERBOARD_KEY,
-  LEGACY_LEADERBOARD_KEY,
-  emptyLeaderboard,
-  insertScoreRecord,
-  migrateLegacyLeaderboard,
-  parseLeaderboard,
-  recordsForMode,
-  type Leaderboard,
-  type ScoreRecord,
-} from './leaderboard';
-
-const PUZZLE_RECORDS_KEY = 'stack-order:puzzle-records:v1';
-
-type PuzzleRecords = Record<string, { first: number; best: number }>;
+  CAMPAIGN_LEVELS,
+  PUZZLE_PROGRESS_KEY,
+  defaultPuzzleProgress,
+  isPuzzleUnlocked,
+  parsePuzzleProgress,
+  recordCanonicalPuzzleCompletion,
+  type PuzzleProgress,
+} from './puzzleProgress';
 
 const MODE_COPY: Record<GameMode, { label: string; goal: string; end: string }> = {
-  marathon: { label: '马拉松模式', goal: '目标：最高得分', end: '结束：堆叠到顶' },
-  race: { label: '竞速模式', goal: '目标：清除 20 行', end: '结束：完成 20 行' },
-  puzzle: { label: '解谜模式', goal: '目标：完成局面', end: '结束：方块用尽' },
+  marathon: { label: '马拉松模式', goal: '目标：累积得分', end: '结束：堆叠到顶' },
+  race: { label: '竞速模式', goal: '目标：完成 20 行', end: '结束：完成目标' },
+  puzzle: { label: '解谜模式', goal: '目标：清空棋盘', end: '结束：方块用尽' },
 };
 
-function readLeaderboard(): Leaderboard {
+function readPuzzleProgress(): PuzzleProgress {
   try {
-    const current = localStorage.getItem(LEADERBOARD_KEY);
-    return current === null
-      ? migrateLegacyLeaderboard(localStorage.getItem(LEGACY_LEADERBOARD_KEY))
-      : parseLeaderboard(current);
+    return parsePuzzleProgress(localStorage.getItem(PUZZLE_PROGRESS_KEY));
   } catch {
-    return emptyLeaderboard();
-  }
-}
-
-function readPuzzleRecords(): PuzzleRecords {
-  try {
-    const value: unknown = JSON.parse(localStorage.getItem(PUZZLE_RECORDS_KEY) ?? '{}');
-    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
-    return Object.fromEntries(Object.entries(value).flatMap(([id, record]) => {
-      if (!record || typeof record !== 'object' || Array.isArray(record)) return [];
-      const candidate = record as { first?: unknown; best?: unknown };
-      const first = candidate.first;
-      const best = candidate.best;
-      if (typeof first !== 'number' || typeof best !== 'number'
-        || !Number.isSafeInteger(first) || !Number.isSafeInteger(best) || first < 1 || best < 1) return [];
-      return [[id, { first, best }] as const];
-    }));
-  } catch {
-    return {};
+    return defaultPuzzleProgress();
   }
 }
 
@@ -68,21 +42,26 @@ function formatDuration(ticks: number): string {
   return `${String(Math.floor(totalSeconds / 60)).padStart(2, '0')}:${String(totalSeconds % 60).padStart(2, '0')}`;
 }
 
-function modeLabel(mode: GameMode): string {
-  return MODE_COPY[mode].label;
-}
-
 function terminalCopy(state: GameState): { title: string; detail: string } | null {
-  if (state.status === 'finished') {
-    if (state.mode === 'race') return { title: '20 行完成', detail: `${formatDuration(state.elapsedTicks)} · ${state.pieceCount} 块` };
-    if (state.mode === 'puzzle') return { title: '解谜完成', detail: `${state.pieceCount} 块完成` };
+  if (state.mode === 'puzzle') {
+    if (state.puzzleCompletion === 'finished') return { title: '解谜完成', detail: '棋盘已清空' };
+    if (state.puzzleCompletion === 'failed-top-out') return { title: '未完成', detail: '堆叠到顶' };
+    if (state.puzzleCompletion === 'failed-invalid-spawn') return { title: '未完成', detail: '无法生成方块' };
+    if (state.puzzleCompletion === 'failed-budget') return { title: '未完成', detail: '方块已用尽' };
+    return null;
+  }
+  if (state.status === 'finished' && state.mode === 'race') {
+    return { title: '20 行完成', detail: `${formatDuration(state.elapsedTicks)} · ${state.pieceCount} 块` };
   }
   if (state.status === 'game-over') {
     if (state.mode === 'race') return { title: '竞速未完成', detail: `还差 ${Math.max(0, RACE_TARGET_LINES - state.lines)} 行` };
-    if (state.mode === 'puzzle') return { title: '方块用尽', detail: `目标 ${state.lines} / ${state.puzzleTargetLines ?? 0} 行` };
     return { title: '堆叠到顶', detail: `${formatScore(state.score)} 分 · ${state.lines} 行` };
   }
   return null;
+}
+
+function campaignLevel(id: PuzzleId | null) {
+  return CAMPAIGN_LEVELS.find((level) => level.id === id) ?? CAMPAIGN_LEVELS[0]!;
 }
 
 interface TouchButtonProps {
@@ -110,53 +89,96 @@ function TouchButton({ action, label, glyph, runtime }: TouchButtonProps) {
       onLostPointerCapture={release}
       onContextMenu={(event) => event.preventDefault()}
     >
-      <b aria-hidden="true">{glyph}</b>
-      <small>{label}</small>
+      <b aria-hidden="true">{glyph}</b><small>{label}</small>
     </button>
   );
 }
 
-function ModeLines({ selected, onSelect, label = '选择模式' }: { selected: GameMode; onSelect: (mode: GameMode) => void; label?: string }) {
+function ModeRail({ selected, onSelect, label }: { selected: GameMode; onSelect: (mode: GameMode) => void; label: string }) {
   return (
-    <section className="mode-lines" data-testid="mode-list" aria-label={label}>
-      <p>{label}</p>
+    <section className="mode-rail" data-testid="mode-list" aria-label={label}>
       {(Object.keys(MODE_COPY) as GameMode[]).map((mode) => (
         <button key={mode} type="button" aria-pressed={selected === mode} onClick={() => onSelect(mode)}>
-          <strong>{MODE_COPY[mode].label}</strong>
-          <span>{MODE_COPY[mode].goal}</span>
-          <small>{MODE_COPY[mode].end}</small>
+          {MODE_COPY[mode].label}
         </button>
       ))}
     </section>
   );
 }
 
-function RunStats({ state, puzzleRecords }: { state: GameState; puzzleRecords: PuzzleRecords }) {
-  const puzzleRecord = state.puzzleId ? puzzleRecords[state.puzzleId] : undefined;
+function ModeFact({ mode }: { mode: GameMode }) {
+  return <p className="mode-fact"><strong>{MODE_COPY[mode].label}</strong><span>{MODE_COPY[mode].goal}　{MODE_COPY[mode].end}</span></p>;
+}
+
+function RunStats({ state }: { state: GameState }) {
   if (state.mode === 'race') {
     return (
       <section className="run-stats" data-testid="stats" aria-label="竞速模式数据">
-        <article><span>用时</span><strong>{formatDuration(state.elapsedTicks)}</strong></article>
+        <article><span>计时</span><strong>{formatDuration(state.elapsedTicks)}</strong></article>
         <article><span>剩余行</span><strong>{Math.max(0, RACE_TARGET_LINES - state.lines)}</strong></article>
         <article><span>速度档</span><strong>{Math.floor(state.pieceCount / 5) + 1}</strong></article>
       </section>
     );
   }
   if (state.mode === 'puzzle') {
+    const level = campaignLevel(state.puzzleId);
     return (
-      <section className="run-stats" data-testid="stats" aria-label="解谜模式数据">
-        <article><span>关卡</span><strong>{state.puzzleId?.replace('offset-', '') ?? '01'}</strong></article>
+      <section className="run-stats run-stats--puzzle" data-testid="stats" aria-label="解谜模式数据">
+        <article><span>关卡</span><strong>{level.index}/{level.total}　{level.name}</strong></article>
+        <article><span>难度</span><strong>{level.difficulty}</strong></article>
         <article><span>剩余方块</span><strong>{Math.max(0, (state.puzzlePieceBudget ?? 0) - state.pieceCount)}</strong></article>
-        <article><span>目标进度</span><strong>{state.lines} / {state.puzzleTargetLines ?? 0}</strong></article>
-        {puzzleRecord && <p className="puzzle-best">首次 {puzzleRecord.first} · 最佳 {puzzleRecord.best}</p>}
+        <article><span>目标</span><strong>清空棋盘</strong></article>
       </section>
     );
   }
   return (
     <section className="run-stats" data-testid="stats" aria-label="马拉松模式数据">
-      <article><span>得分</span><strong>{formatScore(state.score)}</strong></article>
+      <article><span>分数</span><strong>{formatScore(state.score)}</strong></article>
       <article><span>消行</span><strong>{state.lines}</strong></article>
       <article><span>等级</span><strong>{state.level}</strong></article>
+    </section>
+  );
+}
+
+function PuzzleLevelSelect({
+  progress, selectedId, onSelect, onStart, onReturn,
+}: {
+  progress: PuzzleProgress;
+  selectedId: PuzzleId;
+  onSelect: (id: PuzzleId) => void;
+  onStart: () => void;
+  onReturn: () => void;
+}) {
+  const selected = campaignLevel(selectedId);
+  const unlocked = isPuzzleUnlocked(progress, selected.id);
+  return (
+    <section className="puzzle-select" data-testid="puzzle-select" aria-label="解谜模式选择关卡">
+      <p className="section-kicker">解谜模式 · 选择关卡</p>
+      <div className="level-list" data-testid="level-list">
+        {CAMPAIGN_LEVELS.map((level) => {
+          const available = isPuzzleUnlocked(progress, level.id);
+          return (
+            <button
+              key={level.id}
+              type="button"
+              className="level-row"
+              data-testid="level-row"
+              data-level-id={level.id}
+              aria-pressed={selectedId === level.id}
+              disabled={!available}
+              onClick={() => onSelect(level.id)}
+            >
+              <span>关卡 {level.index}/{level.total}</span><strong>{level.name}</strong><span>难度 {level.difficulty}</span>
+              <small>{available ? '已解锁' : '未解锁'}　目标：清空棋盘</small>
+            </button>
+          );
+        })}
+      </div>
+      <p className="selection-fact">已选：关卡 {selected.index}/{selected.total}　{selected.name} · 难度 {selected.difficulty}　目标：清空棋盘</p>
+      <div className="select-actions">
+        <button className="primary-action" type="button" disabled={!unlocked} onClick={onStart}>开始关卡</button>
+        <button className="secondary-action" type="button" onClick={onReturn}>返回模式选择</button>
+      </div>
     </section>
   );
 }
@@ -186,14 +208,14 @@ declare global {
 export default function App() {
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<GameRuntime | null>(null);
-  const lastRecordedRunRef = useRef<string | null>(null);
   const modeSwitchResumesRef = useRef(false);
   const [runtime, setRuntime] = useState<GameRuntime | null>(null);
   const [state, setState] = useState<GameState>(() => createInitialState(0x51a1f00d));
-  const [leaderboard, setLeaderboard] = useState<Leaderboard>(readLeaderboard);
-  const [puzzleRecords, setPuzzleRecords] = useState<PuzzleRecords>(readPuzzleRecords);
+  const [progress, setProgress] = useState<PuzzleProgress>(readPuzzleProgress);
   const [modeSwitchOpen, setModeSwitchOpen] = useState(false);
+  const [puzzleSelectOpen, setPuzzleSelectOpen] = useState(false);
   const [pendingMode, setPendingMode] = useState<GameMode>('marathon');
+  const [selectedPuzzleId, setSelectedPuzzleId] = useState<PuzzleId>('t3r-shaft-01');
   const [liveMessage, setLiveMessage] = useState('Tetris 已准备好。');
 
   const focusBoard = useCallback(() => {
@@ -213,40 +235,13 @@ export default function App() {
         const notable = [...events].reverse().find((event) => event.type === 'lines-cleared' || event.type === 'paused'
           || event.type === 'resumed' || event.type === 'finished' || event.type === 'game-over');
         if (notable) setLiveMessage(eventMessage(notable));
-
-        if (nextState.status === 'ready') lastRecordedRunRef.current = null;
-        const isRecordable = (nextState.mode === 'marathon' && nextState.status === 'game-over')
-          || (nextState.mode === 'race' && nextState.status === 'finished');
-        if (isRecordable) {
-          const runKey = `${nextState.status}:${nextState.seed}:${nextState.mode}:${nextState.elapsedTicks}:${nextState.pieceCount}:${nextState.score}`;
-          if (lastRecordedRunRef.current !== runKey) {
-            lastRecordedRunRef.current = runKey;
-            const recordedMode: 'marathon' | 'race' = nextState.mode === 'race' ? 'race' : 'marathon';
-            const record: ScoreRecord = {
-              version: 2,
-              score: nextState.score,
-              lines: nextState.lines,
-              pieces: nextState.pieceCount,
-              elapsedTicks: nextState.elapsedTicks,
-              completionTicks: nextState.mode === 'race' ? nextState.elapsedTicks : null,
-              mode: recordedMode,
-              outcome: recordedMode === 'race' ? 'finished' : 'top-out',
-              completedAt: new Date().toISOString(),
-            };
-            setLeaderboard((current) => {
-              const next = insertScoreRecord(current, record);
-              try { localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(next)); } catch { /* optional presentation storage */ }
-              return next;
-            });
-          }
-        }
-        if (nextState.mode === 'puzzle' && nextState.status === 'finished' && nextState.puzzleId) {
-          setPuzzleRecords((current) => {
-            const prior = current[nextState.puzzleId!];
-            const used = nextState.pieceCount;
-            const next = { ...current, [nextState.puzzleId!]: { first: prior?.first ?? used, best: Math.min(prior?.best ?? used, used) } };
-            try { localStorage.setItem(PUZZLE_RECORDS_KEY, JSON.stringify(next)); } catch { /* optional presentation storage */ }
-            return next;
+        if (nextState.mode === 'puzzle' && nextState.puzzleCompletion === 'finished') {
+          setProgress((current) => {
+            const updated = recordCanonicalPuzzleCompletion(current, nextState);
+            if (updated !== current) {
+              try { localStorage.setItem(PUZZLE_PROGRESS_KEY, JSON.stringify(updated)); } catch { /* optional presentation storage */ }
+            }
+            return updated;
           });
         }
       },
@@ -272,38 +267,41 @@ export default function App() {
       collect: () => {
         const board = rect(document.querySelector('[data-testid="board-frame"]'));
         const pause = rect(document.querySelector('[data-testid="pause-strip"]'));
-        const header = rect(document.querySelector('[data-testid="cluster-header"]'));
-        const brand = rect(document.querySelector('[data-testid="brand"]'));
-        const currentMode = rect(document.querySelector('[data-testid="current-mode"]'));
-        const hint = rect(document.querySelector('[data-testid="rotation-hint"]'));
         const context = rect(document.querySelector('[data-testid="context-top"]'));
+        const side = rect(document.querySelector('[data-testid="side-rail"]'));
         const stats = rect(document.querySelector('[data-testid="stats"]'));
         const touch = rect(document.querySelector('[data-testid="touch-rail"]'));
-        const modeList = rect(document.querySelector('[data-testid="mode-list"]'));
         const next = rect(document.querySelector('[data-testid="next-slot"]'));
         const canvas = document.querySelector<HTMLCanvasElement>('[data-testid="game-canvas"]');
-        const headerPairs = [[brand, currentMode], [brand, hint], [currentMode, hint]].map(([left, right]) => intersectionArea(left, right));
-        const structuralPairs = [[context, board], [stats, board], [touch, board]].map(([left, right]) => intersectionArea(left, right));
-        const pauseArea = pause ? pause.width * pause.height : 0;
         const boardArea = board ? board.width * board.height : 0;
         return {
           state,
           renderer: runtime?.getRendererSnapshot() ?? null,
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            scrollWidth: document.documentElement.scrollWidth,
+            scrollHeight: document.documentElement.scrollHeight,
+          },
           bounds: {
-            header: serialiseRect(header), brand: serialiseRect(brand), currentMode: serialiseRect(currentMode), rotationHint: serialiseRect(hint),
-            canvasHost: serialiseRect(rect(document.querySelector('[data-testid="canvas-host"]'))),
-            board: serialiseRect(board), next: serialiseRect(next), stats: serialiseRect(stats), pauseStrip: serialiseRect(pause),
-            modeList: serialiseRect(modeList), touchRail: serialiseRect(touch), touchZones: [...document.querySelectorAll('[data-testid^="touch-"]:not([data-testid="touch-rail"])')].map((item) => serialiseRect(rect(item))),
+            header: serialiseRect(rect(document.querySelector('[data-testid="cluster-header"]'))),
+            brand: serialiseRect(rect(document.querySelector('[data-testid="brand"]'))),
+            board: serialiseRect(board), context: serialiseRect(context), side: serialiseRect(side), stats: serialiseRect(stats),
+            next: serialiseRect(next), pauseStrip: serialiseRect(pause), touchRail: serialiseRect(touch),
+            modeList: serialiseRect(rect(document.querySelector('[data-testid="mode-list"]'))),
+            touchZones: [...document.querySelectorAll('[data-testid^="touch-"]:not([data-testid="touch-rail"])')].map((item) => serialiseRect(rect(item))),
           },
           assertions: {
             boardRatio: board ? board.height / board.width : null,
-            pauseStripRatio: boardArea ? pauseArea / boardArea : null,
-            pauseInsideBoard: pause && board ? pause.left >= board.left - 1 && pause.right <= board.right + 1 && pause.top >= board.top - 1 && pause.bottom <= board.bottom + 1 : true,
-            headerPairwiseIntersection: headerPairs,
-            structuralPairwiseIntersection: structuralPairs,
+            pauseStripRatio: pause && boardArea ? (pause.width * pause.height) / boardArea : null,
+            pauseInsideBoard: pause && board ? pause.left >= board.left && pause.right <= board.right && pause.top >= board.top && pause.bottom <= board.bottom : true,
+            structuralPairwiseIntersection: [[context, board], [side, board], [stats, board], [touch, board]].map(([left, right]) => intersectionArea(left, right)),
+            touchMinWidth: Math.min(...[...document.querySelectorAll<HTMLElement>('[data-testid^="touch-"]:not([data-testid="touch-rail"])')].map((item) => item.getBoundingClientRect().width)),
             touchMinHeight: Math.min(...[...document.querySelectorAll<HTMLElement>('[data-testid^="touch-"]:not([data-testid="touch-rail"])')].map((item) => item.getBoundingClientRect().height)),
             canvasCount: document.querySelectorAll('canvas').length,
             domCellCount: document.querySelectorAll('[data-game-cell]').length,
+            levelRows: document.querySelectorAll('[data-testid="level-row"]').length,
+            nextCount: document.querySelectorAll('[data-testid="next-slot"]').length,
             noOverflow: document.documentElement.scrollWidth <= window.innerWidth && document.documentElement.scrollHeight <= Math.max(document.documentElement.clientHeight, window.innerHeight),
             boardText: document.querySelector('[data-testid="board-frame"]')?.textContent?.trim() ?? '',
             previewLayerHidden: modeSwitchOpen ? runtime?.getRendererSnapshot().previewLayerVisible === false : true,
@@ -318,7 +316,13 @@ export default function App() {
   const isReady = state.status === 'ready';
   const isTerminal = state.status === 'game-over' || state.status === 'finished';
   const terminal = terminalCopy(state);
-  const leaderboardRecords = state.mode === 'puzzle' ? [] : recordsForMode(leaderboard, state.mode);
+  const stageClass = [
+    'game-cluster',
+    isReady ? 'game-cluster--ready' : '',
+    modeSwitchOpen ? 'game-cluster--switching' : '',
+    puzzleSelectOpen ? 'game-cluster--selecting' : '',
+    state.mode === 'puzzle' ? 'game-cluster--puzzle' : '',
+  ].filter(Boolean).join(' ');
 
   const openModeSwitch = () => {
     modeSwitchResumesRef.current = state.status === 'playing';
@@ -331,58 +335,95 @@ export default function App() {
     if (modeSwitchResumesRef.current) runtime?.togglePause();
   };
   const applyModeSwitch = () => {
-    setModeSwitchOpen(false);
     runtime?.restart(state.seed, pendingMode);
+    setModeSwitchOpen(false);
+    if (pendingMode === 'puzzle') {
+      setSelectedPuzzleId(state.puzzleId ?? CAMPAIGN_LEVELS[0]!.id);
+      setPuzzleSelectOpen(true);
+      return;
+    }
     runtime?.start();
     focusBoard();
   };
+  const startSelectedMode = () => {
+    if (state.mode === 'puzzle') {
+      setSelectedPuzzleId(state.puzzleId ?? CAMPAIGN_LEVELS[0]!.id);
+      setPuzzleSelectOpen(true);
+      return;
+    }
+    runtime?.start();
+    focusBoard();
+  };
+  const startPuzzle = () => {
+    runtime?.selectPuzzle(selectedPuzzleId);
+    runtime?.start();
+    setPuzzleSelectOpen(false);
+    focusBoard();
+  };
+  const returnToModeSelect = () => {
+    runtime?.restart(state.seed, 'puzzle', selectedPuzzleId);
+    setPuzzleSelectOpen(false);
+  };
+  const returnToPuzzleSelect = () => {
+    const id = state.puzzleId ?? selectedPuzzleId;
+    runtime?.restart(state.seed, 'puzzle', id);
+    setSelectedPuzzleId(id);
+    setPuzzleSelectOpen(true);
+  };
+  const startNextPuzzle = () => {
+    if (state.nextUnlockedLevelId) {
+      setSelectedPuzzleId(state.nextUnlockedLevelId);
+      runtime?.selectPuzzle(state.nextUnlockedLevelId);
+      runtime?.start();
+      focusBoard();
+    } else {
+      returnToPuzzleSelect();
+    }
+  };
 
+  const liveSession = !isReady && !modeSwitchOpen && !puzzleSelectOpen && !isTerminal;
   return (
     <div className="app">
       <main id="game" className="game-shell">
         <header className="cluster-header" data-testid="cluster-header">
           <div className="brand-lockup" data-testid="brand"><h1>Tetris</h1></div>
-          <p className="current-mode" data-testid="current-mode">{modeLabel(state.mode)}</p>
-          <span className="rotation-hint" data-testid="rotation-hint">↑ 旋转</span>
-          <i className="drop-band" aria-hidden="true" />
         </header>
-
-        <section className={`game-cluster${modeSwitchOpen ? ' game-cluster--switching' : ''}`} data-testid="game-cluster" aria-label="Tetris 棋盘">
+        <section className={stageClass} data-testid="game-cluster" aria-label="Tetris 棋盘">
           <div ref={hostRef} className="canvas-host" data-testid="canvas-host" />
-
           <aside className="context-top" data-testid="context-top">
-            {isReady ? (
-              <>
-                <ModeLines selected={state.mode} onSelect={(mode) => runtime?.selectMode(mode)} />
-                <div className="ready-action">
-                  <strong>{MODE_COPY[state.mode].goal.replace('目标：', '')}</strong>
-                  <span>{MODE_COPY[state.mode].end}</span>
-                  <button type="button" onClick={() => { runtime?.start(); focusBoard(); }}>开始</button>
-                </div>
-              </>
+            {puzzleSelectOpen ? (
+              <PuzzleLevelSelect progress={progress} selectedId={selectedPuzzleId} onSelect={setSelectedPuzzleId} onStart={startPuzzle} onReturn={returnToModeSelect} />
+            ) : isReady ? (
+              <section className="ready-panel">
+                <p className="section-kicker">选择模式</p>
+                <ModeRail selected={state.mode} onSelect={(mode) => runtime?.selectMode(mode)} label="选择模式" />
+                <ModeFact mode={state.mode} />
+                <button className="primary-action ready-start" type="button" onClick={startSelectedMode}>{state.mode === 'puzzle' ? '选择关卡' : '开始'}</button>
+              </section>
             ) : modeSwitchOpen ? (
-              <>
-                <ModeLines selected={pendingMode} onSelect={setPendingMode} label="切换模式" />
-                <button className="primary-action" type="button" onClick={applyModeSwitch}>应用并重新开始</button>
-                <button className="secondary-action" type="button" onClick={returnToRun}>返回本局</button>
-              </>
-            ) : (
-              <>
-                <div className="run-heading">
-                  <strong>{modeLabel(state.mode)}</strong>
-                  <button type="button" onClick={openModeSwitch}>切换模式</button>
+              <section className="switch-panel">
+                <p className="section-kicker">切换模式</p>
+                <ModeRail selected={pendingMode} onSelect={setPendingMode} label="切换模式" />
+                <ModeFact mode={pendingMode} />
+                <div className="switch-actions">
+                  <button className="primary-action" type="button" onClick={applyModeSwitch}>应用并重新开始</button>
+                  <button className="secondary-action" type="button" onClick={returnToRun}>返回本局</button>
                 </div>
-                <div className="next-slot" data-testid="next-slot" aria-label="下一个方块" />
-                {state.status === 'playing' && <button className="pause-action" type="button" onClick={() => runtime?.togglePause()}>暂停</button>}
-                <p className="keyboard-map">← → 移动　↑ 旋转　↓ 快速下落　空格 直接落底</p>
-              </>
+              </section>
+            ) : (
+              <section className="run-context">
+                <p className="section-kicker">当前模式</p>
+                <strong data-testid="current-mode">{MODE_COPY[state.mode].label}</strong>
+                <span>{MODE_COPY[state.mode].goal}</span>
+                <button type="button" onClick={openModeSwitch}>切换模式</button>
+                {state.mode === 'puzzle' && <button type="button" onClick={returnToPuzzleSelect}>返回关卡选择</button>}
+              </section>
             )}
           </aside>
-
           <section className="board-frame" data-testid="board-frame" aria-label="10 × 20 棋盘">
             {state.status === 'paused' && !modeSwitchOpen && (
               <div className="pause-strip" data-testid="pause-strip">
-                <strong>暂停</strong><i aria-hidden="true" />
+                <strong>暂停</strong><span aria-hidden="true" />
                 <button className="pause-strip__primary" type="button" onClick={() => { runtime?.togglePause(); focusBoard(); }}>继续</button>
                 <button type="button" onClick={() => { runtime?.restart(); focusBoard(); }}>重新开始</button>
               </div>
@@ -390,14 +431,23 @@ export default function App() {
             {terminal && !modeSwitchOpen && (
               <div className="end-strip" data-testid="end-strip">
                 <strong>{terminal.title}</strong><span>{terminal.detail}</span>
-                <button type="button" onClick={() => { runtime?.restart(); focusBoard(); }}>再来一局</button>
-                {state.mode !== 'puzzle' && <Leaderboard mode={state.mode} records={leaderboardRecords} />}
+                {state.mode === 'puzzle' ? (
+                  <button type="button" onClick={state.puzzleCompletion === 'finished' ? startNextPuzzle : () => { runtime?.restart(); focusBoard(); }}>
+                    {state.puzzleCompletion === 'finished' ? (state.nextUnlockedLevelId ? '下一关' : '返回关卡选择') : '重新开始关卡'}
+                  </button>
+                ) : <button type="button" onClick={() => { runtime?.restart(); focusBoard(); }}>再来一局</button>}
               </div>
             )}
           </section>
-
-          {!isReady && !modeSwitchOpen && <RunStats state={state} puzzleRecords={puzzleRecords} />}
-
+          {liveSession && (
+            <aside className="side-rail" data-testid="side-rail">
+              <div className="next-slot" data-testid="next-slot" aria-label="下一个方块" />
+              {state.status === 'playing' && <button className="pause-action" type="button" onClick={() => runtime?.togglePause()}>暂停</button>}
+              <p className="keyboard-map">← → 移动　↑ 旋转<br />↓ 快速下落　空格/⇣ 直接落底</p>
+              <RunStats state={state} />
+            </aside>
+          )}
+          {!isReady && !modeSwitchOpen && !puzzleSelectOpen && isTerminal && <RunStats state={state} />}
           <section className="touch-deck" data-testid="touch-rail" aria-label="触控操作">
             <TouchButton action="left" label="左移" glyph="←" runtime={runtime} />
             <TouchButton action="right" label="右移" glyph="→" runtime={runtime} />
@@ -412,25 +462,11 @@ export default function App() {
   );
 }
 
-function Leaderboard({ mode, records }: { mode: Exclude<GameMode, 'puzzle'>; records: readonly ScoreRecord[] }) {
-  const isRace = mode === 'race';
-  return (
-    <section className="leaderboard" aria-label={isRace ? '竞速完成榜' : '马拉松记录'}>
-      <p>{isRace ? '竞速完成榜' : '马拉松记录'}</p>
-      {records.length === 0 ? <span>暂无记录</span> : (
-        <ol>{records.slice(0, 5).map((record, index) => (
-          <li key={`${record.completedAt}:${index}`}><b>{index + 1}</b><strong>{isRace ? formatDuration(record.completionTicks ?? record.elapsedTicks) : formatScore(record.score)}</strong><small>{record.pieces} 块</small></li>
-        ))}</ol>
-      )}
-    </section>
-  );
-}
-
 function eventMessage(event: GameEvent): string {
   if (event.type === 'lines-cleared') return `消除了 ${event.count} 行。`;
   if (event.type === 'paused') return '暂停。';
   if (event.type === 'resumed') return '继续游戏。';
   if (event.type === 'finished') return '本局完成。';
-  if (event.type === 'game-over') return event.reason === 'puzzle-budget' ? '方块用尽。' : '堆叠到顶，本局结束。';
+  if (event.type === 'game-over') return event.reason === 'puzzle-budget' ? '方块已用尽。' : '本局结束。';
   return '';
 }
