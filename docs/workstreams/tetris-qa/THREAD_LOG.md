@@ -46,3 +46,12 @@ REUSED GATES QA-001 clean ci/typecheck/47-test/build plus rules and visual findi
 BLOCKER none; QA-002 commit `eabbcb6d5746ac4c90fa82e357c82eed73d42a29` is superseded and neither integrated nor pushed.
 NEXT coordinator integration/push authorization only; no production changes.
 LOG `docs/workstreams/tetris-qa/THREAD_LOG.md` only.
+
+## Recoverable status reports
+
+REPORT TETRIS-QA TETRIS-QA-000 READY
+HEAD `c13961d9a079c7d6928471b7cb32ee0700d408c0`; dirty `docs/screenshots/temple/` (pre-existing untracked, untouched).
+Candidate none; evidence no QA run under the current wait instruction.
+Blocker awaiting a new Tetris candidate SHA from coordinator `019f4deb-7e83-7583-8cd5-8e6f075bc331`.
+Next: on candidate instruction, begin `TETRIS-QA-001`; otherwise remain idle.
+Log `docs/workstreams/tetris-qa/THREAD_LOG.md`.

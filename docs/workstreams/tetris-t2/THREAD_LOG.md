@@ -205,3 +205,16 @@ GATES=pre-fix same-worktree full Vitest 47/47 plus one build; post-fix renderer/
 BLOCKER=none for candidate; pre-existing `docs/screenshots/temple/` and QA-owned `docs/workstreams/tetris-qa/THREAD_LOG.md` remain excluded; root CHANGELOG unchanged.
 NEXT=await independent QA
 LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md
+
+## Recoverable report — TETRIS-T2-005
+
+REPORT TETRIS-T2 TETRIS-T2-005 READY
+HEAD/PARENT/CANDIDATE=9d704d95850ce5c04f03bbe6406bbd97873f38d9 / b4a51c19d372d72870c416181566855c8c9dcc19 / 9d704d95850ce5c04f03bbe6406bbd97873f38d9 (direct child, local only, not pushed).
+EXACT PATHS=only `E:\Proj\Game-1\docs\qa\evidence\tetris-t2\SHA256SUMS.md` and `E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md` changed in the candidate commit.
+CANONICAL SEMANTICS=manifest now hashes raw candidate Git blobs by streaming `git show <candidate>:<path>` into SHA-256; it never hashes checkout-filtered or working-tree bytes.
+CHECKSUM VERIFICATION=18/18 candidate blobs exist and match; streamed verification is identical with `core.autocrlf=true` and `core.autocrlf=false`.
+HASHES=`browser-evidence.json`=`bd1bed9445d058143b9aac6c8af5f6eaccf634addb2a5f5eaf1baa1b203b6c10`; `rules-replay.json`=`97fafadc2c29c6161aa56a3ac21e60b2d12545def7ab5f2fec1511b2016c9194`.
+GATES=no npm ci, test, typecheck, build, browser capture, product/evidence artifact, config, QA log, Temple, or root CHANGELOG change.
+BLOCKER=none; pre-existing QA-owned log and untracked Temple directory remain outside the candidate.
+NEXT=await QA-003
+LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md

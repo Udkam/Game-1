@@ -1,13 +1,14 @@
 # Current Task
 
-## Active slice: T2 — D4 Offset Drop candidate awaiting independent QA
+## Completed slice: T2 — D4 Offset Drop accepted
 
 Branch: `codex/tetris`
 
 Baseline: `0a28a1f4efad72296e46b0a91d859c45cc300edf` (accepted and pushed T1)
 
-Status: **candidate awaiting independent QA**. The local candidate is not a release,
-has not been independently accepted, and must not be pushed from this status.
+Status: **independently accepted and integrated**. Product candidate `a7aca5f`, the
+portable evidence-manifest correction through `9d704d9`, and QA-003 acceptance have
+completed the T2 gate. This records a branch milestone, not a production deployment.
 
 ### Authorized scope
 
@@ -46,11 +47,10 @@ preview-removal correction. The checked-in formal evidence under
 PNG/JSON SHA-256 records. It reports `result: "passed"`, one canvas, zero gameplay
 DOM cells, no overflow, and zero console/page errors.
 
-### Candidate gate record
+### Acceptance gate record
 
-No `npm ci` was needed because the existing dependency tree was available. Before the
-001A correction, the same worktree completed one full 47/47 Vitest run and one build.
-After the correction, `npm.cmd run typecheck` and the renderer/runtime delta suite
-(2 files, 5 tests) passed. The one formal browser capture later completed with
-`result: "passed"`; it must not be rerun. The candidate is committed locally only and
-is now handed to independent QA for clean verification and acceptance.
+Independent QA reproduced a clean install, typecheck, the full 9-file / 47-test suite,
+and build against `a7aca5f`; it also reviewed the rule and visual evidence. QA-003 then
+verified the final checksum-only child `9d704d9`: all 18 evidence entries match their
+canonical raw Git blobs with both `core.autocrlf=true` and `false`. The superseded
+checkout-filtered QA-002 decision is not part of the integrated acceptance chain.

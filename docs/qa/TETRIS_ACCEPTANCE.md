@@ -1,8 +1,9 @@
 # Tetris T2 D4 Production Acceptance Matrix
 
-Result: **candidate awaiting independent QA** against baseline
-`0a28a1f4efad72296e46b0a91d859c45cc300edf`. This is not an independent acceptance,
-release, or push claim.
+Result: **independently accepted** against baseline
+`0a28a1f4efad72296e46b0a91d859c45cc300edf`. Product candidate `a7aca5f` and the
+portable evidence-manifest chain through `9d704d9` passed QA. This is a branch
+milestone, not a production deployment claim.
 
 ## Frozen deterministic rules
 
@@ -61,7 +62,7 @@ release, or push claim.
   console/page errors, and SHA-256 values matching every referenced PNG. The rules
   evidence and complete SHA-256 record are in `docs/qa/evidence/tetris-t2/`.
 
-## Candidate gate record (independent QA still required)
+## Accepted gate record
 
 - No dependency install was required because the dependency tree was present.
 - Before the 001A correction: one full 47/47 Vitest run and one build passed.
@@ -69,4 +70,9 @@ release, or push claim.
   renderer/runtime delta suite passed.
 - One formal browser-evidence pass completed with `result: "passed"`; its 16 PNG
   hashes match its JSON references. Do not rerun these gates in this worktree.
-- Independent QA must perform the clean gate and make the acceptance decision.
+- Independent QA performed a clean install, typecheck, the complete 9-file / 47-test
+  suite, build, rule review, and submitted visual-evidence review against `a7aca5f`.
+- QA-003 independently streamed all 18 evidence files from the final candidate as raw
+  Git blobs under both `core.autocrlf=true` and `false`; every SHA-256 matched the
+  portable manifest in `9d704d9`.
+- QA-002 commit `eabbcb6` is superseded and excluded from the accepted chain.

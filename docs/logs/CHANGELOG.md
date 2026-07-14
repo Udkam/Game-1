@@ -36,3 +36,29 @@
 - Coordinator accepted implementation candidate `b2075ba` after independent QA commit
   `c13961d`; QA independently reproduced clean install, typecheck, 8 files / 41 tests,
   build, responsive live browser interaction, screenshot hashes, and release-stop input.
+
+## 2026-07-14 — Tetris T2/D4 three-mode milestone accepted
+
+- Rebuilt the interface as the original Offset Drop visual system: warm ungridded paper,
+  a deep-ink 1:2 board, a single cinnabar drop-band, restrained print offsets, and a
+  compact game-first composition across desktop, portrait, and landscape.
+- Removed Hold/暂存 from the core, replay/hash surface, inputs, renderer, controls, and
+  player-facing UI. Playing now exposes exactly one 下一个方块 preview.
+- Froze three visibly and mechanically distinct modes: open-ended 马拉松模式 with
+  top-out, fixed-tick 20-line 竞速模式, and three deterministic 解谜模式 layouts with
+  canonical queues, piece budgets, targets, completion, and loss conditions.
+- Kept full Chinese mode names, `↑ 旋转`, fast held soft drop, direct hard drop, five
+  touch zones, a narrow board-contained pause strip, and a mode switch that stays
+  outside the board without stale Next-piece residue.
+- Added mode-owned, fail-closed local leaderboards and deterministic rule/replay proofs,
+  including Marathon top-out, Race completion, all three puzzle completions, puzzle
+  budget failure, input behavior, and rotation replay hash `e6936c36`.
+- Formal browser evidence contains 16 final-candidate captures at 1440 × 900 DPR1,
+  390 × 844 DPR3, and 844 × 390 DPR3. It verifies one canvas, zero gameplay DOM cells,
+  no overflow, zero console/page errors, responsive geometry, pause/mode states, real
+  keyboard/touch commands, and terminal rule outcomes.
+- Independent QA reproduced clean install, typecheck, the complete 9-file / 47-test
+  suite, and build, then accepted the final evidence-manifest child `9d704d9` after all
+  18 canonical Git-blob SHA-256 entries matched under both CRLF settings.
+- Integrated QA-003 acceptance from `9d4537b`; superseded QA-002 commit `eabbcb6` was
+  deliberately excluded. No Temple production or evidence path was included.
