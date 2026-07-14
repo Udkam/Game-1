@@ -1,7 +1,7 @@
 # Active Workstream Coordination
 
-Coordinator thread: `019f4deb-7e83-7583-8cd5-8e6f075bc331`  
-Protocol version: `2`  
+Coordinator thread: `019f4deb-7e83-7583-8cd5-8e6f075bc331`
+Protocol version: `2`
 Last coordinator review: `2026-07-14`
 
 This register exists because a Codex task can complete without its UI callback becoming
