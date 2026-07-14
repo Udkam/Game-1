@@ -9,7 +9,7 @@ the existing candidate files without recapturing any browser state.
 
 ```text
 3a93695681620f296d03e8955a1464a00637f8ea309eb6ba609a9f4bc9408b94  browser-evidence.json
-97fafadc2c29c6161aa56a3ac21e60b2d12545def7ab5f2fec1511b2016c9194  rules-replay.json
+c3e9c3d111db1da80c33ca104ca43b66162d89e0a5544aedea8135f1d321dcbe  rules-replay.json
 72ef48265914bd30f3aab8061bec3f5259074c09c70ef1eb39289a510f841301  desktop-ready.png
 4b71d9131cf684ad856b284cb92adef6af4a6054e44f66c83d93d96b63e88c37  desktop-playing.png
 e4b968696b90049507de31d9dda8e95e274b9f853f13d39d6706bf92a8f0a3b2  desktop-paused.png

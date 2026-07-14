@@ -115,6 +115,21 @@ BLOCKER=visual re-ACK required; finalization authorization remains withdrawn.
 NEXT=await visual re-ACK
 LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md
 
+## 2026-07-14 — TETRIS-T2-004 evidence-integrity correction
+
+- Independent QA rejected `a7aca5fb060d2265036fcab72901c8abdd6860f5` solely because
+  `SHA256SUMS.md` recorded the LF working-tree hash for `rules-replay.json`.
+  `core.autocrlf=true` means a clean candidate checkout produces CRLF bytes whose
+  SHA-256 is `c3e9c3d111db1da80c33ca104ca43b66162d89e0a5544aedea8135f1d321dcbe`.
+- Recomputed every listed formal artifact through Git's checkout filter against the
+  exact rejected candidate. Only the `rules-replay.json` line was objectively stale:
+  `97fafadc2c29c6161aa56a3ac21e60b2d12545def7ab5f2fec1511b2016c9194` changed to
+  `c3e9c3d111db1da80c33ca104ca43b66162d89e0a5544aedea8135f1d321dcbe`.
+  The existing browser JSON `3a93695681620f296d03e8955a1464a00637f8ea309eb6ba609a9f4bc9408b94`
+  already matched its CRLF checkout bytes; all PNG values remained unchanged.
+- No product source, screenshot, evidence JSON, package/config, QA log, Temple path,
+  or root changelog was changed. No install, test, build, typecheck, or capture ran.
+
 ## 2026-07-14 — TETRIS-T2-002 superseded; candidate prepared for independent QA
 
 - Coordinator confirmed that the prior `TETRIS-T2-002 BLOCKED` report sampled the
@@ -147,4 +162,16 @@ GATES=pre-fix same-worktree full Vitest 47/47 and one build passed; post-fix typ
 FAILURE=the sole capture invocation emitted only `DeprecationWarning: Image.Image.getdata is deprecated`; its missing required JSON proves the capture stopped after the 12 state screenshots and before input/terminal evidence. It was not rerun.
 BLOCKER=official browser-evidence completeness gate failed; no dirty-path audit, candidate commit, push, or further capture was performed.
 NEXT=await coordinator direction
+LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md
+
+## Recoverable report — TETRIS-T2-003
+
+REPORT TETRIS-T2 TETRIS-T2-003 READY
+HEAD/PARENT/CANDIDATE=a7aca5fb060d2265036fcab72901c8abdd6860f5 / 0a28a1f4efad72296e46b0a91d859c45cc300edf / a7aca5fb060d2265036fcab72901c8abdd6860f5 (local only; not pushed).
+EXACT PATHS=`E:\Proj\Game-1\docs\qa\evidence\tetris-t2\browser-evidence.json`; `rules-replay.json`; `SHA256SUMS.md`; 16 referenced PNGs in the same directory; D4 development evidence in `docs\screenshots\tetris\d4-dev\`.
+RULE EVIDENCE=public-command Marathon top-out; Race `finished` at 20 lines; `offset-01..03` all finish; Puzzle budget fails game-over; leaderboard ownership stays mode-separated; browser rotation replay hash=`e6936c36`.
+BROWSER EVIDENCE + HASHES=`result: "passed"`, 16 captures, ArrowUp 0→1, touch rotation 1→2 and soft-drop y 19→22, hard-drop pieces 0→1, pause/resume, zero console/page errors; JSON SHA `3a93695681620f296d03e8955a1464a00637f8ea309eb6ba609a9f4bc9408b94`, rules SHA `97fafadc2c29c6161aa56a3ac21e60b2d12545def7ab5f2fec1511b2016c9194`, all 16 PNG references matched.
+GATES=pre-fix same-worktree full Vitest 47/47 plus one build; post-fix renderer/runtime 2 files/5 tests plus typecheck; existing formal capture passed; no repeated ci/test/build/capture.
+BLOCKER=none for candidate; pre-existing `docs/screenshots/temple/` and QA-owned `docs/workstreams/tetris-qa/THREAD_LOG.md` remain excluded; root CHANGELOG unchanged.
+NEXT=await independent QA
 LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md
