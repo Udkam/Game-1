@@ -11,12 +11,12 @@ Branch: `codex/tetris`
 - T2 production/QA remains historical evidence only. Its dark Offset Drop surface and
   three line-target Puzzle definitions are superseded.
 
-Status: **documentation baseline being integrated; T3 production not yet implemented
-or accepted**.
+Status: **T3 production accepted locally; coordinator publication pending.**
 
-The T3 production chain is atomic for publication: C1 core correctness must be
-independently accepted before V1 starts, but the branch is not labelled or published
-as a completed T3 milestone until V1 and final browser evidence pass.
+The T3 production chain is complete through its independent QA gate: C1 campaign
+correctness was accepted before V1 started, and V1 passed final browser evidence plus
+the canonical Git-blob integrity re-review. The branch is not considered published
+until the coordinator pushes the accepted commit chain.
 
 ## Accepted prerequisite: T3-C1 Core campaign
 
@@ -97,13 +97,14 @@ Tests must prove:
   independent QA.
 - Do not start V1, push the candidate, or claim the game is visually correct.
 
-## Active next slice: T3-V1 Mineral Shelf production
+## Accepted implementation: T3-V1 Mineral Shelf production
 
-V1 is now open because C1 and QA-C1 are integrated. It remains a bounded frontend
-and persistence slice: it may consume the accepted C1 contract but may not alter core
-rules, authored campaign data, or the canonical replay/hash semantics.
-
-Reserved owner: the Tetris frontend implementation task.
+V1 is accepted and integrated locally. Candidate
+`6fb1728f6a3e9cf4398304ac9a638df2ddf4c1d7` is a direct child of the accepted C1
+baseline `3bed71f`; independent QA accepted its final evidence in
+`fdd1ffbf1657a3fcc53cc3f292ae8c2a783a83e4`. The implementation binds the frozen C1
+campaign to the D5 Mineral Shelf interface without changing core rules, authored
+campaign data, or canonical replay/hash semantics.
 
 Reserved paths:
 
@@ -139,6 +140,7 @@ target/UI bridge. It may not change core rules or authored level data.
 
 ## Integration policy
 
-The coordinator alone integrates accepted C1 and V1 commits, resolves workstream-log
-divergence, updates `docs/logs/CHANGELOG.md`, performs final live review, and pushes
-`codex/tetris`. QA/design acceptance never self-authorizes the next slice.
+The coordinator has integrated the accepted C1/V1 and QA commit chain, performed a
+final live review, and will push `codex/tetris` as the next operation. QA/design
+acceptance never self-authorizes a later implementation slice; future Tetris work
+requires a new bounded coordinator instruction.

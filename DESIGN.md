@@ -13,8 +13,11 @@ The current accepted inputs are:
 - T3R rules candidate `a096d96056457ebd2158bb6955cf7760fc36e238`,
   independently accepted by QA `0cf78e3efccff4ee9dff0098d231b48f3dec5657`.
 
-Those approvals freeze design and rule contracts only. They are not claims that the
-production engine or UI already implements T3.
+Those approvals froze the design and rule contracts before implementation. The T3-V1
+implementation candidate `6fb1728f6a3e9cf4398304ac9a638df2ddf4c1d7` now binds them to
+the real C1 core and was independently accepted by QA commit
+`fdd1ffbf1657a3fcc53cc3f292ae8c2a783a83e4`; this is a clean-room Tetris milestone,
+not authorization for additional modes or campaign scope.
 
 ## Product intent
 

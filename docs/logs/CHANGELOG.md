@@ -118,3 +118,25 @@
   deprecated presentation bridge remain the active T3-V1 work.
 - No Temple path or the pre-existing untracked `docs/screenshots/temple/` directory was
   staged or modified.
+
+## 2026-07-14 — Tetris T3 Mineral Shelf campaign accepted
+
+- Bound the accepted six-level canonical Puzzle campaign to the light, board-first
+  Mineral Shelf interface: each level starts from its authored non-empty board and
+  finite fixed queue, succeeds only by emptying the full canonical board, and unlocks
+  only the next level through versioned fail-closed local progress.
+- Replaced the deprecated dark T2 Offset Drop surface with the accepted light mineral
+  1:2 tray, complete `Tetris` wordmark, one graphical Next preview, compact
+  mode-owned statistics, a board-contained pause strip, and one continuous five-action
+  keyboard/touch rail. Hold/暂存 and line-target Puzzle progress are absent.
+- Preserved deterministic Marathon and 20-line Race behavior, while Puzzle uses real
+  canonical completion codes for board-empty success, top-out, invalid spawn, and
+  budget exhaustion rather than UI-derived results.
+- Final evidence covers the real runtime at desktop, portrait, landscape, and long
+  Puzzle values, including keyboard/touch actions, mode and level selection,
+  completion/unlock, malformed persistence fallback, one canvas, zero gameplay DOM
+  cells, no overflow/overlap, and zero console/page errors.
+- Candidate `6fb1728` passed clean install, typecheck, the full 12-file / 78-test
+  suite, build, browser review, and a final coordinator live review. Independent QA
+  accepted the canonical raw-Git-blob evidence manifest in log-only commit `fdd1ffb`;
+  all 32 evidence entries match under both CRLF configurations.
