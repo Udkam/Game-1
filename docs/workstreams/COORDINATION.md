@@ -52,7 +52,25 @@ claims, or scope drift stay `BLOCKED`; silence is never acknowledgement.
 | Tetris T3 | historical implementation + QA | `E:\Proj\Game-1` / `codex/tetris` | T3 campaign and Mineral Shelf V1 are integrated and pushed in `4c85828`; no product slice is open. | `ACK-TETRIS-T3-001`: reviewed final accepted chain `6fb1728 -> fdd1ffb -> 4c85828`, including final live browser check. |
 | Temple TR3 A3 | `019f601a-4900-78e3-8acd-01d3b1a7ce30` | `E:\Proj\Game-1-temple` / `codex/temple-run` | Offline clay proof stopped without a candidate. Existing TR3 dirty files are preserved; no runtime integration, GLB/KTX delivery, browser evidence, commit, push, or QA. | `ACK-TEMPLE-A3-BLOCKED-002` at `2026-07-14T18:55:26+08:00`: coordinator read the corrected terminal log and verified `52ae9ae`, 16 modules, 3 canyon bands, 3,308 triangles, and the fail-closed portrait/closeup pursuer and actor-road-band failures. No A4 is open. |
 | Temple A3 visual review | `019f6043-95af-73f0-a29f-18b312e8170e` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only | Independent review of the failed A3 clay evidence. It may write only its separate review log; it cannot alter A3 or production. | `ACK-TEMPLE-REVIEW-BLOCKED-002` at `2026-07-14T19:01:56+08:00`: verified A3 counts and narrowed A4 to camera framing, pursuer placement/silhouette, and arch/support readability. |
-| Temple TR3 A4 | `019f6049-a53a-7001-9620-686ea9bad061` | `E:\Proj\Game-1-temple` / `codex/temple-run` | One offline clay correction batch only. It may add A4-named generator/evaluator/output paths and append the four authorized Temple documents; it must preserve A3, road/canyon/material data, runtime, and Git state. | `ACK-TEMPLE-A4-DOCS-002` at `2026-07-14T19:05:43+08:00`: coordinator verified all four A4 contract entries, branch/base `52ae9ae`, and the `158`-file inherited dirty snapshot. One clay batch + verifier/manual review is now the sole next action. |
+| Temple TR3 A4 | `019f6049-a53a-7001-9620-686ea9bad061` | `E:\Proj\Game-1-temple` / `codex/temple-run` | Closed without a candidate. The one offline clay batch and combined verifier/manual gate are consumed. Existing Temple dirt, A3 evidence, and the unexpected A3 Python cache artifact remain preserved; no retry, cleanup, integration, QA, commit, or push is open. | `ACK-TEMPLE-A4-BLOCKED-003`: see the terminal acknowledgement below; all strict verifier failures remain blocking. |
+
+## Terminal acknowledgement: Temple TR3 A4
+
+ACK-TEMPLE-A4-BLOCKED-003 — 2026-07-14T19:12:58+08:00
+
+The coordinator verified the terminal thread and Temple TR3 log against base
+52ae9ae. All five A4 artifact hashes, 16 modules, 3 canyon bands, 6 semantic
+roots, and 3,344 triangles match the report. Source parity passed; the
+combined verifier did not: portrait separation was 11.98px (minimum 12px),
+road-band overlap was -0.02130 (must be positive), portrait and desktop arch
+height were .06472/.11601 (minimum .12), and desktop aperture width was
+.06503W (minimum .07W).
+
+A4 is closed without a candidate. Its one Blender batch and one
+verifier/manual-review allowance are consumed. No value may be rounded or
+visually waived. Existing Temple worktree changes, the A3 evidence, and the
+unexpected A3 Python cache file remain preserved. No retry, cleanup,
+integration, QA, commit, or push is authorized by this acknowledgement.
 
 ## Coordinator polling rule
 
