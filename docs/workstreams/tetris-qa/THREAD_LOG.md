@@ -83,3 +83,15 @@ GATES no npm, product tests, build, browser, or static-verifier rerun; candidate
 RESIDUAL production must still bind these mock state/data contracts to real canonical state and Pixi; this acceptance grants no production authority.
 NEXT coordinator may integrate design-only acceptance; no push by QA.
 LOG `docs/workstreams/tetris-qa/THREAD_LOG.md` only.
+
+## 2026-07-14 — TETRIS-T3-C1-QA independent acceptance
+
+REPORT TETRIS-T3-C1-QA TETRIS-T3-C1-QA ACCEPTED
+HEAD `8323203b92c5ca7d52d07297461062bc1dc1c0d5`; PARENT `a59d6a638e40329129c83796b6455976c6857d10`; QA_SHA pending log-only commit.
+SCOPE direct candidate delta is exactly the nine authorized C1 core/runtime/test/log paths; direct ancestry and whitespace are clean, with no unrelated production or root-document delta.
+RULES six compiled definitions exactly equal accepted `levels.json`; no `offset-01..03` alias remains, and `puzzleTargetLines` is only declared/null-initialized/asserted. Canonical state contains queue/index/goal/outcome/completed/unlock fields; Puzzle resolves hidden top-out, canonical empty success, budget/queue exhaustion, then next spawn, with delayed clears, inert terminal commands, and exact restart.
+RULES all campaign play uses production initialization and public `dispatch`; no core filesystem, browser, Pixi, storage, or random-draw Puzzle path. The migrated verifier has no adapter state injection and treats historical adapter hashes only as static-shape evidence.
+GATES fresh detached dependency install (`npm.cmd ci --no-audit --no-fund`, 105 packages) once; exactly one `npm.cmd run test` passed 11 files / 73 tests. Candidate log provenance records final `npm.cmd run typecheck` and `npm.cmd run build` as passed.
+BLOCKERS none.
+NEXT coordinator integration decision only; this QA acceptance does not authorize push, frontend work, or further production edits.
+LOG `docs/workstreams/tetris-qa/THREAD_LOG.md` only.
