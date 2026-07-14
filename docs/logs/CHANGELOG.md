@@ -96,3 +96,25 @@
   a completed T3 milestone. No T3 production source is claimed complete by this entry.
 - The pre-existing untracked `docs/screenshots/temple/` directory remains excluded and
   untouched; Temple Run continues only in its separate worktree and branch.
+
+## 2026-07-14 — Tetris T3 six-level Puzzle core accepted
+
+- Replaced the three temporary `offset-*` puzzles with the six accepted clean-room T3
+  campaign definitions and their fixed queues, budgets, names, and difficulty data.
+- Added canonical queue index, full authored queue, board-empty goal, completion code,
+  completed-level ID, and next-unlocked-level ID to deterministic state and hashing.
+- Enforced the frozen terminal order: hidden occupancy/top-out, canonical-board-empty
+  success, exhausted budget/queue, then exact authored spawn. Final-piece success wins
+  over budget failure; terminal states are inert and restart reconstructs the exact
+  authored level.
+- Migrated the design verifier to production initialization and public dispatch without
+  legacy aliases, state injection, or treating historical adapter hashes as production
+  authority.
+- Candidate `8323203` passed the targeted verifier, focused campaign tests, typecheck,
+  the complete 11-file / 73-test suite, and production build. Independent QA reproduced
+  a clean install and the full suite, then accepted it in log-only commit `b79e142`.
+- This is a core milestone only. The D5 Mineral Shelf interface, real level selection,
+  fail-closed unlock persistence, responsive browser evidence, and removal of the
+  deprecated presentation bridge remain the active T3-V1 work.
+- No Temple path or the pre-existing untracked `docs/screenshots/temple/` directory was
+  staged or modified.

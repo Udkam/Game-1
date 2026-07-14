@@ -18,7 +18,12 @@ The T3 production chain is atomic for publication: C1 core correctness must be
 independently accepted before V1 starts, but the branch is not labelled or published
 as a completed T3 milestone until V1 and final browser evidence pass.
 
-## Active next slice: T3-C1 Core campaign
+## Accepted prerequisite: T3-C1 Core campaign
+
+Status: accepted and integrated on 2026-07-14. Production candidate `8323203`
+was independently accepted by QA commit `b79e142`; the full suite passed
+11 files / 73 tests. This section is retained as the frozen implementation record,
+not as an open editing boundary.
 
 Owner: the Tetris gameplay/rules implementation task.
 
@@ -92,9 +97,11 @@ Tests must prove:
   independent QA.
 - Do not start V1, push the candidate, or claim the game is visually correct.
 
-## Reserved later slice: T3-V1 Mineral Shelf production
+## Active next slice: T3-V1 Mineral Shelf production
 
-V1 opens only after independent C1 acceptance and a new coordinator instruction.
+V1 is now open because C1 and QA-C1 are integrated. It remains a bounded frontend
+and persistence slice: it may consume the accepted C1 contract but may not alter core
+rules, authored campaign data, or the canonical replay/hash semantics.
 
 Reserved owner: the Tetris frontend implementation task.
 
