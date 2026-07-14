@@ -115,6 +115,24 @@ BLOCKER=visual re-ACK required; finalization authorization remains withdrawn.
 NEXT=await visual re-ACK
 LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md
 
+## 2026-07-14 — TETRIS-T2-005 portable canonical evidence correction
+
+- Coordinator superseded the checkout-filter semantics of TETRIS-T2-004. The sole
+  authoritative checksum input is the raw Git blob stored in the candidate commit,
+  streamed through `git show <candidate>:<path>`; neither working-tree bytes nor
+  `core.autocrlf` filters participate.
+- Recomputed all 18 entries against exact base
+  `b4a51c19d372d72870c416181566855c8c9dcc19`. Two values were objectively stale
+  under canonical blob semantics: `browser-evidence.json`
+  `3a93695681620f296d03e8955a1464a00637f8ea309eb6ba609a9f4bc9408b94` →
+  `bd1bed9445d058143b9aac6c8af5f6eaccf634addb2a5f5eaf1baa1b203b6c10`, and
+  `rules-replay.json` `c3e9c3d111db1da80c33ca104ca43b66162d89e0a5544aedea8135f1d321dcbe` →
+  `97fafadc2c29c6161aa56a3ac21e60b2d12545def7ab5f2fec1511b2016c9194`.
+- The manifest now defines the portable blob procedure and records no filtered or
+  working-tree hash. The other 16 entries are unchanged. No source, evidence JSON or
+  PNG, package/config, QA log, Temple path, root changelog, test, build, or capture
+  was touched or run.
+
 ## 2026-07-14 — TETRIS-T2-004 evidence-integrity correction
 
 - Independent QA rejected `a7aca5fb060d2265036fcab72901c8abdd6860f5` solely because
@@ -129,6 +147,18 @@ LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md
   already matched its CRLF checkout bytes; all PNG values remained unchanged.
 - No product source, screenshot, evidence JSON, package/config, QA log, Temple path,
   or root changelog was changed. No install, test, build, typecheck, or capture ran.
+
+## Recoverable report — TETRIS-T2-004
+
+REPORT TETRIS-T2 TETRIS-T2-004 READY
+HEAD/PARENT/CANDIDATE=b4a51c19d372d72870c416181566855c8c9dcc19 / a7aca5fb060d2265036fcab72901c8abdd6860f5 / b4a51c19d372d72870c416181566855c8c9dcc19 (direct child, local only, not pushed).
+EXACT PATHS=only `E:\Proj\Game-1\docs\qa\evidence\tetris-t2\SHA256SUMS.md` and `E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md` changed in the candidate commit.
+CHECKSUM VERIFICATION=18/18 candidate checkout-filtered formal artifacts exist and match; `rules-replay.json`=`c3e9c3d111db1da80c33ca104ca43b66162d89e0a5544aedea8135f1d321dcbe`, `browser-evidence.json`=`3a93695681620f296d03e8955a1464a00637f8ea309eb6ba609a9f4bc9408b94`; zero missing/mismatched paths.
+FIX=the sole stale Rules checksum changed `97fafadc2c29c6161aa56a3ac21e60b2d12545def7ab5f2fec1511b2016c9194`→`c3e9c3d111db1da80c33ca104ca43b66162d89e0a5544aedea8135f1d321dcbe` for `core.autocrlf=true` clean-checkout bytes.
+GATES=no npm ci, typecheck, test, build, browser capture, source, screenshot, evidence JSON, config, QA log, Temple path, or root CHANGELOG change.
+BLOCKER=none; pre-existing QA-owned log and untracked Temple directory remain outside the candidate.
+NEXT=await independent QA re-review
+LOG=E:\Proj\Game-1\docs\workstreams\tetris-t2\THREAD_LOG.md
 
 ## 2026-07-14 — TETRIS-T2-002 superseded; candidate prepared for independent QA
 

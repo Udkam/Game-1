@@ -2,14 +2,26 @@
 
 Source baseline: `0a28a1f4efad72296e46b0a91d859c45cc300edf`.
 
-`browser-evidence.json` records `result: "passed"`, 16 captures, zero
-console/page errors, and the same SHA-256 values below for every referenced PNG.
-`rules-replay.json` is a public-command/replay proof. All values were recomputed from
-the existing candidate files without recapturing any browser state.
+## Canonical Git blob checksum semantics
+
+Every value below is the SHA-256 of the canonical Git blob bytes stored by the
+candidate commit. It is never the working-tree file and never checkout-filtered bytes;
+therefore it is identical with `core.autocrlf` set to either `true` or `false`.
+
+To reproduce one entry, stream the exact blob directly from Git (replace
+`<candidate>` and `<path>`; do not open the working-tree file):
 
 ```text
-3a93695681620f296d03e8955a1464a00637f8ea309eb6ba609a9f4bc9408b94  browser-evidence.json
-c3e9c3d111db1da80c33ca104ca43b66162d89e0a5544aedea8135f1d321dcbe  rules-replay.json
+python -c "import hashlib,subprocess,sys; p=subprocess.Popen(['git','show',f'{sys.argv[1]}:{sys.argv[2]}'],stdout=subprocess.PIPE); h=hashlib.sha256(); [h.update(c) for c in iter(lambda:p.stdout.read(65536),b'')]; p.wait(); print(h.hexdigest()); raise SystemExit(p.returncode)" <candidate> <path>
+```
+
+`browser-evidence.json` records `result: "passed"`, 16 captures, zero
+console/page errors, and the same canonical-blob SHA-256 values below for every
+referenced PNG. `rules-replay.json` is a public-command/replay proof.
+
+```text
+bd1bed9445d058143b9aac6c8af5f6eaccf634addb2a5f5eaf1baa1b203b6c10  browser-evidence.json
+97fafadc2c29c6161aa56a3ac21e60b2d12545def7ab5f2fec1511b2016c9194  rules-replay.json
 72ef48265914bd30f3aab8061bec3f5259074c09c70ef1eb39289a510f841301  desktop-ready.png
 4b71d9131cf684ad856b284cb92adef6af4a6054e44f66c83d93d96b63e88c37  desktop-playing.png
 e4b968696b90049507de31d9dda8e95e274b9f853f13d39d6706bf92a8f0a3b2  desktop-paused.png
