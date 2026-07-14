@@ -125,23 +125,27 @@ export function replayRaceCompletion(seed = 0x51a1f00d): { commands: readonly Ga
   return { commands, state };
 }
 
-/**
- * A public-command-only rotation puzzle proof. The I piece needs a clockwise
- * rotation and four right moves before hard drop closes the authored right gap.
- */
+/** A public-command-only T3 route with ordinary delayed line resolution. */
 export function replayPuzzleRotation(seed = 0x51a1f00d): { commands: readonly GameCommand[]; state: GameState; hash: string } {
   const commands: readonly GameCommand[] = [
     { type: 'start' },
-    { type: 'rotate', direction: 1 },
-    { type: 'move', dx: 1 },
-    { type: 'move', dx: 1 },
-    { type: 'move', dx: 1 },
-    { type: 'move', dx: 1 },
+    { type: 'rotate', direction: -1 },
     { type: 'hard-drop' },
+    { type: 'tick' }, { type: 'tick' }, { type: 'tick' },
+    { type: 'move', dx: -1 }, { type: 'move', dx: -1 }, { type: 'move', dx: -1 },
+    { type: 'rotate', direction: -1 }, { type: 'move', dx: -1 },
+    { type: 'hard-drop' },
+    { type: 'tick' }, { type: 'tick' }, { type: 'tick' },
+    { type: 'move', dx: 1 }, { type: 'move', dx: 1 }, { type: 'move', dx: 1 },
+    { type: 'rotate', direction: 1 }, { type: 'move', dx: 1 },
+    { type: 'hard-drop' },
+    { type: 'tick' }, { type: 'tick' }, { type: 'tick' }, { type: 'tick' },
+    { type: 'tick' }, { type: 'tick' }, { type: 'tick' }, { type: 'tick' },
+    { type: 'tick' }, { type: 'tick' }, { type: 'tick' }, { type: 'tick' },
   ];
-  let state = createInitialState(seed, 'puzzle', 'offset-02');
+  let state = createInitialState(seed, 'puzzle', 't3r-shaft-01');
   for (const command of commands) state = dispatch(state, command).state;
-  if (state.status !== 'finished' || state.lines !== 1 || state.pieceCount !== 1) {
+  if (state.status !== 'finished' || state.lines !== 4 || state.pieceCount !== 3 || state.puzzleCompletion !== 'finished') {
     throw new Error(`Puzzle rotation replay did not finish: ${state.status}, ${state.lines} lines, ${state.pieceCount} pieces.`);
   }
   return { commands, state, hash: stateHash(state) };

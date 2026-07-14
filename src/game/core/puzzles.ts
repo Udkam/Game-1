@@ -12,45 +12,48 @@ export interface PuzzleCell {
 export interface PuzzleDefinition {
   id: PuzzleId;
   name: string;
-  board: readonly PuzzleCell[];
+  difficulty: number;
+  /** Exactly twenty rows, each with the visible board width. */
+  boardRows: readonly string[];
+  /** Always empty for T3 authored levels; makes hidden-buffer validation explicit. */
+  hiddenCells: readonly PuzzleCell[];
   queue: readonly PieceType[];
   pieceBudget: number;
-  targetLines: number;
 }
 
-const bottomRow = (filledThrough: number, type: PieceType, y = VISIBLE_HEIGHT - 1): PuzzleCell[] => (
-  Array.from({ length: filledThrough + 1 }, (_, x) => ({ x, y, type }))
-);
+const EMPTY_ROW = '.'.repeat(BOARD_WIDTH);
+const EMPTY_HIDDEN_CELLS: readonly PuzzleCell[] = Object.freeze([]);
 
-/**
- * The authored layouts deliberately teach three different public command routes:
- * a horizontal placement, a clockwise I rotation, and a two-piece sequence.
- */
+function rowsWithFloor(row: string): readonly string[] {
+  return Object.freeze([...Array.from({ length: VISIBLE_HEIGHT - 4 }, () => EMPTY_ROW), row, row, row, row]);
+}
+
+function definition(
+  id: PuzzleId,
+  name: string,
+  difficulty: number,
+  floor: string,
+  queue: readonly PieceType[],
+): PuzzleDefinition {
+  return Object.freeze({
+    id,
+    name,
+    difficulty,
+    boardRows: rowsWithFloor(floor),
+    hiddenCells: EMPTY_HIDDEN_CELLS,
+    queue: Object.freeze([...queue]),
+    pieceBudget: queue.length,
+  });
+}
+
+/** Six clean-room T3 campaign boards. Each sequence is finite and authored. */
 export const PUZZLE_DEFINITIONS: readonly PuzzleDefinition[] = [
-  {
-    id: 'offset-01',
-    name: '右侧补线',
-    board: bottomRow(5, 'J'),
-    queue: ['I'],
-    pieceBudget: 1,
-    targetLines: 1,
-  },
-  {
-    id: 'offset-02',
-    name: '竖线缺口',
-    board: bottomRow(8, 'L'),
-    queue: ['I', 'T', 'O'],
-    pieceBudget: 3,
-    targetLines: 1,
-  },
-  {
-    id: 'offset-03',
-    name: '双层回填',
-    board: [...bottomRow(5, 'S', VISIBLE_HEIGHT - 2), ...bottomRow(5, 'Z')],
-    queue: ['I', 'I'],
-    pieceBudget: 2,
-    targetLines: 2,
-  },
+  definition('t3r-shaft-01', '三井初鸣', 4, '.JJJ.JJJJ.', ['I', 'I', 'I']),
+  definition('t3r-shaft-02', '四井错拍', 5, '.J.JJ.JJJ.', ['I', 'I', 'I', 'I']),
+  definition('t3r-shaft-03', '偏置立柱', 5, 'J.J.JJ.J.J', ['I', 'I', 'I', 'I']),
+  definition('t3r-shaft-04', '五井精裁', 6, '.J.J.J.JJ.', ['I', 'I', 'I', 'I', 'I']),
+  definition('t3r-cascade-05', '左岸级联', 7, '.....JJJJJ', ['I', 'I', 'I', 'O', 'O']),
+  definition('t3r-cascade-06', '右岸回流', 8, 'JJJJJ.....', ['I', 'I', 'O', 'I', 'O']),
 ] as const;
 
 const PIECE_TYPE_SET = new Set<string>(PIECE_TYPES);
@@ -58,29 +61,36 @@ const PUZZLE_ID_SET = new Set<string>(PUZZLE_DEFINITIONS.map((definition) => def
 
 export function validatePuzzleDefinition(definition: PuzzleDefinition): void {
   if (!PUZZLE_ID_SET.has(definition.id)) throw new Error(`Unknown puzzle id: ${definition.id}`);
-  if (!Array.isArray(definition.board) || !Array.isArray(definition.queue) || definition.queue.length === 0) {
-    throw new Error(`Puzzle ${definition.id} requires a non-empty board array and queue.`);
+  if (!Number.isSafeInteger(definition.difficulty) || definition.difficulty < 1) {
+    throw new Error(`Puzzle ${definition.id} has an invalid difficulty.`);
   }
-  if (!Number.isSafeInteger(definition.pieceBudget) || definition.pieceBudget <= 0 || definition.pieceBudget > definition.queue.length) {
-    throw new Error(`Puzzle ${definition.id} has an invalid piece budget.`);
+  if (!Array.isArray(definition.boardRows) || definition.boardRows.length !== VISIBLE_HEIGHT) {
+    throw new Error(`Puzzle ${definition.id} requires exactly ${VISIBLE_HEIGHT} visible board rows.`);
   }
-  if (!Number.isSafeInteger(definition.targetLines) || definition.targetLines <= 0 || definition.targetLines > VISIBLE_HEIGHT) {
-    throw new Error(`Puzzle ${definition.id} has an invalid target line count.`);
+  if (!Array.isArray(definition.hiddenCells) || definition.hiddenCells.length !== 0) {
+    throw new Error(`Puzzle ${definition.id} must begin with an empty hidden buffer.`);
   }
-  const occupied = new Set<string>();
-  for (const cell of definition.board) {
-    if (!Number.isInteger(cell.x) || !Number.isInteger(cell.y)
-      || cell.x < 0 || cell.x >= BOARD_WIDTH || cell.y < 0 || cell.y >= VISIBLE_HEIGHT
-      || !PIECE_TYPE_SET.has(cell.type)) {
-      throw new Error(`Puzzle ${definition.id} contains an illegal board cell.`);
-    }
-    const key = `${cell.x}:${cell.y}`;
-    if (occupied.has(key)) throw new Error(`Puzzle ${definition.id} contains a duplicate board cell.`);
-    occupied.add(key);
+  if (!Array.isArray(definition.queue) || definition.queue.length === 0) {
+    throw new Error(`Puzzle ${definition.id} requires a non-empty queue.`);
   }
   if (definition.queue.some((type) => !PIECE_TYPE_SET.has(type))) {
     throw new Error(`Puzzle ${definition.id} contains an illegal queue piece.`);
   }
+  if (!Number.isSafeInteger(definition.pieceBudget) || definition.pieceBudget <= 0 || definition.pieceBudget !== definition.queue.length) {
+    throw new Error(`Puzzle ${definition.id} has an invalid piece budget.`);
+  }
+  let occupied = 0;
+  for (const row of definition.boardRows) {
+    if (typeof row !== 'string' || row.length !== BOARD_WIDTH) {
+      throw new Error(`Puzzle ${definition.id} contains a malformed board row.`);
+    }
+    if ([...row].some((cell) => cell !== '.' && !PIECE_TYPE_SET.has(cell))) {
+      throw new Error(`Puzzle ${definition.id} contains an illegal board cell.`);
+    }
+    if (![...row].includes('.')) throw new Error(`Puzzle ${definition.id} contains an initially full visible row.`);
+    occupied += [...row].filter((cell) => cell !== '.').length;
+  }
+  if (occupied === 0) throw new Error(`Puzzle ${definition.id} requires a non-empty authored board.`);
 }
 
 export function getPuzzleDefinition(id: PuzzleId): PuzzleDefinition {
@@ -93,10 +103,21 @@ export function getPuzzleDefinition(id: PuzzleId): PuzzleDefinition {
 export function createPuzzleBoard(definition: PuzzleDefinition): Board {
   validatePuzzleDefinition(definition);
   const board = createBoard();
-  for (const cell of definition.board) board[VISIBLE_START_ROW + cell.y]![cell.x] = cell.type;
+  for (let y = 0; y < definition.boardRows.length; y += 1) {
+    const row = definition.boardRows[y]!;
+    for (let x = 0; x < row.length; x += 1) {
+      const type = row[x]!;
+      if (type !== '.') board[VISIBLE_START_ROW + y]![x] = type as PieceType;
+    }
+  }
   return board;
 }
 
 export function defaultPuzzleId(): PuzzleId {
   return PUZZLE_DEFINITIONS[0].id;
+}
+
+export function nextPuzzleId(id: PuzzleId): PuzzleId | null {
+  const index = PUZZLE_DEFINITIONS.findIndex((definition) => definition.id === id);
+  return index >= 0 ? PUZZLE_DEFINITIONS[index + 1]?.id ?? null : null;
 }

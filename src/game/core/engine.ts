@@ -12,10 +12,10 @@ import {
 } from './constants';
 import { canPlace, clearRows, createBoard, fullRows, isGrounded, mergePiece } from './board';
 import { cellsForPiece, createSpawnPiece, nextRotation } from './pieces';
-import { createPuzzleBoard, defaultPuzzleId, getPuzzleDefinition } from './puzzles';
+import { createPuzzleBoard, defaultPuzzleId, getPuzzleDefinition, nextPuzzleId } from './puzzles';
 import { createRandomizer, drawPiece } from './random';
 import { kickTests } from './rotation';
-import type { ActivePiece, GameCommand, GameEvent, GameMode, GameState, GameTransition, PieceType, PuzzleId } from './types';
+import type { ActivePiece, GameCommand, GameEvent, GameMode, GameState, GameTransition, PieceType, PuzzleCompletion, PuzzleId } from './types';
 
 function refillQueue(state: GameState, minimum = NEXT_QUEUE_SIZE + 1): GameState {
   if (state.mode === 'puzzle') return state;
@@ -29,7 +29,70 @@ function refillQueue(state: GameState, minimum = NEXT_QUEUE_SIZE + 1): GameState
   return { ...state, queue, randomizer };
 }
 
+function puzzleFailure(
+  state: GameState,
+  completion: Exclude<PuzzleCompletion, 'active' | 'finished'>,
+  reason: Extract<GameEvent, { type: 'game-over' }>['reason'],
+): GameTransition {
+  return {
+    state: {
+      ...state,
+      active: null,
+      status: 'game-over',
+      phase: 'active',
+      phaseTicks: 0,
+      pendingClearRows: [],
+      gravityTicks: 0,
+      lockTicks: 0,
+      lockResets: 0,
+      puzzleCompletion: completion,
+      completedLevelId: null,
+      nextUnlockedLevelId: null,
+    },
+    events: [{ type: 'game-over', reason }],
+  };
+}
+
+function hasHiddenOccupancy(state: GameState): boolean {
+  return state.board.slice(0, VISIBLE_START_ROW).some((row) => row.some((cell) => cell !== null));
+}
+
+function canonicalOccupiedCount(state: GameState): number {
+  return state.board.flat().filter((cell) => cell !== null).length;
+}
+
+function spawnPuzzlePiece(state: GameState): GameTransition {
+  const queue = state.puzzleQueue;
+  const queueIndex = state.puzzleQueueIndex;
+  if (!queue || state.puzzleGoal !== 'canonical-board-empty' || state.puzzlePieceBudget !== queue.length) {
+    return invalidState(state);
+  }
+  const pieceType = queue[queueIndex];
+  if (!pieceType) return puzzleFailure(state, 'failed-budget', 'puzzle-budget');
+  const active = createSpawnPiece(pieceType);
+  if (!canPlace(state.board, active)) return puzzleFailure(state, 'failed-invalid-spawn', 'puzzle-invalid-spawn');
+  return {
+    state: {
+      ...state,
+      active,
+      queue: queue.slice(queueIndex + 1),
+      puzzleQueueIndex: queueIndex + 1,
+      phase: 'active',
+      phaseTicks: 0,
+      pendingClearRows: [],
+      gravityTicks: 0,
+      lockTicks: 0,
+      lockResets: 0,
+    },
+    events: [],
+  };
+}
+
 function spawnPiece(state: GameState, type?: PieceType): GameTransition {
+  if (state.mode === 'puzzle') {
+    if (type) return invalidState(state);
+    return spawnPuzzlePiece(state);
+  }
   let next = refillQueue(state, type ? NEXT_QUEUE_SIZE : NEXT_QUEUE_SIZE + 1);
   const queue = [...next.queue];
   const pieceType = type ?? queue.shift();
@@ -68,8 +131,15 @@ export function createInitialState(seed = 0x51a1f00d, mode: GameMode = 'marathon
     level: 0,
     mode,
     puzzleId: selectedPuzzle?.id ?? null,
-    puzzleTargetLines: selectedPuzzle?.targetLines ?? null,
+    puzzleTargetLines: null,
     puzzlePieceBudget: selectedPuzzle?.pieceBudget ?? null,
+    puzzleBoardRows: selectedPuzzle?.boardRows ?? null,
+    puzzleQueue: selectedPuzzle?.queue ?? null,
+    puzzleQueueIndex: 0,
+    puzzleGoal: selectedPuzzle ? 'canonical-board-empty' : null,
+    puzzleCompletion: selectedPuzzle ? 'active' : null,
+    completedLevelId: null,
+    nextUnlockedLevelId: null,
     pieceCount: 0,
     status: 'ready',
     phase: 'active',
@@ -82,13 +152,63 @@ export function createInitialState(seed = 0x51a1f00d, mode: GameMode = 'marathon
     randomizer: createRandomizer(seed),
     seed,
   };
+  if (selectedPuzzle) return base;
   return { ...spawnPiece(base).state, status: 'ready' };
 }
 
 function invalidState(state: GameState): GameTransition {
+  if (state.mode === 'puzzle') return puzzleFailure(state, 'failed-top-out', 'invalid-state');
   return {
     state: { ...state, active: null, status: 'game-over' },
     events: [{ type: 'game-over', reason: 'invalid-state' }],
+  };
+}
+
+function finishPuzzleSuccess(state: GameState): GameTransition {
+  const levelId = state.puzzleId;
+  if (!levelId) return invalidState(state);
+  return {
+    state: {
+      ...state,
+      active: null,
+      status: 'finished',
+      phase: 'active',
+      phaseTicks: 0,
+      pendingClearRows: [],
+      gravityTicks: 0,
+      lockTicks: 0,
+      lockResets: 0,
+      puzzleCompletion: 'finished',
+      completedLevelId: levelId,
+      nextUnlockedLevelId: nextPuzzleId(levelId),
+    },
+    events: [{ type: 'finished', completionTicks: state.elapsedTicks }],
+  };
+}
+
+/** Puzzle-only post-lock resolution after shared merge and ordinary line clearing. */
+function resolvePuzzleAfterLock(state: GameState, spawnImmediately: boolean): GameTransition {
+  const queue = state.puzzleQueue;
+  if (!queue || state.puzzleGoal !== 'canonical-board-empty' || state.puzzlePieceBudget !== queue.length) {
+    return invalidState(state);
+  }
+  if (hasHiddenOccupancy(state)) return puzzleFailure(state, 'failed-top-out', 'lock-out');
+  if (canonicalOccupiedCount(state) === 0) return finishPuzzleSuccess(state);
+  if (state.pieceCount >= state.puzzlePieceBudget || state.puzzleQueueIndex >= queue.length) {
+    return puzzleFailure(state, 'failed-budget', 'puzzle-budget');
+  }
+  if (spawnImmediately) return spawnPiece(state);
+  return {
+    state: {
+      ...state,
+      active: null,
+      phase: 'entry',
+      phaseTicks: 0,
+      gravityTicks: 0,
+      lockTicks: 0,
+      lockResets: 0,
+    },
+    events: [],
   };
 }
 
@@ -129,6 +249,10 @@ function lockActive(state: GameState, extraEvents: GameEvent[] = []): GameTransi
   const lockOut = cells.every((cell) => cell.y < VISIBLE_START_ROW) && rows.length === 0;
 
   if (lockOut) {
+    if (state.mode === 'puzzle') {
+      const failed = puzzleFailure({ ...state, board, active: null, pieceCount }, 'failed-top-out', 'lock-out');
+      return { state: failed.state, events: [...extraEvents, lockedEvent, ...failed.events] };
+    }
     return {
       state: { ...state, board, active: null, status: 'game-over', pieceCount },
       events: [...extraEvents, lockedEvent, { type: 'game-over', reason: 'lock-out' }],
@@ -147,18 +271,23 @@ function lockActive(state: GameState, extraEvents: GameEvent[] = []): GameTransi
       gravityTicks: 0,
       lockTicks: 0,
     };
-    if (state.mode === 'puzzle') {
-      const resolved = finishLineClear(clearing);
-      return { state: resolved.state, events: [...extraEvents, lockedEvent, { type: 'clear-started', rows }, ...resolved.events] };
-    }
     return { state: clearing, events: [...extraEvents, lockedEvent, { type: 'clear-started', rows }] };
   }
 
-  if (state.mode === 'puzzle' && pieceCount >= (state.puzzlePieceBudget ?? 0)) {
-    return {
-      state: { ...state, board, active: null, pieceCount, phase: 'active', status: 'game-over' },
-      events: [...extraEvents, lockedEvent, { type: 'game-over', reason: 'puzzle-budget' }],
-    };
+  if (state.mode === 'puzzle') {
+    const resolved = resolvePuzzleAfterLock({
+      ...state,
+      board,
+      active: null,
+      pieceCount,
+      phase: 'active',
+      phaseTicks: 0,
+      pendingClearRows: [],
+      gravityTicks: 0,
+      lockTicks: 0,
+      lockResets: 0,
+    }, false);
+    return { state: resolved.state, events: [...extraEvents, lockedEvent, ...resolved.events] };
   }
 
   return {
@@ -247,37 +376,8 @@ function finishLineClear(state: GameState): GameTransition {
     };
   }
   if (cleared.mode === 'puzzle') {
-    const target = cleared.puzzleTargetLines;
-    const budget = cleared.puzzlePieceBudget;
-    if (!target || !budget) return invalidState(cleared);
-    if (lines >= target) {
-      return {
-        state: {
-          ...cleared,
-          active: null,
-          phase: 'active',
-          status: 'finished',
-          gravityTicks: 0,
-          lockTicks: 0,
-          lockResets: 0,
-        },
-        events: [...events, { type: 'finished', completionTicks: cleared.elapsedTicks }],
-      };
-    }
-    if (cleared.pieceCount >= budget) {
-      return {
-        state: {
-          ...cleared,
-          active: null,
-          phase: 'active',
-          status: 'game-over',
-          gravityTicks: 0,
-          lockTicks: 0,
-          lockResets: 0,
-        },
-        events: [...events, { type: 'game-over', reason: 'puzzle-budget' }],
-      };
-    }
+    const resolved = resolvePuzzleAfterLock(cleared, true);
+    return { state: resolved.state, events: [...events, ...resolved.events] };
   }
   const spawned = spawnPiece(cleared);
   return { state: spawned.state, events: [...events, ...spawned.events] };
@@ -331,6 +431,10 @@ export function dispatch(state: GameState, command: GameCommand): GameTransition
     };
   }
   if (command.type === 'start' && state.status === 'ready') {
+    if (state.mode === 'puzzle') {
+      const spawned = spawnPiece({ ...state, status: 'playing' });
+      return { state: spawned.state, events: [{ type: 'started' }, ...spawned.events] };
+    }
     return { state: { ...state, status: 'playing' }, events: [{ type: 'started' }] };
   }
   if (command.type === 'pause' && state.status === 'playing') {
@@ -368,7 +472,25 @@ export function replay(seed: number, commands: readonly GameCommand[], mode: Gam
 }
 
 export function stateHash(state: GameState): string {
-  const canonical = JSON.stringify(state);
+  // T3-only fields are irrelevant to Marathon/Race and intentionally omitted
+  // there so their established replay hashes remain stable. Puzzle state hashes
+  // include the entire authored campaign payload and outcome fields.
+  const canonicalState = state.mode === 'puzzle'
+    ? state
+    : (() => {
+      const {
+        puzzleBoardRows: _puzzleBoardRows,
+        puzzleQueue: _puzzleQueue,
+        puzzleQueueIndex: _puzzleQueueIndex,
+        puzzleGoal: _puzzleGoal,
+        puzzleCompletion: _puzzleCompletion,
+        completedLevelId: _completedLevelId,
+        nextUnlockedLevelId: _nextUnlockedLevelId,
+        ...legacyState
+      } = state;
+      return legacyState;
+    })();
+  const canonical = JSON.stringify(canonicalState);
   let hash = 2166136261;
   for (let index = 0; index < canonical.length; index += 1) {
     hash ^= canonical.charCodeAt(index);

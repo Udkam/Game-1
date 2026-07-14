@@ -26,7 +26,21 @@ export interface RandomizerState {
 export type GameStatus = 'ready' | 'playing' | 'paused' | 'game-over' | 'finished';
 export type GamePhase = 'active' | 'entry' | 'line-clear';
 export type GameMode = 'marathon' | 'race' | 'puzzle';
-export type PuzzleId = 'offset-01' | 'offset-02' | 'offset-03';
+export type PuzzleId =
+  | 't3r-shaft-01'
+  | 't3r-shaft-02'
+  | 't3r-shaft-03'
+  | 't3r-shaft-04'
+  | 't3r-cascade-05'
+  | 't3r-cascade-06';
+
+export type PuzzleGoal = 'canonical-board-empty';
+export type PuzzleCompletion =
+  | 'active'
+  | 'finished'
+  | 'failed-top-out'
+  | 'failed-invalid-spawn'
+  | 'failed-budget';
 
 export interface GameState {
   board: Board;
@@ -37,8 +51,23 @@ export interface GameState {
   level: number;
   mode: GameMode;
   puzzleId: PuzzleId | null;
+  /**
+   * Temporary presentation bridge for the frozen T2 shell. Puzzle core rules
+   * never read this field: T3 success is exclusively canonical-board-empty.
+   * @deprecated Remove when the presentation shell consumes puzzleGoal.
+   */
   puzzleTargetLines: number | null;
   puzzlePieceBudget: number | null;
+  /** Immutable authored visible board source; the mutable canonical board is above. */
+  puzzleBoardRows: readonly string[] | null;
+  /** Immutable full authored sequence, including the currently active item. */
+  puzzleQueue: readonly PieceType[] | null;
+  /** Number of authored items successfully spawned into active play. */
+  puzzleQueueIndex: number;
+  puzzleGoal: PuzzleGoal | null;
+  puzzleCompletion: PuzzleCompletion | null;
+  completedLevelId: PuzzleId | null;
+  nextUnlockedLevelId: PuzzleId | null;
   pieceCount: number;
   status: GameStatus;
   phase: GamePhase;
@@ -76,7 +105,7 @@ export type GameEvent =
   | { type: 'lines-cleared'; rows: number[]; count: number; score: number }
   | { type: 'level-up'; level: number }
   | { type: 'finished'; completionTicks: number }
-  | { type: 'game-over'; reason: 'block-out' | 'lock-out' | 'puzzle-budget' | 'invalid-state' };
+  | { type: 'game-over'; reason: 'block-out' | 'lock-out' | 'puzzle-budget' | 'puzzle-invalid-spawn' | 'invalid-state' };
 
 export interface GameTransition {
   state: GameState;

@@ -1,72 +1,95 @@
 import { describe, expect, it } from 'vitest';
-import { createInitialState, dispatch, replay, stateHash } from './engine';
-import { PUZZLE_DEFINITIONS, getPuzzleDefinition, validatePuzzleDefinition } from './puzzles';
-import type { GameCommand } from './types';
+import accepted from '../../../docs/workstreams/tetris-t3-rules/levels.json';
+import { createInitialState, dispatch, stateHash } from './engine';
+import { PUZZLE_DEFINITIONS, getPuzzleDefinition, validatePuzzleDefinition, type PuzzleDefinition } from './puzzles';
+import type { PieceType, PuzzleId } from './types';
 
-function run(commands: readonly GameCommand[], id: 'offset-01' | 'offset-02' | 'offset-03') {
-  return replay(0x0ff5e7, commands, 'puzzle', id);
+type AcceptedLevel = {
+  id: PuzzleId;
+  name: string;
+  difficulty: number;
+  boardRows: string[];
+  queue: PieceType[];
+  pieceBudget: number;
+};
+
+const acceptedLevels = accepted as unknown as { levels: AcceptedLevel[] };
+
+function invalid(definition: PuzzleDefinition, patch: Partial<PuzzleDefinition>): PuzzleDefinition {
+  return { ...definition, ...patch };
 }
 
-describe('clean-room puzzle definitions', () => {
-  it('has three distinct typed boards, queues, and budgets', () => {
-    expect(PUZZLE_DEFINITIONS).toHaveLength(3);
-    expect(new Set(PUZZLE_DEFINITIONS.map((definition) => JSON.stringify(definition.board))).size).toBe(3);
-    expect(new Set(PUZZLE_DEFINITIONS.map((definition) => JSON.stringify(definition.queue))).size).toBe(3);
-    expect(new Set(PUZZLE_DEFINITIONS.map((definition) => definition.pieceBudget)).size).toBeGreaterThan(1);
+describe('T3 campaign definitions', () => {
+  it('matches the accepted six-level contract exactly', () => {
+    expect(PUZZLE_DEFINITIONS).toHaveLength(6);
+    expect(PUZZLE_DEFINITIONS.map((definition) => ({
+      id: definition.id,
+      name: definition.name,
+      difficulty: definition.difficulty,
+      boardRows: definition.boardRows,
+      queue: definition.queue,
+      pieceBudget: definition.pieceBudget,
+    }))).toEqual(acceptedLevels.levels.map((level) => ({
+      id: level.id,
+      name: level.name,
+      difficulty: level.difficulty,
+      boardRows: level.boardRows,
+      queue: level.queue,
+      pieceBudget: level.pieceBudget,
+    })));
     for (const definition of PUZZLE_DEFINITIONS) expect(() => validatePuzzleDefinition(definition)).not.toThrow();
   });
 
-  it('fails closed for duplicate cells, empty queues, and illegal budgets', () => {
-    const first = getPuzzleDefinition('offset-01');
-    expect(() => validatePuzzleDefinition({ ...first, board: [...first.board, first.board[0]!] })).toThrow(/duplicate/i);
-    expect(() => validatePuzzleDefinition({ ...first, queue: [] })).toThrow(/non-empty/i);
-    expect(() => validatePuzzleDefinition({ ...first, pieceBudget: 2 })).toThrow(/budget/i);
+  it('fails closed for malformed rows, unsupported cells, empty/full boards, hidden cells, queues, and budgets', () => {
+    const first = getPuzzleDefinition('t3r-shaft-01');
+    expect(() => validatePuzzleDefinition(invalid(first, { boardRows: first.boardRows.slice(1) }))).toThrow(/exactly/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { boardRows: [...first.boardRows.slice(0, 19), '.........'] }))).toThrow(/malformed/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { boardRows: [...first.boardRows.slice(0, 19), 'QJJJ.JJJJ.'] }))).toThrow(/illegal/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { boardRows: Array.from({ length: 20 }, () => '..........') }))).toThrow(/non-empty/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { boardRows: [...first.boardRows.slice(0, 19), 'JJJJJJJJJJ'] }))).toThrow(/full visible row/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { hiddenCells: [{ x: 0, y: 0, type: 'J' }] }))).toThrow(/hidden buffer/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { queue: [] }))).toThrow(/non-empty queue/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { queue: ['Q'] as unknown as PieceType[] }))).toThrow(/illegal queue/i);
+    expect(() => validatePuzzleDefinition(invalid(first, { pieceBudget: first.queue.length - 1 }))).toThrow(/budget/i);
   });
 });
 
-describe('puzzle canonical simulation', () => {
-  it('has no automatic gravity and includes definition facts in its hash', () => {
-    const initial = dispatch(createInitialState(7, 'puzzle', 'offset-01'), { type: 'start' }).state;
-    let afterTicks = initial;
+describe('T3 puzzle canonical initialization', () => {
+  it('keeps the authored queue immutable and advances its index only after successful spawns', () => {
+    const ready = createInitialState(7, 'puzzle', 't3r-shaft-02');
+    expect(ready.status).toBe('ready');
+    expect(ready.active).toBeNull();
+    expect(ready.puzzleQueueIndex).toBe(0);
+    expect(ready.queue).toEqual(['I', 'I', 'I', 'I']);
+    expect(ready.puzzleQueue).toEqual(['I', 'I', 'I', 'I']);
+    expect(ready.puzzleGoal).toBe('canonical-board-empty');
+    expect(ready.puzzleCompletion).toBe('active');
+    expect(ready.puzzleTargetLines).toBeNull();
+
+    const playing = dispatch(ready, { type: 'start' }).state;
+    expect(playing.active?.type).toBe('I');
+    expect(playing.puzzleQueueIndex).toBe(1);
+    expect(playing.queue).toEqual(['I', 'I', 'I']);
+    expect(playing.puzzleQueue).toEqual(ready.puzzleQueue);
+  });
+
+  it('has no automatic puzzle gravity and hashes campaign-only facts', () => {
+    const started = dispatch(createInitialState(7, 'puzzle', 't3r-shaft-01'), { type: 'start' }).state;
+    let afterTicks = started;
     for (let index = 0; index < 180; index += 1) afterTicks = dispatch(afterTicks, { type: 'tick' }).state;
-    expect(afterTicks.active?.y).toBe(initial.active?.y);
-    expect(stateHash(initial)).not.toBe(stateHash(createInitialState(7, 'puzzle', 'offset-02')));
+    expect(afterTicks.active?.y).toBe(started.active?.y);
+    expect(stateHash(started)).not.toBe(stateHash({ ...started, puzzleQueueIndex: 2 }));
+    expect(stateHash(started)).not.toBe(stateHash({ ...started, puzzleCompletion: 'failed-budget' }));
   });
 
-  it('finishes the authored rotation puzzle through public commands only', () => {
-    const commands: GameCommand[] = [
-      { type: 'start' },
-      { type: 'rotate', direction: 1 },
-      { type: 'move', dx: 1 }, { type: 'move', dx: 1 }, { type: 'move', dx: 1 }, { type: 'move', dx: 1 },
-      { type: 'hard-drop' },
-    ];
-    const state = run(commands, 'offset-02');
-    expect(state.status).toBe('finished');
-    expect(state.lines).toBe(1);
-    expect(state.pieceCount).toBe(1);
-    expect(state.active).toBeNull();
-    expect(stateHash(state)).toBe(stateHash(run(commands, 'offset-02')));
-  });
-
-  it('requires a two-piece public command sequence for the double-layer puzzle', () => {
-    const commands: GameCommand[] = [
-      { type: 'start' },
-      { type: 'move', dx: 1 }, { type: 'move', dx: 1 }, { type: 'move', dx: 1 }, { type: 'hard-drop' },
-      { type: 'move', dx: 1 }, { type: 'move', dx: 1 }, { type: 'move', dx: 1 }, { type: 'hard-drop' },
-    ];
-    const state = run(commands, 'offset-03');
-    expect(state.status).toBe('finished');
-    expect(state.lines).toBe(2);
-    expect(state.pieceCount).toBe(2);
-  });
-
-  it('ends immediately when the budget is exhausted and preserves puzzle identity through restart', () => {
-    const failed = run([{ type: 'start' }, { type: 'hard-drop' }], 'offset-01');
-    expect(failed.status).toBe('game-over');
-    expect(failed.pieceCount).toBe(1);
-    const restarted = dispatch(failed, { type: 'restart' }).state;
-    expect(restarted.mode).toBe('puzzle');
-    expect(restarted.puzzleId).toBe('offset-01');
-    expect(dispatch(restarted, { type: 'restart', mode: 'marathon' }).state.puzzleId).toBeNull();
+  it('restarts the exact authored ready state without retaining completion or unlock data', () => {
+    const initial = createInitialState(0x0ff5e7, 'puzzle', 't3r-cascade-05');
+    const started = dispatch(initial, { type: 'start' }).state;
+    const restarted = dispatch(started, { type: 'restart' }).state;
+    expect(stateHash(restarted)).toBe(stateHash(initial));
+    expect(restarted.active).toBeNull();
+    expect(restarted.puzzleQueueIndex).toBe(0);
+    expect(restarted.completedLevelId).toBeNull();
+    expect(restarted.nextUnlockedLevelId).toBeNull();
   });
 });
