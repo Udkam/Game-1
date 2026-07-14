@@ -58,3 +58,19 @@
   bytes streamed through `git show <candidate>:<path>` into `hashlib.sha256`; it is
   independent of `core.autocrlf` and worktree checkout bytes. No evidence JSON, PNG,
   product source, or browser/test/build artifact was regenerated.
+
+## Coordinator integration acknowledgement — 2026-07-15
+
+REPORT TETRIS-T3-V1 INTEGRATED
+THREAD 019f4deb-7e83-7583-8cd5-8e6f075bc331
+TIME 2026-07-15T01:40:12+08:00
+BASE 3bed71f8a84e4608beae4bbaf4479cfbed4e69ed
+PARENT 4c85828
+HEAD 4c85828
+CANDIDATE 6fb1728f6a3e9cf4398304ac9a638df2ddf4c1d7
+WRITE_SCOPE coordinator historical-status closure only in this log
+DIRTY clean at coordinator reconciliation
+GATES accepted QA `fdd1ffb`; final candidate typecheck, 12-file / 78-test suite, build, and 16-capture browser evidence are recorded by the accepted chain
+EVIDENCE canonical raw-Git-blob manifest re-review plus final coordinator live review; published in `4c85828`
+BLOCKER none
+NEXT closed; any future Tetris feature requires a new bounded task and independent QA

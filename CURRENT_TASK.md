@@ -1,4 +1,4 @@
-# Current Task — T3 Production Chain
+# Current Task — T3 Production Record and Next-Work Gate
 
 Branch: `codex/tetris`
 
@@ -17,6 +17,19 @@ The T3 production chain is complete through its independent QA gate: C1 campaign
 correctness was accepted before V1 started, and V1 passed final browser evidence plus
 the canonical Git-blob integrity re-review. The coordinator integrated the accepted
 chain and pushed it to `origin/codex/tetris` in commit `4c85828`.
+
+## 2026-07-15 coordinator reconciliation
+
+Tetris is complete for the currently approved goal: a clean-room three-mode game with
+the six-level fixed-queue Puzzle campaign, canonical empty-board completion, the light
+Mineral Shelf presentation, responsive keyboard/touch controls, deterministic replay,
+and final browser evidence. There is deliberately **no active Tetris writer or QA task**.
+
+The next product lane is Temple only after its separate A6 planning review has produced
+a durable coordinator-acknowledged report. No Tetris source, rules, campaign data, or
+existing evidence may be reopened merely to create activity. Any later Tetris change
+must start as a new named slice with its own exact path list, acceptance gate, and
+independent QA route.
 
 ## Accepted prerequisite: T3-C1 Core campaign
 

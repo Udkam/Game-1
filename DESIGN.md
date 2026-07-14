@@ -243,10 +243,12 @@ C1 is not a user-facing release and is not pushed as a completed T3 milestone by
 itself. V1 must remove the deprecated UI bridge and prove the real combined state
 before the coordinator publishes the production chain.
 
-Implementation status on 2026-07-14: C1 candidate `8323203` and independent QA
-`b79e142` are integrated. The six-level campaign core is therefore frozen; the active
-work is V1 only. This status does not claim the D5 presentation or final browser
-experience is implemented.
+Implementation status on 2026-07-15: C1 candidate `8323203` and independent QA
+`b79e142` are integrated. V1 candidate `6fb1728` and independent QA `fdd1ffb` are
+also integrated and published by coordinator commit `4c85828`. The six-level campaign
+and the D5 Mineral Shelf presentation are frozen as an accepted T3 milestone; no
+Tetris product slice is currently open. Any future enhancement requires a new bounded
+task and fresh browser evidence rather than reinterpreting this historical contract.
 
 ## Final acceptance
 

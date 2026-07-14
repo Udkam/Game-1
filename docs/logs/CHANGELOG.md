@@ -149,3 +149,18 @@
   suite, build, browser review, and a final coordinator live review. Independent QA
   accepted the canonical raw-Git-blob evidence manifest in log-only commit `fdd1ffb`;
   all 32 evidence entries match under both CRLF configurations.
+
+## 2026-07-15 — Coordination and feedback reconciliation
+
+- Verified that `codex/tetris` is clean at `da213a1` and matches
+  `origin/codex/tetris`; T3 C1/V1 and the six-level Puzzle campaign are fully
+  integrated and published in `4c85828`. Tetris has no active product task.
+- Corrected the stale T3 status sentence in `DESIGN.md` and appended explicit
+  coordinator-integration records to the historical C1 and V1 workstream logs so their
+  old candidate handoffs cannot be mistaken for unfinished work.
+- Replaced the invalid A6-review “active” state with one restarted, read-only review
+  that has an exact two-file log boundary and a fixed durable report format. The stale
+  heartbeat aimed at a nonexistent review log was deleted.
+- Temple remains deferred and untouched while that A6 planning review is verified;
+  no Blender, runtime, asset, browser, cleanup, or Git action is opened by this
+  documentation reconciliation.
