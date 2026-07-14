@@ -56,7 +56,8 @@ claims, or scope drift stay `BLOCKED`; silence is never acknowledgement.
 | Temple TR3 A5 visual review | `019f607b-f5f5-7e31-9d2b-8c8a1578a9c8` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except its own workstream docs | Complete planning review; no rendering or production edits occurred. | `ACK-TEMPLE-A5-VISUAL-001`: verified its corrected protocol report and the root-cause contract. Its raster/depth/editability/first-glance gates are binding for A5. |
 | Temple TR3 A5 technical review | `019f607c-2f12-7242-b396-9643d50e9ac3` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except its own workstream docs | Complete planning review; no rendering or production edits occurred. | `ACK-TEMPLE-A5-TECH-001`: verified its corrected protocol report and recovery plan. Geometry recovery is necessary; camera-only repair is prohibited. |
 | Temple TR3 A5 implementation | `019f6086-028d-7560-8f3f-eddfda489694` | `E:\Proj\Game-1-temple` via `E:\Proj` / `codex/temple-run` | Closed without a candidate. The sole offline Blender batch emitted image passes but failed before metadata; the fail-closed evaluator and manual visual gate both blocked the proof. A5 evidence and inherited Temple dirt are preserved unchanged. | `ACK-TEMPLE-A5-BLOCKED-004`: corrected terminal report, artifact hashes, missing metadata, and preservation snapshot were independently verified. No retry, metadata reconstruction, export, integration, QA, commit, or push is open. |
-| Temple TR3 A6 preflight | `019f607c-2f12-7242-b396-9643d50e9ac3` | `E:\Proj\Game-1-temple` via `E:\Proj` / `codex/temple-run` | Active documentation-only recovery contract. It may define metadata compatibility and a new structural composition preflight, but cannot render, generate assets, edit product code, or authorize A6 implementation. | Awaiting `READY_FOR_COORDINATOR_REVIEW`; a read-only visual/technical review is the only possible follow-up. |
+| Temple TR3 A6 preflight | `019f607c-2f12-7242-b396-9643d50e9ac3` | `E:\Proj\Game-1-temple` via `E:\Proj` / `codex/temple-run` | Accepted documentation-only recovery preflight. It establishes source compatibility and structural composition gates, but creates no product/runtime/render authority. | `ACK-TEMPLE-A6-PREFLIGHT-005`: terminal report, exact permitted scope, and preservation against the A5 snapshot were verified. A separate read-only review is required before any later implementation scope. |
+| Temple TR3 A6 independent review | `019f607b-f5f5-7e31-9d2b-8c8a1578a9c8` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except its own A6-review docs | Active review of the A6 preflight for fail-closed metadata, composition, and clean-room boundaries. It cannot change A6, assets, source, or authorize Blender. | Awaiting a fixed-format `PLAN_COMPLETE` or `BLOCKED` report; no implementation begins before coordinator review. |
 
 ## Terminal acknowledgement: Temple TR3 A4
 
@@ -102,6 +103,30 @@ consumed. Do not rerun either, reconstruct metadata from PNGs, export, integrate
 runtime code, stage, commit, push, or route the proof to QA. Only a separately
 authorized A6 no-render preflight and composition-reconstruction contract may
 resume Temple work; it must pass before another render batch is authorized.
+
+## Terminal acknowledgement: Temple TR3 A6 preflight
+
+ACK-TEMPLE-A6-PREFLIGHT-005 — 2026-07-14T20:54:02+08:00
+
+The coordinator read the completed external task and both required terminal
+reports. The A6 work stayed within its append-only Temple contract/log paths
+and three new preflight documents. Rehashing the A5 inherited snapshot again
+found all 107 non-contract paths intact; `git diff --check` is clean. No
+Blender, renderer, browser capture, asset generation, product source, test,
+build, Git mutation, or QA action was performed.
+
+The contract correctly treats A4 as the only clay-material authority, forbids
+the absent `A3.materialValues` lookup, and requires an atomic, typed pure-data
+preflight before any future render process. Its composition specification also
+turns the A5 visual defects into measurable pre-render gates: a central chase
+line, physical road cross-sections, canyon occlusion hierarchy, route-frame
+pursuer proof, readable supported arch, and local editable Tide Scar without
+semantic overlap. This accepts the A6 documentation as planning input only.
+
+It does not authorize Blender, a preflight implementation, asset export,
+runtime integration, QA, commit, or push in the Temple repository. The next
+possible action is one separately scoped read-only review of A6, followed only
+by an explicit coordinator decision about implementation.
 
 ## Coordinator polling rule
 
