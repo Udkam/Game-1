@@ -62,3 +62,37 @@
   18 canonical Git-blob SHA-256 entries matched under both CRLF settings.
 - Integrated QA-003 acceptance from `9d4537b`; superseded QA-002 commit `eabbcb6` was
   deliberately excluded. No Temple production or evidence path was included.
+
+## 2026-07-14 — Tetris T3 design and Puzzle contract accepted
+
+- Recorded the user's rejection of the T2 dark Offset Drop presentation as the start
+  of a new T3 production chain; T2 remains historical evidence rather than the active
+  visual or Puzzle contract.
+- Accepted the original D5 `浅岩台 / Mineral Shelf` direction: a light paper and light
+  mineral 1:2 board, a small complete `Tetris` wordmark, one Next, five 44px+ controls,
+  a board-contained pause strip, and flat external mode/level selection without cards,
+  modals, giant titles, diagonal bands, Hold/暂存, or meaningless telemetry.
+- Corrected and re-captured all 12 D5 formal states. Independent D5 QA verified visible
+  title safe insets, essential copy at least 12px including 844 × 390, Race copy at
+  exactly 20 lines, six reachable representative level rows, no overflow/overlap, and
+  zero recorded console errors. Accepted source/QA identities are `4e13fcc` and
+  `e31a0b6`.
+- Accepted the clean-room T3R six-level campaign contract. Every level starts from a
+  non-empty authored 20 × 10 stack, uses one finite fixed sequence and exact piece
+  budget, and succeeds only when the complete canonical board—including the hidden
+  buffer—is empty after ordinary line resolution.
+- Added fail-closed ordering for top-out, canonical-board-empty success, exhausted
+  budget/queue, and invalid spawn; canonical queue index, completion, completed level,
+  and unlock result are reserved for production state/hash/replay.
+- T3R reference evidence now proves six deterministic solutions, including 5-lock
+  late-campaign levels, effective rotations and at least three distinct landing
+  columns; negative proofs cover hidden/visible residuals, initial full rows, invalid
+  spawn, queue exhaustion, stale digests, unused queue, and terminal tail commands.
+  Independent T3R QA accepted `a096d96` with QA `0cf78e3` after one targeted 18-test
+  verifier run in a clean dependency environment.
+- Replaced root `DESIGN.md` and `CURRENT_TASK.md` with an atomic T3 production plan:
+  C1 implements and independently verifies the core campaign first; V1 then binds the
+  accepted D5 frontend and real campaign progression before the coordinator publishes
+  a completed T3 milestone. No T3 production source is claimed complete by this entry.
+- The pre-existing untracked `docs/screenshots/temple/` directory remains excluded and
+  untouched; Temple Run continues only in its separate worktree and branch.
