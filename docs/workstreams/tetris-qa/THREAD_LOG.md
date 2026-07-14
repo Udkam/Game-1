@@ -69,3 +69,17 @@ D5 `e31a0b665ff0864a0af35ab05dde4072bc96bbf5` is a separate divergent design-cha
 RESIDUAL this accepts design/rules evidence only and grants no production implementation authority.
 NEXT coordinator integration decision only; QA does not push.
 LOG `docs/workstreams/tetris-qa/THREAD_LOG.md` only.
+
+## 2026-07-14 — TETRIS-D5-QA-002 design-only replacement acceptance
+
+REPORT TETRIS-D5-QA TETRIS-D5-QA-002 ACCEPTED
+HEAD `4e13fcc01f2fec703e66f9027d7df25847bbe235`; PARENT `f7afb0ae4bedc872db47afae380bf3e2db43bf1a`; QA_SHA pending log-only commit.
+SCOPE direct 19-path correction stays under `docs/workstreams/tetris-visual-design/**`; whitespace clean, no production/root/package/Temple delta.
+EVIDENCE manually reviewed all 12 recaptured PNGs; `d5-geometry-evidence.json` reports 16 cases, 0 console errors, no overflow/overlap, board ratio 2, and controls at least `52 × 48`.
+VISUAL complete `Tetris` is visibly inside all desktop/portrait/landscape images; title safe top inset is 8px desktop/portrait and 4px landscape, with no giant title, stripe, dark well, card grid, modal, Hold, or 暂存.
+LAYOUT all 16 cases have essential/help/control/action copy ≥12px; six representative flat level rows are scroll-reachable (including row 6), selected `关卡 3/6`, a graphical single Next only while playing, and board-contained pause.
+RULES race copy is `完成 20 行`; prototype source has no stale `40 行`, Hold, or 暂存; names are explicitly representative (`示例`) rather than frozen T3R production names.
+GATES no npm, product tests, build, browser, or static-verifier rerun; candidate-provided geometry and formal PNGs were independently inspected read-only.
+RESIDUAL production must still bind these mock state/data contracts to real canonical state and Pixi; this acceptance grants no production authority.
+NEXT coordinator may integrate design-only acceptance; no push by QA.
+LOG `docs/workstreams/tetris-qa/THREAD_LOG.md` only.
