@@ -11,12 +11,12 @@ Branch: `codex/tetris`
 - T2 production/QA remains historical evidence only. Its dark Offset Drop surface and
   three line-target Puzzle definitions are superseded.
 
-Status: **T3 production accepted locally; coordinator publication pending.**
+Status: **T3 production accepted and published on `codex/tetris`.**
 
 The T3 production chain is complete through its independent QA gate: C1 campaign
 correctness was accepted before V1 started, and V1 passed final browser evidence plus
-the canonical Git-blob integrity re-review. The branch is not considered published
-until the coordinator pushes the accepted commit chain.
+the canonical Git-blob integrity re-review. The coordinator integrated the accepted
+chain and pushed it to `origin/codex/tetris` in commit `4c85828`.
 
 ## Accepted prerequisite: T3-C1 Core campaign
 
@@ -140,7 +140,7 @@ target/UI bridge. It may not change core rules or authored level data.
 
 ## Integration policy
 
-The coordinator has integrated the accepted C1/V1 and QA commit chain, performed a
-final live review, and will push `codex/tetris` as the next operation. QA/design
+The coordinator has integrated and pushed the accepted C1/V1 and QA commit chain and
+performed a final live review. QA/design
 acceptance never self-authorizes a later implementation slice; future Tetris work
 requires a new bounded coordinator instruction.

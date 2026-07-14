@@ -29,6 +29,33 @@
 If two workers would edit the same path, the later worker must stop and report the
 collision instead of merging or overwriting the other worker's dirty state.
 
+## Feedback and escalation protocol
+
+- The Codex UI is a convenience channel, not delivery evidence. A workstream report is
+  received only after the coordinator reads both its thread state and the corresponding
+  `THREAD_LOG.md` entry, then records an acknowledgement in
+  `docs/workstreams/COORDINATION.md`.
+- Every active workstream must append a UTF-8 `REPORT` record to its own `THREAD_LOG.md`
+  before reporting a milestone. It must name its task ID, Asia/Shanghai timestamp,
+  base/parent/HEAD/candidate identity as applicable, exact write scope and dirty paths,
+  commands actually run, final evidence, blocker, and exactly one next action.
+- Allowed report states are `STARTED`, `DOCS_UPDATED`, `GATE_RESULT`,
+  `CANDIDATE_READY`, `READY_FOR_QA`, `QA_ACCEPTED`, `BLOCKED`, `INTEGRATED`, and
+  `STOPPED`. A generic “complete” is not a valid report state.
+- The coordinator polls active external threads at each state transition and before any
+  integration decision. If a UI callback is absent, the coordinator uses `read_thread`
+  plus the workstream log; no worker may infer acknowledgement from silence.
+- A candidate may be routed to QA only after `CANDIDATE_READY` is acknowledged. QA is
+  accepted only after its own log, exact reviewed SHA, and evidence are acknowledged.
+- A `BLOCKED` report must say whether the writer has stopped, which dirty paths remain,
+  and the one authorization needed to resume. It must not retry a consumed browser or
+  Blender batch without a new bounded instruction.
+- `docs/workstreams/COORDINATION.md` is coordinator-owned. Workers may read it but may
+  not edit it. It is the active-task register, not a substitute for their local logs.
+- If a report lacks a SHA/path/evidence field, or conflicts with the recorded scope, its
+  state is `BLOCKED` until corrected. Never keep working across an unacknowledged scope
+  collision.
+
 ## Product boundary
 
 - This repository contains clean-room studies of game mechanics.

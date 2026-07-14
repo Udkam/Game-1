@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-14 — Coordination delivery protocol
+
+- Added a coordinator-owned active-workstream register and SHA/log-based acknowledgement
+  protocol so a missing Codex UI callback cannot be mistaken for a delivered result.
+- Workstreams now report a fixed state record to their own `THREAD_LOG.md`; the
+  coordinator acknowledges only after reading the task, repository state, and evidence.
+- Corrected the T3 task status to reflect that the accepted T3 chain is already pushed
+  to `origin/codex/tetris` in `4c85828`.
+
 ## 2026-07-13 — New two-game branch sequence
 
 - Created and pushed `codex/tetris` and `codex/temple-run` from the neutral `main` baseline.
