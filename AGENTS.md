@@ -1,17 +1,27 @@
-# Game-1 Working Agreement
+# Game-1-tetris Working Agreement
 
 ## Coordinator and workstream boundary
 
 - The primary Codex task is the coordinator. It owns scope, sequencing, integration,
   `docs/logs/CHANGELOG.md`, final browser review, commit, and push.
-- `codex/tetris` owns only the falling-block puzzle in `E:\Proj\Game-1`.
-- `codex/temple-run` owns only the endless runner in `E:\Proj\Game-1-temple`.
-- The two branches may progress in parallel because they use separate worktrees. Never
-  merge gameplay code, evidence, screenshots, or generated assets between them.
+- This repository is the standalone falling-block game at `E:\Proj\Game-1-tetris`.
+- Temple Run and Patrick's Parabox are separate repositories. Never copy their source,
+  evidence, screenshots, generated assets, workstream registers, or Git metadata here.
+- The active development branch is `codex/tetris-recovery`, forked from the last pure
+  Tetris integration commit `4c85828` without rewriting shared history.
 - Each implementation slice has one writer. Independent QA is read-only until the
   implementation owner produces a candidate SHA or explicitly requests an audit.
 - A design or QA task may not self-authorize production edits. Only the coordinator's
   current bounded instruction opens an implementation slice.
+
+## Durable feedback
+
+- Each writer records its task ID, base SHA, exact changed paths, commands actually run,
+  evidence, blocker, and one next action in its Tetris workstream log.
+- The coordinator acknowledges a candidate only after reading both the task report and
+  the corresponding log. Missing UI callbacks are never treated as delivery evidence.
+- `BLOCKED` means stop. Do not retry a consumed browser batch or broaden the path scope
+  without a new bounded coordinator instruction.
 
 ## Required execution order for every slice
 

@@ -206,13 +206,16 @@ canonical-board-empty success, top-out, invalid spawn, or budget exhausted.
 
 | Viewport | Contract |
 | --- | --- |
-| 1440 × 900 | centered board-first cluster; regular board approximately 306 × 612 CSS px |
+| 1440 × 900 | centered board-first cluster; regular board target 380 × 760 CSS px (acceptable 370–390 × 740–780) |
+| 2048 × 1152 | wide desktop cluster; regular board target 460 × 920 CSS px (acceptable 440–470 × 880–940) |
 | 390 × 844 | single column; board approximately 266 × 532; puzzle board may be 216 × 432 |
 | 844 × 390 | compact horizontal stage; board approximately 156 × 312; all essential text remains ≥12px |
 | 360 × 800 probe | long Puzzle values remain visible without overlap or page scrolling |
 
 One canvas, zero gameplay DOM cells, no horizontal overflow, no clipped title, no
-module overlap, and no page scroll are hard gates.
+module overlap, and no page scroll are hard gates. The pause-strip ratio is its height
+divided by board height and must remain at or below 0.18; an area ratio is not valid
+evidence.
 
 ## Presentation and input
 
@@ -243,10 +246,19 @@ C1 is not a user-facing release and is not pushed as a completed T3 milestone by
 itself. V1 must remove the deprecated UI bridge and prove the real combined state
 before the coordinator publishes the production chain.
 
-Implementation status on 2026-07-14: C1 candidate `8323203` and independent QA
-`b79e142` are integrated. The six-level campaign core is therefore frozen; the active
-work is V1 only. This status does not claim the D5 presentation or final browser
-experience is implemented.
+Implementation status on 2026-07-15: C1 candidate `8323203`, V1 candidate `6fb1728`,
+and their independent QA records are integrated in the pure Tetris baseline `4c85828`.
+The six-level campaign core is frozen. T4 changes presentation geometry only.
+
+## T4 desktop recovery direction
+
+The Mineral Shelf direction remains: warm light paper, pale mineral playfield, quiet
+blue-grey and ochre feet, restrained block color, and Chinese-first controls. T4 removes
+the accidental “tiny web widget” behavior. The desktop game cluster scales from the
+viewport, the playfield remains exactly 1:2, the mode rail and control deck receive real
+text width, and supporting information stays adjacent to the playfield instead of
+floating through empty page space. This is a proportional/layout correction, not a new
+theme and not permission to add decorative modules.
 
 ## Final acceptance
 

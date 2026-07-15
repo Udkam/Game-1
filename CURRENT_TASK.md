@@ -1,146 +1,68 @@
-# Current Task — T3 Production Chain
+# Current Task — T4 Repository Separation and Desktop Layout Recovery
 
-Branch: `codex/tetris`
+Branch: `codex/tetris-recovery`
+Baseline: `4c8582854088695ebac90467842dc2bc0cef3a20`
 
-## Accepted planning inputs
+Status: **active, bounded implementation slice**
 
-- D5 Mineral Shelf design: `4e13fcc01f2fec703e66f9027d7df25847bbe235`
-  with independent QA `e31a0b665ff0864a0af35ab05dde4072bc96bbf5`.
-- T3R six-level campaign/rules: `a096d96056457ebd2158bb6955cf7760fc36e238`
-  with independent QA `0cf78e3efccff4ee9dff0098d231b48f3dec5657`.
-- T2 production/QA remains historical evidence only. Its dark Offset Drop surface and
-  three line-target Puzzle definitions are superseded.
+## Why this slice exists
 
-Status: **T3 production accepted locally; coordinator publication pending.**
+The accepted T3 rules and six-level fixed-queue Puzzle campaign are correct, but the
+desktop presentation is not acceptable. At wide viewports the whole game is capped at
+718 CSS px, the board at 306 × 612 px, three Chinese mode labels wrap inside a 174 px
+rail, and five controls crowd a 306 px row. The two `.qa-*` directories were retained
+QA clones with the same product tree, not alternate game versions. Post-`4c85828`
+Temple coordination commits changed documentation only and are intentionally excluded
+from this recovery branch.
 
-The T3 production chain is complete through its independent QA gate: C1 campaign
-correctness was accepted before V1 started, and V1 passed final browser evidence plus
-the canonical Git-blob integrity re-review. The branch is not considered published
-until the coordinator pushes the accepted commit chain.
+## Product contract retained
 
-## Accepted prerequisite: T3-C1 Core campaign
+- Keep Marathon, Race (20 lines), and the six-level Puzzle campaign unchanged.
+- Puzzle success remains canonical visible-board empty after normal line resolution.
+- Keep deterministic replay/hash, fixed queues, unlock persistence, keyboard and touch.
+- React owns page composition; PixiJS owns the single gameplay canvas; no DOM cell grid.
+- Keep the original light Mineral Shelf language, but make it board-first and legible.
 
-Status: accepted and integrated on 2026-07-14. Production candidate `8323203`
-was independently accepted by QA commit `b79e142`; the full suite passed
-11 files / 73 tests. This section is retained as the frozen implementation record,
-not as an open editing boundary.
+## Exact implementation boundary
 
-Owner: the Tetris gameplay/rules implementation task.
+Writer may change only:
 
-### Exact authorized product paths
+- `src/styles.css`;
+- `src/App.tsx` only if semantic grouping or labels must change to remove overlap;
+- directly related presentation/runtime tests when an assertion must describe the new
+  geometry;
+- `AGENTS.md`, `DESIGN.md`, `CURRENT_TASK.md`, `progress.md`;
+- T4 browser evidence and one Tetris-only workstream log;
+- `docs/logs/CHANGELOG.md` at coordinator integration.
 
-- `src/game/core/types.ts`
-- `src/game/core/puzzles.ts`
-- `src/game/core/engine.ts`
-- `src/game/core/index.ts`
-- `src/game/core/puzzles.test.ts`
-- `src/game/core/core.test.ts`
-- `src/game/core/rules.test.ts`
-- optional new `src/game/core/puzzleCampaign.ts`
-- optional new `src/game/core/puzzleCampaign.test.ts`
-- `src/game/runtime/qaScenario.ts`
-- `src/game/runtime/qaScenario.test.ts`
-- `docs/workstreams/tetris-t3-core/THREAD_LOG.md`
+Do not change `src/game/core/**`, Puzzle definitions, hashes, persistence semantics,
+audio rules, dependencies, build configuration, Temple files, or Patrick files.
 
-The two runtime QA-scenario paths are the sole consumer-migration exception: they may
-replace the hard-coded legacy `offset-02` fixture with an accepted T3R level ID and
-update its deterministic expectations, but may not change runtime architecture.
+## Visual acceptance
 
-No other path is writable in C1. In particular, C1 may not edit React, CSS, Pixi,
-GameRuntime, input, audio, persistence, package/config, root documents, Temple files,
-or `docs/logs/CHANGELOG.md`.
+- At 1440 × 900 and 2048 × 1152, the board/game cluster is the clear focal point and
+  uses available space without becoming a tiny website widget.
+- Target regular boards are 380 × 760 at 1440 × 900 and 460 × 920 at 2048 × 1152;
+  responsive variance is allowed only when the complete cluster remains in viewport.
+- Complete Chinese mode names remain on one line or move to a layout with intentional
+  wrapping; no clipped labels.
+- The five actions remain distinct, designed, and at least 44 × 44 CSS px. `↑` is the
+  rotation control; quick drop and hard drop never overlap.
+- Ready, playing, paused, mode select, Puzzle select, Puzzle play, success, and failure
+  remain visually distinct. Pause stays inside the board.
+- 390 × 844 and 844 × 390 remain overflow-free and touch-safe.
+- One canvas, zero gameplay DOM cells, zero console/page errors, no horizontal overflow.
 
-### Required behavior
+## Verification order
 
-1. Replace the three old `offset-*` definitions with the accepted six T3R definitions.
-2. Validate full 20 × 10 non-empty authored boards, initially empty hidden buffer,
-   supported cells, no initially complete row, fixed non-empty queue, and
-   `pieceBudget === queue.length`.
-3. Add canonical/hashable queue index, canonical-board-empty goal, completion code,
-   completed-level ID, and next-unlocked-level ID.
-4. Use the existing public move/rotate/drop/lock/line-resolution path. Do not inject
-   solved state, directly clear cells after initialization, add undo, or add random
-   refill.
-5. Apply the frozen fail order after every lock:
-   top-out/hidden occupancy → board-empty success → budget/queue failure → next
-   authored spawn → blocked-spawn failure.
-6. Restart reconstructs the exact level/queue/index/initial hash. Replay remains
-   deterministic and ends at the first terminal state.
-7. State hash includes every rule-relevant Puzzle field.
-8. Keep `puzzleTargetLines` only as a deprecated compile bridge if whole-repo
-   typecheck requires it. It must be read by no core rule and must be removed by V1.
-   Do not add another compatibility layer.
+Use targeted checks while editing. After the last source change run exactly one final
+typecheck, one complete Vitest suite, one build, and one browser-evidence pass covering
+desktop plus the two mobile orientations. Visually inspect the screenshots; a nonblank
+canvas is not acceptance.
 
-### C1 tests
+## Deferred
 
-Tests must prove:
-
-- all six definitions validate and all accepted reference command sequences solve to
-  full canonical-board occupancy zero;
-- hidden residual cells, visible residual cells, initial full row, invalid cell/row,
-  empty queue, budget mismatch, invalid/blocked spawn, top-out, queue exhaustion, and
-  trailing terminal commands fail closed;
-- final-piece empty-board success precedes budget failure;
-- queue index advances exactly once per successful spawn;
-- restart, double replay, command/event order, initial/final hash, and cell
-  conservation are deterministic;
-- Marathon and Race rules/hashes remain unchanged;
-- no core imports from React/Pixi/DOM/storage/audio/browser/runtime.
-
-### C1 execution and gate
-
-- Use targeted tests while editing.
-- After the final source change, run once: typecheck, complete Vitest suite, and build.
-- No production browser evidence is required for C1 because the old shell is an
-  explicitly temporary compile bridge.
-- Produce one candidate SHA with exact paths and workstream log, then stop for
-  independent QA.
-- Do not start V1, push the candidate, or claim the game is visually correct.
-
-## Accepted implementation: T3-V1 Mineral Shelf production
-
-V1 is accepted and integrated locally. Candidate
-`6fb1728f6a3e9cf4398304ac9a638df2ddf4c1d7` is a direct child of the accepted C1
-baseline `3bed71f`; independent QA accepted its final evidence in
-`fdd1ffbf1657a3fcc53cc3f292ae8c2a783a83e4`. The implementation binds the frozen C1
-campaign to the D5 Mineral Shelf interface without changing core rules, authored
-campaign data, or canonical replay/hash semantics.
-
-Reserved paths:
-
-- `src/App.tsx`
-- `src/styles.css`
-- `src/game/render/TetrisRenderer.ts`
-- `src/game/render/theme.ts`
-- `src/game/render/presentation.ts`
-- `src/game/render/presentation.test.ts`
-- `src/game/runtime/GameRuntime.ts`
-- `src/game/runtime/GameRuntime.test.ts`
-- `src/game/runtime/qaScenario.ts`
-- `src/game/runtime/qaScenario.test.ts`
-- optional new `src/puzzleProgress.ts`
-- optional new `src/puzzleProgress.test.ts`
-- final T3 browser-evidence script and `docs/qa/evidence/tetris-t3/**`
-- `docs/workstreams/tetris-t3-frontend/THREAD_LOG.md`
-
-V1 must bind real C1 state to the accepted D5 layout, six production level names,
-versioned fail-closed unlock persistence, one Next, board-contained pause, five
-controls, and final responsive browser evidence. It must remove the deprecated line
-target/UI bridge. It may not change core rules or authored level data.
-
-## Frozen non-goals
-
-- No fourth mode, multiplayer, accounts, backend, online leaderboard, level editor,
-  solver-generated hints, Puzzle undo, Hold/暂存, DOM cell grid, renderer rewrite, or
-  copied commercial assets/trade dress.
-- No Temple changes and no staging of the pre-existing untracked
-  `docs/screenshots/temple/`.
-- No broad dependency, build-tool, or package changes.
-- No repeated full suites or captures for reassurance.
-
-## Integration policy
-
-The coordinator has integrated the accepted C1/V1 and QA commit chain, performed a
-final live review, and will push `codex/tetris` as the next operation. QA/design
-acceptance never self-authorizes a later implementation slice; future Tetris work
-requires a new bounded coordinator instruction.
+- No fourth mode, multiplayer, backend, account system, level editor, Puzzle undo,
+  Hold/暂存, commercial assets, or Temple development.
+- Do not delete the retained `.local/qa-archives`; they are evidence archives and not
+  runtime inputs.

@@ -273,7 +273,6 @@ export default function App() {
         const touch = rect(document.querySelector('[data-testid="touch-rail"]'));
         const next = rect(document.querySelector('[data-testid="next-slot"]'));
         const canvas = document.querySelector<HTMLCanvasElement>('[data-testid="game-canvas"]');
-        const boardArea = board ? board.width * board.height : 0;
         return {
           state,
           renderer: runtime?.getRendererSnapshot() ?? null,
@@ -293,7 +292,7 @@ export default function App() {
           },
           assertions: {
             boardRatio: board ? board.height / board.width : null,
-            pauseStripRatio: pause && boardArea ? (pause.width * pause.height) / boardArea : null,
+            pauseStripRatio: pause && board ? pause.height / board.height : null,
             pauseInsideBoard: pause && board ? pause.left >= board.left && pause.right <= board.right && pause.top >= board.top && pause.bottom <= board.bottom : true,
             structuralPairwiseIntersection: [[context, board], [side, board], [stats, board], [touch, board]].map(([left, right]) => intersectionArea(left, right)),
             touchMinWidth: Math.min(...[...document.querySelectorAll<HTMLElement>('[data-testid^="touch-"]:not([data-testid="touch-rail"])')].map((item) => item.getBoundingClientRect().width)),
