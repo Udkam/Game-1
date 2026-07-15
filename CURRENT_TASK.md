@@ -48,6 +48,10 @@ The core writer may change only:
   fixtures; `src/puzzleProgress.ts` remains forbidden;
 - `src/game/render/presentation.test.ts` only to replace hard-coded old Puzzle queue
   expectations; renderer/presentation production files remain forbidden;
+- `docs/workstreams/tetris-t3-rules/tests/campaign.verifier.test.ts` only to decouple
+  frozen T3 evidence from current T5 production definitions and verify the unchanged
+  historical artifacts internally; T3 fixtures/logs remain forbidden and the test
+  must stay in full Vitest discovery;
 - new `docs/workstreams/tetris-t5-core/**` fixtures and `THREAD_LOG.md`.
 
 The core writer must not edit `src/App.tsx`, `src/styles.css`,
