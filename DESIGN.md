@@ -3,12 +3,18 @@
 ## Status and authority
 
 The user's 2026-07-16 direction opens T5 and supersedes every conflicting T3/T4
-product rule:
+product rule. The later Puzzle clarification in the same session also supersedes the
+first T5 finite-queue draft:
 
 - the T4 Mineral Shelf presentation is rejected and must be replaced, not patched;
 - Race is endless accelerating play, not a 20-line target;
-- Puzzle levels are all available, are not gated by displayed difficulty, and must be
-  materially longer and less obvious;
+- Puzzle levels are all available, are not gated by displayed difficulty, and use the
+  ordinary continuous falling-piece loop against harder authored clearing goals;
+- a deterministic seed is allowed, but Puzzle must never become a short supplied-piece
+  exercise or a single-reference-solution memorization task;
+- outside games may inform only abstract mechanics such as downstacking or target
+  clearing. T5 board layouts, names, copy, visual language, interaction structure,
+  code, fixtures, and assets are original clean-room work;
 - the reported one-piece Puzzle stall is a release blocker.
 
 The deterministic architecture integrated at
@@ -61,33 +67,52 @@ Race is normal open-ended play with an additional deterministic acceleration cur
 
 ### Puzzle library
 
-Puzzle is a library of authored board-clearing challenges, not an unlock ladder.
+Puzzle is a library of authored board-clearing challenges, not an unlock ladder and
+not a finite input-sequence exercise. It changes the starting board and win condition;
+movement, rotation, gravity, locking, scoring, line resolution, and piece generation
+otherwise follow ordinary Marathon play.
 
 - All six T5 levels are selectable from first launch. No level row is disabled or
   hidden behind prior completion.
-- Numeric difficulty is not shown and does not control ordering or availability.
-  Completion persistence is informational only.
+- Numeric difficulty is removed from production definitions and UI. It does not
+  control ordering or availability. Completion persistence is informational only.
 - The goal remains canonical board empty after ordinary line resolution, including
   the hidden buffer.
-- Every level has an empty hidden buffer, a non-empty authored 20 × 10 visible board,
-  one finite fixed queue, and a piece budget exactly equal to queue length.
-- Every production queue contains 10–16 pieces, at least four piece types, and no run
-  longer than two identical pieces.
-- Every accepted reference solution uses the full budget, at least four effective
-  rotations, at least five landing columns, at least one non-clearing setup lock, and
-  more than one separated line-resolution phase.
-- The initial stack covers at least six rows and uses at least four distinct non-empty
-  row shapes. Repeated floor templates, vertical-I-only wells, and one-obvious-drop
-  openings are forbidden.
-- Puzzle has no automatic gravity. A piece moved to the floor by soft drop must still
-  lock after the shared lock delay and continue the queue.
-- A public hard drop locks immediately. A no-clear lock spawns the next authored piece
-  through the deterministic entry path; a clear uses the shared clear delay and then
-  spawns exactly the next authored piece.
-- The engine checks hidden occupancy/invalid state, canonical-board-empty success,
-  exhausted budget/queue, then exact authored spawn.
-- References initialize with `createInitialState(seed, "puzzle", level.id)` and use
-  public `dispatch` only. No verifier may construct or mutate canonical state.
+- Every level has an empty hidden buffer, a non-empty original 20 × 10 visible board,
+  and a stable level seed. That seed drives the shared deterministic seven-bag
+  randomizer; the bag replenishes for as long as play continues.
+- There is no authored finite queue, piece budget, remaining-piece counter, or
+  `failed-budget` outcome. An unsolved run continues until canonical success, top-out,
+  restart, or explicit exit.
+- Puzzle uses Marathon gravity progression, grounded lock delay, entry delay, clear
+  delay, scoring, soft drop, hard drop, and SRS rotation. A no-clear lock and a clear
+  both continue through the ordinary deterministic spawn path.
+- The initial stack occupies 8–12 visible rows, uses at least five distinct non-empty
+  row shapes, and contains several staggered hole columns or covered cavities. Repeated
+  floor templates, a single vertical-I well, and an immediately obvious opening are
+  forbidden.
+- Production validation samples the first 84 generated pieces from each level seed and
+  proves twelve consecutive complete seven-bags. This is a validation horizon, not a
+  gameplay limit.
+- Each of the six levels has at least two frozen successful public-command replays for
+  the same level seed. Both must clear the canonical board without state injection,
+  and their semantic placement streams must differ at three or more locked-piece
+  indices by final occupied cell set, landing column, and/or effective rotation. At
+  least one intermediate canonical board hash must diverge before success; a different
+  command digest alone is not route diversity.
+- Each accepted route uses 18–35 locked pieces, all seven
+  piece types, at least six landing columns, at least six effective rotations, at least
+  three non-clearing setup locks, and at least three separated line-resolution phases.
+  These metrics establish nontrivial play; neither replay is presented as a unique or
+  optimal answer.
+- Authoring/verifier search stops a route after 70 locks as a bounded safety guard. The
+  guard is not a production queue, gameplay limit, or player failure condition.
+- The engine checks canonical-board-empty success after ordinary line resolution and
+  otherwise applies normal top-out rules. Malformed initial definitions fail validation
+  rather than creating a special player-facing Puzzle failure.
+- References initialize through `createInitialState(level.seed, "puzzle", level.id)`
+  and use public `dispatch` only. No verifier, runtime QA hook, or browser setup may
+  construct, replace, or mutate canonical state.
 
 ## T5 visual direction — 青流蓝图 / Aqua Blueprint
 
@@ -140,10 +165,10 @@ labels must meet WCAG AA contrast.
 ### Puzzle library
 
 - Every level entry is enabled and shows name, board-clearing goal, available-piece
-  count, and optional completion status.
+  stream description, and optional completion status.
 - It does not show numeric difficulty or lock state.
-- Starting a level must keep the visible selection, canonical `puzzleId`, queue index,
-  active piece, and remaining count aligned.
+- Starting a level must keep the visible selection, canonical `puzzleId`, level seed,
+  active piece, and Next preview aligned.
 
 ### Game screen
 
@@ -152,8 +177,9 @@ labels must meet WCAG AA contrast.
 - Mobile uses a compact information band above the board and a five-action deck below.
 - Pause, exit confirmation, success, and failure use accessible light action sheets
   with buttons at least 44 × 44 CSS px.
-- Race shows score, lines, and speed tier. Puzzle shows level name, remaining pieces,
-  goal, and one Next item.
+- Race shows score, lines, and speed tier. Puzzle shows level name, cleared lines,
+  placed pieces, the board-empty goal, and one Next item. It never shows a finite
+  remaining-piece value or a suggested solution.
 
 ## Responsive and accessibility contract
 
@@ -192,16 +218,18 @@ only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
 - production build;
 - deterministic Race replay proving lines never finish the run and acceleration is
   monotonic through its safe cap;
-- all six Puzzle references, exact budget consumption, restart/hash determinism,
-  soft-drop floor locking, and consecutive multi-piece play;
-- negative routes for at least three authored decision points must fail by budget;
+- all six Puzzle levels, two distinct successful public-command routes per level,
+  restart/hash determinism, normal automatic gravity, grounded locking, continuous
+  seven-bag replenishment, and consecutive multi-piece play;
+- first-84-piece seven-bag integrity for every level seed with no queue exhaustion or
+  budget terminal;
 - UI-driven evidence selects modes and levels through visible controls;
 - at least one Puzzle scenario after three consecutive locks, with visible/canonical
-  level, active piece, queue index, and remaining count aligned;
+  level, active piece, placed-piece count, and Next preview aligned;
 - mode-home → game → mode-home → game proof with no canvas/ticker/listener leaks;
 - one gameplay canvas, zero gameplay DOM cells, zero console/page errors;
 - keyboard, touch, pause/resume, restart, explicit exit, failure, success, and reduced
   motion verified at required viewports.
 
-A nonblank screenshot, internal QA state injection, or mock terminal state is not
-acceptance evidence.
+A nonblank screenshot, internal QA state injection, mock terminal state, copied level
+layout, or copied frontend treatment is not acceptance evidence.

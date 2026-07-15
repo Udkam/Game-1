@@ -18,8 +18,16 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
 
 - User rejected the T4 Mineral Shelf presentation and requested a full light cyan/light-blue rebuild with a dedicated three-mode entry page.
 - Race changed from a 20-line finish to endless accelerating normal play; only explicit exit or top-out ends the run.
-- Puzzle changed to all levels available, no numeric-difficulty gating, longer non-obvious authored queues, and a hard requirement that consecutive pieces continue.
+- Puzzle first changed to longer finite authored queues, then the user superseded that
+  draft: current authority is normal automatic-gravity play on an authored starting
+  board, a continuously replenishing deterministic seven-bag stream, no piece budget,
+  and multiple valid solution routes per level.
 - Root-cause audit found Puzzle soft drop can reach the floor but never lock because puzzle ticks return before grounded lock-delay handling.
 - Preserved the rejected T4 follow-up on local branch `codex/tetris-t4-rejected-preservation` at `1362c664629b2a83f0659f836259b84c21750fee`, then returned to a clean `codex/tetris-recovery` tree.
 - T5 uses the `4c85828` deterministic core/rule authority while retaining `dd7e31e` only as a historical ancestor.
-- Active TODO: implement and independently verify T5 core, then Aqua Blueprint frontend, then one combined final gate/evidence pass and final QA.
+- Core candidate `3bf170e` proved endless Race and repaired consecutive Puzzle locking,
+  but independent QA rejected its live runtime replay-state injection. The injection
+  deletion is retained uncommitted while the finite-queue Puzzle work is superseded.
+- Active TODO: implement and independently verify the revised normal-play/multi-route
+  Puzzle core, then the original Aqua Blueprint frontend, then one combined final
+  gate/evidence pass and final QA.
