@@ -57,7 +57,7 @@ claims, or scope drift stay `BLOCKED`; silence is never acknowledgement.
 | Temple TR3 A5 technical review | `019f607c-2f12-7242-b396-9643d50e9ac3` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except its own workstream docs | Complete planning review; no rendering or production edits occurred. | `ACK-TEMPLE-A5-TECH-001`: verified its corrected protocol report and recovery plan. Geometry recovery is necessary; camera-only repair is prohibited. |
 | Temple TR3 A5 implementation | `019f6086-028d-7560-8f3f-eddfda489694` | `E:\Proj\Game-1-temple` via `E:\Proj` / `codex/temple-run` | Closed without a candidate. The sole offline Blender batch emitted image passes but failed before metadata; the fail-closed evaluator and manual visual gate both blocked the proof. A5 evidence and inherited Temple dirt are preserved unchanged. | `ACK-TEMPLE-A5-BLOCKED-004`: corrected terminal report, artifact hashes, missing metadata, and preservation snapshot were independently verified. No retry, metadata reconstruction, export, integration, QA, commit, or push is open. |
 | Temple TR3 A6 preflight | `019f607c-2f12-7242-b396-9643d50e9ac3` | `E:\Proj\Game-1-temple` via `E:\Proj` / `codex/temple-run` | Accepted documentation-only recovery preflight. It establishes source compatibility and structural composition gates, but creates no product/runtime/render authority. | `ACK-TEMPLE-A6-PREFLIGHT-005`: terminal report, exact permitted scope, and preservation against the A5 snapshot were verified. A separate read-only review is required before any later implementation scope. |
-| Temple TR3 A6 independent review | `019f607b-f5f5-7e31-9d2b-8c8a1578a9c8` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except `docs/workstreams/temple-a6-visual-review/{A6_PREFLIGHT_REVIEW.md,THREAD_LOG.md}` | Restarted as a one-shot durable review after the earlier UI interruption left no review log. It cannot change A6, assets, source, or authorize Blender. | `ACK-TEMPLE-A6-REVIEW-STARTED-006` at 2026-07-15T01:40:12+08:00: exact log path and fixed terminal report were re-issued. No implementation begins before coordinator review. |
+| Temple TR3 A6 independent review | `019f607b-f5f5-7e31-9d2b-8c8a1578a9c8` | `E:\Proj\Game-1-temple` via `E:\Proj` / read-only except `docs/workstreams/temple-a6-visual-review/{A6_PREFLIGHT_REVIEW.md,THREAD_LOG.md}` | **BLOCKED.** The delayed terminal review was subsequently written and verifies that A6 remains an incomplete planning contract. It cannot change A6, assets, source, or authorize Blender. | `ACK-TEMPLE-A6-REVIEW-BLOCKED-008`: verified terminal report and two-file review scope. A fresh docs-only A6 correction is required before a new independent review. |
 
 ## Terminal acknowledgement: Temple TR3 A4
 
@@ -127,6 +127,24 @@ It does not authorize Blender, a preflight implementation, asset export,
 runtime integration, QA, commit, or push in the Temple repository. The next
 possible action is one separately scoped read-only review of A6, followed only
 by an explicit coordinator decision about implementation.
+
+## Terminal acknowledgement: Temple TR3 A6 independent review
+
+ACK-TEMPLE-A6-REVIEW-BLOCKED-008 — 2026-07-15T11:45:48+08:00
+
+The coordinator verified the terminal external report and the two permitted review
+files against base `52ae9ae`. The review stayed read-only: it ran no Blender, renderer,
+browser capture, image generation, network request, test/build, Git, QA, or product
+action. It confirms that A4-only material authority and the A6 fail-closed boundary are
+sound, but A6 cannot yet be used as a reproducible pure-data gate.
+
+Exactly four documentation corrections are required before a fresh review: freeze
+camera/projection records; define normative nested construction/result schemas; bind a
+green preflight's normalized input and construction hash to the later scene; and name
+the exact authoritative Tide Scar scalars/formula. This is a planning-only block, not a
+visual waiver. No Blender, runtime, asset, or browser work is authorized. The next
+possible action is one new documentation-only A6 correction slice with an exact scope,
+followed by a fresh independent read-only review.
 
 ## Coordinator polling rule
 
