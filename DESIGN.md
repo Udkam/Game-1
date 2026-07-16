@@ -121,10 +121,10 @@ paired with fine blueprint ticks and one offset cyan route line. Warm paper, och
 shelf feet, mineral shadows, inset rectangles, and the current block material language
 are removed.
 
-- The player-facing product name is `青流方阵`. `Tetris` is removed from the document
-  title, metadata, visible heading, live-region copy, canvas label, and favicon concept.
-- `index.html` uses the original product name, an original falling-block description,
-  the Aqua Blueprint theme color, and a `跳到主要内容` skip link.
+- The in-app player-facing product name is `青流方阵`. `Tetris` is removed from visible
+  headings, live-region copy, and canvas labels.
+- Per the user's later direction, `index.html` is outside the T5 redesign slice and
+  remains unchanged as the required Vite entry document.
 - Internal filenames and clean-room rule terminology may remain technical; they are not
   player-facing brand or borrowed trade dress.
 

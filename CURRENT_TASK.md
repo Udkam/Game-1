@@ -102,7 +102,6 @@ passed independently. This slice is now unblocked.
 
 The frontend writer may change only:
 
-- `index.html`;
 - `src/App.tsx`;
 - `src/styles.css`;
 - `src/puzzleProgress.ts` and `src/puzzleProgress.test.ts`;
@@ -118,8 +117,8 @@ configuration, dependencies, T3/T4 evidence, changelog, or coordinator docs.
 
 Frontend acceptance:
 
-- original player-facing brand `青流方阵` in metadata, heading, live copy, favicon,
-  skip link, and canvas label; no player-facing `Tetris` brand remains;
+- original in-app brand `青流方阵` in heading, live copy, and canvas label; no in-app
+  player-facing `Tetris` brand remains; `index.html` stays unchanged by user direction;
 - dedicated three-entry mode home with no mounted runtime or canvas;
 - entering gameplay creates exactly one runtime/canvas and returning home destroys it;
 - all Puzzle levels enabled, no numeric difficulty UI, completion only informational;
