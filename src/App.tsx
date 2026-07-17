@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  PIECE_TYPES,
   raceSpeedTier,
   type GameEvent,
   type GameMode,
   type GameState,
+  type PieceType,
   type PuzzleId,
   createInitialState,
 } from './game/core';
@@ -19,6 +21,7 @@ import {
   recordCanonicalPuzzleCompletion,
   type PuzzleProgress,
 } from './puzzleProgress';
+import { PIECE_MATERIALS } from './game/render/theme';
 import { ActionSheet } from './ui/ActionSheet';
 
 type AppScreen = 'home' | 'puzzle-library' | 'game';
@@ -32,7 +35,7 @@ const MODE_COPY: Record<GameMode, {
   action: string;
 }> = {
   marathon: {
-    label: '马拉松',
+    label: '经典',
     detail: '持续消行，刷新分数与等级。',
     action: '开始',
   },
@@ -43,7 +46,7 @@ const MODE_COPY: Record<GameMode, {
   },
   puzzle: {
     label: '解谜',
-    detail: '六关全开，连续七袋方块，目标是清空棋盘。',
+    detail: `${CAMPAIGN_LEVELS.length} 关全开，连续七袋方块，目标是清空棋盘。`,
     action: '选关',
   },
 };
@@ -143,7 +146,7 @@ function ModeGlyph({ mode }: { mode: GameMode }) {
   return <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 30h8v-8h7v8h7V14h8v16" /></svg>;
 }
 
-function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
+export function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
   const [previewMode, setPreviewMode] = useState<GameMode>('marathon');
   const preview = MODE_COPY[previewMode];
   return (
@@ -207,24 +210,44 @@ function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
   );
 }
 
-function puzzleSilhouettePath(id: PuzzleId): string {
+function cssHex(color: number): string {
+  return `#${color.toString(16).padStart(6, '0')}`;
+}
+
+export function puzzleSilhouettePaths(id: PuzzleId): ReadonlyMap<PieceType, string> {
   const board = createInitialState(APP_SEED, 'puzzle', id).board.slice(-12);
   const unit = 4;
   const face = 3.25;
-  return board.flatMap((row, y) => row.map((cell, x) => (
-    cell ? `M${x * unit + .375} ${y * unit + .375}h${face}v${face}h-${face}z` : ''
-  ))).join('');
+  const paths = new Map<PieceType, string>();
+  for (const type of PIECE_TYPES) {
+    const path = board.flatMap((row, y) => row.map((cell, x) => (
+      cell === type ? `M${x * unit + .375} ${y * unit + .375}h${face}v${face}h-${face}z` : ''
+    ))).join('');
+    if (path) paths.set(type, path);
+  }
+  return paths;
 }
 
 function PuzzleSilhouette({ id, name }: { id: PuzzleId; name: string }) {
   return (
     <svg className="puzzle-silhouette" viewBox="0 0 40 48" role="img" aria-label={`${name}起始棋盘轮廓`}>
-      <path d={puzzleSilhouettePath(id)} />
+      {[...puzzleSilhouettePaths(id)].map(([type, path]) => {
+        const material = PIECE_MATERIALS[type];
+        return (
+          <path
+            key={type}
+            data-piece-type={type}
+            d={path}
+            fill={cssHex(material.fillStart)}
+            stroke={cssHex(material.edge)}
+          />
+        );
+      })}
     </svg>
   );
 }
 
-function PuzzleLibrary({
+export function PuzzleLibrary({
   progress,
   selectedId,
   onSelect,
@@ -246,10 +269,10 @@ function PuzzleLibrary({
       </header>
       <section className="library-intro" aria-labelledby="library-title">
         <h1 id="library-title">解谜关卡</h1>
-        <p>六关全部开放。方块持续补充，操作与普通模式一致；目标是清空完整棋盘。</p>
+        <p>{CAMPAIGN_LEVELS.length} 关全部开放。方块持续补充，操作与普通模式一致；目标是清空完整棋盘。</p>
       </section>
       <section className="library-content" aria-label="全部解谜关卡">
-        <div className="level-list" aria-label="六个可用解谜关卡" data-testid="level-list">
+        <div className="level-list" aria-label={`${CAMPAIGN_LEVELS.length} 个可用解谜关卡`} data-testid="level-list">
           {CAMPAIGN_LEVELS.map((level) => {
             const complete = progress.completedLevelIds.includes(level.id);
             const selectedLevel = selectedId === level.id;
@@ -266,24 +289,24 @@ function PuzzleLibrary({
                   <span className="level-entry__number">{String(level.index).padStart(2, '0')}</span>
                   <span className="level-entry__copy">
                     <strong>{level.name}</strong>
-                    <small>{complete ? '已完成 · 可重玩' : '可直接进入'}</small>
+                    <small>清空棋盘 · 七袋持续{complete ? ' · 已完成' : ''}</small>
                   </span>
                   <span className="level-entry__chevron" aria-hidden="true">›</span>
                 </button>
-                {selectedLevel && (
-                  <div className="level-inline-detail" aria-live="polite">
-                    <PuzzleSilhouette id={selected.id} name={selected.name} />
-                    <div>
-                      <p>清空完整棋盘</p>
-                      <span>连续七袋方块 · 不限定唯一解法</span>
-                    </div>
-                    <button className="primary-action" type="button" data-testid="start-selected-puzzle-mobile" onClick={onStart}>开始这一关</button>
-                  </div>
-                )}
               </article>
             );
           })}
         </div>
+        <section className="level-inline-detail" aria-live="polite" aria-label={`当前选择：${selected.name}`}>
+          <PuzzleSilhouette id={selected.id} name={selected.name} />
+          <div>
+            <small>{selected.index}/{selected.total} · 当前选择</small>
+            <h2>{selected.name}</h2>
+            <p>清空完整棋盘</p>
+            <span>连续七袋方块 · 不限定唯一解法</span>
+          </div>
+          <button className="primary-action" type="button" data-testid="start-selected-puzzle-mobile" onClick={onStart}>开始这一关</button>
+        </section>
         <aside className="level-detail" aria-live="polite">
           <div className="level-detail__visual">
             <PuzzleSilhouette id={selected.id} name={selected.name} />
@@ -360,7 +383,7 @@ function RunStats({ state }: { state: GameState }) {
     );
   }
   return (
-    <section className="run-stats" data-testid="stats" aria-label="马拉松模式数据">
+    <section className="run-stats" data-testid="stats" aria-label="经典模式数据">
       <article><span>分数</span><strong>{formatScore(state.score)}</strong></article>
       <article><span>消行</span><strong>{state.lines}</strong></article>
       <article><span>等级</span><strong>{state.level}</strong></article>

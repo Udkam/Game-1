@@ -473,3 +473,140 @@ changelog, and evidence directories have no writer diff.
 - Push: not performed; the coordinator owns the push decision after independent QA.
 - Next: create the bounded two-path candidate commit and route its exact SHA to
   independent read-only QA.
+
+## 2026-07-17 — FIFTEEN-LEVEL FRONTEND CANDIDATE READY
+
+- Task: `TETRIS-T5-FRONTEND-CAMPAIGN-15-007`.
+- Branch: `codex/tetris-recovery`.
+- Base SHA: `05bb7dcd1bf667f899be1a91af06b857f369f38a`.
+- Intake: branch and HEAD matched the coordinator instruction, the working tree was
+  clean, and Slice G was already recorded as independently accepted before the first
+  frontend edit.
+- Skills followed: `frontend-design` preserved the accepted original light neo-tech
+  minimal language and continuous surfaces; `develop-web-game` supplied the real
+  input/screenshot loop. Its normal `progress.md` write was intentionally replaced by
+  this authorized log because Slice H forbids `progress.md` changes.
+- Candidate identity: the single bounded writer commit created from this recorded
+  tree; its exact SHA is returned to the coordinator with this log.
+
+### Exact changed paths
+
+- `src/App.tsx`
+- `src/App.test.ts`
+- `src/styles.css`
+- `src/game/render/theme.ts`
+- new `src/game/render/theme.test.ts`
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md`
+
+No writer diff exists in Core or Puzzle definitions/references, `puzzleProgress.ts`,
+`TetrisRenderer.ts`, presentation/runtime/input/audio, dependencies/build
+configuration, `index.html`, coordinator documents, changelog, or formal evidence.
+
+### Delivered frontend binding
+
+- Replaced every player-visible and accessibility use of `马拉松` with `经典` while
+  retaining the internal `marathon` mode key, `enter-marathon` selector, and existing
+  CSS compatibility keys.
+- Replaced the seven cool near-blue materials with the exact four-value
+  mineral-signal palette frozen in `DESIGN.md`. Board, Next, active, locked, and Ghost
+  rendering still share the existing `TetrisRenderer` edge-lit plate primitive; no
+  renderer logic changed.
+- Removed the `六关` / `六个` frontend constants. Home copy, library copy, and the
+  library aria label derive their visible count from `CAMPAIGN_LEVELS.length`.
+- Kept all fifteen `level-row` buttons mounted, enabled, keyboard/touch reachable,
+  and equipped with stable `data-level-id` plus `aria-pressed`. The existing
+  `puzzle-library`, `level-list`, `start-selected-puzzle`, and
+  `start-selected-puzzle-mobile` selectors remain present.
+- Rebuilt the continuous selector as a 3 × 5 matrix beside the existing detail/start
+  region on desktop, 1024 × 768, and 844 × 390. The short-landscape layout fits all
+  fifteen complete buttons and the 44 px start action in the first viewport.
+- At 390 and 360 widths the selector is a two-column, eight-row matrix. Its selected
+  detail is now a sibling after the complete level list in normal document flow, not
+  content nested inside or overlaid on a level item; library scrolling remains
+  allowed while gameplay remains viewport-bounded.
+- Changed the canonical starting-board silhouette from one recolored occupancy path
+  into at most one SVG path per present piece type. It reads the canonical board and
+  shared theme only, creates no DOM gameplay grid, and shows all seven authored colors
+  for the accepted fifteen-level boards.
+- Added focused DOM binding tests for visible `经典` with the internal Marathon
+  selector, fifteen enabled ordered rows, first/eighth/fifteenth selection, both start
+  selectors, canonical initial active/Next state, and multi-color silhouettes. Added
+  an exact-value theme regression for all 28 frozen palette values.
+
+### Commands and results actually run
+
+- Targeted
+  `npm.cmd run test -- src/App.test.ts src/game/render/theme.test.ts` — PASS,
+  2 files / 4 tests. It was rerun after the final test-helper type correction with the
+  same result. jsdom printed only its non-failing Canvas `getContext()` diagnostic.
+- The first attempted final `npm.cmd run typecheck` correctly found
+  `src/App.test.ts(10,12) TS7017` for assigning the React act flag directly to
+  `globalThis`. The test helper changed to typed `Object.assign`; final-gate counting
+  was reset from the beginning.
+- After the final source change, final `npm.cmd run typecheck` — PASS.
+- After the final source change, final `npm.cmd run test` — PASS: 40 files total,
+  39 passed / 1 skipped; 252 tests total, 251 passed / 1 skipped.
+- After the final source change, final `npm.cmd run build` — PASS; Vite transformed
+  739 modules.
+- Ran the prescribed `develop-web-game` client with the supplied
+  `action_payloads.json`, the visible `enter-marathon` selector, two iterations, and
+  intentional pauses. Real left/hard-drop bursts reached score 38 / placed 1 / active
+  O / Next S, then score 74 / placed 2 / active S / Next Z. Its two canvas captures
+  under `.local/slice-h-writer/client/` were opened and inspected; no error artifact
+  was emitted. The existing Playwright npm cache was exposed only through an ignored
+  temporary junction and the junction was removed afterward with its path absent.
+- An initial browser iteration found only a 6 px root-page overflow at 1024 × 768.
+  The bounded library height budget was corrected, and the targeted rerun measured
+  `rootWidth = 1024`, `rootHeight = 768`, no overflow, fifteen complete buttons, and a
+  272 × 44 px selected start action.
+- A production-preview browser attempt stopped at the expected DEV diagnostic
+  boundary because `render_game_to_text` is not exposed in production. Two later
+  `.local` harness assertions were corrected without product changes: canvas counting
+  now waits for asynchronous Pixi mount, and the single-line name check uses
+  horizontal width rather than subpixel line-height rounding. The successful final
+  matrix ran against the exact frozen DEV source after the separate production build
+  passed.
+- Final fail-fast browser matrix covered 1440 × 900, 1024 × 768, 844 × 390 DPR3,
+  390 × 844 DPR3, and 360 × 800 DPR3. Structured output is the ignored
+  `.local/slice-h-writer/matrix/results.json`.
+
+### Final browser evidence inspected
+
+- Home at every viewport showed `经典`, Race, and Puzzle fully inside the first
+  viewport, no visible `马拉松`, zero canvases, no root overflow, and exactly one
+  72 × 2 px phase seam with the 220 ms transition.
+- Library at 1440, 1024, and 844 used 3 columns × 5 rows with no page overflow.
+  The 844 rows measured approximately 55 px and its selected start action measured
+  262 × 44 px. Library at 390 and 360 used 2 columns × 8 rows, allowed only the
+  intended vertical library scroll, and placed the visible selected detail after and
+  outside `level-list`.
+- Every library case had 15 enabled buttons, one pressed row, zero canvases, zero DOM
+  gameplay cells, minimum visible button height 44 px, no clipped level name, and two
+  canonical silhouettes containing seven piece-type paths each.
+- Real UI selected and started the first, eighth, and fifteenth levels at every
+  viewport. Canonical/visible pairs were:
+  `t3r-shaft-01` / `青脊回旋` / active S / Next L;
+  `t5r-drift-08` / `微澜错屿` / active T / Next O; and
+  `t5r-horizon-15` / `远蓝合流` / active S / Next I.
+  Every starting board exposed all seven locked piece types.
+- Gameplay at every viewport had exactly one canvas, zero DOM cells, no horizontal or
+  vertical overflow, statistics labels at least 14 px, values at least 18 px, touch
+  labels at least 12 px, and buttons at least 44 px. `清空完整棋盘` was exact and
+  unclipped: client/scroll widths were 193/193 desktop/tablet, 113/113 landscape,
+  122/122 portrait, and 131/131 narrow.
+- Desktop visible lifecycle measured one canvas after entry, zero after confirmed
+  return home, and one after re-entry. Changing to reduced motion while paused left
+  the detached canonical state byte-for-byte unchanged.
+- Console/page error arrays were empty in every final scenario. The ten final
+  `{desktop,tablet,landscape,portrait,narrow}-{library,level-08}.png` captures under
+  `.local/slice-h-writer/matrix/` were individually opened at original detail. They
+  showed complete names/copy, the continuous selector, separate mobile detail,
+  multi-color Board, shared-material Next, complete goal, and non-overlapping controls.
+
+### Handoff
+
+- Blocker: none.
+- Push: not performed; the coordinator owns independent QA routing and the push
+  decision.
+- Next: create the single bounded candidate commit and route its exact SHA to
+  independent read-only frontend QA before any formal evidence or changelog update.
