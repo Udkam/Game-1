@@ -161,3 +161,30 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   restricted to light blue/green. Slice I therefore uses an ice-light spectral-glass
   system with controlled cyan, cobalt, violet, and small coral state accents while
   keeping the separate seven-piece bright mapping and avoiding a dark/random rainbow.
+
+## 2026-07-17 — Slice I rejected; authored endgames and deep natural theme opened
+
+- Slice I checkpoint `e552b3c` completed the bright spectral surface, renderer, and
+  five-viewport writer gates immediately before the next user review. It remains clean
+  and local, but is rejected as a release candidate and will not receive QA, evidence,
+  changelog integration, or push.
+- The user identified three replacement requirements: remove the plastic color feel
+  in favor of a deeper, tenser, mutually compatible natural palette; rebuild Puzzle
+  boards as rule-stacked endgames whose colors correspond to actual source
+  tetrominoes; and remove redundant descriptions from the classic-game interface.
+- Read-only Core audit confirmed the current generator randomly excavates occupancy
+  masks and then independently assigns a salted seven-bag color to every occupied
+  cell. It proves neither a legal stacking history nor four-cell color/shape
+  provenance, so all fifteen masks and thirty solution references must be replaced.
+- Slice J now owns frozen setup seeds plus explicit `{ type, rotation, x }` histories.
+  Every landing row is derived by public-command hard drop from an empty board, setup
+  performs zero line clears, and the derived Puzzle board must preserve each source
+  tetromino as an exact four-cell same-material component.
+- Official descriptions of ordinary falling/rotation, Perfect Clear, and
+  multiple-solution Tetrimino puzzles informed only the abstract objective and
+  validation principles. No external mask, color mapping, level name, UI composition,
+  or route is copied.
+- After independent Core QA, Slice K applies the exact `暮海矿物` tokens and coordinated
+  garnet/sea-pine/ochre/storm/moss/rock-violet/lake piece mapping, removes BlurFilter
+  aura and glass effects, and reduces visible copy to names, controls, statistics,
+  completion, and the immediate board-clear objective.

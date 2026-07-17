@@ -85,6 +85,29 @@ dark neon theme and not an unstructured rainbow.
 - Gameplay piece colors remain the separate bright luminous-spectrum mapping below;
   UI state color never remaps a tetromino material.
 
+The user's latest 2026-07-17 review rejects the resulting local Slice I checkpoint
+`e552b3c86e59b801f6d69045a94211e3f1c97e34`. It remains an unpushed historical
+checkpoint and is not eligible for QA, evidence, changelog integration, or push. The
+following authority supersedes every conflicting bright-spectral, glass, salted-color,
+and verbose-copy rule below:
+
+- the complete page and piece palette becomes one natural, mutually compatible deep
+  `暮海矿物` spectrum; darker color must create tension through controlled value and
+  proportion, not neon glow, black-on-rainbow contrast, or unrelated accent colors;
+- minos become matte anodized plates with restrained tonal variation. The bright
+  plastic/candy fills, blurred active aura, glass blur, colored ambient light fields,
+  gradient CTA fills, and luminous locked-cell treatment are rejected;
+- every Puzzle starting board is an authored endgame generated from a frozen legal
+  tetromino stacking history. Per-cell salted recoloring and randomly excavated masks
+  are forbidden; every initial cell inherits the type and material of the exact source
+  tetromino that formed it;
+- all fifteen masks, state hashes, and thirty solution references are regenerated.
+  Existing IDs, order, and gameplay seven-bag seeds stay stable, but the earlier mask
+  and route compatibility promise is explicitly superseded;
+- visible copy is reduced to names, controls, score/statistics, and the immediate
+  objective. Repeated explanations of ordinary falling-block play are removed while
+  full ARIA labels remain available to assistive technology.
+
 The deterministic architecture integrated at
 `4c8582854088695ebac90467842dc2bc0cef3a20` remains the rule baseline. The rejected
 T4 candidate `dd7e31ea3547c18a797b2308f04161310d1412ce` remains in history but is not
@@ -162,23 +185,26 @@ otherwise follow ordinary Classic play.
 - Puzzle uses Classic gravity progression, grounded lock delay, entry delay, clear
   delay, scoring, soft drop, hard drop, and SRS rotation. A no-clear lock and a clear
   both continue through the ordinary deterministic spawn path.
-- The initial stack occupies 8–12 visible rows, uses at least five distinct non-empty
-  row shapes, and contains several staggered hole columns or covered cavities. Repeated
-  floor templates, a single vertical-I well, and an immediately obvious opening are
-  forbidden.
+- The initial stack occupies 8–12 visible rows and is produced by 16–22 frozen setup
+  pieces. It contains all seven piece types, at least seven distinct non-empty row
+  shapes, four row-density classes, covered cavities in at least five columns, and at
+  least eight buried holes. Repeated floor templates, three or more consecutive rows
+  exposing one straight well, and an immediately obvious opening are forbidden.
 - Production validation samples the first 84 generated pieces from each level seed and
   proves twelve consecutive complete seven-bags. This is a validation horizon, not a
   gameplay limit.
 - Each of the fifteen levels has at least two frozen successful public-command replays for
   the same level seed. Both must clear the canonical board without state injection,
-  and their semantic placement streams must differ at three or more locked-piece
+  and their semantic placement streams must differ at five or more locked-piece
   indices by final occupied cell set, landing column, and/or effective rotation. At
-  least one intermediate canonical board hash must diverge before success; a different
-  command digest alone is not route diversity.
-- Each accepted route uses 28–35 locked pieces, all seven
-  piece types, at least six landing columns, at least six effective rotations, at least
-  three non-clearing setup locks, and at least three separated line-resolution phases.
-  These metrics establish nontrivial play; neither replay is presented as a unique or
+  least two intermediate canonical board hashes must diverge before success; a
+  different command digest alone is not route diversity.
+- Each accepted route uses 30–42 locked pieces, all seven piece types, at least seven
+  landing columns, at least eight effective rotations, at least five non-clearing setup
+  locks, and at least four separated line-resolution phases. Paired routes differ at
+  five or more semantic placement indices, diverge no later than the fifth lock, and
+  produce different canonical board hashes at two or more shared indices. These
+  metrics establish nontrivial play; neither replay is presented as a unique or
   optimal answer.
 - Authoring/verifier search stops a route after 70 locks as a bounded safety guard. The
   guard is not a production queue, gameplay limit, or player failure condition.
@@ -188,40 +214,62 @@ otherwise follow ordinary Classic play.
 - References initialize through `createInitialState(level.seed, "puzzle", level.id)`
   and use public `dispatch` only. No verifier, runtime QA hook, or browser setup may
   construct, replace, or mutate canonical state.
-- The first six levels keep their accepted IDs, seeds, occupancy masks, and routes so
-  saved completion remains compatible. A separate salted color pass replaces each
-  occupied marker with a deterministic piece type without consuming or altering the
-  level's seven-bag state. Every level uses at least five piece types and the campaign
-  uses all seven.
+- Every definition owns a separate `setup.seed` and an explicit ordered
+  `setup.placements` list of `{ type, rotation, x }`. The declared type must equal the
+  next piece drawn from that setup seed. Landing `y` is never authored or injected; it
+  is derived by legal gravity and hard drop from the empty canonical board.
+- Setup replay uses ordinary rotation, horizontal movement, and hard drop. It must
+  produce no line clear, top-out, hidden-buffer occupancy, overlap, or invalid spawn.
+  Every source owner therefore remains exactly four cells whose normalized geometry
+  equals the canonical rotation of its declared tetromino. Two source pieces of the
+  same type may not share an orthogonal edge in the final setup, so every visible
+  same-color connected component is one recognizable legal tetromino.
+- `boardRows` is derived byte-for-byte from the frozen setup history. It is not a
+  second handwritten authority. `BOARD_COLOR_SALT`, per-cell color draws, runtime mask
+  generation, and production random excavation are removed. The separate gameplay
+  seed still starts the ordinary continuously replenishing seven-bag and is never
+  consumed by setup construction.
+- Tests and the reference builder replay every setup from
+  `createInitialState(level.setup.seed, "marathon")` through public `dispatch` only,
+  then require the resulting board to match the production Puzzle board exactly. The
+  pure production board constructor may reuse canonical shapes and collision helpers
+  but must not import the engine or create a dependency cycle.
+- The fifteen existing IDs, order, names, and gameplay seeds remain stable so the UI
+  and informational completion records remain compatible. The old occupancy masks,
+  setup colors, route streams, state hashes, reference SHA, and browser evidence are
+  invalidated and regenerated under this authority.
 - Topology validation normalizes every occupied piece character to one occupancy bit
   before counting distinct rows, densities, holes, or cavities. Color variation may
   never masquerade as geometric difficulty.
-- The nine new original levels use unique seeds and 9–12 occupied rows, at least six
-  distinct occupancy-row shapes, at least four density classes, covered cavities in
-  five or more columns, and at least eight buried holes. An immediately legible well,
-  a copied old mask, or a recolored duplicate is rejected.
+- All fifteen normalized masks are unique and every pair differs in at least 20 of the
+  200 visible cells. The signed-in histories are authored and visually reviewed as
+  distinct endgame motifs; the authoring/search helper may screen candidates and find
+  solutions, but production never generates a board at runtime. A copied mask,
+  recolored duplicate, random hole field, or one-obvious-answer opener is rejected.
 
-## T5 light neo-tech minimal visual direction
+## T5 `暮海矿物` deep-tech minimal visual direction
 
-The accepted visual target is a precise, light game interface with a restrained
-technology character. It replaces both the rejected Aqua Blueprint candidate and the
-rejected clean rounded/ceramic candidate instead of combining or recoloring them. The
-only player-facing brand is `Tetris` set as ordinary text in the product type system.
+The accepted visual target is a precise dark-navy game interface built from one
+natural deep-sea/mineral spectrum. It replaces the rejected Aqua Blueprint, rounded
+ceramic, bright spectral-glass, and plastic luminous-slab candidates rather than
+combining or recoloring them. The only player-facing brand is `Tetris` set as ordinary
+text in the product type system.
 
-- Technology comes from measured spacing, thin cyan/blue edges, functional state
-  feedback, and disciplined composition. It does not come from CAD, dashboards,
-  decorative telemetry, or a generic futuristic theme.
+- Technology comes from measured spacing, deep structural planes, restrained mineral
+  state colors, functional feedback, and disciplined composition. It does not come
+  from CAD, dashboards, decorative telemetry, generic neon futurism, or unrelated
+  rainbow accents.
 - Remove the custom brand glyph, `青流方阵`, `AQUA ROUTE`, coordinates, route lines,
   blueprint grids and ticks, diagonal bands, clipped corners, decorative numbering,
   all-caps engineering labels, oversized slogans, and the rejected stepped mode bands.
-- Also forbid scanlines, repeating grids, decorative particles, toy/glass candy
-  blocks, marketing heroes, settings-row layouts, floating-card piles, and technical
-  English used only as decoration.
+- Also forbid scanlines, repeating grids, decorative particles, toy/glass candy or
+  plastic blocks, marketing heroes, settings-row layouts, floating-card piles,
+  backdrop blur, colored ambient blobs, and technical English used only as decoration.
 - Do not imitate an official Tetris logo, multicolor wordmark, commercial font,
   existing product composition, commercial level screen, or other trade dress.
 - Per the user's earlier direction, `index.html` remains unchanged as the required
   Vite entry document; it already provides the browser HTML shell and `Tetris` title.
-- The only ornamental motion signature is a 2 px cyan-to-blue `phase seam`: about
+- The only ornamental motion signature is a 2 px teal-to-blue-to-violet `phase seam`: about
   72 px while idle, extending once on selection or focus over 220 ms. It never loops,
   and reduced motion switches state immediately.
 
@@ -229,62 +277,68 @@ only player-facing brand is `Tetris` set as ordinary text in the product type sy
 
 | Role | Token |
 | --- | --- |
-| Page | `#F4FAFD` |
-| Main surface | `#FFFFFF` |
-| Cyan surface | `#E7F7FA` |
-| Blue surface | `#EBF2FF` |
-| Board well | `#EFF8FC` |
-| Line / board edge | `#B9D8E3` / `#79B7C7` |
-| Primary / secondary text | `#071E2B` / `#526D7A` |
-| Cyan / blue action | `#059AA8` / `#2F67D8` |
-| Focus | `#0B5BD7` |
-| Success / failure | `#176B54` / `#A33A55` |
+| Page | `#0B1422` |
+| Main / raised / selected surface | `#111D2E` / `#172538` / `#1D2D43` |
+| Board well | `#07101C` |
+| Primary / secondary text | `#EDF2F7` / `#AAB5C4` |
+| Line / structural edge | `#34445A` / `#566981` |
+| Classic / Race / Puzzle / selection | `#5A918B` / `#6F87B7` / `#9A81A8` / `#B57686` |
+| Action / hover / focus | `#365B8D` / `#426A9D` / `#9ABCE6` |
+| Success / failure | `#6F9A7D` / `#B16A78` |
 
-Light colors are surfaces, not text colors. Essential text, borders, focus, and state
-labels must meet WCAG AA contrast.
+The only page gradient is the signature
+`linear-gradient(90deg, #5A918B, #6F87B7, #9A81A8)` phase seam. Buttons use solid
+colors. Primary text on the main surface measures 15.05:1, secondary text 8.16:1,
+and primary button text on `#365B8D` 6.14:1. The `#34445A` divider is only a
+non-essential separator because its surface contrast is below 3:1; selection, focus,
+and error states always add a higher-contrast or non-color cue.
 
 ### Typography, surfaces, and piece language
 
 - Use the system sans stack for Chinese and normal product copy. A display sans may be
   used for the plain-text `Tetris` name; monospace is reserved for numeric values.
-- The background contains at most three broad low-opacity cyan/violet/coral light fields. It has
-  no repeating grid, measurement marks, grain, diagonal stripe, or route diagram.
-- Only the main page/game container may use restrained soft depth. Internal regions
-  rely on one-pixel cool borders, spacing, and tone rather than repeated shadows.
-- Primary surfaces use 16–20 px radii. Buttons, action sheets, the board, and cells
+- The page uses solid deep structural planes. It has no colored ambient field,
+  `backdrop-filter`, repeating grid, measurement mark, grain, diagonal stripe, route
+  diagram, gradient CTA, or glow shadow.
+- Only the main page/game container may use the restrained `0 22px 60px
+  rgba(2, 7, 14, .28)` depth. Internal regions rely on one-pixel structural edges,
+  spacing, and tone rather than repeated shadows.
+- Primary surfaces use 12–18 px radii. Buttons, action sheets, the board, and cells
   have no clipped corners; nested large pill/card stacks are forbidden.
-- Every mino is a `precision luminous slab`: a high-chroma diagonal color field,
-  1.25–2.5 px corner radius, one fine same-hue dark edge, and no permanent full inner
-  perimeter. Locked cells remain flat and shadowless. Active cells may add one soft
-  outer aura using the light material color; that aura must not become a thick border.
-  The style has no white highlight bar, lower lip, full double outline, jelly gloss,
-  ceramic bevel, embossing, detached unit shadow, universal black outline, cut corner,
-  or mineral inset.
-- `innerEdge` is reserved for the active aura and brief lock response rather than a
-  second outline on every locked cell. Ghost cells use no more than 3% fill plus one
-  fine complete outline; they never use corner brackets.
+- Every mino is a `matte anodized plate`: a 135-degree two-stop field with no more
+  than about 8% lightness difference, 1.25–1.75 px corner radius, and one 0.75–1 px
+  same-hue dark edge. Locked cells are flat and shadowless. The style has no aura,
+  blur filter, white highlight bar, lower lip, full double outline, jelly gloss,
+  ceramic/plastic bevel, embossing, detached unit shadow, universal black outline,
+  cut corner, or mineral inset.
+- The existing `innerEdge` material field is semantically the lighter `signal` color.
+  Active cells replace the locked dark edge with that single signal edge; they do not
+  add a second perimeter. Ghost cells have zero fill and one complete 1 px signal
+  outline at about 45% alpha. The lock response is only an 80–100 ms low-alpha fill
+  change and never draws a second border.
 - Board, Next, canonical silhouettes, active cells, and locked cells use the same
   exact material mapping. Board and Next use the same Pixi drawing primitive; the
   silhouette may simplify the material to fill plus edge but may not remap colors.
-- The original bright luminous-spectrum mapping below deliberately differs from the
-  standard commercial cyan/yellow/purple/green/red/blue/orange assignment. All seven
-  fills are bright and saturated as explicitly requested; the ice-light spectral page
-  remains restrained so gameplay color still carries the strongest visual energy.
+- The coordinated mineral mapping below deliberately differs from the standard
+  commercial piece-color assignment. Garnet, sea-pine, ochre, storm blue, moss,
+  rock violet, and lake blue share one restrained value/chroma envelope; no one piece
+  becomes a fluorescent or candy accent.
 
 | Piece | Fill start | Fill end | Edge | Inner edge |
 | --- | --- | --- | --- | --- |
-| I | `#FF4F7B` | `#EB2F62` | `#8A1838` | `#FFB7C8` |
-| O | `#00C9B7` | `#00A99D` | `#056067` | `#9AF5EA` |
-| T | `#FFB020` | `#EE8500` | `#874500` | `#FFE09A` |
-| S | `#6375FF` | `#4357E8` | `#25328E` | `#C0C7FF` |
-| Z | `#8EDB3F` | `#65B91E` | `#376A12` | `#DBF7A0` |
-| J | `#D75BFF` | `#B838E8` | `#69208A` | `#F0B5FF` |
-| L | `#24A8FF` | `#087EDB` | `#07518A` | `#A7DDFF` |
-- Active cells gain only the low-intensity light-color aura described above. Locked
-  cells stay flat. Ghost cells use a complete fine outline with no more than 3% fill.
+| I | `#AE4761` | `#A1445A` | `#542532` | `#C78A99` |
+| O | `#3E988F` | `#347F78` | `#204944` | `#80B9B4` |
+| T | `#AD7D43` | `#946C3C` | `#503A22` | `#C6A078` |
+| S | `#4F67B0` | `#5264A2` | `#283653` | `#8795C2` |
+| Z | `#759A4C` | `#637F43` | `#3A4A2A` | `#A0B584` |
+| J | `#8A53A2` | `#835294` | `#432A4D` | `#AF8FBA` |
+| L | `#43829D` | `#386E86` | `#244452` | `#81AABB` |
+- Every fill endpoint has at least 3:1 non-text contrast against the `#07101C` board
+  well; the measured range is 3.17:1–5.89:1. Active/locked distinction cannot depend
+  on glow or color alone.
 - Board and Next reuse the exact drawing primitive. Page entrance is 180 ms over at
-  most 6 px; line clear is one local 160 ms sweep. No ornamental animation loops, and
-  reduced motion removes positional, sweep, and glow transitions immediately.
+  most 4 px; line clear is one local 120–160 ms tonal sweep. No ornamental animation
+  loops, and reduced motion removes positional and sweep transitions immediately.
 
 ## Information architecture
 
@@ -293,25 +347,27 @@ labels must meet WCAG AA contrast.
 - The webpage opens on a dedicated mode home with no gameplay board.
 - The mode home and Puzzle library do not mount a runtime or canvas. Entering a run
   creates one runtime/canvas; returning home destroys both before showing the home.
-- A compact `Tetris` header and short `选择模式` introduction lead directly to `经典`,
-  Race, and Puzzle. There is no poetic or marketing hero.
+- A compact `Tetris` header and one `选择模式` heading lead directly to `经典`, Race,
+  and Puzzle. There is no poetic or marketing hero.
 - The three entrances share one continuous 1+2 mode surface: Classic occupies the
   complete first row, with Race and Puzzle as two independent complete buttons in the
   second row. One-pixel dividers and selected-state tone establish grouping; they are
   not three floating cards or a settings list.
-- A small original four-cell composition may reflect the selected mode, but it uses
-  the same precision-slab language, stays subordinate to selection, and never becomes
-  a logo, commercial composition, or looping hero.
-- Each entrance contains only its Chinese mode name, concise factual rules, and an
-  explicit action. Decorative `01 / 02 / 03` numbering and redundant `Tetris` labels
-  inside the chooser are forbidden.
-- Race copy is `速度持续提升｜无终点｜主动退出或堆叠到顶结束`.
+- The standalone selected-mode preview pane and its explanatory copy are removed. A
+  small original four-cell signal may live inside a mode entrance, uses the same
+  matte-plate language, and never becomes a logo or looping hero.
+- Visible home copy is frozen to `Tetris`, one `选择模式`, the three Chinese mode
+  names, and these terse factual lines: Classic `分数 · 消行 · 等级`, Race
+  `速度递增 · 无终点`, and Puzzle `15 关残局 · 清空棋盘`, plus `开始` / `选关`.
+  `当前选择`, `三种玩法`, `随时开始，也可随时退出。`, `键盘与触控均可操作`,
+  full-sentence rule explanations, decorative numbering, and redundant brand labels
+  are removed from the visible home.
 - Mode selection is not a small rail beside the board.
 
 ### Puzzle library
 
-- Every level entry is enabled and shows name, board-clearing goal, available-piece
-  stream description, and optional completion status.
+- Every level entry is enabled and shows only its ordinal, name, and optional
+  completion status.
 - It does not show numeric difficulty or lock state.
 - The library is one continuous surface with fifteen complete enabled entries and one
   selected-level detail/start region. Desktop and 844 × 390 use a 3 × 5 matrix plus
@@ -322,8 +378,13 @@ labels must meet WCAG AA contrast.
 - If a level silhouette is shown, it is read-only derived from the existing canonical
   initial board as one SVG with at most one bounded path per piece type. It is not a
   DOM gameplay grid and must not duplicate or modify Puzzle definitions.
-- No sticky or fixed selection panel may cover a level row. The title is the compact
-  `解谜关卡`, not a multi-line marketing statement.
+- No sticky or fixed selection panel may cover a level row. Visible library copy is
+  only `Tetris`, `解谜`, back, ordinals, level names/completion, one selected-board
+  silhouette, `目标  清空棋盘`, and `开始`.
+- Remove the repeated row-level `清空棋盘`, the library explanation paragraph,
+  `当前选择`, visible `起始棋盘`, `连续七袋方块 · 不限定唯一解法`, and the separate
+  `方块` / `规则` definition rows. Full accessible labels may still describe controls
+  and state without duplicating that prose visually.
 - Starting a level must keep the visible selection, canonical `puzzleId`, level seed,
   active piece, and Next preview aligned.
 
@@ -331,8 +392,8 @@ labels must meet WCAG AA contrast.
 
 - Top actions provide mode-home exit, current mode, and pause.
 - Desktop uses one coherent game surface: the board is the dominant element and one
-  flat 200–240 px information dock contains Next, statistics, the factual mode rule,
-  and keyboard help. It does not return to detached side cards.
+  flat 200–240 px information dock contains Next, statistics, and compact keyboard
+  controls. It does not return to detached side cards.
 - Mobile uses a compact information band above the board and a five-action deck below.
 - The five actions belong to one integrated control deck with shared edges and clear
   pressed/focus state, not five floating pills or tiles.
@@ -344,6 +405,11 @@ labels must meet WCAG AA contrast.
 - Race shows score, lines, and speed tier. Puzzle shows level name, cleared lines,
   placed pieces, the board-empty goal, and one Next item. It never shows a finite
   remaining-piece value or a suggested solution.
+- Remove visible `本局数据`, long `.mode-rule` explanations, and explanatory pause or
+  exit paragraphs. Result copy is limited to `棋盘已清空` plus `X 方块 · Y 消行`,
+  `堆叠到顶`, or `竞速结束` plus the necessary statistics. Mode/level name, back,
+  pause, score/statistics, objective, Next, keyboard map, and the five touch labels
+  remain visible.
 
 ## Responsive and accessibility contract
 
@@ -362,7 +428,7 @@ labels must meet WCAG AA contrast.
   least 14 px, and statistic values at least 18 px.
 - No horizontal overflow, clipped essential text, overlapping modules, or accidental
   gameplay page scroll.
-- At 360 × 800, Puzzle statistics show the complete goal `清空完整棋盘`; it may not
+- At 360 × 800, Puzzle statistics show the complete visible goal `清空棋盘`; it may not
   be ellipsized, clipped, or made to fit by shrinking the value below 18 px. A narrow
   override may redistribute the two statistic columns while preserving their shared
   surface and the 390 × 844 / 844 × 390 layouts.
@@ -373,15 +439,15 @@ labels must meet WCAG AA contrast.
 ## Implementation ownership and sequence
 
 1. Coordinator freezes this contract and exact path boundaries.
-2. T5 Core owns Race/Puzzle rules, authored data, deterministic T5 fixtures, runtime QA
-   migration, leaderboard semantics, and focused tests. It does not edit frontend.
-3. Independent read-only core QA verifies the candidate SHA.
-4. T5 Frontend owns mode home, Puzzle library, game composition, completion display,
-   the revised clean light CSS, Pixi rendering, and presentation tests.
+2. Puzzle Slice J replaces all fifteen boards with frozen legal zero-clear setup
+   histories, regenerates thirty routes/references, and changes no frontend path.
+3. Independent read-only Core QA verifies the exact Slice J candidate SHA.
+4. Frontend Slice K owns the `暮海矿物` theme, matte renderer, reduced visible copy,
+   and related presentation tests. It changes no Core definition or reference.
 5. Coordinator runs one combined final typecheck, full suite, build, and browser pass
    after the last product change.
-6. Independent read-only final QA verifies the exact combined candidate before
-   changelog integration and push.
+6. Independent read-only functional and visual QA verify the exact combined candidate
+   before evidence, changelog integration, or push.
 
 Historical T3/T4 evidence stays unchanged. New reference and browser evidence lives
 only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
@@ -395,7 +461,12 @@ only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
   monotonic through its safe cap;
 - all fifteen Puzzle levels, two distinct successful public-command routes per level,
   restart/hash determinism, normal automatic gravity, grounded locking, continuous
-  seven-bag replenishment, and consecutive multi-piece play;
+  seven-bag replenishment, consecutive multi-piece play, and exact regeneration from
+  legal zero-clear setup histories;
+- each setup replay uses public commands from an empty canonical board, derives every
+  landing row by hard drop, preserves each source owner as four canonical cells, and
+  proves initial cell type/color equals source tetromino type with no random per-cell
+  recoloring;
 - first-84-piece seven-bag integrity for every level seed with no queue exhaustion or
   budget terminal;
 - UI-driven evidence selects modes and levels through visible controls;
@@ -406,14 +477,21 @@ only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
 - the home is one coherent 1+2 mode surface and the `phase seam` is its only
   ornamental motion;
 - the mobile Puzzle selector has no overlay covering any level content;
-- bright precision-slab minos, full fine-outline ghost cells, and Next share one
-  drawing primitive; rejected double-outline, toy/candy, cut-corner, ceramic,
-  highlight-bar, thick-lip, and bracket-ghost styles are absent;
+- coordinated deep mineral matte minos, zero-fill full-outline ghost cells, and Next
+  share one drawing primitive; rejected bright-plastic, blurred aura, double-outline,
+  toy/candy, cut-corner, ceramic, highlight-bar, thick-lip, and bracket-ghost styles
+  are absent;
+- the page uses the exact `暮海矿物` solid tokens, no backdrop blur, ambient color
+  blobs, gradient CTA, glow shadow, or page gradient outside the single phase seam;
+- visible home/library/game copy matches the frozen minimal lists above. Repeated
+  gameplay explanations and the banned strings `当前选择`, `三种玩法`,
+  `随时开始，也可随时退出。`, `键盘与触控均可操作`, `本局数据`, and the long
+  library/rule descriptions are absent;
 - player-facing copy contains no legacy `路线`; use `解法`, `本局`, or `对局` only when
   that meaning is actually needed;
 - computed mobile body, statistic, and touch-label sizes are recorded by browser
   evidence rather than inferred only from CSS declarations;
-- the complete 360 × 800 Puzzle goal text is visibly present and its rendered value
+- the complete 360 × 800 Puzzle goal text `清空棋盘` is visibly present and its rendered value
   has `scrollWidth <= clientWidth` without lowering the 18 px statistic-value floor;
 - at least one Puzzle scenario after three consecutive locks, with visible/canonical
   level, active piece, placed-piece count, and Next preview aligned;

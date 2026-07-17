@@ -11,30 +11,31 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **active — fifteen-level behavior is accepted; premium bright-block visual
-replacement Slice I is open after the user rejected candidate `248ca89` styling**
+Status: **active — local Slice I checkpoint `e552b3c` is rejected and unpushed;
+Slice J legal authored endgames is open before Slice K deep natural frontend**
 
 ## User-visible problems to resolve
 
-1. Keep a high-contrast, light neo-tech minimal interface named only `Tetris`, but
-   raise its perceived quality with a controlled cyan/cobalt/violet/coral spectral
-   theme and replace the rejected muted, double-outlined rounded blocks with bright
-   precision luminous slabs.
+1. Keep the page named only `Tetris`, but replace the rejected bright spectral-glass
+   and plastic-looking pieces with the exact coordinated `暮海矿物` deep-natural theme
+   and matte anodized minos frozen in `DESIGN.md`.
 2. Keep the dedicated entry page with separate Classic (`经典`), Race, and Puzzle
    entrances. The internal `marathon` key remains compatibility-only.
 3. Make Race endless accelerating normal play. It has no line target and stops only
    through player exit or top-out.
-4. Expand Puzzle to exactly fifteen normal continuous-play levels over harder
-   authored starting boards:
-   automatic gravity, replenishing seeded seven-bag input, no finite piece budget,
-   every level unlocked, multi-color prefilled cells, and at least two proven
-   successful routes per level.
+4. Rebuild all fifteen Puzzle levels as difficult authored endgames generated from
+   explicit legal tetromino stacking histories: automatic gravity, replenishing seeded
+   seven-bag input, no finite piece budget, every level unlocked, exact source-piece
+   colors, and at least two proven successful routes per level.
 5. Keep all level layouts, copy, frontend composition, block language, and assets
    original. Similar games are abstract mechanics research only.
 6. Remove the current engineering-dashboard vocabulary, oversized slogan, custom
    brand glyph, `青流方阵` name, grid/coordinate/route decoration, clipped corners,
    oversized level cards, rounded ceramic/jelly blocks, stepped mode bands, legacy
    `路线` copy, and bracket-style ghost cells.
+7. Remove repeated descriptions of ordinary play. Visible copy is limited to names,
+   controls, score/statistics, completion state, and the immediate objective; full
+   ARIA labels remain available without duplicating prose visually.
 
 ## Baseline policy
 
@@ -52,6 +53,10 @@ replacement Slice I is open after the user rejected candidate `248ca89` styling*
 - Preserve from `c9135f3` only the verified lifecycle, accessibility, input/rule
   behavior, and detached `structuredClone` QA snapshot regression. Its rounded mode
   bands, ceramic cell material, page composition, and copy are superseded.
+- Local commit `e552b3c86e59b801f6d69045a94211e3f1c97e34` completed the rejected
+  bright spectral surface immediately before the latest user review. It is a clean
+  historical checkpoint only. It must not receive independent acceptance, formal
+  evidence, changelog integration, or push.
 
 ## Slice A — T5 Core
 
@@ -511,6 +516,11 @@ stopped when the user rejected the finish. No Slice H formal evidence is regener
 
 Task ID: `TETRIS-T5-PREMIUM-BRIGHT-BLOCKS-008`
 
+Status: **REJECTED BY USER** at local commit
+`e552b3c86e59b801f6d69045a94211e3f1c97e34`. It is unpushed and is not eligible
+for QA or evidence. The path list and acceptance bullets below are historical only and
+grant no further Slice I authority.
+
 Product base: rejected-as-final but functionally complete candidate
 `248ca89551ce1293abe88e651c9953e132c816be`.
 
@@ -564,5 +574,122 @@ Slice I acceptance:
   create one candidate commit, and do not push.
 
 Independent read-only functional and visual QA must accept the exact Slice I candidate
+before the coordinator regenerates explicit-LF formal evidence, updates the changelog,
+or decides whether to push.
+
+## Slice J — legal authored Puzzle endgames
+
+Task ID: `TETRIS-T5-PUZZLE-AUTHORED-ENDGAMES-009`
+
+Status: **OPEN — sole active product writer boundary**.
+
+Product base: rejected visual checkpoint
+`e552b3c86e59b801f6d69045a94211e3f1c97e34`; its accepted mode/runtime behavior
+remains the deterministic base, but its visual result is not accepted.
+
+Writer base: the coordinator documentation commit that opens Slice J directly above
+the product base.
+
+The single Core writer may change only:
+
+- `src/game/core/puzzles.ts`;
+- `src/game/core/puzzles.test.ts`;
+- `src/game/core/puzzleCampaign.test.ts`;
+- `docs/workstreams/tetris-t5-core/search-puzzles.mjs`;
+- `docs/workstreams/tetris-t5-core/build-puzzle-references.test.ts`;
+- `docs/workstreams/tetris-t5-core/puzzle-references.json`;
+- at most one new directly related authoring/reference helper under
+  `docs/workstreams/tetris-t5-core/`;
+- `docs/workstreams/tetris-t5-core/THREAD_LOG.md`.
+
+The Core writer must not change `engine.ts`, `random.ts`, `pieces.ts`, `board.ts`,
+runtime/input/audio/render/frontend paths, `puzzleProgress.ts`, dependencies/build
+configuration, `index.html`, coordinator documents, changelog, or formal browser
+evidence.
+
+Slice J acceptance:
+
+- remove `BOARD_COLOR_SALT`, `colorizeBoardRows`, random hole excavation as production
+  authority, and every per-cell color draw;
+- keep the fifteen IDs, names, order, and gameplay seeds, but replace all masks and
+  all thirty route/reference streams;
+- each definition owns a separate setup seed and 16–22 explicit
+  `{ type, rotation, x }` placements. Type must match the setup seed's next seven-bag
+  draw; landing `y` is derived by ordinary hard drop and is never authored/injected;
+- public-command setup replay starts from an empty Marathon board, uses rotation,
+  horizontal movement, and hard drop only, produces zero line clears/top-out/hidden
+  occupancy, and byte-matches the production Puzzle board;
+- every source owner remains exactly four cells matching its canonical tetromino
+  rotation and material type. Same-type source pieces do not share an orthogonal edge,
+  so every visible same-color component is one recognizable tetromino;
+- every endgame occupies 8–12 rows, uses all seven types, has at least seven row
+  shapes, four density classes, five covered-cavity columns, and eight buried holes;
+  masks are pairwise unique with Hamming distance at least 20;
+- every level retains automatic gravity and the indefinitely replenishing gameplay
+  seven-bag, and has two public-dispatch successful routes of 30–42 locks meeting the
+  strengthened diversity thresholds in `DESIGN.md`;
+- the reference verifier proves all thirty routes, the fifteen setup replays, and the
+  first 84 gameplay pieces as twelve complete seven-bags. Search uses at most two
+  concurrent processes; failed candidates are replaced rather than weakening gates;
+- after the last Core source change, run one typecheck, one complete Vitest suite, one
+  production build, and the complete setup/route verifier. Inspect the exact reference
+  JSON, log paths/commands/results, create one candidate commit, and do not push.
+
+Independent read-only Core QA must accept the exact Slice J candidate before Slice K
+opens. The old random-color masks, state hashes, reference SHA, screenshots, and
+routes are rejected evidence and may not be reused.
+
+## Slice K — `暮海矿物` theme and minimal visible copy
+
+Task ID: `TETRIS-T5-DEEP-MINERAL-MINIMAL-010`
+
+Status: **PENDING accepted Slice J**.
+
+The single frontend/render writer may change only:
+
+- `src/App.tsx`;
+- `src/App.test.ts`;
+- `src/styles.css`;
+- `src/game/render/theme.ts`;
+- `src/game/render/theme.test.ts`;
+- `src/game/render/TetrisRenderer.ts`;
+- at most one new focused renderer test under `src/game/render/`;
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md`.
+
+The frontend writer must not change Core/Puzzle definitions, setup histories,
+references/routes, `puzzleProgress.ts`, presentation/runtime/input/audio, dependencies,
+`index.html`, coordinator documents, changelog, or formal evidence.
+
+Slice K acceptance:
+
+- implement the exact `暮海矿物` page tokens and seven-piece four-value table in
+  `DESIGN.md`; page and pieces form one natural, coordinated deep spectrum with no
+  fluorescent, candy-rainbow, or clashing complementary accents;
+- replace the blurred luminous material with the frozen matte anodized primitive:
+  135-degree low-delta fill, 1.25–1.75 px radius, one 0.75–1 px dark edge, no locked
+  shadow/inner ring/highlight, active using one signal edge and no BlurFilter, zero-fill
+  Ghost with one 1 px signal outline, and Board/Next sharing the primitive;
+- use solid page/control surfaces. The phase seam is the only page gradient; remove
+  backdrop blur, ambient color blobs, gradient CTA, glow shadow, and plastic/glass
+  styling. Preserve measured AA and at least 3:1 board-cell contrast endpoints;
+- home visibly contains only `Tetris`, one `选择模式`, the three names, their terse
+  statistic/objective lines, and `开始` / `选关`; remove the standalone selected-mode
+  preview copy and every banned explanatory string in `DESIGN.md`;
+- Puzzle rows contain only ordinal, name, and optional completion. Selected detail
+  contains silhouette, `目标  清空棋盘`, and `开始`; remove repeated objectives and
+  seven-bag/rule explanations;
+- game retains mode/level, back, pause, score/statistics, `清空棋盘`, Next, keyboard
+  controls, and five touch actions, while removing `本局数据`, long mode-rule copy,
+  and explanatory pause/exit paragraphs. ARIA remains complete;
+- preserve all stable selectors, internal `marathon`, exact fifteen enabled entries,
+  first/eighth/fifteenth canonical binding, 44 px controls, 12/14/18 px floors,
+  reduced motion, one-canvas/zero-DOM-cell lifecycle, endless Race, and continuous
+  Puzzle behavior;
+- run targeted App/theme/renderer tests while editing. After the final source change,
+  run one typecheck, one complete suite, one build, the prescribed action client, and
+  one five-viewport home/library/game browser matrix; inspect every PNG, log exact
+  evidence, create one candidate commit, and do not push.
+
+Independent read-only functional and visual QA must accept the exact Slice K candidate
 before the coordinator regenerates explicit-LF formal evidence, updates the changelog,
 or decides whether to push.
