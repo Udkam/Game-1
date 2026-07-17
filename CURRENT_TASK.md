@@ -16,9 +16,10 @@ replacement Slice I is open after the user rejected candidate `248ca89` styling*
 
 ## User-visible problems to resolve
 
-1. Keep the original light cyan/light-blue, high-contrast, neo-tech minimal interface
-   named only `Tetris`, but raise its perceived quality and replace the rejected
-   muted, double-outlined rounded blocks with bright precision luminous slabs.
+1. Keep a high-contrast, light neo-tech minimal interface named only `Tetris`, but
+   raise its perceived quality with a controlled cyan/cobalt/violet/coral spectral
+   theme and replace the rejected muted, double-outlined rounded blocks with bright
+   precision luminous slabs.
 2. Keep the dedicated entry page with separate Classic (`经典`), Race, and Puzzle
    entrances. The internal `marathon` key remains compatibility-only.
 3. Make Race endless accelerating normal play. It has no line target and stops only
@@ -506,7 +507,7 @@ Frontend acceptance:
 Slice H's functional and responsive results carry into Slice I, but its visual QA was
 stopped when the user rejected the finish. No Slice H formal evidence is regenerated.
 
-## Slice I — premium surface and bright precision blocks
+## Slice I — premium spectral surface and bright precision blocks
 
 Task ID: `TETRIS-T5-PREMIUM-BRIGHT-BLOCKS-008`
 
@@ -540,9 +541,11 @@ Slice I acceptance:
   aura; locked is flat; Ghost is a full fine outline with at most 3% fill;
 - canonical silhouettes use the same bright mapping, at most one path per present
   piece type, and no DOM gameplay grid;
-- page refinement keeps the light cyan/light-blue direction but replaces template-like
-  flatness with controlled translucent depth, tighter type/spacing hierarchy, and one
-  restrained spectral rail. It does not add a dark neon theme, decorative telemetry,
+- page refinement uses the exact `spectral glass light` tokens in `DESIGN.md`: ice
+  base, near-white translucent surfaces, cyan/cobalt/violet state families, and coral
+  only as a small Puzzle/selection signal. It replaces template-like flatness with
+  controlled depth, tighter type/spacing hierarchy, and the single three-stop spectral
+  rail. It does not add a dark neon theme, uncontrolled rainbow, decorative telemetry,
   repeating page grid, marketing hero, external font/asset, or copied trade dress;
 - the 15-level matrix remains continuous. Selected state is unmistakable without
   becoming a floating card; repetitive cell copy is shortened without hiding names;

@@ -157,3 +157,7 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   HUD/control surfaces, and a filled final mobile grid row. Core, dependencies,
   `index.html`, coordinator docs after this contract, and formal evidence remain
   read-only for the writer.
+- The user then broadened the page palette itself: premium technology color is not
+  restricted to light blue/green. Slice I therefore uses an ice-light spectral-glass
+  system with controlled cyan, cobalt, violet, and small coral state accents while
+  keeping the separate seven-piece bright mapping and avoiding a dark/random rainbow.

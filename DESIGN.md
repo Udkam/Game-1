@@ -66,6 +66,25 @@ The latest authority is therefore:
 - all accepted rules, fifteen-level bindings, selectors, accessibility, responsive
   geometry, and lifecycle proofs from `248ca89` remain mandatory.
 
+The user's final color clarification explicitly removes the earlier cyan/green-only
+page limitation. The premium page theme is `spectral glass light`: a cool near-white
+base with disciplined cyan, cobalt, violet, and small coral state accents. It is not a
+dark neon theme and not an unstructured rainbow.
+
+- Base page: cool ice `#F5F7FF`; primary ink `#081426`; muted text `#52627A`;
+  cool hairline `#B9CBE4`; translucent surfaces remain near-white.
+- State accents: cyan `#00BFC8`, cobalt `#4767F5`, violet `#8A5CF6`, and coral
+  `#FF5B7C`. Classic uses cyan-to-cobalt, Race uses cobalt-to-violet, and Puzzle uses
+  violet with coral only as a small selection signal.
+- The single signature rail is `linear-gradient(90deg, #00BFC8, #4767F5, #8A5CF6)`.
+  CTA and focus treatments may use adjacent stops from this rail; they do not mix all
+  four accents on every component.
+- The background may use at most three broad, very-low-opacity cyan, violet, and coral
+  light fields. It still has no repeating page grid, scanline, noise texture, or
+  decorative technical coordinates.
+- Gameplay piece colors remain the separate bright luminous-spectrum mapping below;
+  UI state color never remaps a tetromino material.
+
 The deterministic architecture integrated at
 `4c8582854088695ebac90467842dc2bc0cef3a20` remains the rule baseline. The rejected
 T4 candidate `dd7e31ea3547c18a797b2308f04161310d1412ce` remains in history but is not
@@ -228,7 +247,7 @@ labels must meet WCAG AA contrast.
 
 - Use the system sans stack for Chinese and normal product copy. A display sans may be
   used for the plain-text `Tetris` name; monospace is reserved for numeric values.
-- The background contains at most two broad low-opacity cyan/blue light fields. It has
+- The background contains at most three broad low-opacity cyan/violet/coral light fields. It has
   no repeating grid, measurement marks, grain, diagonal stripe, or route diagram.
 - Only the main page/game container may use restrained soft depth. Internal regions
   rely on one-pixel cool borders, spacing, and tone rather than repeated shadows.
@@ -249,8 +268,8 @@ labels must meet WCAG AA contrast.
   silhouette may simplify the material to fill plus edge but may not remap colors.
 - The original bright luminous-spectrum mapping below deliberately differs from the
   standard commercial cyan/yellow/purple/green/red/blue/orange assignment. All seven
-  fills are bright and saturated as explicitly requested; the light cyan/light-blue
-  page remains restrained so gameplay color carries the visual energy.
+  fills are bright and saturated as explicitly requested; the ice-light spectral page
+  remains restrained so gameplay color still carries the strongest visual energy.
 
 | Piece | Fill start | Fill end | Edge | Inner edge |
 | --- | --- | --- | --- | --- |
