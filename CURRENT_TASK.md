@@ -11,9 +11,8 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **active — Slice J authored endgames passed its targeted verifier; the final
-suite exposed one stale internal QA route, so bounded Slice J-R is open before Core QA
-and Slice K deep natural frontend**
+Status: **active — Slice J + J-R are independently accepted through candidate
+`676d804`; Slice K `暮海矿物` frontend is now the sole active product boundary**
 
 ## User-visible problems to resolve
 
@@ -582,7 +581,10 @@ or decides whether to push.
 
 Task ID: `TETRIS-T5-PUZZLE-AUTHORED-ENDGAMES-009`
 
-Status: **OPEN — sole active product writer boundary**.
+Status: **ACCEPTED** at Core checkpoints `ee0d996` and `2d282b6`, with final frozen
+product/source SHA `26ef004dc4ab11de8caeee6605bbe21044c5d950` after Slice J-R.
+Independent read-only QA accepted the contiguous range
+`50be21d70abab887051b85d412a102f0b77eb9d2..676d804c2be74b107d429c61639ecc03e70e6509`.
 
 Product base: rejected visual checkpoint
 `e552b3c86e59b801f6d69045a94211e3f1c97e34`; its accepted mode/runtime behavior
@@ -644,8 +646,9 @@ routes are rejected evidence and may not be reused.
 
 Task ID: `TETRIS-T5-QA-ROUTE-MIGRATION-009R`
 
-Status: **OPEN — sole runtime-QA fixture writer boundary; Slice J Core paths remain
-owned by the Core writer and may not be touched**.
+Status: **ACCEPTED** at source checkpoint
+`26ef004dc4ab11de8caeee6605bbe21044c5d950`; runtime log checkpoint `aab0dc9` and
+Core final-gate log checkpoint `676d804` are accepted read-only records.
 
 Trigger: the post-source full suite passed 39 files / 251 tests and failed only
 `src/game/runtime/qaScenario.test.ts` because `PUZZLE_CHALLENGE_QA_ROUTE` still owns
@@ -680,7 +683,13 @@ the fixture migration. Independent QA reviews the contiguous Slice J + J-R range
 
 Task ID: `TETRIS-T5-DEEP-MINERAL-MINIMAL-010`
 
-Status: **PENDING accepted Slice J**.
+Status: **OPEN — sole active product writer boundary**.
+
+Product base: independently accepted Slice J + J-R candidate
+`676d804c2be74b107d429c61639ecc03e70e6509`.
+
+Writer base: the coordinator documentation checkpoint that opens Slice K directly
+after the accepted product base.
 
 The single frontend/render writer may change only:
 

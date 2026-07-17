@@ -218,6 +218,10 @@ otherwise follow ordinary Classic play.
   `setup.placements` list of `{ type, rotation, x }`. The declared type must equal the
   next piece drawn from that setup seed. Landing `y` is never authored or injected; it
   is derived by legal gravity and hard drop from the empty canonical board.
+- Product meaning: each level is a frozen mid-game snapshot from a difficult seeded
+  normal-play trace. The seed supplies the legal bag order and the signed placement
+  history supplies the play already performed; neither a seed alone nor a fabricated
+  occupancy mask is treated as the authored endgame.
 - Setup replay uses ordinary rotation, horizontal movement, and hard drop. It must
   produce no line clear, top-out, hidden-buffer occupancy, overlap, or invalid spawn.
   Every source owner therefore remains exactly four cells whose normalized geometry

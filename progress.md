@@ -202,3 +202,22 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   test if required, and a runtime workstream log. It may update the frozen 35-lock
   public-command fixture but may not change Puzzle rules, runtime behavior, Core,
   frontend, or `index.html`.
+
+## 2026-07-17 — authored mid-game endgames accepted; Slice K opened
+
+- Final Core/runtime source SHA `26ef004` passed one complete post-fix sequence:
+  typecheck, 39 files / 252 tests, 739-module production build, and the explicit
+  15-setup / 30-route verifier with 49 tests.
+- Independent read-only QA accepted `50be21d..676d804`. It confirmed every level is a
+  frozen mid-game snapshot produced from an independent seeded seven-bag and 16–22
+  legal placements, rather than a random mask; all source-piece shapes and colors are
+  exact, pairwise board Hamming distance is at least 24, and all thirty routes satisfy
+  the strengthened diversity thresholds.
+- Reference SHA-256 is
+  `4c8f9fac3451b2e888c5560126b75c5cd949c7e1a947f04274698e93c0171bec` at 263,980
+  bytes with zero CRLF. The J-R first-level QA fixture exactly matches the signed
+  35-placement route and changes no Race or production dispatch behavior.
+- Slice K is now the sole active product boundary. It owns player-visible `经典`, the
+  exact coordinated `暮海矿物` palette, matte anodized Board/Next cells, and concise
+  names/controls/statistics/objective copy. Core, runtime, `index.html`, dependencies,
+  coordinator docs, changelog, and formal evidence remain read-only to its writer.
