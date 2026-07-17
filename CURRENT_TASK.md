@@ -331,3 +331,52 @@ exact changed paths in the workstream log, create one candidate commit, and not 
 
 After the candidate, independent read-only visual and functional QA must accept the
 exact SHA before the coordinator regenerates T5 evidence or updates the changelog.
+
+## Slice F — narrow Puzzle goal and portable evidence correction
+
+Task ID: `TETRIS-T5-FRONTEND-NARROW-COPY-FIX-005`
+
+Base SHA: coordinator contract child of rejected evidence commit
+`221c8218b338abeaae6be4e3d73d24fb74550c76`.
+
+Status: **active — final QA rejected the first formal Slice E evidence child with two
+bounded findings**.
+
+Independent visual QA found that `narrow-puzzle-360x800.png` ellipsizes the essential
+Puzzle goal to `清空完整棋...`. Independent static QA also found that the evidence
+generator hashed the Windows CRLF working-tree bytes of `browser-evidence.json`, while
+Git stored the normalized LF blob; exact-commit verification therefore matched only
+17 of 18 listed evidence files. All other visual, interaction, scope, and evidence
+checks passed.
+
+The single frontend fix writer may change only:
+
+- `src/styles.css`;
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md`.
+
+The writer must not change `App.tsx`, renderer/theme, tests, Core/runtime/Puzzle data,
+`index.html`, dependencies/build configuration, coordinator documents, changelog, or
+any evidence path.
+
+Product acceptance:
+
+- at 360 × 800 Puzzle gameplay shows the complete `清空完整棋盘` value with no
+  ellipsis or clipping and computed `scrollWidth <= clientWidth`;
+- statistic labels remain at least 14 px, values remain at least 18 px, touch labels
+  remain at least 12 px, and all visible buttons remain at least 44 × 44 CSS px;
+- the fix redistributes narrow Puzzle statistic space rather than hiding copy,
+  scaling the page, or changing gameplay content;
+- 390 × 844 Puzzle, 844 × 390 gameplay, all mode-home layouts, Board/Next geometry,
+  one-canvas/zero-DOM-cell behavior, and all accepted rules remain unchanged;
+- after the final source change, run one typecheck, one complete Vitest suite, one
+  production build, and a bounded 360/390/844 browser comparison; inspect the actual
+  captures, log exact computed values, create one candidate commit, and do not push.
+
+After independent read-only product QA accepts the exact fix candidate, the
+coordinator may change only `docs/qa/evidence/tetris-t5/**` to:
+
+- write generated JSON and checksum text with explicit LF bytes before hashing;
+- regenerate all 16 first-viewport captures against the accepted product SHA;
+- prove every `SHA256SUMS.txt` entry against the exact commit's raw Git blobs;
+- route the new evidence child through independent static, browser, and visual QA
+  before changelog integration or push.

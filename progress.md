@@ -73,3 +73,20 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   lifecycle/accessibility behavior, and detached QA snapshot regression remain fixed.
 - Next: commit the Slice E contract, authorize one bounded frontend writer, then route
   the exact candidate through independent QA before evidence, changelog, or push.
+
+## 2026-07-17 — Slice E final evidence rejected with bounded fixes
+
+- Neo-tech minimal candidate `f66c118` and compact-layout fix `f277c2a` passed writer
+  gates and independent product QA. Coordinator evidence child `221c821` contains 16
+  first-viewport captures and passed the final 38-file / 238-test suite and build.
+- Final visual QA found one product defect: at 360 × 800 the Puzzle goal is visibly
+  ellipsized as `清空完整棋...` instead of `清空完整棋盘`.
+- Final static QA found one evidence-integrity defect: Windows CRLF bytes were hashed
+  before Git normalized `browser-evidence.json` to LF, so raw Git-blob verification
+  matched 17/18 entries even though the local working tree matched 18/18.
+- All other reviewed visuals, five-viewport geometry, 44 px controls, 12/14/18 px
+  type floors, lifecycle teardown, detached snapshots, normal-gravity Puzzle locks,
+  public-keyboard success, endless Race, and evidence scope passed.
+- Next: one CSS/log writer fixes only the narrow Puzzle statistic allocation; after
+  independent product QA, the coordinator regenerates all formal evidence with
+  explicit LF output and repeats final exact-commit QA before changelog or push.

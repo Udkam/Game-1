@@ -278,6 +278,13 @@ labels must meet WCAG AA contrast.
   least 14 px, and statistic values at least 18 px.
 - No horizontal overflow, clipped essential text, overlapping modules, or accidental
   gameplay page scroll.
+- At 360 × 800, Puzzle statistics show the complete goal `清空完整棋盘`; it may not
+  be ellipsized, clipped, or made to fit by shrinking the value below 18 px. A narrow
+  override may redistribute the two statistic columns while preserving their shared
+  surface and the 390 × 844 / 844 × 390 layouts.
+- Generated JSON and checksum evidence uses explicit LF bytes before hashing so every
+  entry in `SHA256SUMS.txt` matches the corresponding raw Git blob on Windows and
+  non-Windows checkouts.
 
 ## Implementation ownership and sequence
 
@@ -322,6 +329,8 @@ only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
   that meaning is actually needed;
 - computed mobile body, statistic, and touch-label sizes are recorded by browser
   evidence rather than inferred only from CSS declarations;
+- the complete 360 × 800 Puzzle goal text is visibly present and its rendered value
+  has `scrollWidth <= clientWidth` without lowering the 18 px statistic-value floor;
 - at least one Puzzle scenario after three consecutive locks, with visible/canonical
   level, active piece, placed-piece count, and Next preview aligned;
 - mode-home → game → mode-home → game proof with no canvas/ticker/listener leaks;
