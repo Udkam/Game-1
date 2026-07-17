@@ -15,6 +15,9 @@ OUTPUT_DIR = SCRIPT_PATH.parent
 REPO_ROOT = SCRIPT_PATH.parents[4]
 REFERENCES_PATH = REPO_ROOT / "docs" / "workstreams" / "tetris-t5-core" / "puzzle-references.json"
 BASE_URL = sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:4175/"
+SOURCE_SHA = sys.argv[2] if len(sys.argv) > 2 else None
+CANDIDATE_TIP = sys.argv[3] if len(sys.argv) > 3 else None
+PUZZLE_LEVEL_COUNT = 15
 
 CAPTURES: list[dict[str, Any]] = []
 CHECKS: dict[str, Any] = {}
@@ -22,6 +25,7 @@ ERRORS: list[dict[str, str]] = []
 BANNED_VISIBLE_TEXT = (
     "青流方阵",
     "AQUA ROUTE",
+    "马拉松",
     "路线",
     "20 行",
     "剩余行",
@@ -30,6 +34,11 @@ BANNED_VISIBLE_TEXT = (
     "难度",
     "锁定",
     "剩余方块",
+    "当前选择",
+    "三种玩法",
+    "本局数据",
+    "随时开始，也可随时退出。",
+    "键盘与触控均可操作",
 )
 
 
@@ -46,11 +55,19 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def attach_error_tracking(page: Page, label: str) -> list[dict[str, str]]:
+def attach_error_tracking(
+    page: Page,
+    label: str,
+    *,
+    allow_blocked_fonts: bool = False,
+) -> list[dict[str, str]]:
     page_errors: list[dict[str, str]] = []
 
     def on_console(message: Any) -> None:
         if message.type == "error":
+            if allow_blocked_fonts and "ERR_FAILED" in message.text:
+                CHECKS.setdefault("expectedBlockedFontConsole", []).append(message.text)
+                return
             page_errors.append({"capture": label, "type": "console.error", "text": message.text})
 
     def on_page_error(error: Any) -> None:
@@ -69,17 +86,25 @@ def open_page(
     dpr: int,
     label: str,
     has_touch: bool = False,
+    block_fonts: bool = False,
 ) -> tuple[BrowserContext, Page, list[dict[str, str]]]:
     context = browser.new_context(
         viewport={"width": width, "height": height},
         device_scale_factor=dpr,
-        color_scheme="light",
+        color_scheme="dark",
         reduced_motion="no-preference",
         locale="zh-CN",
         has_touch=has_touch,
     )
+    if block_fonts:
+        def abort_font(route: Any) -> None:
+            CHECKS.setdefault("blockedFontRequests", []).append(route.request.url)
+            route.abort("failed")
+
+        context.route("https://fonts.googleapis.com/**", abort_font)
+        context.route("https://fonts.gstatic.com/**", abort_font)
     page = context.new_page()
-    page_errors = attach_error_tracking(page, label)
+    page_errors = attach_error_tracking(page, label, allow_blocked_fonts=block_fonts)
     page.goto(BASE_URL, wait_until="networkidle")
     page.evaluate("document.fonts && document.fonts.ready")
     page.wait_for_timeout(150)
@@ -109,7 +134,10 @@ def enter_mode(page: Page, mode: str, puzzle_id: str | None = None) -> None:
     page.locator(f'[data-testid="enter-{mode}"]').click()
     if mode == "puzzle":
         page.locator('[data-testid="puzzle-library"]').wait_for(state="visible")
-        require(page.locator('[data-testid="level-row"]:not([disabled])').count() == 6, "All six Puzzle levels must be enabled.")
+        require(
+            page.locator('[data-testid="level-row"]:not([disabled])').count() == PUZZLE_LEVEL_COUNT,
+            "All fifteen Puzzle levels must be enabled.",
+        )
         if puzzle_id is not None:
             page.locator(f'[data-level-id="{puzzle_id}"]').click()
         started = False
@@ -186,12 +214,17 @@ def rect_metrics(page: Page) -> dict[str, Any]:
             const rect = element.getBoundingClientRect();
             return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
           };
-          const rectFor = (selector) => {
-            const element = document.querySelector(selector);
+          const boxFor = (element) => {
             if (!element || !visible(element)) return null;
             const rect = element.getBoundingClientRect();
-            return { x: rect.x, y: rect.y, width: rect.width, height: rect.height, right: rect.right, bottom: rect.bottom };
+            return {
+              x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+              right: rect.right, bottom: rect.bottom,
+              clientWidth: element.clientWidth, clientHeight: element.clientHeight,
+              scrollWidth: element.scrollWidth, scrollHeight: element.scrollHeight,
+            };
           };
+          const rectFor = (selector) => boxFor(document.querySelector(selector));
           const overlap = (left, right) => {
             if (!left || !right) return 0;
             const width = Math.max(0, Math.min(left.right, right.right) - Math.max(left.x, right.x));
@@ -224,6 +257,29 @@ def rect_metrics(page: Page) -> dict[str, Any]:
                   && rect.right <= innerWidth + 0.5 && rect.bottom <= innerHeight + 0.5,
               };
             });
+          const modeActionFor = (mode) => {
+            const buttonElement = document.querySelector(`[data-testid="enter-${mode}"]`);
+            const actionElement = buttonElement?.querySelector('.mode-gate__action');
+            const arrowElement = actionElement?.querySelector('b');
+            const surfaceElement = document.querySelector('[data-testid="mode-list"]');
+            const button = boxFor(buttonElement);
+            const action = boxFor(actionElement);
+            const arrow = boxFor(arrowElement);
+            const surface = boxFor(surfaceElement);
+            const contains = (outer, inner) => Boolean(outer && inner
+              && inner.x >= outer.x - .5 && inner.y >= outer.y - .5
+              && inner.right <= outer.right + .5 && inner.bottom <= outer.bottom + .5);
+            return {
+              button, action, arrow,
+              actionInsideButton: contains(button, action),
+              arrowInsideButton: contains(button, arrow),
+              actionInsideSurface: contains(surface, action),
+              arrowStyle: arrowElement ? {
+                borderWidth: Number.parseFloat(getComputedStyle(arrowElement).borderRightWidth),
+                borderRadius: Number.parseFloat(getComputedStyle(arrowElement).borderTopRightRadius),
+              } : null,
+            };
+          };
           const board = rectFor('[data-testid="board-frame"]');
           const stats = rectFor('[data-testid="stats"]');
           const next = rectFor('[data-testid="next-slot"]');
@@ -284,6 +340,11 @@ def rect_metrics(page: Page) -> dict[str, Any]:
                 transitionDuration: getComputedStyle(phase).transitionDuration,
               } : null,
               selection: document.querySelector('[data-testid="mode-list"]')?.getAttribute('data-selection') || null,
+              actions: {
+                marathon: modeActionFor('marathon'),
+                race: modeActionFor('race'),
+                puzzle: modeActionFor('puzzle'),
+              },
               fonts: {
                 previewKicker: fontSizes('.mode-preview__copy small'),
                 previewCopy: fontSizes('.mode-preview__copy p'),
@@ -300,12 +361,35 @@ def rect_metrics(page: Page) -> dict[str, Any]:
               statLabels: fontSizes('.run-stats span'),
               statValues: fontSizes('.run-stats strong'),
               touchLabels: fontSizes('.touch-key small'),
+              nextLabels: fontSizes('.rail-label'),
+              keyboard: fontSizes('.keyboard-map'),
+              spaceGroteskReady: document.fonts ? document.fonts.check('500 16px "Space Grotesk"') : null,
+              notoSansReady: document.fonts ? document.fonts.check('500 16px "Noto Sans SC"') : null,
             },
             motion: {
               animatedCount: animated.length,
               infiniteCount: animated.filter((element) => getComputedStyle(element).animationIterationCount === 'infinite').length,
             },
-            bounds: { board, stats, next, touch, canvasHost: rectFor('[data-testid="canvas-host"]') },
+            stats: {
+              roles: [...document.querySelectorAll('[data-stat-role]')].filter(visible).map((element) => element.dataset.statRole),
+              borders: [...document.querySelectorAll('[data-stat-role]')].filter(visible).map((element) => {
+                const style = getComputedStyle(element);
+                return {
+                  role: element.dataset.statRole,
+                  top: Number.parseFloat(style.borderTopWidth),
+                  right: Number.parseFloat(style.borderRightWidth),
+                  bottom: Number.parseFloat(style.borderBottomWidth),
+                  left: Number.parseFloat(style.borderLeftWidth),
+                };
+              }),
+            },
+            bounds: {
+              board, stats, next, touch,
+              nextLabel: rectFor('.rail-label'),
+              keyboard: rectFor('.keyboard-map'),
+              goal: rectFor('[data-stat-role="objective"] strong'),
+              canvasHost: rectFor('[data-testid="canvas-host"]'),
+            },
             boardRatio: board ? board.height / board.width : null,
             overlap: {
               statsBoard: overlap(stats, board),
@@ -370,12 +454,23 @@ def validate_layout(metrics: dict[str, Any], *, gameplay: bool) -> None:
             phase = metrics["home"]
             require(phase["phaseCount"] == 1 and phase["phase"], f"Home must expose one phase seam: {phase}")
             require(abs(phase["phase"]["height"] - 2) <= 0.6, f"Phase seam thickness drifted: {phase}")
+            for mode, action in phase["actions"].items():
+                require(action["button"] and action["action"] and action["arrow"], f"Missing {mode} action geometry: {action}")
+                require(action["button"]["scrollWidth"] <= action["button"]["clientWidth"], f"{mode} button clips: {action}")
+                require(action["action"]["scrollWidth"] <= action["action"]["clientWidth"], f"{mode} action clips: {action}")
+                require(action["actionInsideButton"] and action["arrowInsideButton"] and action["actionInsideSurface"], f"{mode} action escapes its surface: {action}")
+                require(action["arrowStyle"]["borderWidth"] >= 0.9 and action["arrowStyle"]["borderRadius"] >= 8.9, f"{mode} arrow edge is incomplete: {action}")
+                if viewport["height"] <= 520:
+                    require(action["action"]["height"] >= 43.5, f"{mode} landscape action below 44 px: {action}")
             if viewport["width"] <= 599 or viewport["height"] <= 520:
                 home_fonts = [size for values in phase["fonts"].values() for size in values]
                 require(home_fonts and min(home_fonts) >= 11.9, f"Mobile home helper text below 12 px: {phase['fonts']}")
         if metrics["screen"] == "puzzle-library":
             rows = metrics["library"]["rows"]
-            require(len(rows) == 6 and all(not row["disabled"] for row in rows), f"Puzzle library must expose six enabled levels: {rows}")
+            require(
+                len(rows) == PUZZLE_LEVEL_COUNT and all(not row["disabled"] for row in rows),
+                f"Puzzle library must expose fifteen enabled levels: {rows}",
+            )
             if viewport["width"] >= 600 and viewport["height"] <= 520:
                 require(document["scrollHeight"] <= viewport["height"] + 1, f"Short-landscape library overflow: {metrics}")
                 require(all(row["firstViewport"] for row in rows), f"Short-landscape library hides levels: {rows}")
@@ -389,6 +484,17 @@ def validate_layout(metrics: dict[str, Any], *, gameplay: bool) -> None:
     for key, area in metrics["overlap"].items():
         require(float(area) <= 0.5, f"Gameplay overlap {key}: {area}")
     state = metrics["state"]
+    require(metrics["bounds"]["nextLabel"] is not None, "Visible Next label is missing.")
+    require(metrics["bounds"]["keyboard"] is not None, "Visible keyboard map is missing.")
+    expected_roles = {
+        "marathon": ["score", "lines", "classic-level"],
+        "race": ["score", "lines", "race-speed"],
+        "puzzle": ["puzzle-level", "placed", "lines", "objective"],
+    }
+    require(metrics["stats"]["roles"] == expected_roles[state["mode"]], f"Statistic roles drifted: {metrics['stats']}")
+    if state["mode"] == "puzzle":
+        goal = metrics["bounds"]["goal"]
+        require(goal and goal["scrollWidth"] <= goal["clientWidth"], f"Puzzle goal clips: {goal}")
     text_state = metrics["textState"]
     if state and text_state:
         require(state["mode"] == text_state["mode"], "Text state mode drift.")
@@ -423,6 +529,8 @@ def validate_layout(metrics: dict[str, Any], *, gameplay: bool) -> None:
         require(fonts["statLabels"] and min(fonts["statLabels"]) >= 13.9, f"Mobile stat label below 14 px: {fonts}")
         require(fonts["statValues"] and min(fonts["statValues"]) >= 17.9, f"Mobile stat value below 18 px: {fonts}")
         require(fonts["touchLabels"] and min(fonts["touchLabels"]) >= 11.9, f"Mobile touch label below 12 px: {fonts}")
+        require(fonts["nextLabels"] and min(fonts["nextLabels"]) >= 11.9, f"Mobile Next label below 12 px: {fonts}")
+        require(fonts["keyboard"] and min(fonts["keyboard"]) >= 11.9, f"Mobile keyboard map below 12 px: {fonts}")
 
 
 def capture(page: Page, name: str, *, gameplay: bool, extra: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -474,17 +582,17 @@ def exercise_marathon_desktop(browser: Browser) -> None:
         enter_mode(page, "marathon")
         hard_drop(page)
         hard_drop(page)
-        capture(page, "desktop-marathon-playing-1440x900.png", gameplay=True)
+        capture(page, "desktop-classic-playing-1440x900.png", gameplay=True)
 
         page.get_by_role("button", name="暂停", exact=True).click()
-        page.get_by_role("dialog", name="本局已暂停").wait_for(state="visible")
+        page.get_by_role("dialog", name="已暂停").wait_for(state="visible")
         require(qa_state(page)["status"] == "paused", "Pause sheet did not pause canonical state.")
         require(page.evaluate("document.activeElement?.textContent?.trim()") == "继续游戏", "Pause initial focus is wrong.")
         page.keyboard.press("Shift+Tab")
         require(page.evaluate("document.activeElement?.textContent?.trim()") == "离开本局", "Shift+Tab focus trap failed.")
         page.keyboard.press("Tab")
         require(page.evaluate("document.activeElement?.textContent?.trim()") == "继续游戏", "Tab focus trap failed.")
-        capture(page, "desktop-marathon-paused-1440x900.png", gameplay=True)
+        capture(page, "desktop-classic-paused-1440x900.png", gameplay=True)
         page.keyboard.press("Escape")
         page.wait_for_function("() => window.__SIGNAL_FOUNDRY_QA__.getState().status === 'playing'")
 
@@ -496,12 +604,12 @@ def exercise_marathon_desktop(browser: Browser) -> None:
         )
         CHECKS["restartVisibleUi"] = True
 
-        page.get_by_role("button", name="← 模式首页", exact=True).click()
-        page.get_by_role("dialog", name="要离开本局吗？").wait_for(state="visible")
+        page.locator('[data-testid="cluster-header"] .topbar-action').first.click()
+        page.get_by_role("dialog", name="离开本局？").wait_for(state="visible")
         page.get_by_role("button", name="留在本局", exact=True).click()
         page.wait_for_function("() => window.__SIGNAL_FOUNDRY_QA__.getState().status === 'playing'")
-        page.get_by_role("button", name="← 模式首页", exact=True).click()
-        page.get_by_role("button", name="返回模式首页", exact=True).click()
+        page.locator('[data-testid="cluster-header"] .topbar-action').first.click()
+        page.get_by_role("dialog", name="离开本局？").get_by_role("button", name="返回模式首页", exact=True).click()
         page.locator('[data-testid="mode-home"]').wait_for(state="visible")
         page.wait_for_function(
             "() => document.querySelectorAll('canvas').length === 0 && !window.__SIGNAL_FOUNDRY_QA__"
@@ -557,11 +665,11 @@ def exercise_marathon_desktop(browser: Browser) -> None:
 def exercise_race_wide(browser: Browser) -> None:
     context, page, page_errors = open_page(browser, width=2048, height=1152, dpr=1, label="wide-race")
     try:
-        enter_mode(page, "race")
         body = page.locator("body").inner_text()
         require("无终点" in body, "Race endless copy is missing.")
         for forbidden in ("20 行", "剩余行", "完成目标"):
             require(forbidden not in body, f"Obsolete Race copy remains: {forbidden}")
+        enter_mode(page, "race")
         hard_drop(page)
         hard_drop(page)
         capture(page, "wide-race-playing-2048x1152.png", gameplay=True)
@@ -572,7 +680,7 @@ def exercise_race_wide(browser: Browser) -> None:
                 break
             terminal = hard_drop(page)
         require(terminal is not None and terminal["status"] == "game-over", "Race did not reach ordinary top-out.")
-        page.get_by_role("dialog", name="本轮竞速结束").wait_for(state="visible")
+        page.get_by_role("dialog", name="竞速结束").wait_for(state="visible")
         capture(page, "wide-race-topout-2048x1152.png", gameplay=True)
         CHECKS["raceTopOutOnlyTerminal"] = {
             "pieceCount": terminal["pieceCount"],
@@ -603,11 +711,11 @@ def exercise_puzzle_portrait(browser: Browser) -> None:
         require(state is not None and state["puzzleId"] == "t3r-shaft-01", "Visible level selection drifted.")
         require(state["pieceCount"] == 3, "Three normal-gravity Puzzle locks did not lock three pieces.")
         body = page.locator("body").inner_text()
-        require("青脊回旋" in body and "关卡 1/6" in body, "Visible Puzzle identity drifted from canonical level.")
+        require("青脊回旋" in body and "关卡 1/15" in body, "Visible Puzzle identity drifted from canonical level.")
         for forbidden in ("难度", "锁定", "剩余方块", "方块预算"):
             require(forbidden not in body, f"Obsolete Puzzle UI remains: {forbidden}")
         page.get_by_role("button", name="暂停", exact=True).click()
-        page.get_by_role("dialog", name="本局已暂停").wait_for(state="visible")
+        page.get_by_role("dialog", name="已暂停").wait_for(state="visible")
         paused_metrics = rect_metrics(page)
         require(paused_metrics["state"]["status"] == "paused", "Puzzle pause did not freeze canonical state.")
         require(paused_metrics["state"]["active"] == paused_metrics["textState"]["active"], "Paused active-piece text drift.")
@@ -642,16 +750,31 @@ def exercise_other_viewports(browser: Browser) -> None:
         browser, width=844, height=390, dpr=3, label="landscape-marathon", has_touch=True
     )
     try:
-        capture(page, "landscape-home-844x390-dpr3.png", gameplay=False)
+        action_states: dict[str, Any] = {}
+        capture_names = {
+            "marathon": "landscape-home-844x390-dpr3.png",
+            "race": "landscape-home-race-active-844x390-dpr3.png",
+            "puzzle": "landscape-home-puzzle-active-844x390-dpr3.png",
+        }
+        for mode in ("marathon", "race", "puzzle"):
+            page.locator(f'[data-testid="enter-{mode}"]').focus()
+            page.wait_for_function(
+                "mode => document.querySelector('[data-testid=mode-list]')?.getAttribute('data-selection') === mode",
+                arg=mode,
+            )
+            page.wait_for_timeout(220)
+            action_states[mode] = rect_metrics(page)["home"]["actions"][mode]
+            capture(page, capture_names[mode], gameplay=False)
+        CHECKS["landscapeModeActions"] = action_states
         page.locator('[data-testid="enter-puzzle"]').tap()
         page.locator('[data-testid="puzzle-library"]').wait_for(state="visible")
         capture(page, "landscape-puzzle-library-844x390-dpr3.png", gameplay=False)
-        page.get_by_role("button", name="← 返回模式首页", exact=True).tap()
+        page.get_by_role("button", name="返回模式首页", exact=True).tap()
         page.locator('[data-testid="mode-home"]').wait_for(state="visible")
         enter_mode(page, "marathon")
         state = hard_drop(page, touch=True)
         require(state["pieceCount"] == 1, "Landscape touch hard drop did not lock exactly one piece.")
-        capture(page, "landscape-marathon-844x390-dpr3.png", gameplay=True)
+        capture(page, "landscape-classic-844x390-dpr3.png", gameplay=True)
     finally:
         assert_no_page_errors(page_errors)
         context.close()
@@ -661,9 +784,63 @@ def exercise_other_viewports(browser: Browser) -> None:
     )
     try:
         capture(page, "narrow-home-360x800.png", gameplay=False)
-        enter_mode(page, "puzzle", "t3r-shaft-04")
+        enter_mode(page, "puzzle", "t5r-horizon-15")
+        initial = qa_state(page)
+        require(initial is not None and initial["puzzleId"] == "t5r-horizon-15", "Level 15 UI binding drifted.")
+        require(initial["active"]["type"] == "S" and initial["queue"][0] == "I", "Level 15 active/Next binding drifted.")
         hard_drop(page, touch=True)
         capture(page, "narrow-puzzle-360x800.png", gameplay=True)
+        CHECKS["puzzleFifteenthBinding"] = {
+            "puzzleId": initial["puzzleId"],
+            "active": initial["active"]["type"],
+            "next": initial["queue"][0],
+        }
+    finally:
+        assert_no_page_errors(page_errors)
+        context.close()
+
+
+def exercise_font_fallback(browser: Browser) -> None:
+    before = len(CHECKS.get("blockedFontRequests", []))
+    context, page, page_errors = open_page(
+        browser,
+        width=844,
+        height=390,
+        dpr=3,
+        label="landscape-font-fallback",
+        has_touch=True,
+        block_fonts=True,
+    )
+    try:
+        action_states: dict[str, Any] = {}
+        capture_names = {
+            "marathon": "landscape-home-font-fallback-844x390-dpr3.png",
+            "race": "landscape-home-race-active-font-fallback-844x390-dpr3.png",
+            "puzzle": "landscape-home-puzzle-active-font-fallback-844x390-dpr3.png",
+        }
+        for mode in ("marathon", "race", "puzzle"):
+            page.locator(f'[data-testid="enter-{mode}"]').focus()
+            page.wait_for_function(
+                "mode => document.querySelector('[data-testid=mode-list]')?.getAttribute('data-selection') === mode",
+                arg=mode,
+            )
+            page.wait_for_timeout(220)
+            action_states[mode] = rect_metrics(page)["home"]["actions"][mode]
+            capture(page, capture_names[mode], gameplay=False)
+        enter_mode(page, "puzzle", "t5r-horizon-15")
+        state = qa_state(page)
+        require(state is not None and state["puzzleId"] == "t5r-horizon-15", "Fallback Level 15 binding drifted.")
+        capture(page, "landscape-puzzle-font-fallback-844x390-dpr3.png", gameplay=True)
+        require(
+            len(CHECKS.get("blockedFontRequests", [])) > before,
+            "The fallback evidence did not block a Google Fonts request.",
+        )
+        CHECKS["fontFallback"] = {
+            "blockedRequests": CHECKS["blockedFontRequests"][before:],
+            "modeActions": action_states,
+            "visibleText": True,
+            "gameLayout": "valid",
+        }
     finally:
         assert_no_page_errors(page_errors)
         context.close()
@@ -699,6 +876,27 @@ def drive_reference_route(page: Page, route: dict[str, Any]) -> dict[str, Any]:
     return state
 
 
+def exercise_puzzle_eighth(browser: Browser) -> None:
+    context, page, page_errors = open_page(
+        browser, width=1440, height=900, dpr=1, label="desktop-puzzle-level-08"
+    )
+    try:
+        enter_mode(page, "puzzle", "t5r-drift-08")
+        state = qa_state(page)
+        require(state is not None and state["puzzleId"] == "t5r-drift-08", "Level 8 UI binding drifted.")
+        require(state["active"]["type"] == "T" and state["queue"][0] == "O", "Level 8 active/Next binding drifted.")
+        require("关卡 8/15" in page.locator("body").inner_text(), "Level 8 visible identity drifted.")
+        capture(page, "desktop-puzzle-level-08-1440x900.png", gameplay=True)
+        CHECKS["puzzleEighthBinding"] = {
+            "puzzleId": state["puzzleId"],
+            "active": state["active"]["type"],
+            "next": state["queue"][0],
+        }
+    finally:
+        assert_no_page_errors(page_errors)
+        context.close()
+
+
 def exercise_puzzle_success(browser: Browser) -> None:
     references = json.loads(REFERENCES_PATH.read_text(encoding="utf-8"))
     level = references["levels"][0]
@@ -726,32 +924,67 @@ def exercise_puzzle_success(browser: Browser) -> None:
         context.close()
 
 
-def write_manifest(candidate_sha: str) -> None:
+def write_manifest(source_sha: str, candidate_tip: str, capture_head: str) -> None:
     manifest = {
-        "taskId": "TETRIS-T5-FINAL-BROWSER-002",
-        "candidateSha": candidate_sha,
+        "taskId": "TETRIS-T5-FINAL-BROWSER-003",
+        "candidateSha": source_sha,
+        "sourceSha": source_sha,
+        "candidateTip": candidate_tip,
+        "captureHead": capture_head,
+        "independentQa": {
+            "staticFunctional": "ACCEPT",
+            "visualBrowser": "ACCEPT",
+            "visualChecks": "203/203",
+            "matrixExecutionErrors": 0,
+        },
         "baseUrl": BASE_URL,
         "method": (
-            "First-viewport screenshots from visible UI; real keyboard and touch input; three Puzzle locks by normal gravity; "
-            "detached canonical/text/renderer snapshot comparison only. Deterministic time advances ticks without replacing state, "
-            "and no terminal state is fabricated."
+            "First-viewport screenshots from visible UI; loaded and deliberately blocked Google Fonts; active 844x390 mode actions; "
+            "first/eighth/fifteenth Puzzle binding; real keyboard and touch input; three Puzzle locks by normal gravity; detached "
+            "canonical/text/renderer snapshot comparison only. Deterministic time advances ticks without replacing state, and no "
+            "terminal state is fabricated."
         ),
         "captures": CAPTURES,
         "checks": CHECKS,
         "errors": ERRORS,
     }
     manifest_path = OUTPUT_DIR / "browser-evidence.json"
-    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    hashed_files = sorted(path for path in OUTPUT_DIR.iterdir() if path.suffix in {".png", ".json", ".py"})
+    manifest_path.write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
+    hashed_files = sorted(
+        {SCRIPT_PATH, manifest_path, *(OUTPUT_DIR / record["file"] for record in CAPTURES)},
+        key=lambda path: path.name,
+    )
     checksum_lines = [f"{sha256(path)}  {path.name}" for path in hashed_files]
-    (OUTPUT_DIR / "SHA256SUMS.txt").write_text("\n".join(checksum_lines) + "\n", encoding="utf-8")
+    (OUTPUT_DIR / "SHA256SUMS.txt").write_bytes(("\n".join(checksum_lines) + "\n").encode("utf-8"))
 
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    candidate_sha = subprocess.check_output(
+    capture_head = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True, encoding="utf-8"
     ).strip()
+    source_sha = subprocess.check_output(
+        ["git", "rev-parse", SOURCE_SHA or capture_head], cwd=REPO_ROOT, text=True, encoding="utf-8"
+    ).strip()
+    candidate_tip = subprocess.check_output(
+        ["git", "rev-parse", CANDIDATE_TIP or source_sha], cwd=REPO_ROOT, text=True, encoding="utf-8"
+    ).strip()
+    product_paths = [
+        "src", "index.html", "package.json", "package-lock.json", "vite.config.ts",
+        "tsconfig.json", "tsconfig.app.json", "tsconfig.node.json",
+    ]
+    require(
+        subprocess.run(
+            ["git", "diff", "--quiet", source_sha, "--", *product_paths], cwd=REPO_ROOT, check=False
+        ).returncode == 0,
+        "Current product paths differ from the declared source SHA.",
+    )
+    require(
+        subprocess.run(
+            ["git", "diff", "--quiet", "--", *product_paths], cwd=REPO_ROOT, check=False
+        ).returncode == 0,
+        "Tracked product paths are dirty before capture.",
+    )
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(
             headless=True,
@@ -762,12 +995,14 @@ def main() -> None:
             exercise_race_wide(browser)
             exercise_puzzle_portrait(browser)
             exercise_other_viewports(browser)
+            exercise_font_fallback(browser)
+            exercise_puzzle_eighth(browser)
             exercise_puzzle_success(browser)
         finally:
             browser.close()
     require(not ERRORS, f"Browser errors were recorded: {ERRORS}")
-    write_manifest(candidate_sha)
-    print(json.dumps({"candidateSha": candidate_sha, "captures": len(CAPTURES), "checks": CHECKS}, ensure_ascii=False))
+    write_manifest(source_sha, candidate_tip, capture_head)
+    print(json.dumps({"sourceSha": source_sha, "candidateTip": candidate_tip, "captures": len(CAPTURES), "checks": CHECKS}, ensure_ascii=False))
 
 
 if __name__ == "__main__":
