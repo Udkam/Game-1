@@ -228,3 +228,111 @@ documents, changelog, historical evidence, or committed T5 evidence.
 - Status: waits for the coordinator documentation commit; no source edit or push is
   authorized before that commit.
 - Next: one bounded writer implements Slice E and records exact final gates/evidence.
+
+## 2026-07-17 — LIGHT NEO-TECH MINIMAL CANDIDATE READY
+
+- Task: `TETRIS-T5-FRONTEND-TECH-MINIMAL-003`.
+- Branch: `codex/tetris-recovery`.
+- Base SHA: `368d9d80445e35fa2e1098f259c8f50c51e591a8`.
+- Intake: branch and HEAD matched the coordinator instruction and the working tree was
+  clean before the first source edit.
+- Candidate identity: the single bounded writer commit created from this recorded
+  tree; its exact SHA is returned to the coordinator with this log.
+
+### Exact changed paths
+
+- `src/App.tsx`
+- `src/styles.css`
+- `src/game/render/theme.ts`
+- `src/game/render/TetrisRenderer.ts`
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md`
+
+There is no writer diff in `index.html`, package/dependency/build configuration,
+`src/main.tsx`, Core, runtime, input, audio, Puzzle definitions/progress,
+leaderboard, renderer presentation, coordinator documents, changelog, or any evidence
+directory. `src/App.test.ts` and `src/ui/ActionSheet.tsx` remain byte-for-byte at the
+accepted `c9135f3` behavioral baseline.
+
+### Delivered interface and preserved behavior
+
+- Replaced the rejected rounded-band page with an original light neo-tech minimal
+  system named only `Tetris`. The home is one continuous surface: a functional current
+  selection view and one grouped 1+2 mode deck. Hover/focus updates the current mode;
+  the mode button still enters immediately through the existing visible control.
+- Added exactly one real `phase-seam` element. It is 2 px high and 72 px idle; focus
+  changes the selected mode and extends it once over 220 ms. It never loops and the
+  existing reduced-motion override makes its state change immediate.
+- Kept the exact Race rule copy visible: continuous acceleration, no finish, and only
+  explicit exit or top-out as termination. All player-visible `路线` wording was
+  removed and Puzzle now describes multiple possible `解法`.
+- Rebuilt Puzzle selection as one six-row all-enabled surface plus one selected detail
+  region. The selected original starting board is derived read-only through
+  `createInitialState` and drawn as one SVG/path; it is not a DOM cell grid and does
+  not copy or redefine Puzzle data. The mobile selected detail expands in normal flow
+  with no sticky/fixed overlap.
+- Rebuilt gameplay as one bounded continuous surface containing the dominant board,
+  flat information dock, graphical Next, and one shared-edge five-key control deck.
+  Mobile stats show labels at 14 px and values at 18 px, including the complete Puzzle
+  level name; touch labels are 12 px.
+- Replaced ceramic/jelly cells with one Board/Next `edge-lit plate` primitive: 2.5–4 px
+  radii, a bounded same-hue diagonal gradient, fine same-hue outer and inner edges,
+  and only a low-intensity active outline. Locked cells are flat; Ghost uses a complete
+  fine outline with at most 6% fill. The white highlight bar, lower lip, shared dark
+  outline, cut corner, bracket ghost, detached unit shadow, and board grid are absent.
+- Preserved the conditional `home → puzzle-library → game` lifecycle, `GameSession`
+  key, asynchronous mount disposal guard, media-query cleanup, pointer capture,
+  keyboard/touch controls, accessible action sheets, exact runtime/canvas teardown,
+  endless Race, continuous Puzzle play, and the detached nested `structuredClone` QA
+  snapshot regression.
+- Retained the existing `enter-*`, `level-row`, `board-frame`, `stats`, `next-slot`,
+  and `touch-rail` test IDs. Added stable `phase-seam`,
+  `start-selected-puzzle`, and `start-selected-puzzle-mobile` selectors without
+  changing evidence scripts.
+
+### Commands and results actually run
+
+- Targeted `npm.cmd run test -- src/App.test.ts` — PASS, 1 file / 1 test.
+- Targeted
+  `npm.cmd run test -- src/App.test.ts src/game/runtime/GameRuntime.test.ts` — PASS,
+  4 files / 12 tests; this compiled and exercised the renderer/runtime integration.
+- After the final product source change, exactly one final
+  `npm.cmd run typecheck` — PASS.
+- After the final product source change, exactly one final `npm.cmd run test` — PASS,
+  38 files / 238 tests.
+- After the final product source change, exactly one final `npm.cmd run build` — PASS;
+  Vite transformed 739 modules.
+- Ran the prescribed `develop-web-game` Playwright client against the frozen source,
+  with the supplied `action_payloads.json`, the visible `enter-marathon` control,
+  three iterations, and intentional pauses. Real left/hard-drop bursts produced a
+  visible three-piece stack and matching text state: Marathon, playing, score 106,
+  placed pieces 3, active Z, Next L. Final `shot-2.png` and all earlier shots/states
+  were opened or read; no console/page error was emitted.
+- Ran one final visible page smoke over 11 scenarios covering 1440 × 900,
+  2048 × 1152, 390 × 844 DPR3, 360 × 800 DPR3, and 844 × 390 DPR3. It exercised
+  home, the Puzzle library, Marathon keyboard input, and Puzzle selection/start plus
+  three real `touch-hard-drop` clicks.
+- Final matrix result for every scenario: console/page errors `[]`, no horizontal or
+  accidental vertical overflow, and zero gameplay DOM cells. Home/library contained
+  zero canvases; gameplay contained exactly one. All three home modes were fully
+  inside every required home viewport.
+- Computed final browser values: minimum visible button 44 × 44 px in gameplay and
+  library; mobile/landscape statistic labels 14 px, statistic values 18 px, and all
+  five touch labels 12 px. The idle phase seam measured 72 × 2 px; a dedicated focus
+  check found exactly one seam, selected view transitions
+  `马拉松 → 竞速 → 解谜`, and one 220 ms extension to 132 px at mobile width.
+- The final 390 × 844 Puzzle state and screenshot agreed on canonical level
+  `t3r-shaft-01` / visible `青脊回旋`, `placedPieces = 3`, active T, and Next J.
+- Actual final captures opened and inspected included `desktop-home.png`,
+  `wide-home.png`, `portrait-home.png`, `narrow-home.png`, `landscape-home.png`,
+  `desktop-library.png`, `portrait-library.png`, `desktop-marathon.png`,
+  `portrait-marathon.png`, `landscape-marathon.png`, and
+  `portrait-puzzle-three-locks.png` under the ignored temporary
+  `.local/t5-tech-writer-smoke/pages/` directory. They showed the expected geometry,
+  readable exact copy, full level name, Board/Next material match, and no overlap.
+
+### Handoff
+
+- Blocker: none.
+- Push: not performed; the coordinator owns QA routing, integration, and push.
+- Next: independent read-only visual and functional QA audits the exact candidate SHA
+  before the coordinator regenerates T5 evidence or updates the changelog.

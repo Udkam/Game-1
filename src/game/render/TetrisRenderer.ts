@@ -1,4 +1,4 @@
-import { Application, Container, Graphics, type Ticker } from 'pixi.js';
+import { Application, Container, FillGradient, Graphics, type Ticker } from 'pixi.js';
 import {
   BOARD_WIDTH,
   LINE_CLEAR_DELAY_TICKS,
@@ -75,6 +75,7 @@ export class TetrisRenderer {
   private readonly boardGraphics = new Graphics();
   private readonly pieceGraphics = new Graphics();
   private readonly effectGraphics = new Graphics();
+  private readonly cellGradients = new Map<PieceType, FillGradient>();
 
   private frameCallback: ((deltaMs: number) => void) | null = null;
   private presentation: PiecePresentation | null = null;
@@ -182,6 +183,8 @@ export class TetrisRenderer {
     if (!this.app) return;
     this.app.ticker.remove(this.onTick);
     this.frameCallback = null;
+    for (const gradient of this.cellGradients.values()) gradient.destroy();
+    this.cellGradients.clear();
     this.app.destroy({ removeView: true }, { children: true });
     this.app = null;
     this.host = null;
@@ -229,22 +232,11 @@ export class TetrisRenderer {
   private drawBoard(state: GameState, layout: BoardLayout): void {
     const graphics = this.boardGraphics;
     graphics.clear();
-    const radius = Math.max(10, Math.min(22, layout.cell * 0.55));
+    const radius = Math.max(8, Math.min(12, layout.cell * 0.38));
     graphics
       .roundRect(layout.x, layout.y, layout.width, layout.height, radius)
       .fill({ color: COLORS.well, alpha: 1 })
-      .stroke({ color: COLORS.edge, width: Math.max(1.5, layout.cell * 0.065) });
-
-    for (let column = 1; column < BOARD_WIDTH; column += 1) {
-      const x = layout.x + column * layout.cell;
-      graphics.moveTo(x, layout.y + 1).lineTo(x, layout.y + layout.height - 1)
-        .stroke({ color: COLORS.grid, alpha: 0.62, width: 1 });
-    }
-    for (let row = 1; row < VISIBLE_HEIGHT; row += 1) {
-      const y = layout.y + row * layout.cell;
-      graphics.moveTo(layout.x + 1, y).lineTo(layout.x + layout.width - 1, y)
-        .stroke({ color: COLORS.grid, alpha: 0.62, width: 1 });
-    }
+      .stroke({ color: COLORS.edge, alpha: .86, width: Math.max(1, layout.cell * 0.035) });
     this.scrimBounds = null;
     if (state.status === 'paused' || state.status === 'game-over' || state.status === 'finished' || this.options.modeSwitch) {
       const alpha = state.status === 'paused' ? 0.22 : this.options.modeSwitch ? 0.38 : 0.16;
@@ -361,10 +353,28 @@ export class TetrisRenderer {
       this.drawGhostCell(graphics, x, y, size, type, alpha);
       return;
     }
-    this.drawCeramicCell(graphics, x, y, size, type, alpha, active);
+    this.drawPlateCell(graphics, x, y, size, type, alpha, active);
   }
 
-  private drawCeramicCell(
+  private gradientFor(type: PieceType): FillGradient {
+    const existing = this.cellGradients.get(type);
+    if (existing) return existing;
+    const material = PIECE_MATERIALS[type];
+    const gradient = new FillGradient({
+      type: 'linear',
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+      textureSpace: 'local',
+      colorStops: [
+        { offset: 0, color: material.fillStart },
+        { offset: 1, color: material.fillEnd },
+      ],
+    });
+    this.cellGradients.set(type, gradient);
+    return gradient;
+  }
+
+  private drawPlateCell(
     graphics: Graphics,
     x: number,
     y: number,
@@ -374,23 +384,21 @@ export class TetrisRenderer {
     active: boolean,
   ): void {
     const material = PIECE_MATERIALS[type];
-    const radius = Math.max(2.5, Math.min(size * 0.2, 7));
-    const borderWidth = active ? Math.max(1.6, size * 0.07) : Math.max(.65, size * 0.025);
+    const radius = Math.max(2.5, Math.min(4, size * 0.14));
+    const borderWidth = Math.max(.8, Math.min(1.25, size * .035));
+    if (active) {
+      graphics
+        .roundRect(x - 1.4, y - 1.4, size + 2.8, size + 2.8, radius + 1.4)
+        .stroke({ color: material.edge, alpha: Math.min(.24, alpha * .24), width: Math.max(2.4, size * .08) });
+    }
     graphics
       .roundRect(x, y, size, size, radius)
-      .fill({ color: material.lowerEdge, alpha })
-      .stroke({
-        color: active ? 0xffffff : material.outline,
-        alpha: active ? Math.min(1, alpha * .95) : Math.min(.55, alpha * .5),
-        width: borderWidth,
-      });
-    const faceHeight = size * .79;
+      .fill({ fill: this.gradientFor(type), alpha })
+      .stroke({ color: material.edge, alpha: Math.min(.9, alpha * .88), width: active ? borderWidth * 1.25 : borderWidth });
+    const innerInset = Math.max(1.7, size * .055);
     graphics
-      .roundRect(x + borderWidth * .4, y + borderWidth * .4, size - borderWidth * .8, faceHeight, Math.max(2, radius - borderWidth * .25))
-      .fill({ color: material.fill, alpha });
-    graphics
-      .roundRect(x + size * .16, y + size * .12, size * .68, Math.max(1.2, size * .075), Math.max(1, size * .04))
-      .fill({ color: 0xffffff, alpha: alpha * (active ? .56 : .34) });
+      .roundRect(x + innerInset, y + innerInset, size - innerInset * 2, size - innerInset * 2, Math.max(1.5, radius - innerInset * .38))
+      .stroke({ color: material.innerEdge, alpha: Math.min(.42, alpha * .38), width: Math.max(.55, borderWidth * .62) });
   }
 
   private drawGhostCell(
@@ -404,10 +412,11 @@ export class TetrisRenderer {
     const material = PIECE_MATERIALS[type];
     const inset = Math.max(1, size * 0.06);
     const ghostSize = size - inset * 2;
-    const radius = Math.max(2, Math.min(ghostSize * .2, 6));
+    const radius = Math.max(2.5, Math.min(4, ghostSize * .14));
     graphics
       .roundRect(x + inset, y + inset, ghostSize, ghostSize, radius)
-      .stroke({ color: material.outline, alpha: Math.min(.78, alpha), width: Math.max(1.15, size * 0.055) });
+      .fill({ color: material.fillStart, alpha: Math.min(.06, alpha * .06) })
+      .stroke({ color: material.edge, alpha: Math.min(.72, alpha * .78), width: Math.max(1, Math.min(1.4, size * 0.045)) });
   }
 
   private drawEffects(state: GameState, layout: BoardLayout): void {
@@ -434,8 +443,8 @@ export class TetrisRenderer {
         const x = layout.x + cell.x * layout.cell + layout.cell * 0.06;
         const y = layout.y + (cell.y - VISIBLE_START_ROW) * layout.cell + layout.cell * 0.06;
         graphics
-          .roundRect(x, y, layout.cell * 0.88, layout.cell * 0.88, Math.max(2, layout.cell * .16))
-          .stroke({ color: material.outline, alpha, width: Math.max(1, layout.cell * 0.06) });
+          .roundRect(x, y, layout.cell * 0.88, layout.cell * 0.88, Math.max(2.5, Math.min(4, layout.cell * .14)))
+          .stroke({ color: material.edge, alpha: alpha * .3, width: Math.max(1, layout.cell * 0.035) });
       }
     }
   }
@@ -514,7 +523,7 @@ export class TetrisRenderer {
     for (const cell of shape) {
       const x = centerX - width / 2 + (cell.x - minX) * unit;
       const y = centerY - height / 2 + (cell.y - minY) * unit;
-      this.drawCeramicCell(graphics, x + 0.7, y + 0.7, unit - 1.4, type, 0.96, false);
+      this.drawPlateCell(graphics, x + 0.7, y + 0.7, unit - 1.4, type, 0.96, false);
     }
   }
 

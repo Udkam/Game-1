@@ -32,20 +32,28 @@ const MODE_COPY: Record<GameMode, {
   action: string;
 }> = {
   marathon: {
-    label: '马拉松模式',
-    detail: '分数与等级持续累积，堆叠到顶结束。',
-    action: '开始游戏',
+    label: '马拉松',
+    detail: '持续消行，刷新分数与等级。',
+    action: '开始',
   },
   race: {
-    label: '竞速模式',
+    label: '竞速',
     detail: '速度持续提升｜无终点｜主动退出或堆叠到顶结束',
-    action: '开始竞速',
+    action: '开始',
   },
   puzzle: {
-    label: '解谜模式',
-    detail: '六个关卡全部开放，使用连续七袋方块寻找自己的清空路线。',
-    action: '选择关卡',
+    label: '解谜',
+    detail: '六关全开，连续七袋方块，目标是清空棋盘。',
+    action: '选关',
   },
+};
+
+const MODE_ORDER: readonly GameMode[] = ['marathon', 'race', 'puzzle'];
+
+const MODE_SIGNAL_CELLS: Record<GameMode, readonly (readonly [number, number])[]> = {
+  marathon: [[0, 0], [1, 0], [2, 0], [1, 1]],
+  race: [[0, 0], [1, 0], [1, 1], [2, 1]],
+  puzzle: [[0, 1], [1, 1], [2, 1], [2, 0]],
 };
 
 export function cloneQaState(state: GameState): GameState {
@@ -76,7 +84,7 @@ function terminalCopy(state: GameState): { title: string; detail: string; succes
       return { title: '棋盘已清空', detail: `使用 ${state.pieceCount} 个方块，完成 ${state.lines} 次消行。`, success: true };
     }
     if (state.puzzleCompletion && state.puzzleCompletion !== 'active') {
-      return { title: '路线在这里结束', detail: '堆叠触及顶部，可以重新整理清空路径。', success: false };
+      return { title: '本局在这里结束', detail: '堆叠触及顶部，可以重新整理清空方法。', success: false };
     }
     return null;
   }
@@ -99,38 +107,120 @@ function Brand({ compact = false }: { compact?: boolean }) {
   );
 }
 
+function ModeSignal({ mode }: { mode: GameMode }) {
+  return (
+    <svg className={`mode-signal mode-signal--${mode}`} viewBox="0 0 152 104" role="img" aria-label={`${MODE_COPY[mode].label}方块示意`}>
+      <defs>
+        <linearGradient id="mode-signal-fill" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#e7f7fa" />
+          <stop offset="1" stopColor="#dfefff" />
+        </linearGradient>
+      </defs>
+      <g transform="translate(22 18)">
+        {MODE_SIGNAL_CELLS[mode].map(([x, y], index) => (
+          <rect
+            key={`${x}:${y}`}
+            className={`mode-signal__cell mode-signal__cell--${index + 1}`}
+            x={x * 36}
+            y={y * 36}
+            width="32"
+            height="32"
+            rx="3"
+          />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+function ModeGlyph({ mode }: { mode: GameMode }) {
+  if (mode === 'marathon') {
+    return <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 31h9V22h9v-9h8" /></svg>;
+  }
+  if (mode === 'race') {
+    return <svg viewBox="0 0 40 40" aria-hidden="true"><path className="mode-glyph__soft" d="M5 12h12M5 19h9M5 26h6" /><path d="M19 13h7v7h8v8H19z" /></svg>;
+  }
+  return <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 30h8v-8h7v8h7V14h8v16" /></svg>;
+}
+
 function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
+  const [previewMode, setPreviewMode] = useState<GameMode>('marathon');
+  const preview = MODE_COPY[previewMode];
   return (
     <main id="game" className="landing-shell" data-testid="mode-home">
       <header className="landing-header">
         <Brand />
-        <span>键盘与触控均可操作</span>
+        <span>选择模式</span>
       </header>
-      <section className="landing-intro" aria-labelledby="home-title">
-        <h1 id="home-title">选择模式</h1>
-        <p>选择一种玩法开始。三种模式使用相同的移动与旋转操作。</p>
-      </section>
-      <section className="mode-gates" aria-label="选择游戏模式" data-testid="mode-list">
-        {(Object.keys(MODE_COPY) as GameMode[]).map((mode) => {
-          const item = MODE_COPY[mode];
-          return (
-            <button
-              key={mode}
-              className={`mode-gate mode-gate--${mode}`}
-              type="button"
-              data-testid={`enter-${mode}`}
-              onClick={() => onEnter(mode)}
-            >
-              <span className="mode-gate__body">
-                <strong>{item.label}</strong>
-                <span>{item.detail}</span>
-              </span>
-              <span className="mode-gate__action">{item.action}<b aria-hidden="true">→</b></span>
-            </button>
-          );
-        })}
+      <section className="landing-stage" aria-labelledby="home-title">
+        <section className="mode-preview" aria-live="polite">
+          <div className="mode-preview__copy">
+            <small>当前选择</small>
+            <h2>{preview.label}</h2>
+            <p>{preview.detail}</p>
+          </div>
+          <ModeSignal mode={previewMode} />
+          <p className="mode-preview__input"><i aria-hidden="true" />键盘与触控均可操作</p>
+        </section>
+        <section className="mode-chooser">
+          <div className="landing-intro">
+            <div>
+              <small>三种玩法</small>
+              <h1 id="home-title">选择模式</h1>
+            </div>
+            <p>随时开始，也可随时退出。</p>
+          </div>
+          <div
+            className="mode-gates"
+            data-selection={previewMode}
+            aria-label="选择游戏模式"
+            data-testid="mode-list"
+          >
+            <span className="phase-seam" data-testid="phase-seam" aria-hidden="true" />
+            {MODE_ORDER.map((mode) => {
+              const item = MODE_COPY[mode];
+              const active = previewMode === mode;
+              return (
+                <button
+                  key={mode}
+                  className={`mode-gate mode-gate--${mode} ${active ? 'mode-gate--active' : ''}`}
+                  type="button"
+                  data-testid={`enter-${mode}`}
+                  data-selected={active || undefined}
+                  onPointerEnter={() => setPreviewMode(mode)}
+                  onFocus={() => setPreviewMode(mode)}
+                  onClick={() => onEnter(mode)}
+                >
+                  <span className="mode-gate__glyph"><ModeGlyph mode={mode} /></span>
+                  <span className="mode-gate__body">
+                    <strong>{item.label}</strong>
+                    <span>{item.detail}</span>
+                  </span>
+                  <span className="mode-gate__action"><span>{item.action}</span><b aria-hidden="true">→</b></span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
       </section>
     </main>
+  );
+}
+
+function puzzleSilhouettePath(id: PuzzleId): string {
+  const board = createInitialState(APP_SEED, 'puzzle', id).board.slice(-12);
+  const unit = 4;
+  const face = 3.25;
+  return board.flatMap((row, y) => row.map((cell, x) => (
+    cell ? `M${x * unit + .375} ${y * unit + .375}h${face}v${face}h-${face}z` : ''
+  ))).join('');
+}
+
+function PuzzleSilhouette({ id, name }: { id: PuzzleId; name: string }) {
+  return (
+    <svg className="puzzle-silhouette" viewBox="0 0 40 48" role="img" aria-label={`${name}起始棋盘轮廓`}>
+      <path d={puzzleSilhouettePath(id)} />
+    </svg>
   );
 }
 
@@ -158,7 +248,7 @@ function PuzzleLibrary({
         <h1 id="library-title">解谜关卡</h1>
         <p>六关全部开放。方块持续补充，操作与普通模式一致；目标是清空完整棋盘。</p>
       </section>
-      <section className="library-content">
+      <section className="library-content" aria-label="全部解谜关卡">
         <div className="level-list" aria-label="六个可用解谜关卡" data-testid="level-list">
           {CAMPAIGN_LEVELS.map((level) => {
             const complete = progress.completedLevelIds.includes(level.id);
@@ -182,9 +272,12 @@ function PuzzleLibrary({
                 </button>
                 {selectedLevel && (
                   <div className="level-inline-detail" aria-live="polite">
-                    <p>清空完整棋盘</p>
-                    <span>连续七袋方块 · 不限定唯一路线</span>
-                    <button className="primary-action" type="button" onClick={onStart}>开始这一关</button>
+                    <PuzzleSilhouette id={selected.id} name={selected.name} />
+                    <div>
+                      <p>清空完整棋盘</p>
+                      <span>连续七袋方块 · 不限定唯一解法</span>
+                    </div>
+                    <button className="primary-action" type="button" data-testid="start-selected-puzzle-mobile" onClick={onStart}>开始这一关</button>
                   </div>
                 )}
               </article>
@@ -192,17 +285,23 @@ function PuzzleLibrary({
           })}
         </div>
         <aside className="level-detail" aria-live="polite">
-          <span className="level-detail__count">{String(selected.index).padStart(2, '0')} / {String(selected.total).padStart(2, '0')}</span>
-          <div>
-            <small>当前选择</small>
-            <h2>{selected.name}</h2>
+          <div className="level-detail__visual">
+            <PuzzleSilhouette id={selected.id} name={selected.name} />
+            <span>起始棋盘</span>
+          </div>
+          <div className="level-detail__heading">
+            <span className="level-detail__count">{String(selected.index).padStart(2, '0')} / {String(selected.total).padStart(2, '0')}</span>
+            <div>
+              <small>当前选择</small>
+              <h2>{selected.name}</h2>
+            </div>
           </div>
           <dl>
             <div><dt>目标</dt><dd>清空完整棋盘</dd></div>
             <div><dt>方块</dt><dd>持续补充的七袋序列</dd></div>
-            <div><dt>规则</dt><dd>与普通模式一致，不限定唯一路线</dd></div>
+            <div><dt>规则</dt><dd>与普通模式一致，不限定唯一解法</dd></div>
           </dl>
-          <button className="primary-action" type="button" onClick={onStart}>开始这一关</button>
+          <button className="primary-action" type="button" data-testid="start-selected-puzzle" onClick={onStart}>开始这一关</button>
         </aside>
       </section>
     </main>
@@ -253,7 +352,7 @@ function RunStats({ state }: { state: GameState }) {
     const level = campaignLevel(state.puzzleId);
     return (
       <section className="run-stats run-stats--puzzle" data-testid="stats" aria-label="解谜模式数据">
-        <article className="run-stats__wide"><span>关卡</span><strong>{level.index}/{level.total} · {level.name}</strong></article>
+        <article className="run-stats__wide"><span>关卡 {level.index}/{level.total}</span><strong>{level.name}</strong></article>
         <article><span>已放置</span><strong>{state.pieceCount}</strong></article>
         <article><span>消行</span><strong>{state.lines}</strong></article>
         <article className="run-stats__wide"><span>目标</span><strong>清空完整棋盘</strong></article>
@@ -476,35 +575,37 @@ function GameSession({
         >{state.status === 'paused' ? '继续' : '暂停'}</button>
       </header>
 
-      <section className="game-arena" data-testid="game-cluster" aria-label={`${MODE_COPY[state.mode].label}游戏区`}>
-        <div ref={hostRef} className="canvas-host" data-testid="canvas-host" />
-        <section className="board-frame" data-testid="board-frame" aria-label="10 × 20 游戏棋盘" />
-        <aside className="game-side-panel" data-testid="side-rail">
-          <div className="info-rail" data-testid="context-top">
-            <p className="rail-label">本局数据</p>
-            <RunStats state={state} />
-            <p className="mode-rule">{MODE_COPY[state.mode].detail}</p>
-          </div>
-          <div className="preview-rail">
-            <p className="rail-label">下一个</p>
-            <div className="next-slot" data-testid="next-slot" aria-label="下一个方块" />
-          </div>
-          <p className="keyboard-map"><b>键盘</b><span>← → 移动</span><span>↑ 旋转</span><span>↓ 快速下落</span><span>空格 直接落底</span></p>
-        </aside>
-      </section>
+      <section className="play-surface" aria-label={`${MODE_COPY[state.mode].label}游戏面板`}>
+        <section className="game-arena" data-testid="game-cluster" aria-label={`${MODE_COPY[state.mode].label}游戏区`}>
+          <div ref={hostRef} className="canvas-host" data-testid="canvas-host" />
+          <section className="board-frame" data-testid="board-frame" aria-label="10 × 20 游戏棋盘" />
+          <aside className="game-side-panel" data-testid="side-rail">
+            <div className="info-rail" data-testid="context-top">
+              <p className="rail-label">本局数据</p>
+              <RunStats state={state} />
+              <p className="mode-rule">{MODE_COPY[state.mode].detail}</p>
+            </div>
+            <div className="preview-rail">
+              <p className="rail-label">下一个</p>
+              <div className="next-slot" data-testid="next-slot" aria-label="下一个方块" />
+            </div>
+            <p className="keyboard-map"><b>键盘</b><span>← → 移动</span><span>↑ 旋转</span><span>↓ 快速下落</span><span>空格 直接落底</span></p>
+          </aside>
+        </section>
 
-      <section className="touch-deck" data-testid="touch-rail" aria-label="触控操作">
-        <TouchButton action="left" label="左移" glyph="←" runtime={runtime} />
-        <TouchButton action="right" label="右移" glyph="→" runtime={runtime} />
-        <TouchButton action="rotate-cw" label="旋转" glyph="↻" runtime={runtime} />
-        <TouchButton action="soft-drop" label="快速下落" glyph="↓" runtime={runtime} />
-        <TouchButton action="hard-drop" label="直接落底" glyph="⇣" runtime={runtime} />
+        <section className="touch-deck" data-testid="touch-rail" aria-label="触控操作">
+          <TouchButton action="left" label="左移" glyph="←" runtime={runtime} />
+          <TouchButton action="right" label="右移" glyph="→" runtime={runtime} />
+          <TouchButton action="rotate-cw" label="旋转" glyph="↻" runtime={runtime} />
+          <TouchButton action="soft-drop" label="快速下落" glyph="↓" runtime={runtime} />
+          <TouchButton action="hard-drop" label="直接落底" glyph="⇣" runtime={runtime} />
+        </section>
       </section>
 
       <ActionSheet
         open={pauseOpen}
         title="本局已暂停"
-        description="棋盘状态已保留。继续、重新开始，或离开当前路线。"
+        description="棋盘状态已保留。继续、重新开始，或离开本局。"
         onCancel={resumeRun}
       >
         <button className="primary-action" data-autofocus type="button" onClick={resumeRun}>继续游戏</button>
@@ -514,7 +615,7 @@ function GameSession({
 
       <ActionSheet
         open={exitOpen}
-        title="要离开当前路线吗？"
+        title="要离开本局吗？"
         description="本局尚未保存；已完成的解谜记录不会受影响。"
         tone="danger"
         onCancel={cancelExit}
