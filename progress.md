@@ -113,3 +113,27 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   mineral-signal seven-color theme, and a responsive fifteen-entry library. Formal
   evidence and raw-blob LF correction are deferred until both new slices pass QA.
 - No push is eligible from the rejected six-level evidence chain.
+
+## 2026-07-17 — Slice G fifteen-level Core accepted
+
+- Core candidate `48a229e` extends the production library to exactly fifteen levels,
+  retains the first six IDs, seeds, normalized occupancy masks, and two placement
+  streams, and adds nine original seeds/masks with thirty total production
+  `createInitialState` plus public-`dispatch` solution routes.
+- Every authored starting board now uses all seven piece types through a deterministic
+  salted color pass that is independent from gameplay randomization. Independent QA
+  confirmed the first 84 pieces remain twelve complete seven-bags for all fifteen
+  seeds and that generation continues beyond that horizon.
+- Independent Core QA accepted the exact candidate: new levels each use 10 occupied
+  rows, 10 normalized row shapes, 4 density classes, 5–9 covered-cavity columns, and
+  11–14 buried holes; pairwise new-mask Hamming distance is at least 24; routes use
+  29–35 locks and every route pair diverges in an intermediate canonical board hash.
+- Writer gates passed: typecheck, 38 files / 248 tests, 739-module production build,
+  and the explicit 15-level / 30-route verifier. QA reran only bounded target tests,
+  verified reference SHA-256
+  `F1A05DB8CA31B6833FCF09F096A5C726E29D5B95274897A2A7E0259A5ED7696C`, and left the
+  worktree clean.
+- Slice H is now the sole active writer boundary: visible `经典`, the frozen original
+  seven-color mineral-signal theme, and the responsive fifteen-entry level library.
+  Core definitions, routes, engine, randomizer, `index.html`, and formal evidence stay
+  read-only until frontend QA accepts its exact candidate.

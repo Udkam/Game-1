@@ -394,9 +394,13 @@ regenerate the obsolete six-level evidence. The final combined evidence must lat
 
 Task ID: `TETRIS-T5-PUZZLE-CAMPAIGN-15-006`
 
+Status: **CORE ACCEPTED** at
+`48a229ef55b94d7b6e1de4ba88539bebb1909ec0`. Independent read-only QA accepted the
+exact commit with a clean worktree and no blocking finding.
+
 Product base: `56288cde99f8121fd2bb6be51836385fb9d30883`.
 
-Writer base: the coordinator contract commit that introduces Slice G and Slice H.
+Writer base: `ef2d7472eeb2cf461c5408101f045207605334ec`.
 
 The single Core writer may change only:
 
@@ -448,8 +452,13 @@ starts. A Core-only 15-level candidate is not releasable through the six-row fro
 
 Task ID: `TETRIS-T5-FRONTEND-CAMPAIGN-15-007`
 
-Base: the independently accepted Slice G candidate plus any coordinator-only QA
-acknowledgement required to open this slice.
+Status: **active — frontend writer may start only from the coordinator acknowledgement
+commit that records the accepted Core candidate**.
+
+Product base: independently accepted Slice G candidate
+`48a229ef55b94d7b6e1de4ba88539bebb1909ec0`.
+
+Writer base: the coordinator acknowledgement commit that opens Slice H.
 
 The single frontend writer may change only:
 
