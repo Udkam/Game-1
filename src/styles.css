@@ -307,6 +307,7 @@ p {
   align-items: center;
   gap: 9px;
   min-height: 44px;
+  padding-inline-end: 2px;
   color: var(--focus);
   font-size: 12px;
   font-weight: 700;
