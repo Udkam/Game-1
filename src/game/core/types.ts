@@ -32,7 +32,16 @@ export type PuzzleId =
   | 't3r-shaft-03'
   | 't3r-shaft-04'
   | 't3r-cascade-05'
-  | 't3r-cascade-06';
+  | 't3r-cascade-06'
+  | 't5r-delta-07'
+  | 't5r-drift-08'
+  | 't5r-lattice-09'
+  | 't5r-rift-10'
+  | 't5r-prism-11'
+  | 't5r-current-12'
+  | 't5r-arc-13'
+  | 't5r-pulse-14'
+  | 't5r-horizon-15';
 
 export type PuzzleGoal = 'canonical-board-empty';
 export type PuzzleCompletion =

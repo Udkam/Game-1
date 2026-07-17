@@ -260,3 +260,104 @@ changelog, T3/T4 evidence, or QA archive was edited.
 - Push: not performed; coordinator owns integration and push decisions.
 - Next: independent read-only Core QA verifies the exact candidate SHA before the
   coordinator authorizes frontend integration.
+
+## 2026-07-17 — FIFTEEN-LEVEL CAMPAIGN CANDIDATE READY
+
+- Task: `TETRIS-T5-PUZZLE-CAMPAIGN-15-006`
+- Branch: `codex/tetris-recovery`
+- Base SHA: `ef2d7472eeb2cf461c5408101f045207605334ec`
+- Scope: exactly fifteen all-enabled Puzzle definitions, deterministic multi-color
+  starting boards, nine new original masks/seeds, and thirty same-seed successful
+  public-command routes. No engine/random/runtime/frontend rule path was opened.
+- Candidate SHA: this single writer commit; the exact SHA is reported to the
+  coordinator immediately after creation.
+
+### Exact changed paths
+
+- `src/game/core/types.ts`
+- `src/game/core/puzzles.ts`
+- `src/game/core/puzzles.test.ts`
+- `src/game/core/puzzleCampaign.test.ts`
+- `src/game/core/puzzleFlow.test.ts`
+- `src/puzzleProgress.test.ts`
+- `docs/workstreams/tetris-t5-core/search-puzzles.mjs`
+- `docs/workstreams/tetris-t5-core/puzzle-references.json`
+- `docs/workstreams/tetris-t5-core/build-puzzle-references.test.ts` (the one authorized
+  new reference-builder helper)
+- `docs/workstreams/tetris-t5-core/THREAD_LOG.md`
+
+### Delivered implementation and evidence
+
+- Production exports exactly fifteen definitions. The first six retain their exact
+  IDs, seeds, bottom alignment, normalized occupancy masks, and both placement streams.
+  A base/current JSON comparison reported `allCompatible: true` for all four facts on
+  every legacy level.
+- A separate randomizer seeded with `level.seed ^ 0xa57e31d9` colors occupied cells
+  without sharing or mutating gameplay randomizer state. Every board uses all seven
+  piece types in the generated fixture; the gameplay active/preview stream still
+  matches direct draws from the unmodified level seed for every definition.
+- Geometry validation normalizes colors to occupancy before row-shape checks. All
+  fifteen boards have at least six occupancy shapes, four density classes, five
+  covered-cavity columns, and eight buried holes. The nine new boards each have ten
+  occupied rows, ten shapes, four density classes, 5-9 covered columns, and 11-14
+  buried holes; all fifteen normalized masks are unique.
+- All fifteen seeds freeze the first 84 pieces as twelve complete seven-bags and prove
+  another complete bag after that validation horizon.
+- `puzzle-references.json` is 15 levels / 30 routes. New-route metrics are 30-35 locks,
+  24-38 effective rotations, 10-11 landing x values, 14-20 non-clearing setup locks,
+  and 15-19 clear phases. Paired semantic differences are 3-27 and every pair diverges
+  at a real common-index intermediate canonical board hash.
+- The generated JSON is 217,515 UTF-8 bytes. Re-running the builder with the same nine
+  ignored authoring results produced the identical SHA-256
+  `F1A05DB8CA31B6833FCF09F096A5C726E29D5B95274897A2A7E0259A5ED7696C`.
+- Builder input merges by level ID, rejects seed or placement conflicts, initializes
+  production `createInitialState(seed, "puzzle", id)`, and uses public `dispatch` only.
+  It never constructs, replaces, or mutates canonical state.
+
+### Bounded clean-room search record
+
+- `search-puzzles.mjs` now accepts `--seed <uint32>` and an optional 9-12 row height,
+  rejects topology below 6 shapes / 4 densities / 5 covered columns / 8 buried holes,
+  and enforces the 28-35-lock route floor without changing the 70-lock verifier guard.
+- At most two hidden Node processes ran concurrently. Every process wrote unique
+  ignored `.local/tetris-t5-search/seed-*.{json,log}` output; no product or formal
+  evidence path received search scratch data.
+- Accepted seeds/candidates were `91e2b43d/5`, `c37a58e1/5`, `a5c91367/1`,
+  `d1596af5/1`, `73bc20e9/2`, `b47d8e23/1`, `5c29f6a1/2`, `f2a7634b/0`, and
+  `8ea45d17/1`. The first four used the default 9-12 cycle with 20 candidates,
+  beam 4000, and 240 seconds; later searches used explicit height 10, with the final
+  two bounded to 6 candidates / 150 seconds.
+- Bounded misses `6d4a9f17`, `4f86d2b9`, `2be74d83`, `e8451c2f`, and `38af71c5`
+  were discarded rather than weakening a gate. Hedge seed `17dce985` also succeeded
+  but remained ignored: `8ea45d17` was selected for stronger covered/buried topology
+  and greater mean 200-cell Hamming distance from the preceding eight new masks.
+
+### Commands and results before final gates
+
+- `node --check docs/workstreams/tetris-t5-core/search-puzzles.mjs` — PASS after the
+  final helper change.
+- Explicit-seed smoke with 1 candidate / beam 120 / 1 second — bounded miss as
+  expected; CLI and JSON output were valid.
+- Mid-authoring production builder verification — PASS, current 11 levels / 22 routes,
+  proving the search mirror had not produced false-positive placements.
+- Full reference builder with nine selected ignored results — PASS, 1 test; all 15
+  levels / 30 routes executed before JSON replacement.
+- Focused convergence:
+  `npm.cmd run test -- src/game/core/puzzles.test.ts src/game/core/puzzleCampaign.test.ts src/game/core/puzzleFlow.test.ts src/puzzleProgress.test.ts docs/workstreams/tetris-t5-core/build-puzzle-references.test.ts`
+  — PASS, 75 tests; the environment-gated builder was the one intentional skip.
+- Idempotent full builder rerun — PASS, 1 test; JSON SHA-256 unchanged.
+- `git diff --check` — PASS during pre-final audit; line-ending notices only.
+
+### Final gate status and handoff
+
+- Final `npm.cmd run typecheck` — PASS.
+- Final `npm.cmd run test` — PASS, 38 files / 248 tests; the environment-gated
+  reference writer was the one intentional skipped file/test.
+- Final `npm.cmd run build` — PASS; Vite transformed 739 modules and produced the
+  production bundle.
+- Final explicit `npm.cmd run test -- src/game/core/puzzleCampaign.test.ts` — PASS,
+  3 files / 47 tests, including the exact 15-level / 30-route production verifier.
+- Blocker: none.
+- Push: not performed; coordinator owns QA integration and push decisions.
+- Next: create one candidate commit and hand the exact SHA to independent read-only
+  Core QA before any frontend integration or push decision.

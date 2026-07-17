@@ -1,6 +1,6 @@
 {
-  "taskId": "TETRIS-T5-PUZZLE-NORMALPLAY-002",
-  "contract": "Normal-play Puzzle: shared gravity, replenishing seeded seven-bag, canonical-board-empty success.",
+  "taskId": "TETRIS-T5-PUZZLE-CAMPAIGN-15-006",
+  "contract": "Fifteen all-enabled multi-color boards with continuous seeded seven-bag play and two public-dispatch routes each.",
   "verifierLockGuard": 70,
   "levels": [
     {
@@ -19,16 +19,16 @@
         "..........",
         "..........",
         "..........",
-        "JJ.J.JJJ..",
-        "JJJ.J..JJJ",
-        ".JJ..JJJJJ",
-        "JJJ.JJJJJ.",
-        "JJJ..JJJJJ",
-        "JJ..JJJJJJ",
-        "JJJJJJJJJ.",
-        "JJJJJJ.JJJ",
-        "JJJJJ.JJJJ",
-        ".JJJJJJJJJ"
+        "JI.S.LOT..",
+        "ZSI.O..ZJL",
+        ".TT..JSIOZ",
+        "LZJ.OTLSI.",
+        "ZJS..ITLOI",
+        "ZJ..TLSOZL",
+        "STIOJLZSJ.",
+        "IOTLIS.TOJ",
+        "ZJSTZ.IOLZ",
+        ".LTSIOJZSI"
       ],
       "first84": [
         "S",
@@ -378,11 +378,11 @@
             "boardHashDiverged": false
           },
           "evidence": {
-            "initialHash": "c3233e57",
-            "finalHash": "d4365030",
+            "initialHash": "cc8d0fef",
+            "finalHash": "1e0f8bb7",
             "commandDigest": "28d59c9e",
             "eventDigest": "b8915772",
-            "boardTraceDigest": "cc161077",
+            "boardTraceDigest": "5d88d508",
             "commandCount": 422
           }
         },
@@ -647,11 +647,11 @@
             "boardHashDiverged": true
           },
           "evidence": {
-            "initialHash": "c3233e57",
-            "finalHash": "51cd35ba",
+            "initialHash": "cc8d0fef",
+            "finalHash": "e706bfc5",
             "commandDigest": "1cd13b43",
             "eventDigest": "c5a4d51a",
-            "boardTraceDigest": "ab7f0d28",
+            "boardTraceDigest": "67fb920d",
             "commandCount": 416
           }
         }
@@ -673,16 +673,16 @@
         "..........",
         "..........",
         "..........",
-        "JJJ.J..JJ.",
-        "J...JJJJJJ",
-        "J..JJJJJ.J",
-        "JJJJ.JJJJ.",
-        "JJJJJ.JJ.J",
-        "JJ..JJJJJJ",
-        "JJ.JJJJJJJ",
-        "JJJJ.JJJJJ",
-        ".JJJJJJJJJ",
-        "JJJJJJJJJ."
+        "ZTL.O..JI.",
+        "S...IJZLTS",
+        "O..JZSTI.O",
+        "LTLJ.OZIS.",
+        "ILTZJ.OS.I",
+        "TL..JSZOJT",
+        "IL.OSZZJIL",
+        "SOTI.TOJLS",
+        ".ZZJITOSLZ",
+        "ISTOLJTLI."
       ],
       "first84": [
         "S",
@@ -1032,11 +1032,11 @@
             "boardHashDiverged": false
           },
           "evidence": {
-            "initialHash": "7d2b8067",
-            "finalHash": "e76fc57b",
+            "initialHash": "a661fdcd",
+            "finalHash": "4584bc47",
             "commandDigest": "3f0f1a0d",
             "eventDigest": "aa090778",
-            "boardTraceDigest": "3d3b7be5",
+            "boardTraceDigest": "a87efb21",
             "commandCount": 386
           }
         },
@@ -1301,11 +1301,11 @@
             "boardHashDiverged": true
           },
           "evidence": {
-            "initialHash": "7d2b8067",
-            "finalHash": "ec79e03c",
+            "initialHash": "a661fdcd",
+            "finalHash": "68202728",
             "commandDigest": "d3be87d8",
             "eventDigest": "585f6173",
-            "boardTraceDigest": "1ca6bbba",
+            "boardTraceDigest": "de8d8dd4",
             "commandCount": 395
           }
         }
@@ -1327,16 +1327,16 @@
         "..........",
         "..........",
         "..........",
-        "JJ...JJJ.J",
-        "JJJ...JJJJ",
-        "JJ.JJJJJ..",
-        "J.JJJ.JJJJ",
-        "J.JJJJ.JJJ",
-        "JJJJ..JJJJ",
-        "JJJJJJJ.JJ",
-        "JJJJJJJJJ.",
-        "JJJJJJJJ.J",
-        "J.JJJJJJJJ"
+        "SI...TOJ.Z",
+        "LOT...LZIS",
+        "JI.JSOTZ..",
+        "L.TZL.SOIJ",
+        "I.ZJTO.SLJ",
+        "ZIOL..TSIT",
+        "JSZLOJI.OS",
+        "ZLTJLISOT.",
+        "ZZTOJISL.I",
+        "T.JSLOZLTJ"
       ],
       "first84": [
         "O",
@@ -1651,11 +1651,11 @@
             "boardHashDiverged": false
           },
           "evidence": {
-            "initialHash": "85ef2223",
-            "finalHash": "3d7d2f80",
+            "initialHash": "7aa7adbf",
+            "finalHash": "d47134e3",
             "commandDigest": "3e1a71df",
             "eventDigest": "ba799edf",
-            "boardTraceDigest": "a61ea640",
+            "boardTraceDigest": "ab156dc0",
             "commandCount": 342
           }
         },
@@ -1885,11 +1885,11 @@
             "boardHashDiverged": true
           },
           "evidence": {
-            "initialHash": "85ef2223",
-            "finalHash": "9df985a4",
+            "initialHash": "7aa7adbf",
+            "finalHash": "80138c7f",
             "commandDigest": "522a2ab7",
             "eventDigest": "426bfb4b",
-            "boardTraceDigest": "08cb1a4d",
+            "boardTraceDigest": "a1cac630",
             "commandCount": 342
           }
         }
@@ -1913,14 +1913,14 @@
         "..........",
         "..........",
         "..........",
-        "..JJJ.JJ.J",
-        "JJ.JJJ.J.J",
-        "...JJJJJJJ",
-        "J.JJJJJJ.J",
-        "JJJJJJJJJ.",
-        "JJJJJ.JJJJ",
-        "J.JJJJJJJJ",
-        "JJJ.JJJJJJ"
+        "..SOL.IJ.Z",
+        "TT.ZLS.J.O",
+        "...IILSTZO",
+        "J.SJLTOZ.I",
+        "LISOJTZST.",
+        "JLZOI.LSZI",
+        "J.OTTIOSJZ",
+        "LJS.OLZTIT"
       ],
       "first84": [
         "I",
@@ -2228,11 +2228,11 @@
             "boardHashDiverged": false
           },
           "evidence": {
-            "initialHash": "0a9a48af",
-            "finalHash": "dfb99a85",
+            "initialHash": "8fcb95a1",
+            "finalHash": "83dd0aca",
             "commandDigest": "a519f830",
             "eventDigest": "31874c8c",
-            "boardTraceDigest": "417fc820",
+            "boardTraceDigest": "e88eaac9",
             "commandCount": 335
           }
         },
@@ -2455,11 +2455,11 @@
             "boardHashDiverged": true
           },
           "evidence": {
-            "initialHash": "0a9a48af",
-            "finalHash": "0101267e",
+            "initialHash": "8fcb95a1",
+            "finalHash": "b6247ae1",
             "commandDigest": "b97dce52",
             "eventDigest": "0ff56579",
-            "boardTraceDigest": "9570211d",
+            "boardTraceDigest": "f9409fc4",
             "commandCount": 338
           }
         }
@@ -2483,14 +2483,14 @@
         "..........",
         "..........",
         "..........",
-        "J.J...JJJJ",
-        ".JJJJJ.J.J",
-        ".J.JJJJ.JJ",
-        ".JJJ.JJJJJ",
-        ".JJJJJJJJJ",
-        "J.JJJJJJJJ",
-        "JJJJJ.JJJJ",
-        "JJJJ.JJJJJ"
+        "Z.S...OIJL",
+        ".TZSLT.O.J",
+        ".I.TJLZ.OI",
+        ".SJO.SITLZ",
+        ".ZSJTOILLJ",
+        "I.TZOSLZOT",
+        "JSIIS.ZTJO",
+        "LTJZ.IOLSZ"
       ],
       "first84": [
         "J",
@@ -2833,11 +2833,11 @@
             "boardHashDiverged": false
           },
           "evidence": {
-            "initialHash": "ea5e0a53",
-            "finalHash": "c1e1b631",
+            "initialHash": "82a1c24d",
+            "finalHash": "d93adbc6",
             "commandDigest": "95168d30",
             "eventDigest": "648806ad",
-            "boardTraceDigest": "2363b0b6",
+            "boardTraceDigest": "57079003",
             "commandCount": 395
           }
         },
@@ -3095,11 +3095,11 @@
             "boardHashDiverged": true
           },
           "evidence": {
-            "initialHash": "ea5e0a53",
-            "finalHash": "54b8075d",
+            "initialHash": "82a1c24d",
+            "finalHash": "330cfbde",
             "commandDigest": "c70045f5",
             "eventDigest": "824d4faf",
-            "boardTraceDigest": "83b27ed0",
+            "boardTraceDigest": "e5c72207",
             "commandCount": 369
           }
         }
@@ -3121,16 +3121,16 @@
         "..........",
         "..........",
         "..........",
-        "JJJJJ...J.",
-        ".JJ..JJJJJ",
-        "JJJ.JJ..JJ",
-        "J.JJJJJJJ.",
-        "..JJJJJJJJ",
-        "JJJ.J.JJJJ",
-        "J.JJJJJJJJ",
-        "JJJJJ.JJJJ",
-        "JJJ.JJJJJJ",
-        "JJJJJJJJ.J"
+        "SZJIO...T.",
+        ".LJ..LTOZI",
+        "STL.ZS..IJ",
+        "O.ITLSZOJ.",
+        "..OJZSILTZ",
+        "OJS.I.TLJI",
+        "L.OZSTSILO",
+        "TJZIJ.ZLTS",
+        "OOL.JIZSTO",
+        "STJIZLOZ.I"
       ],
       "first84": [
         "J",
@@ -3445,11 +3445,11 @@
             "boardHashDiverged": false
           },
           "evidence": {
-            "initialHash": "eac57406",
-            "finalHash": "af92bded",
+            "initialHash": "435057b6",
+            "finalHash": "ba243b83",
             "commandDigest": "c56b78d1",
             "eventDigest": "dd193ab4",
-            "boardTraceDigest": "157f8204",
+            "boardTraceDigest": "80f96ef3",
             "commandCount": 359
           }
         },
@@ -3679,12 +3679,5828 @@
             "boardHashDiverged": true
           },
           "evidence": {
-            "initialHash": "eac57406",
-            "finalHash": "b8211f69",
+            "initialHash": "435057b6",
+            "finalHash": "c2ce3223",
             "commandDigest": "828fa698",
             "eventDigest": "a2f9d3b0",
-            "boardTraceDigest": "be7c5526",
+            "boardTraceDigest": "430ecf0f",
             "commandCount": 369
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-delta-07",
+      "name": "折光浅湾",
+      "seed": 2447553597,
+      "authoringCandidate": 5,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        ".OLZT...SI",
+        ".JOLISJ..T",
+        ".ZOSIJT.Z.",
+        "LL.TSZOI.J",
+        "JS.OIZTLJ.",
+        "ISOLZ.TJ.L",
+        "OTIZS.LZTI",
+        "SOJO.ISTLJ",
+        "ZLZSJIOT.S",
+        "JO.TLIZSOZ"
+      ],
+      "first84": [
+        "L",
+        "J",
+        "I",
+        "O",
+        "S",
+        "T",
+        "Z",
+        "T",
+        "Z",
+        "I",
+        "L",
+        "J",
+        "O",
+        "S",
+        "O",
+        "L",
+        "J",
+        "T",
+        "I",
+        "S",
+        "Z",
+        "J",
+        "L",
+        "Z",
+        "O",
+        "I",
+        "S",
+        "T",
+        "S",
+        "J",
+        "O",
+        "Z",
+        "I",
+        "T",
+        "L",
+        "S",
+        "L",
+        "J",
+        "I",
+        "T",
+        "Z",
+        "O",
+        "I",
+        "Z",
+        "L",
+        "O",
+        "J",
+        "S",
+        "T",
+        "Z",
+        "J",
+        "S",
+        "L",
+        "T",
+        "O",
+        "I",
+        "J",
+        "T",
+        "O",
+        "I",
+        "S",
+        "Z",
+        "L",
+        "J",
+        "Z",
+        "S",
+        "O",
+        "I",
+        "L",
+        "T",
+        "S",
+        "J",
+        "L",
+        "Z",
+        "O",
+        "I",
+        "T",
+        "T",
+        "O",
+        "Z",
+        "S",
+        "J",
+        "L",
+        "I"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 36,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 5,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 28,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 17,
+            "clearPhases": 18,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "4b7883d5",
+            "finalHash": "dc333cef",
+            "commandDigest": "e34585c4",
+            "eventDigest": "b92ff831",
+            "boardTraceDigest": "67a1ddfd",
+            "commandCount": 419
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 4,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 28,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 16,
+            "clearPhases": 19,
+            "clearedLines": 22,
+            "semanticDifferences": 12,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "4b7883d5",
+            "finalHash": "a29a1a52",
+            "commandDigest": "5bef6caa",
+            "eventDigest": "0eab6a19",
+            "boardTraceDigest": "17b9e9d1",
+            "commandCount": 431
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-drift-08",
+      "name": "微澜错屿",
+      "seed": 3279575265,
+      "authoringCandidate": 5,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "L.OT...ISJ",
+        ".ZJ..TSIZL",
+        "OOT.IS..JL",
+        "ZO..JSLITZ",
+        ".JTLI.ZSOI",
+        ".OLTZJ.SLO",
+        "ZJTSI.TLOZ",
+        ".SJITOZLSI",
+        "JTLIOSZ.JO",
+        "ITZSLJTZS."
+      ],
+      "first84": [
+        "T",
+        "O",
+        "L",
+        "J",
+        "I",
+        "S",
+        "Z",
+        "J",
+        "T",
+        "L",
+        "I",
+        "S",
+        "Z",
+        "O",
+        "L",
+        "I",
+        "J",
+        "Z",
+        "S",
+        "O",
+        "T",
+        "J",
+        "Z",
+        "T",
+        "L",
+        "O",
+        "S",
+        "I",
+        "L",
+        "J",
+        "O",
+        "Z",
+        "I",
+        "S",
+        "T",
+        "Z",
+        "T",
+        "I",
+        "J",
+        "L",
+        "S",
+        "O",
+        "Z",
+        "T",
+        "O",
+        "J",
+        "L",
+        "I",
+        "S",
+        "I",
+        "O",
+        "T",
+        "S",
+        "Z",
+        "L",
+        "J",
+        "J",
+        "S",
+        "I",
+        "L",
+        "T",
+        "O",
+        "Z",
+        "I",
+        "S",
+        "T",
+        "Z",
+        "J",
+        "L",
+        "O",
+        "O",
+        "L",
+        "Z",
+        "I",
+        "T",
+        "S",
+        "J",
+        "L",
+        "T",
+        "S",
+        "Z",
+        "J",
+        "O",
+        "I"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 4,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 30,
+            "pieceTypes": 7,
+            "effectiveRotations": 24,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 14,
+            "clearPhases": 16,
+            "clearedLines": 20,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "136d7f54",
+            "finalHash": "7504c9f0",
+            "commandDigest": "87c47e9b",
+            "eventDigest": "7832dd66",
+            "boardTraceDigest": "c20d985e",
+            "commandCount": 363
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 4,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 2
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 30,
+            "pieceTypes": 7,
+            "effectiveRotations": 29,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 14,
+            "clearPhases": 16,
+            "clearedLines": 20,
+            "semanticDifferences": 14,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "136d7f54",
+            "finalHash": "16f01853",
+            "commandDigest": "30c10e52",
+            "eventDigest": "55731cbc",
+            "boardTraceDigest": "e063a194",
+            "commandCount": 369
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-lattice-09",
+      "name": "蓝桥叠汐",
+      "seed": 2781418343,
+      "authoringCandidate": 1,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "IL.T.O.J.S",
+        "ZZ.IJLST..",
+        "O.T.JLZ.OS",
+        "ITOSLJIZ..",
+        "IOLTZSJ..S",
+        "JT.ZI.OLZJ",
+        "LTO.ISOTLJ",
+        ".SIZLJOSIZ",
+        "TLZT.ISOJJ",
+        "TL.OZISZST"
+      ],
+      "first84": [
+        "S",
+        "Z",
+        "I",
+        "T",
+        "O",
+        "L",
+        "J",
+        "Z",
+        "T",
+        "S",
+        "O",
+        "L",
+        "J",
+        "I",
+        "L",
+        "S",
+        "I",
+        "O",
+        "J",
+        "T",
+        "Z",
+        "J",
+        "S",
+        "L",
+        "I",
+        "T",
+        "O",
+        "Z",
+        "O",
+        "S",
+        "I",
+        "L",
+        "Z",
+        "J",
+        "T",
+        "T",
+        "I",
+        "L",
+        "O",
+        "Z",
+        "S",
+        "J",
+        "S",
+        "L",
+        "I",
+        "J",
+        "T",
+        "O",
+        "Z",
+        "T",
+        "L",
+        "S",
+        "I",
+        "O",
+        "Z",
+        "J",
+        "I",
+        "Z",
+        "L",
+        "O",
+        "T",
+        "S",
+        "J",
+        "J",
+        "S",
+        "L",
+        "I",
+        "T",
+        "Z",
+        "O",
+        "L",
+        "O",
+        "Z",
+        "J",
+        "S",
+        "T",
+        "I",
+        "S",
+        "L",
+        "I",
+        "Z",
+        "O",
+        "J",
+        "T"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 3
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 5,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 4,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 38,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 17,
+            "clearPhases": 18,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "7fc87409",
+            "finalHash": "0eb71900",
+            "commandDigest": "684c7b47",
+            "eventDigest": "d19b122d",
+            "boardTraceDigest": "44c2fc81",
+            "commandCount": 430
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 3
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 3,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 6,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 5,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 34,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 18,
+            "clearPhases": 17,
+            "clearedLines": 22,
+            "semanticDifferences": 14,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "7fc87409",
+            "finalHash": "6cb9c377",
+            "commandDigest": "5e6644d8",
+            "eventDigest": "be615d06",
+            "boardTraceDigest": "437834ea",
+            "commandCount": 418
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-rift-10",
+      "name": "薄雾回廊",
+      "seed": 3512298229,
+      "authoringCandidate": 1,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "T.ZOIJS...",
+        ".LLOZ.JI.S",
+        ".TOTZ.LIS.",
+        "JTI.J.SLZO",
+        "OJT.SZILT.",
+        "LOISJZL.T.",
+        ".SIOJZZJST",
+        "I.LOISZTOL",
+        "JSZ.IJTLOI",
+        "ZTSOLJ.ZOJ"
+      ],
+      "first84": [
+        "Z",
+        "L",
+        "I",
+        "J",
+        "O",
+        "S",
+        "T",
+        "O",
+        "L",
+        "J",
+        "S",
+        "I",
+        "Z",
+        "T",
+        "Z",
+        "J",
+        "I",
+        "L",
+        "O",
+        "T",
+        "S",
+        "Z",
+        "T",
+        "O",
+        "J",
+        "L",
+        "S",
+        "I",
+        "Z",
+        "L",
+        "J",
+        "S",
+        "T",
+        "I",
+        "O",
+        "I",
+        "S",
+        "Z",
+        "L",
+        "T",
+        "J",
+        "O",
+        "O",
+        "I",
+        "Z",
+        "L",
+        "J",
+        "T",
+        "S",
+        "S",
+        "I",
+        "J",
+        "T",
+        "Z",
+        "L",
+        "O",
+        "O",
+        "S",
+        "T",
+        "I",
+        "J",
+        "Z",
+        "L",
+        "L",
+        "Z",
+        "T",
+        "O",
+        "J",
+        "I",
+        "S",
+        "S",
+        "L",
+        "T",
+        "Z",
+        "I",
+        "J",
+        "O",
+        "I",
+        "T",
+        "Z",
+        "J",
+        "S",
+        "O",
+        "L"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 2
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 4,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 6,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 6,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 2,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 5,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 38,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 30,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 18,
+            "clearPhases": 17,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "8a746519",
+            "finalHash": "a1043600",
+            "commandDigest": "86b04493",
+            "eventDigest": "c321f733",
+            "boardTraceDigest": "b5b1d0a3",
+            "commandCount": 417
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 2
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 2,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 5,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 38,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 29,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 18,
+            "clearPhases": 17,
+            "clearedLines": 22,
+            "semanticDifferences": 15,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "8a746519",
+            "finalHash": "232068fc",
+            "commandDigest": "a196ac52",
+            "eventDigest": "9f44111d",
+            "boardTraceDigest": "226b13e7",
+            "commandCount": 417
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-prism-11",
+      "name": "棱湾交错",
+      "seed": 1941709033,
+      "authoringCandidate": 2,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..LJSZI.O.",
+        "TTIS.O..JL",
+        "ZT...IZOLS",
+        "JOZ..IJSLT",
+        "ZITSOJ.L.L",
+        "Z.TSJIOSL.",
+        "JTIZOZI.JT",
+        "LOSSZT.IJL",
+        ".OZITJLSOT",
+        "JOLI.ZSSIO"
+      ],
+      "first84": [
+        "I",
+        "L",
+        "T",
+        "J",
+        "O",
+        "S",
+        "Z",
+        "I",
+        "T",
+        "J",
+        "Z",
+        "L",
+        "S",
+        "O",
+        "L",
+        "I",
+        "T",
+        "O",
+        "J",
+        "Z",
+        "S",
+        "J",
+        "Z",
+        "I",
+        "T",
+        "O",
+        "L",
+        "S",
+        "I",
+        "J",
+        "T",
+        "Z",
+        "S",
+        "O",
+        "L",
+        "I",
+        "Z",
+        "O",
+        "L",
+        "S",
+        "T",
+        "J",
+        "L",
+        "Z",
+        "T",
+        "O",
+        "J",
+        "S",
+        "I",
+        "I",
+        "J",
+        "Z",
+        "T",
+        "L",
+        "O",
+        "S",
+        "Z",
+        "S",
+        "I",
+        "L",
+        "O",
+        "T",
+        "J",
+        "O",
+        "Z",
+        "I",
+        "L",
+        "J",
+        "T",
+        "S",
+        "O",
+        "Z",
+        "T",
+        "J",
+        "S",
+        "L",
+        "I",
+        "O",
+        "T",
+        "J",
+        "L",
+        "Z",
+        "I",
+        "S"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 6,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 30,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 2,
+              "landingY": 31,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 4,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 2
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 27,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 20,
+            "clearPhases": 15,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "1339c4e5",
+            "finalHash": "cfa5d455",
+            "commandDigest": "1d9ea080",
+            "eventDigest": "3de65579",
+            "boardTraceDigest": "cb83fdb2",
+            "commandCount": 386
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 6,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 30,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 2,
+              "landingY": 31,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 4,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 2
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 26,
+            "distinctLandingXs": 10,
+            "nonClearingLocks": 20,
+            "clearPhases": 15,
+            "clearedLines": 22,
+            "semanticDifferences": 3,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "1339c4e5",
+            "finalHash": "d58e048b",
+            "commandDigest": "58567c4d",
+            "eventDigest": "5882502c",
+            "boardTraceDigest": "8b09cda8",
+            "commandCount": 385
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-current-12",
+      "name": "双潮折线",
+      "seed": 3028127267,
+      "authoringCandidate": 1,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..OIJT..LZ",
+        "..SJSIT.LZ",
+        "O.ZSJT.I.L",
+        ".OJOTLZSI.",
+        "ITO..ZLSJI",
+        "J.LOS.ZTZI",
+        "TJOSLTS.OL",
+        "JZISOL.JIT",
+        "ZJOS.ZITLJ",
+        "ILOTZSOTL."
+      ],
+      "first84": [
+        "L",
+        "J",
+        "Z",
+        "O",
+        "S",
+        "I",
+        "T",
+        "I",
+        "J",
+        "L",
+        "T",
+        "Z",
+        "O",
+        "S",
+        "I",
+        "L",
+        "O",
+        "T",
+        "J",
+        "Z",
+        "S",
+        "O",
+        "L",
+        "J",
+        "I",
+        "S",
+        "T",
+        "Z",
+        "Z",
+        "L",
+        "J",
+        "S",
+        "T",
+        "O",
+        "I",
+        "O",
+        "S",
+        "T",
+        "Z",
+        "J",
+        "L",
+        "I",
+        "Z",
+        "S",
+        "O",
+        "I",
+        "L",
+        "T",
+        "J",
+        "S",
+        "O",
+        "T",
+        "L",
+        "J",
+        "I",
+        "Z",
+        "T",
+        "S",
+        "Z",
+        "L",
+        "J",
+        "O",
+        "I",
+        "J",
+        "Z",
+        "L",
+        "I",
+        "O",
+        "S",
+        "T",
+        "O",
+        "L",
+        "I",
+        "T",
+        "S",
+        "Z",
+        "J",
+        "S",
+        "I",
+        "L",
+        "T",
+        "Z",
+        "O",
+        "J"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 30,
+              "clearedLines": 3
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 38,
+              "clearedLines": 1
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 30,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 20,
+            "clearPhases": 15,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "4ca71a4a",
+            "finalHash": "c28adc52",
+            "commandDigest": "558dc353",
+            "eventDigest": "6fdee350",
+            "boardTraceDigest": "85185289",
+            "commandCount": 389
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 30,
+              "clearedLines": 3
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 3,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 38,
+              "clearedLines": 1
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 31,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 19,
+            "clearPhases": 16,
+            "clearedLines": 22,
+            "semanticDifferences": 8,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "4ca71a4a",
+            "finalHash": "ee5032f1",
+            "commandDigest": "f6088d98",
+            "eventDigest": "06610622",
+            "boardTraceDigest": "f46d16c1",
+            "commandCount": 399
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-arc-13",
+      "name": "静弧深槽",
+      "seed": 1546253985,
+      "authoringCandidate": 2,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        ".ZOL.S..TI",
+        ".JT.LZ.ISJ",
+        ".OLZ.TSIO.",
+        "JZJIL.SOT.",
+        "T.SIZ.LJOT",
+        ".LJS.ZIOLT",
+        ".SOJIZLIZS",
+        "OJTSZJLO.I",
+        "TLJIT.SZOI",
+        "OL.ZSJTSZT"
+      ],
+      "first84": [
+        "L",
+        "Z",
+        "S",
+        "J",
+        "O",
+        "I",
+        "T",
+        "J",
+        "S",
+        "O",
+        "I",
+        "T",
+        "L",
+        "Z",
+        "L",
+        "I",
+        "O",
+        "J",
+        "S",
+        "Z",
+        "T",
+        "O",
+        "S",
+        "J",
+        "T",
+        "L",
+        "I",
+        "Z",
+        "T",
+        "L",
+        "J",
+        "O",
+        "Z",
+        "S",
+        "I",
+        "Z",
+        "I",
+        "O",
+        "J",
+        "S",
+        "L",
+        "T",
+        "I",
+        "S",
+        "O",
+        "T",
+        "L",
+        "J",
+        "Z",
+        "L",
+        "T",
+        "Z",
+        "S",
+        "O",
+        "J",
+        "I",
+        "T",
+        "Z",
+        "O",
+        "I",
+        "L",
+        "S",
+        "J",
+        "J",
+        "I",
+        "S",
+        "T",
+        "Z",
+        "O",
+        "L",
+        "Z",
+        "O",
+        "S",
+        "L",
+        "T",
+        "J",
+        "I",
+        "I",
+        "T",
+        "S",
+        "L",
+        "Z",
+        "J",
+        "O"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 26,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 26,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 28,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 4,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 0,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 3,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 38,
+              "clearedLines": 1
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 26,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 17,
+            "clearPhases": 18,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "5655d63e",
+            "finalHash": "706d998e",
+            "commandDigest": "057626ba",
+            "eventDigest": "e7072e8f",
+            "boardTraceDigest": "2ddf8d83",
+            "commandCount": 411
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 27,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 2
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 4,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 38,
+              "clearedLines": 1
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 25,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 18,
+            "clearPhases": 17,
+            "clearedLines": 22,
+            "semanticDifferences": 26,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "5655d63e",
+            "finalHash": "c4755612",
+            "commandDigest": "ed2b3de3",
+            "eventDigest": "c2bd23c9",
+            "boardTraceDigest": "5fbfc818",
+            "commandCount": 404
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-pulse-14",
+      "name": "脉光群岛",
+      "seed": 4071056203,
+      "authoringCandidate": 0,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..TIS..LZJ",
+        "OZI.TO..LJ",
+        "S.O.SI.TJZ",
+        "L.TLOZSJ.I",
+        "LT.JOZISI.",
+        "ZOLST.J.OJ",
+        "SLIZTIZ.OS",
+        "TLJTIOJZ.S",
+        "LTLSJ.OIZJ",
+        "IZT.OSLSJT"
+      ],
+      "first84": [
+        "L",
+        "I",
+        "J",
+        "T",
+        "S",
+        "O",
+        "Z",
+        "J",
+        "S",
+        "L",
+        "O",
+        "I",
+        "Z",
+        "T",
+        "L",
+        "I",
+        "S",
+        "T",
+        "Z",
+        "O",
+        "J",
+        "Z",
+        "L",
+        "O",
+        "S",
+        "I",
+        "T",
+        "J",
+        "Z",
+        "T",
+        "S",
+        "O",
+        "L",
+        "I",
+        "J",
+        "Z",
+        "I",
+        "L",
+        "S",
+        "O",
+        "T",
+        "J",
+        "Z",
+        "T",
+        "I",
+        "O",
+        "S",
+        "J",
+        "L",
+        "J",
+        "I",
+        "T",
+        "L",
+        "S",
+        "O",
+        "Z",
+        "T",
+        "S",
+        "I",
+        "J",
+        "O",
+        "Z",
+        "L",
+        "J",
+        "Z",
+        "O",
+        "I",
+        "T",
+        "L",
+        "S",
+        "Z",
+        "I",
+        "S",
+        "J",
+        "L",
+        "O",
+        "T",
+        "I",
+        "S",
+        "L",
+        "Z",
+        "O",
+        "T",
+        "J"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 31,
+              "clearedLines": 2
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 2,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 2,
+              "landingY": 37,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 6,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 28,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 18,
+            "clearPhases": 17,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "9a79fb87",
+            "finalHash": "01702a76",
+            "commandDigest": "bf1d34b4",
+            "eventDigest": "35191874",
+            "boardTraceDigest": "d7768baa",
+            "commandCount": 409
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 26,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 27,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "L",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 34,
+              "clearedLines": 3
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 6,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 35,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 37,
+              "clearedLines": 3
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 24,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 20,
+            "clearPhases": 15,
+            "clearedLines": 22,
+            "semanticDifferences": 27,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "9a79fb87",
+            "finalHash": "c0fe3f43",
+            "commandDigest": "22f5ce18",
+            "eventDigest": "f83beb4c",
+            "boardTraceDigest": "a7210774",
+            "commandCount": 387
+          }
+        }
+      ]
+    },
+    {
+      "id": "t5r-horizon-15",
+      "name": "远蓝合流",
+      "seed": 2393136407,
+      "authoringCandidate": 1,
+      "boardRows": [
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..OZI.TS.L",
+        "J.S.ZIT.JL",
+        "OZ.TLSJI..",
+        ".O.ZLJITOS",
+        "TZSI.LJ.OT",
+        "OZJLISOI..",
+        "TLJZS.LIZT",
+        "SOJTOLISZ.",
+        "JSITOZ.LJZ",
+        "TI.JOLSZJL"
+      ],
+      "first84": [
+        "S",
+        "I",
+        "T",
+        "Z",
+        "L",
+        "J",
+        "O",
+        "Z",
+        "J",
+        "S",
+        "T",
+        "L",
+        "I",
+        "O",
+        "L",
+        "J",
+        "T",
+        "S",
+        "I",
+        "O",
+        "Z",
+        "S",
+        "T",
+        "L",
+        "J",
+        "I",
+        "Z",
+        "O",
+        "T",
+        "Z",
+        "J",
+        "I",
+        "S",
+        "O",
+        "L",
+        "Z",
+        "J",
+        "I",
+        "O",
+        "S",
+        "L",
+        "T",
+        "T",
+        "Z",
+        "O",
+        "I",
+        "S",
+        "J",
+        "L",
+        "Z",
+        "S",
+        "O",
+        "T",
+        "I",
+        "L",
+        "J",
+        "S",
+        "I",
+        "L",
+        "T",
+        "Z",
+        "J",
+        "O",
+        "S",
+        "I",
+        "Z",
+        "O",
+        "J",
+        "L",
+        "T",
+        "T",
+        "L",
+        "O",
+        "Z",
+        "I",
+        "J",
+        "S",
+        "I",
+        "Z",
+        "J",
+        "S",
+        "T",
+        "O",
+        "L"
+      ],
+      "routes": [
+        {
+          "id": "route-1",
+          "placements": [
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 28,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 6,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 31,
+              "clearedLines": 3
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 0,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 33,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 37,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 5,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 37,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 38,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 0,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 30,
+            "distinctLandingXs": 10,
+            "nonClearingLocks": 19,
+            "clearPhases": 16,
+            "clearedLines": 22,
+            "semanticDifferences": 0,
+            "boardHashDiverged": false
+          },
+          "evidence": {
+            "initialHash": "b900c8a7",
+            "finalHash": "5e0e1560",
+            "commandDigest": "461289d0",
+            "eventDigest": "1b83dbeb",
+            "boardTraceDigest": "51e78895",
+            "commandCount": 403
+          }
+        },
+        {
+          "id": "route-2",
+          "placements": [
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 0,
+              "x": 1,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 28,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 28,
+              "clearedLines": 2
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 7,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 4,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 29,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 1,
+              "landingY": 31,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 6,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 3,
+              "x": 5,
+              "landingY": 29,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 3,
+              "x": 8,
+              "landingY": 30,
+              "clearedLines": 2
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": -2,
+              "landingY": 30,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 2,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 32,
+              "clearedLines": 1
+            },
+            {
+              "type": "T",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 2,
+              "landingY": 30,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 31,
+              "clearedLines": 1
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 8,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 4,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "S",
+              "rotation": 1,
+              "x": 3,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 2,
+              "x": 1,
+              "landingY": 32,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 34,
+              "clearedLines": 1
+            },
+            {
+              "type": "J",
+              "rotation": 1,
+              "x": -1,
+              "landingY": 33,
+              "clearedLines": 0
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 34,
+              "clearedLines": 2
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 2
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 0,
+              "landingY": 35,
+              "clearedLines": 0
+            },
+            {
+              "type": "T",
+              "rotation": 1,
+              "x": 5,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "Z",
+              "rotation": 1,
+              "x": 7,
+              "landingY": 36,
+              "clearedLines": 0
+            },
+            {
+              "type": "J",
+              "rotation": 2,
+              "x": 3,
+              "landingY": 36,
+              "clearedLines": 1
+            },
+            {
+              "type": "I",
+              "rotation": 1,
+              "x": 0,
+              "landingY": 36,
+              "clearedLines": 2
+            },
+            {
+              "type": "S",
+              "rotation": 0,
+              "x": 7,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "O",
+              "rotation": 0,
+              "x": 3,
+              "landingY": 38,
+              "clearedLines": 0
+            },
+            {
+              "type": "L",
+              "rotation": 2,
+              "x": 5,
+              "landingY": 37,
+              "clearedLines": 2
+            }
+          ],
+          "metrics": {
+            "lockedPieces": 35,
+            "pieceTypes": 7,
+            "effectiveRotations": 34,
+            "distinctLandingXs": 11,
+            "nonClearingLocks": 20,
+            "clearPhases": 15,
+            "clearedLines": 22,
+            "semanticDifferences": 20,
+            "boardHashDiverged": true
+          },
+          "evidence": {
+            "initialHash": "b900c8a7",
+            "finalHash": "c0efbf7b",
+            "commandDigest": "489de711",
+            "eventDigest": "3ad62c9c",
+            "boardTraceDigest": "4037f60a",
+            "commandCount": 399
           }
         }
       ]

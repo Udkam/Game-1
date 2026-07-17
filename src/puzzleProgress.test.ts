@@ -43,11 +43,11 @@ function completeFirstT5Puzzle(): GameState {
 }
 
 describe('T5 puzzle completion presentation data', () => {
-  it('binds all six T5 levels without difficulty or availability gates', () => {
+  it('binds all fifteen T5 levels without difficulty or availability gates', () => {
     expect(CAMPAIGN_LEVELS.map((level) => [level.id, level.name, level.index, level.total])).toEqual(
       t5Levels.map((level, index) => [level.id, level.name, index + 1, t5Levels.length]),
     );
-    expect(CAMPAIGN_LEVELS).toHaveLength(6);
+    expect(CAMPAIGN_LEVELS).toHaveLength(15);
     expect(CAMPAIGN_LEVELS.every((level) => !('difficulty' in level))).toBe(true);
   });
 

@@ -182,6 +182,12 @@ function execute(level: LevelReference, route: RouteReference) {
 }
 
 describe('T5 normal-play Puzzle campaign verifier', () => {
+  it('binds exactly fifteen definitions and thirty frozen public-dispatch routes', () => {
+    expect(PUZZLE_DEFINITIONS).toHaveLength(15);
+    expect(references).toHaveLength(15);
+    expect(references.flatMap((level) => level.routes)).toHaveLength(30);
+  });
+
   it.each(references)('$id has two successful same-seed public-dispatch routes', (level) => {
     const definition = getPuzzleDefinition(level.id);
     expect(definition.seed).toBe(level.seed);
@@ -210,7 +216,7 @@ describe('T5 normal-play Puzzle campaign verifier', () => {
       expect(run.nonClearingLocks).toBe(metrics.nonClearingLocks);
       expect(run.clearPhases).toBe(metrics.clearPhases);
       expect(run.clearedLines).toBe(metrics.clearedLines);
-      expect(run.lockedPieces).toBeGreaterThanOrEqual(18);
+      expect(run.lockedPieces).toBeGreaterThanOrEqual(28);
       expect(run.lockedPieces).toBeLessThanOrEqual(35);
       expect(run.lockedTypes.size).toBe(7);
       expect(run.effectiveRotations).toBeGreaterThanOrEqual(6);
@@ -247,7 +253,9 @@ describe('T5 normal-play Puzzle campaign verifier', () => {
     }
     expect(semanticDifferences).toBe(level.routes[1]!.metrics.semanticDifferences);
     expect(semanticDifferences).toBeGreaterThanOrEqual(3);
-    expect(runs[0]!.boardHashes.some((hash, index) => hash !== runs[1]!.boardHashes[index])).toBe(true);
+    const commonBoardTraceLength = Math.min(runs[0]!.boardHashes.length, runs[1]!.boardHashes.length);
+    expect(runs[0]!.boardHashes.slice(0, commonBoardTraceLength)
+      .some((hash, index) => hash !== runs[1]!.boardHashes[index])).toBe(true);
     expect(level.routes[1]!.metrics.boardHashDiverged).toBe(true);
   });
 

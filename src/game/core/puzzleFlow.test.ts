@@ -52,7 +52,7 @@ describe('T5 Puzzle ordinary consecutive-piece flow', () => {
   });
 
   it('keeps replenishing after multiple public hard-drop locks without a queue or budget stop', () => {
-    let state = dispatch(createInitialState(1, 'puzzle', 't3r-cascade-06'), { type: 'start' }).state;
+    let state = dispatch(createInitialState(1, 'puzzle', 't5r-horizon-15'), { type: 'start' }).state;
     const lockedTypes: PieceType[] = [];
 
     for (let lock = 0; lock < 3; lock += 1) {

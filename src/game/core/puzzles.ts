@@ -29,9 +29,32 @@ type LegacyPuzzleDefinitionView = PuzzleDefinition & { readonly difficulty: numb
 
 const EMPTY_ROW = '.'.repeat(BOARD_WIDTH);
 const EMPTY_HIDDEN_CELLS: readonly PuzzleCell[] = Object.freeze([]);
+const BOARD_COLOR_SALT = 0xa57e31d9;
+const LEGACY_PUZZLE_IDS = new Set<PuzzleId>([
+  't3r-shaft-01',
+  't3r-shaft-02',
+  't3r-shaft-03',
+  't3r-shaft-04',
+  't3r-cascade-05',
+  't3r-cascade-06',
+]);
 
 function bottomRows(...rows: readonly string[]): readonly string[] {
   return Object.freeze([...Array.from({ length: VISIBLE_HEIGHT - rows.length }, () => EMPTY_ROW), ...rows]);
+}
+
+function colorizeBoardRows(seed: number, occupancyRows: readonly string[]): readonly string[] {
+  let colorRandomizer = createRandomizer((seed ^ BOARD_COLOR_SALT) >>> 0);
+  return Object.freeze(occupancyRows.map((row) => [...row].map((cell) => {
+    if (cell === '.') return cell;
+    const draw = drawPiece(colorRandomizer);
+    colorRandomizer = draw.randomizer;
+    return draw.piece;
+  }).join('')));
+}
+
+function occupancyRow(row: string): string {
+  return [...row].map((cell) => cell === '.' ? '.' : '#').join('');
 }
 
 function definition(
@@ -44,12 +67,12 @@ function definition(
     id,
     name,
     seed,
-    boardRows: Object.freeze([...boardRows]),
+    boardRows: colorizeBoardRows(seed, boardRows),
     hiddenCells: EMPTY_HIDDEN_CELLS,
   });
 }
 
-/** Six clean-room T5 starting boards. Piece input comes only from each level seed. */
+/** Clean-room T5 starting boards. Piece input comes only from each level seed. */
 const PUZZLE_LIBRARY: readonly PuzzleDefinition[] = [
   definition('t3r-shaft-01', '青脊回旋', 0x75c0b101, bottomRows(
     'JJ.J.JJJ..', 'JJJ.J..JJJ', '.JJ..JJJJJ', 'JJJ.JJJJJ.', 'JJJ..JJJJJ', 'JJ..JJJJJJ', 'JJJJJJJJJ.', 'JJJJJJ.JJJ', 'JJJJJ.JJJJ', '.JJJJJJJJJ',
@@ -69,6 +92,33 @@ const PUZZLE_LIBRARY: readonly PuzzleDefinition[] = [
   definition('t3r-cascade-06', '远岸终局', 0x75c0b606, bottomRows(
     'JJJJJ...J.', '.JJ..JJJJJ', 'JJJ.JJ..JJ', 'J.JJJJJJJ.', '..JJJJJJJJ', 'JJJ.J.JJJJ', 'J.JJJJJJJJ', 'JJJJJ.JJJJ', 'JJJ.JJJJJJ', 'JJJJJJJJ.J',
   )),
+  definition('t5r-delta-07', '折光浅湾', 0x91e2b43d, bottomRows(
+    '.JJJJ...JJ', '.JJJJJJ..J', '.JJJJJJ.J.', 'JJ.JJJJJ.J', 'JJ.JJJJJJ.', 'JJJJJ.JJ.J', 'JJJJJ.JJJJ', 'JJJJ.JJJJJ', 'JJJJJJJJ.J', 'JJ.JJJJJJJ',
+  )),
+  definition('t5r-drift-08', '微澜错屿', 0xc37a58e1, bottomRows(
+    'J.JJ...JJJ', '.JJ..JJJJJ', 'JJJ.JJ..JJ', 'JJ..JJJJJJ', '.JJJJ.JJJJ', '.JJJJJ.JJJ', 'JJJJJ.JJJJ', '.JJJJJJJJJ', 'JJJJJJJ.JJ', 'JJJJJJJJJ.',
+  )),
+  definition('t5r-lattice-09', '蓝桥叠汐', 0xa5c91367, bottomRows(
+    'JJ.J.J.J.J', 'JJ.JJJJJ..', 'J.J.JJJ.JJ', 'JJJJJJJJ..', 'JJJJJJJ..J', 'JJ.JJ.JJJJ', 'JJJ.JJJJJJ', '.JJJJJJJJJ', 'JJJJ.JJJJJ', 'JJ.JJJJJJJ',
+  )),
+  definition('t5r-rift-10', '薄雾回廊', 0xd1596af5, bottomRows(
+    'J.JJJJJ...', '.JJJJ.JJ.J', '.JJJJ.JJJ.', 'JJJ.J.JJJJ', 'JJJ.JJJJJ.', 'JJJJJJJ.J.', '.JJJJJJJJJ', 'J.JJJJJJJJ', 'JJJ.JJJJJJ', 'JJJJJJ.JJJ',
+  )),
+  definition('t5r-prism-11', '棱湾交错', 0x73bc20e9, bottomRows(
+    '..JJJJJ.J.', 'JJJJ.J..JJ', 'JJ...JJJJJ', 'JJJ..JJJJJ', 'JJJJJJ.J.J', 'J.JJJJJJJ.', 'JJJJJJJ.JJ', 'JJJJJJ.JJJ', '.JJJJJJJJJ', 'JJJJ.JJJJJ',
+  )),
+  definition('t5r-current-12', '双潮折线', 0xb47d8e23, bottomRows(
+    '..JJJJ..JJ', '..JJJJJ.JJ', 'J.JJJJ.J.J', '.JJJJJJJJ.', 'JJJ..JJJJJ', 'J.JJJ.JJJJ', 'JJJJJJJ.JJ', 'JJJJJJ.JJJ', 'JJJJ.JJJJJ', 'JJJJJJJJJ.',
+  )),
+  definition('t5r-arc-13', '静弧深槽', 0x5c29f6a1, bottomRows(
+    '.JJJ.J..JJ', '.JJ.JJ.JJJ', '.JJJ.JJJJ.', 'JJJJJ.JJJ.', 'J.JJJ.JJJJ', '.JJJ.JJJJJ', '.JJJJJJJJJ', 'JJJJJJJJ.J', 'JJJJJ.JJJJ', 'JJ.JJJJJJJ',
+  )),
+  definition('t5r-pulse-14', '脉光群岛', 0xf2a7634b, bottomRows(
+    '..JJJ..JJJ', 'JJJ.JJ..JJ', 'J.J.JJ.JJJ', 'J.JJJJJJ.J', 'JJ.JJJJJJ.', 'JJJJJ.J.JJ', 'JJJJJJJ.JJ', 'JJJJJJJJ.J', 'JJJJJ.JJJJ', 'JJJ.JJJJJJ',
+  )),
+  definition('t5r-horizon-15', '远蓝合流', 0x8ea45d17, bottomRows(
+    '..JJJ.JJ.J', 'J.J.JJJ.JJ', 'JJ.JJJJJ..', '.J.JJJJJJJ', 'JJJJ.JJ.JJ', 'JJJJJJJJ..', 'JJJJJ.JJJJ', 'JJJJJJJJJ.', 'JJJJJJ.JJJ', 'JJ.JJJJJJJ',
+  )),
 ] as const;
 
 // See LegacyPuzzleDefinitionView above. No runtime object contains a numeric difficulty.
@@ -77,6 +127,13 @@ export const PUZZLE_DEFINITIONS = PUZZLE_LIBRARY as readonly LegacyPuzzleDefinit
 const PIECE_TYPE_SET = new Set<string>(PIECE_TYPES);
 const PUZZLE_ID_SET = new Set<string>(PUZZLE_LIBRARY.map((candidate) => candidate.id));
 const PUZZLE_SEED_SET = new Set<number>(PUZZLE_LIBRARY.map((candidate) => candidate.seed));
+const CAMPAIGN_COLOR_SET = new Set(PUZZLE_LIBRARY.flatMap((candidate) => (
+  candidate.boardRows.flatMap((row) => [...row].filter((cell): cell is PieceType => PIECE_TYPE_SET.has(cell)))
+)));
+
+if (CAMPAIGN_COLOR_SET.size !== PIECE_TYPES.length) {
+  throw new Error('Puzzle campaign starting boards must use all seven piece colors.');
+}
 
 function validateSeedBags(definition: PuzzleDefinition): void {
   let randomizer = createRandomizer(definition.seed);
@@ -110,6 +167,7 @@ export function validatePuzzleDefinition(definition: PuzzleDefinition): void {
 
   let occupied = 0;
   const nonEmptyRows: string[] = [];
+  const boardColors = new Set<PieceType>();
   for (const row of definition.boardRows) {
     if (typeof row !== 'string' || row.length !== BOARD_WIDTH) {
       throw new Error(`Puzzle ${definition.id} contains a malformed board row.`);
@@ -120,18 +178,24 @@ export function validatePuzzleDefinition(definition: PuzzleDefinition): void {
     if (![...row].includes('.')) throw new Error(`Puzzle ${definition.id} contains an initially full visible row.`);
     const rowOccupied = [...row].filter((cell) => cell !== '.').length;
     occupied += rowOccupied;
+    for (const cell of row) if (cell !== '.') boardColors.add(cell as PieceType);
     if (rowOccupied > 0) nonEmptyRows.push(row);
   }
   if (occupied === 0) throw new Error(`Puzzle ${definition.id} requires a non-empty authored board.`);
-  if (nonEmptyRows.length < 8 || nonEmptyRows.length > 12) {
-    throw new Error(`Puzzle ${definition.id} requires an 8-12 row initial stack.`);
+  const minimumRows = LEGACY_PUZZLE_IDS.has(definition.id) ? 8 : 9;
+  if (nonEmptyRows.length < minimumRows || nonEmptyRows.length > 12) {
+    throw new Error(`Puzzle ${definition.id} requires a ${minimumRows}-12 row initial stack.`);
   }
-  if (new Set(nonEmptyRows).size < 5) {
-    throw new Error(`Puzzle ${definition.id} requires at least five distinct non-empty row shapes.`);
+  const occupancyRows = nonEmptyRows.map(occupancyRow);
+  if (new Set(occupancyRows).size < 6) {
+    throw new Error(`Puzzle ${definition.id} requires at least six distinct occupancy-row shapes.`);
   }
   const rowDensities = nonEmptyRows.map((row) => [...row].filter((cell) => cell !== '.').length);
-  if (new Set(rowDensities).size < 3 || rowDensities.filter((count) => count <= BOARD_WIDTH - 3).length < 2) {
+  if (new Set(rowDensities).size < 4 || rowDensities.filter((count) => count <= BOARD_WIDTH - 3).length < 2) {
     throw new Error(`Puzzle ${definition.id} forbids repeated floor templates and requires layered cavity density.`);
+  }
+  if (boardColors.size < 5) {
+    throw new Error(`Puzzle ${definition.id} requires at least five deterministic starting-board colors.`);
   }
 
   const top = definition.boardRows.findIndex((row) => row !== EMPTY_ROW);
@@ -146,8 +210,8 @@ export function validatePuzzleDefinition(definition: PuzzleDefinition): void {
       if (hasFilledAbove && hasFilledBelow) buriedHoles += 1;
     }
   }
-  if (coveredEmptyColumns.size < 3 || buriedHoles < 4) {
-    throw new Error(`Puzzle ${definition.id} requires staggered covered cavities in at least three columns.`);
+  if (coveredEmptyColumns.size < 5 || buriedHoles < 8) {
+    throw new Error(`Puzzle ${definition.id} requires at least five covered-cavity columns and eight buried holes.`);
   }
 
   validateSeedBags(definition);

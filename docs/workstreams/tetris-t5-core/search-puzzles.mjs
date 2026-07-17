@@ -6,7 +6,8 @@
  * always re-run through the TypeScript engine's public dispatch API.
  *
  * Usage:
- *   node search-puzzles.mjs <level-index 0..5> [candidate-count] [beam-width] [max-ms] [start-candidate]
+ *   node search-puzzles.mjs <level-index 0..5> [candidate-count] [beam-width] [max-ms] [start-candidate] [stack-height]
+ *   node search-puzzles.mjs --seed <uint32> [candidate-count] [beam-width] [max-ms] [start-candidate] [stack-height]
  */
 
 const WIDTH = 10;
@@ -215,7 +216,7 @@ function routeMetrics(node, sequence, path) {
 
 function meetsRouteThresholds(node, sequence, path) {
   const metrics = routeMetrics(node, sequence, path);
-  return metrics.lockedPieces >= 18 && metrics.lockedPieces <= 35
+  return metrics.lockedPieces >= 28 && metrics.lockedPieces <= 35
     && metrics.pieceTypes === 7
     && metrics.effectiveRotations >= 6
     && metrics.distinctLandingXs >= 6
@@ -348,11 +349,10 @@ function routeDiversity(first, second) {
   return { semanticDifferences, boardHashDiverged };
 }
 
-function candidateBoard(seed, candidateIndex) {
+function candidateBoard(seed, candidateIndex, requestedHeight = null) {
   const rand = random(seed ^ Math.imul(candidateIndex + 1, 0x9e3779b1));
-  const stackHeight = 8 + (candidateIndex % 5);
+  const stackHeight = requestedHeight ?? 9 + (candidateIndex % 4);
   const holeProfiles = {
-    8: [4, 3, 3, 2, 1, 1, 1, 1],
     9: [4, 3, 3, 2, 2, 1, 1, 1, 1],
     10: [4, 3, 3, 2, 2, 2, 1, 1, 1, 1],
     11: [5, 4, 3, 3, 2, 2, 1, 1, 1, 1, 1],
@@ -370,8 +370,20 @@ function candidateBoard(seed, candidateIndex) {
     }
     masks.push(mask);
   }
-  if (new Set(masks).size < 5 || new Set(masks.map(popcount)).size < 3) return null;
-  if (masks.filter((mask) => popcount(mask) <= 7).length < 2) return null;
+  if (new Set(masks).size < 6 || new Set(masks.map(popcount)).size < 4) return null;
+
+  const coveredColumns = new Set();
+  let buriedHoles = 0;
+  for (let x = 0; x < WIDTH; x += 1) {
+    for (let y = 1; y < masks.length - 1; y += 1) {
+      if ((masks[y] & (1 << x)) !== 0) continue;
+      const hasFilledAbove = masks.slice(0, y).some((mask) => (mask & (1 << x)) !== 0);
+      const hasFilledBelow = masks.slice(y + 1).some((mask) => (mask & (1 << x)) !== 0);
+      if (hasFilledAbove) coveredColumns.add(x);
+      if (hasFilledAbove && hasFilledBelow) buriedHoles += 1;
+    }
+  }
+  if (coveredColumns.size < 5 || buriedHoles < 8) return null;
 
   const rows = Array.from({ length: HEIGHT }, () => 0);
   for (let row = 0; row < stackHeight; row += 1) rows[HEIGHT - stackHeight + row] = masks[row];
@@ -393,23 +405,34 @@ function routeForOutput(route) {
   };
 }
 
-const levelIndex = Number(process.argv[2] ?? 0);
-const maxCandidates = Number(process.argv[3] ?? 60);
-const beamWidth = Number(process.argv[4] ?? 7000);
-const maxMs = Number(process.argv[5] ?? 120_000);
-const startCandidate = Number(process.argv[6] ?? 0);
-if (!Number.isInteger(levelIndex) || levelIndex < 0 || levelIndex >= LEVEL_SEEDS.length) {
+const explicitSeed = process.argv[2] === '--seed';
+const levelIndex = explicitSeed ? null : Number(process.argv[2] ?? 0);
+const seed = explicitSeed ? Number(process.argv[3]) : LEVEL_SEEDS[levelIndex];
+const optionOffset = explicitSeed ? 1 : 0;
+const maxCandidates = Number(process.argv[3 + optionOffset] ?? 60);
+const beamWidth = Number(process.argv[4 + optionOffset] ?? 7000);
+const maxMs = Number(process.argv[5 + optionOffset] ?? 120_000);
+const startCandidate = Number(process.argv[6 + optionOffset] ?? 0);
+const requestedHeight = process.argv[7 + optionOffset] === undefined
+  ? null
+  : Number(process.argv[7 + optionOffset]);
+if (!explicitSeed && (!Number.isInteger(levelIndex) || levelIndex < 0 || levelIndex >= LEVEL_SEEDS.length)) {
   throw new Error('level-index must be 0..5');
 }
+if (!Number.isSafeInteger(seed) || seed <= 0 || seed > 0xffff_ffff) {
+  throw new Error('seed must be a nonzero uint32');
+}
+if (requestedHeight !== null && (!Number.isInteger(requestedHeight) || requestedHeight < 9 || requestedHeight > 12)) {
+  throw new Error('stack-height must be 9..12');
+}
 
-const seed = LEVEL_SEEDS[levelIndex];
 const sequence = sequenceForSeed(seed, 84);
 const deadline = Date.now() + maxMs;
 let result = null;
 for (let candidateIndex = startCandidate; candidateIndex < startCandidate + maxCandidates && Date.now() < deadline; candidateIndex += 1) {
-  const board = candidateBoard(seed, candidateIndex);
+  const board = candidateBoard(seed, candidateIndex, requestedHeight);
   if (!board) continue;
-  process.stderr.write(`candidate ${candidateIndex}: height ${8 + (candidateIndex % 5)}\n`);
+  process.stderr.write(`candidate ${candidateIndex}: height ${requestedHeight ?? 9 + (candidateIndex % 4)}\n`);
   const first = searchRoute(board, sequence, beamWidth, deadline, null, 0, true);
   if (!first) continue;
   process.stderr.write(`candidate ${candidateIndex}: first route ${first.path.length} locks\n`);
