@@ -140,3 +140,13 @@
   suite, build, browser review, and a final coordinator live review. Independent QA
   accepted the canonical raw-Git-blob evidence manifest in log-only commit `fdd1ffb`;
   all 32 evidence entries match under both CRLF configurations.
+
+## 2026-07-17 — Bounded commit policy adopted
+
+- Added an authoritative small-checkpoint policy so core, frontend, generated evidence,
+  QA verdicts, and coordinator records are no longer accumulated into one large commit.
+- Set a default source checkpoint budget of 10 product/test paths, 500 hand-authored
+  changed lines, and one subsystem or user-visible claim, with explicit pre-authorization
+  required for any atomic exception.
+- Recorded the inherited `CURRENT_TASK.md` and `DESIGN.md` edits as separately owned docs
+  work; neither may be silently bundled with the next gameplay or frontend commit.

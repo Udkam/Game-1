@@ -3,7 +3,8 @@
 ## Coordinator and workstream boundary
 
 - The primary Codex task is the coordinator. It owns scope, sequencing, integration,
-  `docs/logs/CHANGELOG.md`, final browser review, commit, and push.
+  `docs/logs/CHANGELOG.md`, final browser review, and push. A writer may create only the
+  bounded local checkpoint commits authorized by `docs/COMMIT_POLICY.md`.
 - This repository is the standalone falling-block game at `E:\Proj\Game-1-tetris`.
 - Temple Run and Patrick's Parabox are separate repositories. Never copy their source,
   evidence, screenshots, generated assets, workstream registers, or Git metadata here.
@@ -38,6 +39,22 @@
 
 If two workers would edit the same path, the later worker must stop and report the
 collision instead of merging or overwriting the other worker's dirty state.
+
+## Bounded commit discipline
+
+- `docs/COMMIT_POLICY.md` is authoritative for commit size, checkpoint order, staging,
+  candidate ranges, and push ownership.
+- A candidate is normally a short linear range of reviewable commits, not one giant
+  commit made after core, frontend, screenshots, evidence, and logs have accumulated.
+- Commit the first green, reviewable claim before editing the next subsystem or concern.
+- Never combine product source, generated browser evidence, and independent QA
+  disposition in one commit.
+- Never use `git add .`, `git add -A`, wildcard staging, or a commit command that captures
+  paths outside the declared checkpoint. Stage exact paths and inspect the cached path
+  list before every commit.
+- At adoption, the existing uncommitted `CURRENT_TASK.md` and `DESIGN.md` are inherited
+  documentation paths. They must be assigned to bounded docs checkpoints or left
+  untouched; they cannot be silently bundled with the next gameplay/frontend commit.
 
 ## Product boundary
 
