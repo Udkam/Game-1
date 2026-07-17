@@ -11,19 +11,23 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **active — both prior T5 frontend presentations are rejected; light neo-tech
-minimal replacement slice active**
+Status: **active — accepted neo-tech foundation is being extended to fifteen
+multi-color Puzzle levels and the player-facing `经典` mode name**
 
 ## User-visible problems to resolve
 
-1. Replace both rejected T5 frontends and block treatments with an original light
-   cyan/light-blue, high-contrast, neo-tech minimal interface named only `Tetris`.
-2. Add a dedicated entry page with separate Marathon, Race, and Puzzle entrances.
+1. Keep the accepted original light cyan/light-blue, high-contrast, neo-tech minimal
+   interface named only `Tetris`, but give the seven pieces a more varied original
+   multi-hue edge-lit palette.
+2. Keep the dedicated entry page with separate Classic (`经典`), Race, and Puzzle
+   entrances. The internal `marathon` key remains compatibility-only.
 3. Make Race endless accelerating normal play. It has no line target and stops only
    through player exit or top-out.
-4. Rebuild Puzzle as normal continuous play over harder authored starting boards:
+4. Expand Puzzle to exactly fifteen normal continuous-play levels over harder
+   authored starting boards:
    automatic gravity, replenishing seeded seven-bag input, no finite piece budget,
-   every level unlocked, and at least two proven successful routes per level.
+   every level unlocked, multi-color prefilled cells, and at least two proven
+   successful routes per level.
 5. Keep all level layouts, copy, frontend composition, block language, and assets
    original. Similar games are abstract mechanics research only.
 6. Remove the current engineering-dashboard vocabulary, oversized slogan, custom
@@ -339,8 +343,9 @@ Task ID: `TETRIS-T5-FRONTEND-NARROW-COPY-FIX-005`
 Base SHA: coordinator contract child of rejected evidence commit
 `221c8218b338abeaae6be4e3d73d24fb74550c76`.
 
-Status: **active — final QA rejected the first formal Slice E evidence child with two
-bounded findings**.
+Status: **PRODUCT ACCEPTED** at
+`56288cde99f8121fd2bb6be51836385fb9d30883`; the old six-level formal evidence remains
+rejected and is superseded by the later fifteen-level direction.
 
 Independent visual QA found that `narrow-puzzle-360x800.png` ellipsizes the essential
 Puzzle goal to `清空完整棋...`. Independent static QA also found that the evidence
@@ -372,11 +377,122 @@ Product acceptance:
   production build, and a bounded 360/390/844 browser comparison; inspect the actual
   captures, log exact computed values, create one candidate commit, and do not push.
 
-After independent read-only product QA accepts the exact fix candidate, the
-coordinator may change only `docs/qa/evidence/tetris-t5/**` to:
+Independent read-only product QA accepted the exact two-path candidate: the complete
+goal measured `clientWidth == scrollWidth` at 360/390/844, retained 18 px values and
+44 px controls, and produced one canvas, zero DOM cells, no overflow, and no console
+errors. Because the user then expanded the campaign, the coordinator does not
+regenerate the obsolete six-level evidence. The final combined evidence must later:
 
 - write generated JSON and checksum text with explicit LF bytes before hashing;
-- regenerate all 16 first-viewport captures against the accepted product SHA;
+- regenerate the complete required first-viewport capture set against the accepted
+  product SHA;
 - prove every `SHA256SUMS.txt` entry against the exact commit's raw Git blobs;
 - route the new evidence child through independent static, browser, and visual QA
   before changelog integration or push.
+
+## Slice G — fifteen-level multi-color Puzzle core
+
+Task ID: `TETRIS-T5-PUZZLE-CAMPAIGN-15-006`
+
+Product base: `56288cde99f8121fd2bb6be51836385fb9d30883`.
+
+Writer base: the coordinator contract commit that introduces Slice G and Slice H.
+
+The single Core writer may change only:
+
+- `src/game/core/types.ts`;
+- `src/game/core/puzzles.ts`;
+- `src/game/core/puzzles.test.ts`;
+- `src/game/core/puzzleCampaign.test.ts`;
+- `src/game/core/puzzleFlow.test.ts`;
+- `src/puzzleProgress.test.ts`;
+- `docs/workstreams/tetris-t5-core/search-puzzles.mjs`;
+- `docs/workstreams/tetris-t5-core/puzzle-references.json`;
+- `docs/workstreams/tetris-t5-core/THREAD_LOG.md`;
+- at most one new reference-builder helper under
+  `docs/workstreams/tetris-t5-core/` when required.
+
+The Core writer must not change `engine.ts`, `random.ts`, `puzzleProgress.ts`, React,
+CSS, renderer/theme, runtime/input/audio, dependencies, `index.html`, coordinator
+documents, changelog, or formal browser evidence.
+
+Core acceptance:
+
+- production exports exactly fifteen all-enabled definitions; the old six IDs, seeds,
+  occupancy masks, and two route placement streams remain compatible;
+- nine new definitions have original names, unique nonzero seeds, original occupancy
+  masks, 9–12 occupied rows, six or more occupancy-row shapes, four density classes,
+  covered cavities in five or more columns, and at least eight buried holes;
+- every starting board is deterministically colorized with at least five piece types,
+  and all seven types occur across the campaign; this salted color pass never consumes
+  or changes the gameplay randomizer;
+- geometry validation normalizes every occupied character before measuring topology,
+  so colors cannot fake row-shape or cavity diversity;
+- every seed still produces twelve consecutive complete seven-bags in the first 84
+  pieces and replenishes indefinitely in production;
+- every one of the fifteen levels has two same-seed 28–35-lock successful routes
+  through production `createInitialState` and public `dispatch` only; each route uses
+  all seven incoming types, six landing columns, six effective rotations, three setup
+  locks, and three separated clear phases; paired routes have at least three semantic
+  placement differences and an intermediate board-hash divergence;
+- search may use at most two concurrent seed processes and unique ignored outputs;
+  failed seeds/candidates are replaced rather than weakening route or topology gates;
+- after the final Core source change, run one typecheck, one complete Vitest suite,
+  one production build, and the complete 30-route verifier. Inspect exact generated
+  references, log commands/results, create one Core candidate commit, and do not push.
+
+Independent read-only Core QA must accept the exact Slice G candidate before Slice H
+starts. A Core-only 15-level candidate is not releasable through the six-row frontend.
+
+## Slice H — `经典`, mineral-signal palette, and fifteen-level library
+
+Task ID: `TETRIS-T5-FRONTEND-CAMPAIGN-15-007`
+
+Base: the independently accepted Slice G candidate plus any coordinator-only QA
+acknowledgement required to open this slice.
+
+The single frontend writer may change only:
+
+- `src/App.tsx`;
+- `src/App.test.ts`;
+- `src/styles.css`;
+- `src/game/render/theme.ts`;
+- one new focused `src/game/render/theme.test.ts` if useful;
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md`.
+
+The frontend writer must not change Core/Puzzle definitions or references,
+`puzzleProgress.ts`, renderer logic, presentation/runtime/input/audio, dependencies,
+`index.html`, coordinator documents, changelog, or formal browser evidence.
+
+Frontend acceptance:
+
+- all player-facing mode copy and accessibility labels say `经典`; no visible
+  `马拉松` remains. Internal `marathon`, `enter-marathon`, and CSS mode keys remain
+  unchanged for deterministic compatibility;
+- Board and Next use the exact seven-piece mineral-signal palette frozen in
+  `DESIGN.md`; it is more varied than the rejected blue-only set and does not use the
+  standard commercial piece-color mapping or a toy-rainbow treatment;
+- the canonical multi-color starting board is visible in gameplay. Any library
+  silhouette groups canonical cells into a bounded number of SVG paths by piece type,
+  not a DOM cell grid and not a copied decorative layout;
+- every `六关`/`六个` hard-code is removed. Copy and aria derive the exact count from
+  `CAMPAIGN_LEVELS.length`;
+- desktop and 844 × 390 show one continuous 3 × 5 all-enabled level matrix beside the
+  selected detail/start region, with all fifteen rows/buttons inside the first
+  viewport at 844 × 390; 360/390 use a two-column matrix and a separate in-flow detail
+  region, with normal library scrolling allowed;
+- all fifteen entries stay mounted, enabled, keyboard/touch reachable, and carry the
+  existing `level-row`, `data-level-id`, `aria-pressed`, and stable start selectors;
+- real UI proves selection/start for the first, middle, and fifteenth levels and
+  matches canonical `puzzleId`, name, active piece, Next, and multi-color locked cells;
+- preserve the accepted 1+2 home, phase seam, complete 360 px goal, 44 px controls,
+  12/14/18 px type floors, one-canvas lifecycle, accessibility, reduced motion,
+  continuous Puzzle, and endless Race;
+- after the final frontend source change, run one typecheck, one complete Vitest
+  suite, one production build, and the five-viewport browser matrix. Inspect actual
+  captures, log exact values, create one frontend candidate commit, and do not push.
+
+After independent frontend QA accepts Slice H, the coordinator updates only the T5
+formal evidence for fifteen levels, explicit-LF hashing, the `经典` label, multi-color
+Board/Next, and first/middle/fifteenth real selection. The exact evidence child must
+pass raw-Git-blob, visual, and browser QA before changelog integration or push.

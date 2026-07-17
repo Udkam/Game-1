@@ -38,6 +38,20 @@ must not regress. Independent review also found 8–11 px mobile statistics and 
 `路线` copy; both must disappear in the replacement rather than be patched in the
 rejected presentation.
 
+The user's later 2026-07-17 direction extends the accepted neo-tech foundation before
+release:
+
+- the player-facing `马拉松` name becomes `经典`; the internal deterministic mode key
+  remains `marathon` only for compatibility and is never player-facing;
+- the seven edge-lit plates use a restrained, original multi-hue mineral-signal
+  palette rather than seven near-equal cyan/blue fills or the standard commercial
+  piece-color mapping;
+- Puzzle contains exactly fifteen all-enabled original levels for this milestone;
+- every authored starting board is visibly multi-colored while its color assignment
+  stays independent from gameplay randomization and never changes collision geometry;
+- the nine new levels strengthen the existing topology and multi-route proof instead
+  of duplicating or recoloring the first six.
+
 The deterministic architecture integrated at
 `4c8582854088695ebac90467842dc2bc0cef3a20` remains the rule baseline. The rejected
 T4 candidate `dd7e31ea3547c18a797b2308f04161310d1412ce` remains in history but is not
@@ -69,9 +83,11 @@ evidence only. T5 uses new paths and does not rewrite those artifacts.
 
 ## T5 mode rules
 
-### Marathon
+### Classic (`marathon` internal key)
 
-- Open-ended familiar play.
+- The only player-facing mode name is `经典`; `马拉松` is removed from visible copy
+  and accessibility labels.
+- Classic is open-ended familiar play.
 - Scoring, line count, level progression, and deterministic gravity remain.
 - The run ends only on top-out or explicit player exit.
 
@@ -96,9 +112,9 @@ Race is normal open-ended play with an additional deterministic acceleration cur
 Puzzle is a library of authored board-clearing challenges, not an unlock ladder and
 not a finite input-sequence exercise. It changes the starting board and win condition;
 movement, rotation, gravity, locking, scoring, line resolution, and piece generation
-otherwise follow ordinary Marathon play.
+otherwise follow ordinary Classic play.
 
-- All six T5 levels are selectable from first launch. No level row is disabled or
+- All fifteen T5 levels are selectable from first launch. No level row is disabled or
   hidden behind prior completion.
 - Numeric difficulty is removed from production definitions and UI. It does not
   control ordering or availability. Completion persistence is informational only.
@@ -110,7 +126,7 @@ otherwise follow ordinary Marathon play.
 - There is no authored finite queue, piece budget, remaining-piece counter, or
   `failed-budget` outcome. An unsolved run continues until canonical success, top-out,
   restart, or explicit exit.
-- Puzzle uses Marathon gravity progression, grounded lock delay, entry delay, clear
+- Puzzle uses Classic gravity progression, grounded lock delay, entry delay, clear
   delay, scoring, soft drop, hard drop, and SRS rotation. A no-clear lock and a clear
   both continue through the ordinary deterministic spawn path.
 - The initial stack occupies 8–12 visible rows, uses at least five distinct non-empty
@@ -120,13 +136,13 @@ otherwise follow ordinary Marathon play.
 - Production validation samples the first 84 generated pieces from each level seed and
   proves twelve consecutive complete seven-bags. This is a validation horizon, not a
   gameplay limit.
-- Each of the six levels has at least two frozen successful public-command replays for
+- Each of the fifteen levels has at least two frozen successful public-command replays for
   the same level seed. Both must clear the canonical board without state injection,
   and their semantic placement streams must differ at three or more locked-piece
   indices by final occupied cell set, landing column, and/or effective rotation. At
   least one intermediate canonical board hash must diverge before success; a different
   command digest alone is not route diversity.
-- Each accepted route uses 18–35 locked pieces, all seven
+- Each accepted route uses 28–35 locked pieces, all seven
   piece types, at least six landing columns, at least six effective rotations, at least
   three non-clearing setup locks, and at least three separated line-resolution phases.
   These metrics establish nontrivial play; neither replay is presented as a unique or
@@ -139,6 +155,18 @@ otherwise follow ordinary Marathon play.
 - References initialize through `createInitialState(level.seed, "puzzle", level.id)`
   and use public `dispatch` only. No verifier, runtime QA hook, or browser setup may
   construct, replace, or mutate canonical state.
+- The first six levels keep their accepted IDs, seeds, occupancy masks, and routes so
+  saved completion remains compatible. A separate salted color pass replaces each
+  occupied marker with a deterministic piece type without consuming or altering the
+  level's seven-bag state. Every level uses at least five piece types and the campaign
+  uses all seven.
+- Topology validation normalizes every occupied piece character to one occupancy bit
+  before counting distinct rows, densities, holes, or cavities. Color variation may
+  never masquerade as geometric difficulty.
+- The nine new original levels use unique seeds and 9–12 occupied rows, at least six
+  distinct occupancy-row shapes, at least four density classes, covered cavities in
+  five or more columns, and at least eight buried holes. An immediately legible well,
+  a copied old mask, or a recolored duplicate is rejected.
 
 ## T5 light neo-tech minimal visual direction
 
@@ -196,9 +224,21 @@ labels must meet WCAG AA contrast.
   value shift is no greater than about 6%, and fine same-hue outer/inner edges. It has
   no white highlight bar, thick lower lip, jelly gloss, ceramic bevel, embossing,
   detached unit shadow, dark universal outline, cut corner, or mineral inset.
-- The seven pieces remain distinguishable through hue and value while staying within
-  a bounded cool palette. They must not read as seven near-equal blue stickers or as a
-  toy rainbow.
+- The seven pieces remain distinguishable through hue and value. Their mapping is the
+  original muted mineral-signal palette below, deliberately different from the
+  standard commercial cyan/yellow/purple/green/red/blue/orange assignment. The page
+  remains light cyan/light-blue; richer hues belong only to gameplay pieces and
+  canonical board previews.
+
+| Piece | Fill start | Fill end | Edge | Inner edge |
+| --- | --- | --- | --- | --- |
+| I | `#C7486C` | `#A83858` | `#6E2139` | `#EA93A8` |
+| O | `#2C7E80` | `#176A70` | `#0D474E` | `#8DCAC8` |
+| T | `#B2701F` | `#965A12` | `#603709` | `#E4BE78` |
+| S | `#5063B5` | `#3E4E9B` | `#273164` | `#AAB5E5` |
+| Z | `#6E8637` | `#596E28` | `#394819` | `#BACB82` |
+| J | `#9A4F9E` | `#813D85` | `#542255` | `#D5A0D2` |
+| L | `#2875A1` | `#1C608A` | `#103E5C` | `#91C3D9` |
 - Active cells gain only a low-intensity edge glow. Locked cells stay flat. Ghost
   cells use a complete fine outline with no more than 6% fill, never corner brackets.
 - Board and Next reuse the exact drawing primitive. Page entrance is 180 ms over at
@@ -212,9 +252,9 @@ labels must meet WCAG AA contrast.
 - The webpage opens on a dedicated mode home with no gameplay board.
 - The mode home and Puzzle library do not mount a runtime or canvas. Entering a run
   creates one runtime/canvas; returning home destroys both before showing the home.
-- A compact `Tetris` header and short `选择模式` introduction lead directly to Marathon,
+- A compact `Tetris` header and short `选择模式` introduction lead directly to `经典`,
   Race, and Puzzle. There is no poetic or marketing hero.
-- The three entrances share one continuous 1+2 mode surface: Marathon occupies the
+- The three entrances share one continuous 1+2 mode surface: Classic occupies the
   complete first row, with Race and Puzzle as two independent complete buttons in the
   second row. One-pixel dividers and selected-state tone establish grouping; they are
   not three floating cards or a settings list.
@@ -232,12 +272,15 @@ labels must meet WCAG AA contrast.
 - Every level entry is enabled and shows name, board-clearing goal, available-piece
   stream description, and optional completion status.
 - It does not show numeric difficulty or lock state.
-- The library is one continuous surface with six complete enabled entries and one
-  selected-level detail/start region. Desktop may use list/detail columns; mobile may
-  expand selection in flow, but neither layout is a pile of floating cards.
+- The library is one continuous surface with fifteen complete enabled entries and one
+  selected-level detail/start region. Desktop and 844 × 390 use a 3 × 5 matrix plus
+  the existing right-side detail. At 360/390 widths the level matrix uses two columns
+  and the selected detail stays in normal flow outside the level items. Library-page
+  scrolling is allowed on narrow portrait; gameplay page scrolling is not. No layout
+  is a pile of floating cards, pagination, or a difficulty/unlock ladder.
 - If a level silhouette is shown, it is read-only derived from the existing canonical
-  initial board as one SVG/path. It is not a DOM gameplay grid and must not duplicate
-  or modify Puzzle definitions.
+  initial board as one SVG with at most one bounded path per piece type. It is not a
+  DOM gameplay grid and must not duplicate or modify Puzzle definitions.
 - No sticky or fixed selection panel may cover a level row. The title is the compact
   `解谜关卡`, not a multi-line marketing statement.
 - Starting a level must keep the visible selection, canonical `puzzleId`, level seed,
@@ -309,7 +352,7 @@ only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
 - production build;
 - deterministic Race replay proving lines never finish the run and acceleration is
   monotonic through its safe cap;
-- all six Puzzle levels, two distinct successful public-command routes per level,
+- all fifteen Puzzle levels, two distinct successful public-command routes per level,
   restart/hash determinism, normal automatic gravity, grounded locking, continuous
   seven-bag replenishment, and consecutive multi-piece play;
 - first-84-piece seven-bag integrity for every level seed with no queue exhaustion or

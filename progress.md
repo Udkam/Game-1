@@ -90,3 +90,26 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
 - Next: one CSS/log writer fixes only the narrow Puzzle statistic allocation; after
   independent product QA, the coordinator regenerates all formal evidence with
   explicit LF output and repeats final exact-commit QA before changelog or push.
+
+## 2026-07-17 — fifteen-level multi-color direction opened
+
+- Slice F candidate `56288cd` fixed the 360 × 800 Puzzle goal using only a 40/60
+  narrow statistic-column allocation plus the frontend log. Independent browser QA
+  accepted the exact SHA at 360/390/844: complete `清空完整棋盘`, 18 px value text,
+  44 px controls, one canvas, zero DOM cells, no overflow, and no console errors.
+- The user then extended the product target before release: player-facing `马拉松`
+  becomes `经典`; pieces use a more varied original multi-hue palette; Puzzle grows
+  from six to at least fifteen all-enabled levels; and every prefilled board uses
+  multiple piece colors.
+- Public descriptions of comparable falling-block products informed only the abstract
+  split between continuous classic play and a larger level library. No external level
+  mask, name, palette mapping, interface, or trade dress is copied.
+- Core preflight confirmed that normal gravity, continuous seven-bag replenishment,
+  board-empty success, top-out, and progress derivation are already level-count
+  independent. Slice G therefore owns fifteen definitions, deterministic multi-color
+  canonical boards, nine new original masks/seeds, and thirty public-dispatch route
+  proofs without changing engine/random/runtime/frontend code.
+- After independent Core QA, Slice H owns visible `经典` copy, the frozen original
+  mineral-signal seven-color theme, and a responsive fifteen-entry library. Formal
+  evidence and raw-blob LF correction are deferred until both new slices pass QA.
+- No push is eligible from the rejected six-level evidence chain.
