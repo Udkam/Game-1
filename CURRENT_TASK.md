@@ -691,6 +691,12 @@ Product base: independently accepted Slice J + J-R candidate
 Writer base: the coordinator documentation checkpoint that opens Slice K directly
 after the accepted product base.
 
+Commit-policy plan: use bounded linear source checkpoints rather than one opaque UI
+commit. Theme/renderer, visible App composition/copy, and CSS surface/responsive finish
+are separate reviewable claims when their hand-authored range would otherwise exceed
+500 lines. Each checkpoint keeps its direct tests green; the expensive final gates and
+browser matrix run once after the last product-source change.
+
 The single frontend/render writer may change only:
 
 - `src/App.tsx`;
@@ -734,7 +740,8 @@ Slice K acceptance:
 - run targeted App/theme/renderer tests while editing. After the final source change,
   run one typecheck, one complete suite, one build, the prescribed action client, and
   one five-viewport home/library/game browser matrix; inspect every PNG, log exact
-  evidence, create one candidate commit, and do not push.
+  evidence, create bounded linear source checkpoints plus a log-only checkpoint, and
+  do not push.
 
 Independent read-only functional and visual QA must accept the exact Slice K candidate
 before the coordinator regenerates explicit-LF formal evidence, updates the changelog,
