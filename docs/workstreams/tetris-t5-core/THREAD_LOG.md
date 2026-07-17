@@ -361,3 +361,123 @@ changelog, T3/T4 evidence, or QA archive was edited.
 - Push: not performed; coordinator owns QA integration and push decisions.
 - Next: create one candidate commit and hand the exact SHA to independent read-only
   Core QA before any frontend integration or push decision.
+
+## 2026-07-17 — LEGAL AUTHORED ENDGAMES CANDIDATE READY
+
+- Task: `TETRIS-T5-PUZZLE-AUTHORED-ENDGAMES-009`
+- Branch: `codex/tetris-recovery`
+- Writer base SHA: `50be21d70abab887051b85d412a102f0b77eb9d2`
+- Core checkpoint A: `ee0d996f7309ead46654fc76bc2855f4c2ea73b6`
+  (`feat(puzzle): add legal authored endgame search`)
+- Core checkpoint B: `2d282b6796072c6fcd0d031c474f640c987c77a1`
+  (`feat(puzzle): author fifteen legal endgame setups`)
+- Integrated product/source SHA after the separately owned Slice J-R fixture migration:
+  `26ef004dc4ab11de8caeee6605bbe21044c5d950`.
+- Final HEAD also contains runtime's log-only checkpoint `aab0dc9`; it changes no
+  product, Core, reference, or verifier path.
+
+### Exact Core paths
+
+- Checkpoint A changes only
+  `docs/workstreams/tetris-t5-core/search-puzzles.mjs`.
+- Checkpoint B changes only:
+  - `src/game/core/puzzles.ts`;
+  - `src/game/core/puzzles.test.ts`;
+  - `src/game/core/puzzleCampaign.test.ts`;
+  - `docs/workstreams/tetris-t5-core/build-puzzle-references.test.ts`;
+  - `docs/workstreams/tetris-t5-core/puzzle-references.json`.
+- This final documentation checkpoint changes only
+  `docs/workstreams/tetris-t5-core/THREAD_LOG.md`.
+
+### Delivered authored-endgame contract
+
+- Removed `BOARD_COLOR_SALT`, `colorizeBoardRows`, random hole excavation, and every
+  per-cell color draw from production Puzzle definition authority.
+- Each level now owns a frozen separate setup seed and 16–22 explicit
+  `{ type, rotation, x }` placements. Production reconstructs the board through the
+  ordinary board/piece legality functions: each setup type matches the next setup-bag
+  draw, landing `y` is derived by hard drop, and every setup lock is zero-clear with no
+  top-out or hidden occupancy.
+- The fifteen setup counts are
+  `20, 20, 19, 20, 20, 21, 20, 22, 20, 21, 21, 19, 16, 22, 20`.
+  Every final board uses all seven materials; each same-material connected component
+  is exactly one canonical four-cell tetromino and same-material source pieces never
+  share an orthogonal edge.
+- The thirty public-dispatch completion routes have lock counts
+  `35/35, 35/35, 41/36, 35/35, 35/35, 39/39, 30/40, 38/38, 35/35,
+  34/34, 39/39, 36/36, 39/39, 33/38, 35/35`.
+  All retain automatic gravity and an indefinitely replenishing gameplay seven-bag.
+- Paired first-divergence locks are
+  `1, 2, 2, 3, 5, 1, 4, 3, 2, 1, 1, 1, 2, 1, 2`; paired canonical board-hash
+  divergence counts are
+  `34, 33, 35, 32, 30, 38, 27, 35, 33, 32, 38, 35, 37, 33, 33`.
+  Thus route diversity is real state divergence, not only a different command spelling.
+- Search and reference output keep `landingY` only as diagnostic evidence. Production
+  setup and route placements contain only the authored type/rotation/x contract.
+
+### Reference identity and L7/L13 audit
+
+- `docs/workstreams/tetris-t5-core/puzzle-references.json` is 263,980 bytes, contains
+  15 levels / 30 routes, has 11,723 LF bytes and zero CRLF pairs, and hashes to SHA-256
+  `4c8f9fac3451b2e888c5560126b75c5cd949c7e1a947f04274698e93c0171bec`.
+- Final pairwise occupancy Hamming minimum is 24 (L1/L15), above the required 20.
+- A prior L7/L13 candidate at direct Hamming 20 was discarded rather than weakening
+  the gate. The final pair is direct Hamming 40, horizontal-mirror Hamming 38,
+  vertical-mirror Hamming 144, and 180-degree Hamming 144.
+- L7 is a left-high terrace with multilayer central cavities: 20 setup locks and
+  30/40 completion locks. L13 is a right-side I cap with split vertical wells:
+  16 setup locks and 39/39 completion locks. Their distinct topology survives direct
+  and mirrored comparisons.
+
+### Search, generation, and targeted evidence
+
+- Search used at most two Node processes concurrently and wrote only ignored results
+  below `.local/tetris-t5-endgames/`. Failed candidates were discarded; no setup,
+  topology, route-length, route-diversity, or pairwise-distance threshold was lowered.
+- Initial bounded probe:
+  `node docs/workstreams/tetris-t5-core/search-puzzles.mjs --seed 1975562497 --setup-seed 2712847316 1 300 10000 0 20`
+  — PASS in 6,768 ms; 20 setup locks, 10 occupied rows, 9 row shapes, 4 density
+  classes, 9 covered columns, 11 buried holes, and two 35/40-lock routes.
+- The final verifier inputs were `.local/tetris-t5-endgames/level-01.json` through
+  `level-15.json`, with the intentionally replaced L13 input
+  `.local/tetris-t5-endgames/level-13-alt3.json`.
+- Environment-gated setup smoke with one result — PASS, 1 test / 1 skipped.
+- Full write-enabled builder with all fifteen final results — PASS, 1 test / 1 skipped;
+  it produced the signed reference identity above.
+- Targeted production convergence — PASS, 7 files / 65 tests; separate Puzzle-flow
+  convergence — PASS, 1 file / 2 tests.
+
+### Failed full-suite attempt and bounded Slice J-R resolution
+
+- The first post-Core-source `npm.cmd run test` attempt had one failure after
+  38 passed files / 1 skipped file and 251 passed tests / 2 skipped tests:
+  `src/game/runtime/qaScenario.test.ts` reported
+  `Puzzle challenge QA route expected Z, received none`.
+- Cause: `PUZZLE_CHALLENGE_QA_ROUTE` still contained the rejected pre-Slice-J route;
+  the failure did not invalidate the Core setup or route references. Core stopped
+  without touching runtime.
+- The separately bounded Slice J-R writer replaced only that frozen route in
+  `src/game/runtime/qaScenario.ts` and created source checkpoint
+  `26ef004dc4ab11de8caeee6605bbe21044c5d950`. Its focused runtime suite passed before
+  this Core owner resumed the final sequence.
+
+### One green final sequence on source SHA `26ef004`
+
+- `npm.cmd run typecheck` — PASS.
+- `npm.cmd run test` — PASS, 39 files / 1 skipped file and 252 tests / 2 skipped
+  tests. The jsdom `HTMLCanvasElement.getContext()` notice was non-failing test-environment
+  output.
+- `npm.cmd run build` — PASS; Vite transformed 739 modules and emitted the production
+  bundle.
+- The complete explicit verifier set:
+  - set `VERIFY_PUZZLE_AUTHORING=1` and `VERIFY_PUZZLE_SETUP=1`;
+  - set `PUZZLE_AUTHORING_RESULTS` to the exact fifteen paths described above;
+  - run
+    `npm.cmd run test -- docs/workstreams/tetris-t5-core/build-puzzle-references.test.ts src/game/core/puzzleCampaign.test.ts`.
+  Result: PASS, 4 files / 49 tests, covering all 15 setup replays and all 30 signed
+  completion routes without rewriting the reference.
+- `git diff --check` — PASS before this log edit.
+- Blocker: none.
+- Push: not performed; coordinator owns independent QA integration and push.
+- Next: independent read-only Core/runtime QA reviews the exact contiguous Slice J +
+  J-R candidate range before Slice K or push.
