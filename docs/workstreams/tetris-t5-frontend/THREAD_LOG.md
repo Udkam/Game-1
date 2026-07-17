@@ -112,3 +112,93 @@ coordinator documents, changelog, T3/T4 evidence, and QA archives have no writer
 - Push: not performed; coordinator owns integration and push decisions.
 - Next: create one bounded writer candidate commit, then route its exact SHA to
   independent read-only final QA before changelog integration.
+
+## 2026-07-17 — CLEAN `TETRIS` REDESIGN CANDIDATE READY
+
+- Task: `TETRIS-T5-FRONTEND-REDESIGN-002`
+- Branch: `codex/tetris-recovery`
+- Base SHA: `137ff47a44036201a893af4f69f907bc29cf384d`
+- Candidate identity: the bounded writer commit created from this recorded tree; its
+  exact SHA is returned to the coordinator with this log.
+
+### Exact changed paths
+
+- `src/App.tsx`
+- `src/App.test.ts`
+- `src/styles.css`
+- `src/game/render/theme.ts`
+- `src/game/render/TetrisRenderer.ts`
+- `src/ui/ActionSheet.tsx`
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md`
+
+No writer diff exists in `index.html`, dependencies/configuration, Core/Puzzle data,
+`GameRuntime`, input/audio/storage, `puzzleProgress.ts`, `presentation.ts`, coordinator
+documents, changelog, historical evidence, or committed T5 evidence.
+
+### Delivered behavior
+
+- Replaced the rejected `青流方阵` / Aqua Blueprint page with plain-text `Tetris`, a
+  quiet light cyan/light-blue surface system, and three compact rounded horizontal
+  mode bands. Removed the glyph, English subtitle, route/coordinate/grid/tick language,
+  clipped corners, decorative numbering, and oversized marketing statement.
+- Kept the conditional home → Puzzle library → game lifecycle and all existing test
+  IDs. Home/library mount zero canvases; game mounts exactly one runtime/canvas.
+- Rebuilt Puzzle selection as six compact enabled rows plus one desktop detail panel.
+  At mobile width the selected row expands its own in-flow detail and start action;
+  there is no sticky/fixed selection surface or overlap.
+- Rebuilt gameplay as one coherent board/right-rail surface on desktop and a compact
+  statistics/Next band above the board on mobile. The right rail owns statistics,
+  factual mode copy, one graphical Next, and keyboard help; Pixi no longer duplicates
+  a `NEXT` title.
+- Replaced cut-corner, shared-dark-outline cells with per-hue rounded ceramic tiles:
+  a colored face, same-hue lower edge, and restrained top highlight. Board and Next
+  share the primitive; ghost cells use a complete rounded outline. Board CAD ticks and
+  route marks were removed.
+- Mapped canvas keyboard focus to the board frame rather than outlining the whole
+  transparent canvas. Restored the existing HTML skip link's intended off-screen-until-
+  focus behavior without changing `index.html`.
+- Changed the renderer canvas label and startup live message to plain `Tetris`.
+- `__TETRIS_D4_QA__.collect().state` now returns a structured clone. The direct test
+  mutates snapshot `status`, `active.x`, `queue[0]`, and `board[0][0]`, proves the
+  canonical state is byte-for-byte unchanged, and proves active/queue/board/row nested
+  identities are detached.
+- Existing accessible ActionSheet focus trap, Escape/cancel, focus restoration,
+  reduced-motion listener, pointer capture, keyboard/touch controls, all-level access,
+  endless Race copy/rules, and continuous Puzzle semantics remain unchanged.
+
+### Commands and evidence actually run
+
+- First `npm.cmd run test -- src/App.test.ts` — FAIL because the new test used the
+  non-production ID `broken-weir`; corrected to production level `t3r-shaft-01` without
+  touching Puzzle definitions.
+- Re-run `npm.cmd run test -- src/App.test.ts` — PASS, 1 file / 1 test.
+- Targeted `npm.cmd run test -- src/App.test.ts src/game/render/presentation.test.ts src/game/runtime/GameRuntime.test.ts`
+  — PASS, 7 files / 24 tests.
+- Intermediate `npm.cmd run typecheck` — PASS.
+- After the final source change, final `npm.cmd run typecheck` — PASS.
+- After the final source change, final `npm.cmd run test` — PASS, 38 files / 238 tests.
+- After the final source change, final `npm.cmd run build` — PASS; Vite transformed
+  739 modules.
+- Ran the required `develop-web-game` Playwright client from the installed skill with
+  its supplied `action_payloads.json`. It entered Marathon through the visible mode
+  control, performed real left/hard-drop input bursts, produced matching
+  `render_game_to_text` state, and captured canvas screenshots that were opened and
+  visually inspected before and after the focus-ring correction.
+- Ran a temporary Playwright page-smoke harness at 1440 × 900, 390 × 844, 360 × 800,
+  and 844 × 390. It used visible mode/level/start/touch controls and screenshots were
+  opened at every requested portrait/desktop size plus landscape. Final results:
+  console/page errors `[]`; no horizontal overflow; all three home entries fully
+  visible at 1440 × 900 and 390 × 844; home/library canvas count 0; game canvas count
+  1; gameplay minimum button size 44 × 44; board ratio exactly 1:2; mobile selected
+  detail gap 0 with normal in-flow expansion.
+- The temporary Playwright script, screenshots, output JSON, and dependency junctions
+  lived only under verified workspace path `.local/t5-redesign-smoke` and were removed
+  after inspection. No package manifest or lockfile changed.
+- `git diff --check` — PASS; Git line-ending notices only.
+
+### Handoff
+
+- Blocker: none.
+- Push: not performed.
+- Next: coordinator routes the exact candidate SHA to independent read-only visual,
+  lifecycle, snapshot-isolation, and scope QA before replacing obsolete T5 evidence.

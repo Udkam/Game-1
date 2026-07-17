@@ -89,7 +89,6 @@ export function ActionSheet({
         aria-describedby={descriptionId}
         tabIndex={-1}
       >
-        <span className="action-sheet__index" aria-hidden="true">FLOW / HOLD</span>
         <h2 id={titleId}>{title}</h2>
         <p id={descriptionId}>{description}</p>
         <div className="action-sheet__actions">{children}</div>

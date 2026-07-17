@@ -27,34 +27,30 @@ type ExitDestination = 'home' | 'puzzle-library';
 const APP_SEED = 0x51a1f00d;
 
 const MODE_COPY: Record<GameMode, {
-  index: string;
   label: string;
-  short: string;
   detail: string;
   action: string;
 }> = {
   marathon: {
-    index: '01',
     label: '马拉松模式',
-    short: '开放堆叠',
     detail: '分数与等级持续累积，堆叠到顶结束。',
-    action: '进入马拉松',
+    action: '开始游戏',
   },
   race: {
-    index: '02',
     label: '竞速模式',
-    short: '持续加速',
     detail: '速度持续提升｜无终点｜主动退出或堆叠到顶结束',
-    action: '进入竞速',
+    action: '开始竞速',
   },
   puzzle: {
-    index: '03',
     label: '解谜模式',
-    short: '清空棋盘',
     detail: '六个关卡全部开放，使用连续七袋方块寻找自己的清空路线。',
-    action: '查看关卡',
+    action: '选择关卡',
   },
 };
+
+export function cloneQaState(state: GameState): GameState {
+  return structuredClone(state);
+}
 
 function readPuzzleProgress(): PuzzleProgress {
   try {
@@ -98,11 +94,7 @@ function terminalCopy(state: GameState): { title: string; detail: string; succes
 function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <div className={`brand ${compact ? 'brand--compact' : ''}`} data-testid="brand">
-      <span className="brand__mark" aria-hidden="true"><i /><i /><i /></span>
-      <span className="brand__copy">
-        <strong>青流方阵</strong>
-        <small>AQUA ROUTE / 10 × 20</small>
-      </span>
+      <strong>Tetris</strong>
     </div>
   );
 }
@@ -112,12 +104,11 @@ function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
     <main id="game" className="landing-shell" data-testid="mode-home">
       <header className="landing-header">
         <Brand />
-        <span className="header-coordinate" aria-hidden="true">N 20 / E 10</span>
+        <span>键盘与触控均可操作</span>
       </header>
       <section className="landing-intro" aria-labelledby="home-title">
-        <p className="eyebrow">CHOOSE A FLOW / 选择路线</p>
-        <h1 id="home-title">让每一次下落，<br />走向不同的终点。</h1>
-        <p>三种规则各自进入。棋盘只在开局后生成，离开时完整收起。</p>
+        <h1 id="home-title">选择模式</h1>
+        <p>选择一种玩法开始。三种模式使用相同的移动与旋转操作。</p>
       </section>
       <section className="mode-gates" aria-label="选择游戏模式" data-testid="mode-list">
         {(Object.keys(MODE_COPY) as GameMode[]).map((mode) => {
@@ -130,21 +121,15 @@ function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
               data-testid={`enter-${mode}`}
               onClick={() => onEnter(mode)}
             >
-              <span className="mode-gate__index" aria-hidden="true">{item.index}</span>
               <span className="mode-gate__body">
-                <small>{item.short}</small>
                 <strong>{item.label}</strong>
                 <span>{item.detail}</span>
               </span>
-              <span className="mode-gate__action">{item.action}<b aria-hidden="true">↗</b></span>
+              <span className="mode-gate__action">{item.action}<b aria-hidden="true">→</b></span>
             </button>
           );
         })}
       </section>
-      <footer className="landing-footer">
-        <span>键盘与触控均可操作</span>
-        <span>连续七袋 · 确定性规则</span>
-      </footer>
     </main>
   );
 }
@@ -170,41 +155,56 @@ function PuzzleLibrary({
         <button className="text-action" type="button" onClick={onBack}>← 返回模式首页</button>
       </header>
       <section className="library-intro" aria-labelledby="library-title">
-        <div>
-          <p className="eyebrow">PUZZLE ARCHIVE / 关卡库</p>
-          <h1 id="library-title">从复杂堆叠中，找出你的清空路线。</h1>
+        <h1 id="library-title">解谜关卡</h1>
+        <p>六关全部开放。方块持续补充，操作与普通模式一致；目标是清空完整棋盘。</p>
+      </section>
+      <section className="library-content">
+        <div className="level-list" aria-label="六个可用解谜关卡" data-testid="level-list">
+          {CAMPAIGN_LEVELS.map((level) => {
+            const complete = progress.completedLevelIds.includes(level.id);
+            const selectedLevel = selectedId === level.id;
+            return (
+              <article className={`level-item ${selectedLevel ? 'level-item--selected' : ''}`} key={level.id}>
+                <button
+                  className="level-entry"
+                  type="button"
+                  data-testid="level-row"
+                  data-level-id={level.id}
+                  aria-pressed={selectedLevel}
+                  onClick={() => onSelect(level.id)}
+                >
+                  <span className="level-entry__number">{String(level.index).padStart(2, '0')}</span>
+                  <span className="level-entry__copy">
+                    <strong>{level.name}</strong>
+                    <small>{complete ? '已完成 · 可重玩' : '可直接进入'}</small>
+                  </span>
+                  <span className="level-entry__chevron" aria-hidden="true">›</span>
+                </button>
+                {selectedLevel && (
+                  <div className="level-inline-detail" aria-live="polite">
+                    <p>清空完整棋盘</p>
+                    <span>连续七袋方块 · 不限定唯一路线</span>
+                    <button className="primary-action" type="button" onClick={onStart}>开始这一关</button>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
-        <p>全部关卡开放。每局使用持续补充的确定性七袋序列，操作与普通模式一致，不限定唯一答案。</p>
+        <aside className="level-detail" aria-live="polite">
+          <span className="level-detail__count">{String(selected.index).padStart(2, '0')} / {String(selected.total).padStart(2, '0')}</span>
+          <div>
+            <small>当前选择</small>
+            <h2>{selected.name}</h2>
+          </div>
+          <dl>
+            <div><dt>目标</dt><dd>清空完整棋盘</dd></div>
+            <div><dt>方块</dt><dd>持续补充的七袋序列</dd></div>
+            <div><dt>规则</dt><dd>与普通模式一致，不限定唯一路线</dd></div>
+          </dl>
+          <button className="primary-action" type="button" onClick={onStart}>开始这一关</button>
+        </aside>
       </section>
-      <section className="level-grid" aria-label="六个可用解谜关卡" data-testid="level-list">
-        {CAMPAIGN_LEVELS.map((level) => {
-          const complete = progress.completedLevelIds.includes(level.id);
-          const selectedLevel = selectedId === level.id;
-          return (
-            <button
-              key={level.id}
-              className="level-entry"
-              type="button"
-              data-testid="level-row"
-              data-level-id={level.id}
-              aria-pressed={selectedLevel}
-              onClick={() => onSelect(level.id)}
-            >
-              <span className="level-entry__number">{String(level.index).padStart(2, '0')}</span>
-              <span className="level-entry__copy">
-                <small>{complete ? '已完成 · 可重玩' : '可直接进入'}</small>
-                <strong>{level.name}</strong>
-                <span>目标：清空完整棋盘</span>
-              </span>
-              <span className="level-entry__stream">连续七袋<b aria-hidden="true">→</b></span>
-            </button>
-          );
-        })}
-      </section>
-      <footer className="library-selection" aria-live="polite">
-        <span><small>当前选择</small><strong>{selected.index}/{selected.total} · {selected.name}</strong></span>
-        <button className="primary-action" type="button" onClick={onStart}>进入所选关卡</button>
-      </footer>
     </main>
   );
 }
@@ -310,7 +310,7 @@ function GameSession({
   const [runtime, setRuntime] = useState<GameRuntime | null>(null);
   const [state, setState] = useState<GameState>(() => createInitialState(APP_SEED, mode, mode === 'puzzle' ? puzzleId : undefined));
   const [exitOpen, setExitOpen] = useState(false);
-  const [liveMessage, setLiveMessage] = useState('青流方阵已开始。');
+  const [liveMessage, setLiveMessage] = useState('Tetris 已开始。');
 
   const focusBoard = useCallback(() => {
     requestAnimationFrame(() => hostRef.current?.querySelector('canvas')?.focus({ preventScroll: true }));
@@ -388,7 +388,7 @@ function GameSession({
         const buttons = [...document.querySelectorAll<HTMLElement>('button')].map((button) => button.getBoundingClientRect());
         return {
           screen: 'game',
-          state: runtime.getState(),
+          state: cloneQaState(runtime.getState()),
           renderer: runtime.getRendererSnapshot(),
           viewport: {
             width: window.innerWidth,
@@ -462,7 +462,6 @@ function GameSession({
         >← 模式首页</button>
         <div className="play-identity">
           <Brand compact />
-          <span aria-hidden="true">/</span>
           <h1 data-testid="current-mode">{MODE_COPY[state.mode].label}</h1>
           {level && <small>{level.index}/{level.total} · {level.name}</small>}
         </div>
@@ -479,16 +478,18 @@ function GameSession({
 
       <section className="game-arena" data-testid="game-cluster" aria-label={`${MODE_COPY[state.mode].label}游戏区`}>
         <div ref={hostRef} className="canvas-host" data-testid="canvas-host" />
-        <aside className="info-rail" data-testid="context-top">
-          <p className="rail-label">LIVE DATA / 本局</p>
-          <RunStats state={state} />
-          <p className="mode-rule">{MODE_COPY[state.mode].detail}</p>
-        </aside>
         <section className="board-frame" data-testid="board-frame" aria-label="10 × 20 游戏棋盘" />
-        <aside className="preview-rail" data-testid="side-rail">
-          <p className="rail-label">ROUTE / NEXT</p>
-          <div className="next-slot" data-testid="next-slot" aria-label="下一个方块" />
-          <p className="keyboard-map">← → 移动<br />↑ 旋转<br />↓ 快速下落<br />空格 直接落底</p>
+        <aside className="game-side-panel" data-testid="side-rail">
+          <div className="info-rail" data-testid="context-top">
+            <p className="rail-label">本局数据</p>
+            <RunStats state={state} />
+            <p className="mode-rule">{MODE_COPY[state.mode].detail}</p>
+          </div>
+          <div className="preview-rail">
+            <p className="rail-label">下一个</p>
+            <div className="next-slot" data-testid="next-slot" aria-label="下一个方块" />
+          </div>
+          <p className="keyboard-map"><b>键盘</b><span>← → 移动</span><span>↑ 旋转</span><span>↓ 快速下落</span><span>空格 直接落底</span></p>
         </aside>
       </section>
 
@@ -573,7 +574,6 @@ export default function App() {
 
   return (
     <div className="app">
-      <div className="route-line" aria-hidden="true"><i /><i /><i /></div>
       {screen === 'home' && <ModeHome onEnter={enterMode} />}
       {screen === 'puzzle-library' && (
         <PuzzleLibrary
