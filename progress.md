@@ -240,3 +240,21 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   Grotesk` + `Noto Sans SC` through CSS v2 with `display=swap` and system fallbacks.
   It keeps `Tetris` as plain text and leaves `index.html`, dependencies, Core,
   runtime, input/audio/storage, and formal evidence unchanged.
+
+## 2026-07-17 — cohesive dimensional tetromino repair added
+
+- The user's gameplay screenshot shows that the accepted colors are still rendered as
+  isolated flat tiles: every mino retains a complete perimeter and a wide well gap,
+  so a four-cell piece does not read as one shape.
+- Slice K-R now also owns a renderer-only cohesive component pass. Same-material
+  orthogonal neighbors bridge the gap, hide full internal outlines, and retain at most
+  a hairline seam. Active/Next/Ghost use their exact canonical four-cell grouping;
+  locked boards group same-material neighbors without adding ownership to Core.
+- Dimensionality is limited to one directional mineral bevel: low-alpha signal on
+  exposed top/left edges and the material dark edge on bottom/right edges. Exact colors
+  remain frozen and plastic gloss, white highlights, glow, blur, glass, double rings,
+  and detached unit shadows remain forbidden.
+- Canonical Puzzle silhouettes close their old cell gaps while keeping at most one SVG
+  path per piece type. The expanded allowlist adds only App silhouette source/tests and
+  theme/renderer presentation paths; engine, board data, runtime, `index.html`,
+  dependencies, coordinator evidence, and other product subsystems stay unchanged.

@@ -11,9 +11,9 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **active — Slice K candidate `9c128ab` is rejected by independent QA; bounded
-Slice K-R typography, divider, responsive-copy, and motion repair is the sole active
-product boundary**
+Status: **active — Slice K candidate `9c128ab` is rejected; bounded Slice K-R now owns
+typography, dividers, responsive copy/motion, and the user's cohesive dimensional
+tetromino repair as the sole active product boundary**
 
 ## User-visible problems to resolve
 
@@ -761,8 +761,11 @@ coordinated mineral palette/material remain fixed.
 
 The repair writer may change only:
 
+- `src/App.tsx` only for canonical silhouette cohesion;
 - `src/styles.css`;
 - `src/App.test.ts` only for direct visible-copy/structure regression coverage;
+- `src/game/render/theme.ts`;
+- `src/game/render/theme.test.ts`;
 - `src/game/render/TetrisRenderer.ts`;
 - `src/game/render/presentation.ts`;
 - `src/game/render/presentation.test.ts`;
@@ -787,14 +790,28 @@ Slice K-R acceptance:
 - reduce `surface-in` to at most 4 px over 180 ms. Cap the ordinary line-clear tonal
   sweep to nine 60 Hz presentation ticks (150 ms) without changing Core clear delay;
   reduced motion must show no positional or sweep transition;
+- replace isolated cell plates with cohesive tetromino components. Orthogonally
+  adjacent same-material cells bridge the old gap and do not retain full internal
+  outlines; any seam stays at or below 0.35 px / 22% alpha. Active, Next, Ghost, and
+  locked-board rendering use the same grouping logic, while the canonical silhouette
+  substantially closes its per-cell gaps without exceeding one path per piece type;
+- add only the frozen directional mineral relief: a 0.75–1.25 px low-alpha signal
+  bevel on exposed top/left edges and the material dark edge on exposed bottom/right
+  edges. Preserve the exact 28 colors and prohibit white highlight bars, inner rings,
+  double outlines, glow, blur, glass, detached shadows, or plastic/candy gloss;
+- test the grouping helper with canonical I/O/T/S/Z/J/L cells, proving internal edges
+  are suppressed and the Ghost perimeter has no internal cell boxes. Visually inspect
+  active, locked, Next, all fifteen authored boards, and post-line-clear fragments at
+  desktop and mobile sizes;
 - preserve the exact palette/material values, concise copy, `经典`, stable selectors,
   fifteen enabled levels, first/eighth/fifteenth binding, 44 px controls, 12/14/18 px
   floors, one canvas/zero DOM cells, lifecycle, endless Race, and continuous Puzzle;
 - run focused App/presentation/renderer tests while editing. After the final product
   source change, run one typecheck, one complete suite, one production build, the
   prescribed action client, and a fresh five-viewport home/library/game matrix with
-  original-detail inspection. Use one bounded source checkpoint plus a log-only
-  checkpoint; do not push.
+  original-detail inspection. Use bounded linear source checkpoints if the cohesive
+  renderer and typography/layout claims together exceed 500 hand-authored modified
+  lines, plus a log-only checkpoint; do not push.
 
 Independent static/functional and visual/browser QA must accept the exact K-R source
 checkpoint before formal evidence, changelog integration, or push.

@@ -32,6 +32,12 @@ Fonts pairing and rejects broken statistic dividers. This does not authorize a l
 font or copied wordmark: `Tetris` remains editable plain text, while typography and
 numeric rhythm become part of the surrounding original interface.
 
+The user's subsequent board review rejects the remaining isolated-tile appearance.
+Four-cell tetrominoes must read as cohesive dimensional forms rather than four small
+plates with four complete outlines. The permitted depth is a restrained machined
+mineral relief; this supersedes the earlier flat-cell edge rule but does not restore
+plastic gloss, glass, glow, detached shadow, or candy bevels.
+
 The user's later 2026-07-17 review also rejects the complete second frontend
 presentation at `c9135f3252abfa3bd6d7e94c5eb2e11fc3c72a18`. It is not a visual baseline
 that can be accepted through local polish. The new authority is light neo-tech
@@ -319,20 +325,32 @@ and error states always add a higher-contrast or non-color cue.
   spacing, and tone rather than repeated shadows.
 - Primary surfaces use 12–18 px radii. Buttons, action sheets, the board, and cells
   have no clipped corners; nested large pill/card stacks are forbidden.
-- Every mino is a `matte anodized plate`: a 135-degree two-stop field with no more
-  than about 8% lightness difference, 1.25–1.75 px corner radius, and one 0.75–1 px
-  same-hue dark edge. Locked cells are flat and shadowless. The style has no aura,
-  blur filter, white highlight bar, lower lip, full double outline, jelly gloss,
-  ceramic/plastic bevel, embossing, detached unit shadow, universal black outline,
-  cut corner, or mineral inset.
-- The existing `innerEdge` material field is semantically the lighter `signal` color.
-  Active cells replace the locked dark edge with that single signal edge; they do not
-  add a second perimeter. Ghost cells have zero fill and one complete 1 px signal
-  outline at about 45% alpha. The lock response is only an 80–100 ms low-alpha fill
-  change and never draws a second border.
+- Every tetromino uses a joined `matte machined mineral` face: the existing 135-degree
+  two-stop field remains within about 8% lightness difference, but orthogonally
+  adjacent same-material cells bridge their gap and suppress complete internal
+  borders. An optional internal seam is at most 0.35 px and 22% alpha. Different
+  materials retain a narrow well-colored separation so dense残局 remain readable.
+- Depth comes from one outer directional bevel only: exposed top/left edges use the
+  existing lighter `innerEdge` signal at 22–32% alpha, while exposed bottom/right
+  edges use the material dark edge at 72–92% alpha. The bevel is 0.75–1.25 px and
+  follows the joined component perimeter. It is not a second full outline and adds no
+  white specular bar, lower lip, emboss texture, glow, blur, glass, detached shadow,
+  universal black stroke, or plastic/candy highlight.
+- Active and Next pieces group their exact four canonical cells. Active replaces the
+  locked outer contour with one higher-contrast signal contour; it never adds a second
+  perimeter. Locked-board grouping joins only orthogonally adjacent cells with the
+  same material. Authored Puzzle setup guarantees those initial same-material
+  components are exact source tetrominoes; later line clears may naturally split a
+  contour and same-material contacts may naturally merge it without changing Core.
+- Ghost uses zero fill and one complete 1 px signal outline around the whole active
+  tetromino perimeter at about 45% alpha, with no four independent cell boxes. The
+  lock response remains an 80–100 ms low-alpha face change and never draws a second
+  border.
 - Board, Next, canonical silhouettes, active cells, and locked cells use the same
-  exact material mapping. Board and Next use the same Pixi drawing primitive; the
-  silhouette may simplify the material to fill plus edge but may not remap colors.
+  exact material mapping and cohesive component principle. Board and Next share the
+  same Pixi group primitive. The silhouette keeps at most one path per piece type,
+  substantially closes the old per-cell gaps, and uses only a hairline seam so the
+  tetromino geometry reads before the individual grid units.
 - The coordinated mineral mapping below deliberately differs from the standard
   commercial piece-color assignment. Garnet, sea-pine, ochre, storm blue, moss,
   rock violet, and lake blue share one restrained value/chroma envelope; no one piece
