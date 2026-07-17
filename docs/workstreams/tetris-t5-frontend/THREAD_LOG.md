@@ -202,3 +202,29 @@ documents, changelog, historical evidence, or committed T5 evidence.
 - Push: not performed.
 - Next: coordinator routes the exact candidate SHA to independent read-only visual,
   lifecycle, snapshot-isolation, and scope QA before replacing obsolete T5 evidence.
+
+## 2026-07-17 — CLEAN `TETRIS` REDESIGN REJECTED
+
+- Task: `TETRIS-T5-FRONTEND-REDESIGN-002`
+- Candidate: `c9135f3252abfa3bd6d7e94c5eb2e11fc3c72a18`.
+- Result: the user rejected the complete presentation. It is not a pending polish
+  candidate and no narrow font/copy fix is authorized against its visual system.
+- Independent review additionally recorded 8–11 px mobile statistic text and legacy
+  `路线` copy. They are replacement-slice regression requirements, not permission to
+  retain the rounded mode bands or ceramic cell material.
+- Retained behavioral baseline: conditional lifecycle, exact canvas teardown,
+  accessibility and input behavior, rule binding, and detached nested QA snapshots.
+- Push: not performed.
+- Next: visual authority transfers to Slice E after the coordinator contract commit.
+
+## 2026-07-17 — LIGHT NEO-TECH MINIMAL SLICE QUEUED
+
+- Task: `TETRIS-T5-FRONTEND-TECH-MINIMAL-003`.
+- Product baseline: `c9135f3252abfa3bd6d7e94c5eb2e11fc3c72a18`.
+- Direction: original light cyan/light-blue neo-tech minimal interface, one continuous
+  1+2 mode surface, one-shot phase seam, coherent Puzzle/game surfaces, and flat
+  edge-lit plate Board/Next cells.
+- Exact allowed and forbidden paths are frozen in `CURRENT_TASK.md` Slice E.
+- Status: waits for the coordinator documentation commit; no source edit or push is
+  authorized before that commit.
+- Next: one bounded writer implements Slice E and records exact final gates/evidence.

@@ -55,3 +55,21 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   game interface, compact layered mode entrances, a non-overlapping Puzzle selector,
   one coherent game surface, and rounded ceramic cells. No commercial logo, font,
   product layout, or trade dress may be copied.
+
+## 2026-07-17 — second T5 frontend rejected
+
+- Candidate `c9135f3252abfa3bd6d7e94c5eb2e11fc3c72a18` completed typecheck,
+  38 files / 238 tests, build, and bounded browser smoke, but the user rejected its
+  full visual presentation rather than requesting a local polish pass.
+- Independent review also found computed mobile statistic text at only 8–11 px and
+  legacy player-facing `路线` copy. Those findings move into the replacement contract;
+  the rejected rounded mode bands and ceramic cells are not repaired in place.
+- Latest authority is light neo-tech minimal: one continuous 1+2 mode surface, precise
+  thin edges, one cyan-to-blue phase seam, coherent Puzzle/game surfaces, and flat
+  edge-lit plate cells. Grids, CAD/scanlines, decorative technical text, toy/glass
+  styling, marketing heroes, settings lists, floating-card piles, and looping
+  ornament are forbidden.
+- The accepted endless Race, continuous seven-bag Puzzle, all-level access,
+  lifecycle/accessibility behavior, and detached QA snapshot regression remain fixed.
+- Next: commit the Slice E contract, authorize one bounded frontend writer, then route
+  the exact candidate through independent QA before evidence, changelog, or push.
