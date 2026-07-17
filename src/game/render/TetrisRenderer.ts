@@ -1,7 +1,6 @@
 import { Application, Container, FillGradient, Graphics, type Ticker } from 'pixi.js';
 import {
   BOARD_WIDTH,
-  LINE_CLEAR_DELAY_TICKS,
   PIECE_SHAPES,
   VISIBLE_HEIGHT,
   VISIBLE_START_ROW,
@@ -13,7 +12,14 @@ import {
   type PieceType,
 } from '../core';
 import { CELL_STYLE, COLORS, PIECE_MATERIALS } from './theme';
-import { approachPresentationPoint, lineClearCellProgress, nextPreviewPiece } from './presentation';
+import {
+  approachPresentationPoint,
+  exposedCellEdges,
+  lineClearPresentationProgress,
+  nextPreviewPiece,
+  orthogonalCellComponents,
+  type CellEdge,
+} from './presentation';
 
 interface RenderOptions {
   reducedMotion: boolean;
@@ -49,6 +55,18 @@ interface LockPulse {
   elapsed: number;
   duration: number;
   piece: PieceType;
+}
+
+interface GroupDrawOptions {
+  originX: number;
+  originY: number;
+  unit: number;
+  offsetX?: number;
+  offsetY?: number;
+  scale?: number;
+  active?: boolean;
+  ghost?: boolean;
+  faceColor?: number;
 }
 
 export interface RendererSnapshot {
@@ -249,40 +267,40 @@ export class TetrisRenderer {
     const graphics = this.pieceGraphics;
     graphics.clear();
     let visibleLockedCells = 0;
+    const lockedByType = new Map<PieceType, Cell[]>();
 
     state.board.forEach((row, boardY) => {
       if (boardY < VISIBLE_START_ROW) return;
       row.forEach((cell, x) => {
         if (!cell) return;
         visibleLockedCells += 1;
-        const clearProgress = state.phase === 'line-clear' && state.pendingClearRows.includes(boardY)
-          ? lineClearCellProgress(state.phaseTicks / LINE_CLEAR_DELAY_TICKS, x, BOARD_WIDTH)
-          : 0;
-        this.drawCell(
-          graphics,
-          layout,
-          x,
-          boardY - VISIBLE_START_ROW,
-          cell,
-          1 - clearProgress * 0.92,
-          false,
-          0,
-          0,
-          false,
-          this.options.reducedMotion ? 1 : 1 - clearProgress * 0.72,
-        );
+        const cells = lockedByType.get(cell) ?? [];
+        cells.push({ x, y: boardY - VISIBLE_START_ROW });
+        lockedByType.set(cell, cells);
       });
     });
+    for (const [type, cells] of lockedByType) {
+      this.drawCellGroups(graphics, cells, type, 1, {
+        originX: layout.x,
+        originY: layout.y,
+        unit: layout.cell,
+      });
+    }
 
     if (this.trail && !this.options.reducedMotion) {
       const progress = Math.min(1, this.trail.elapsed / this.trail.duration);
       const echoCount = Math.min(6, Math.max(1, this.trail.distance));
       for (let echo = 1; echo <= echoCount; echo += 1) {
         const alpha = (1 - progress) * (0.16 / echo);
-        for (const cell of this.trail.cells) {
-          const y = cell.y - VISIBLE_START_ROW - echo * Math.max(1, Math.floor(this.trail.distance / echoCount));
-          if (y >= 0) this.drawCell(graphics, layout, cell.x, y, this.trail.piece, alpha, false, 0, 0);
-        }
+        const cells = this.trail.cells
+          .map((cell) => ({ x: cell.x, y: cell.y - VISIBLE_START_ROW }))
+          .filter((cell) => cell.y >= 0);
+        this.drawCellGroups(graphics, cells, this.trail.piece, alpha, {
+          originX: layout.x,
+          originY: layout.y,
+          unit: layout.cell,
+          offsetY: -echo * Math.max(1, Math.floor(this.trail.distance / echoCount)) * layout.cell,
+        });
       }
     }
 
@@ -294,12 +312,20 @@ export class TetrisRenderer {
       ghostCells.splice(0, ghostCells.length, ...cellsForPiece(state.active).map((cell) => ({ x: cell.x, y: cell.y + dropDistance(state) })));
     }
 
-    for (const cell of ghostCells) {
-      if (cell.y < VISIBLE_START_ROW) continue;
-      const ghostOffsetX = this.presentation && state.active
-        ? (this.presentation.x - state.active.x) * layout.cell
-        : 0;
-      this.drawCell(graphics, layout, cell.x, cell.y - VISIBLE_START_ROW, state.active!.type, 0.82, true, ghostOffsetX, 0);
+    const visibleGhostCells = ghostCells
+      .filter((cell) => cell.y >= VISIBLE_START_ROW)
+      .map((cell) => ({ x: cell.x, y: cell.y - VISIBLE_START_ROW }));
+    const ghostOffsetX = this.presentation && state.active
+      ? (this.presentation.x - state.active.x) * layout.cell
+      : 0;
+    if (state.active) {
+      this.drawCellGroups(graphics, visibleGhostCells, state.active.type, 0.82, {
+        originX: layout.x,
+        originY: layout.y,
+        unit: layout.cell,
+        offsetX: ghostOffsetX,
+        ghost: true,
+      });
     }
 
     const offsetX = this.presentation && state.active && !this.options.reducedMotion
@@ -309,20 +335,23 @@ export class TetrisRenderer {
       ? (this.presentation.y - state.active.y) * layout.cell
       : 0;
     const rotationScale = this.options.reducedMotion ? 1 : 1 + this.rotationPulse * 0.035;
-    for (const cell of activeCells) {
-      if (cell.y < VISIBLE_START_ROW) continue;
-      this.drawCell(
+    if (state.active) {
+      this.drawCellGroups(
         graphics,
-        layout,
-        cell.x,
-        cell.y - VISIBLE_START_ROW,
-        state.active!.type,
+        activeCells
+          .filter((cell) => cell.y >= VISIBLE_START_ROW)
+          .map((cell) => ({ x: cell.x, y: cell.y - VISIBLE_START_ROW })),
+        state.active.type,
         1,
-        false,
-        offsetX,
-        offsetY,
-        true,
-        rotationScale,
+        {
+          originX: layout.x,
+          originY: layout.y,
+          unit: layout.cell,
+          offsetX,
+          offsetY,
+          active: true,
+          scale: rotationScale,
+        },
       );
     }
 
@@ -331,29 +360,16 @@ export class TetrisRenderer {
     this.effectGraphics.alpha = this.options.modeSwitch ? 0.2 : 1;
   }
 
-  private drawCell(
+  private drawCellGroups(
     graphics: Graphics,
-    layout: BoardLayout,
-    gridX: number,
-    gridY: number,
+    cells: readonly Cell[],
     type: PieceType,
     alpha: number,
-    ghost: boolean,
-    offsetX: number,
-    offsetY: number,
-    active = false,
-    scale = 1,
+    options: GroupDrawOptions,
   ): void {
-    const gap = Math.max(CELL_STYLE.gapMin, layout.cell * CELL_STYLE.gapRatio);
-    const size = (layout.cell - gap * 2) * scale;
-    const scaleInset = (layout.cell - gap * 2 - size) / 2;
-    const x = layout.x + gridX * layout.cell + gap + scaleInset + offsetX;
-    const y = layout.y + gridY * layout.cell + gap + scaleInset + offsetY;
-    if (ghost) {
-      this.drawGhostCell(graphics, x, y, size, type, alpha);
-      return;
+    for (const component of orthogonalCellComponents(cells)) {
+      this.drawCellComponent(graphics, component, type, alpha, options);
     }
-    this.drawPlateCell(graphics, x, y, size, type, alpha, active);
   }
 
   private gradientFor(type: PieceType): FillGradient {
@@ -374,67 +390,132 @@ export class TetrisRenderer {
     return gradient;
   }
 
-  private drawPlateCell(
+  private drawCellComponent(
     graphics: Graphics,
-    x: number,
-    y: number,
-    size: number,
+    cells: readonly Cell[],
     type: PieceType,
     alpha: number,
-    active: boolean,
+    options: GroupDrawOptions,
   ): void {
+    if (!cells.length) return;
+    const scale = options.scale ?? 1;
+    const offsetX = options.offsetX ?? 0;
+    const offsetY = options.offsetY ?? 0;
+    const minX = Math.min(...cells.map((cell) => cell.x));
+    const maxX = Math.max(...cells.map((cell) => cell.x));
+    const minY = Math.min(...cells.map((cell) => cell.y));
+    const maxY = Math.max(...cells.map((cell) => cell.y));
+    const centerX = options.originX + ((minX + maxX + 1) * options.unit) / 2;
+    const centerY = options.originY + ((minY + maxY + 1) * options.unit) / 2;
+    const scaledUnit = options.unit * scale;
+    const baseGap = Math.max(0.7, Math.min(CELL_STYLE.gapMin, options.unit * CELL_STYLE.gapRatio));
+    const ghostInset = options.ghost
+      ? Math.max(CELL_STYLE.ghostInsetMin, options.unit * CELL_STYLE.ghostInsetRatio)
+      : 0;
+    const gap = (baseGap + ghostInset) * scale;
+    const size = scaledUnit - gap * 2;
     const material = PIECE_MATERIALS[type];
     const radius = Math.max(CELL_STYLE.radiusMin, Math.min(CELL_STYLE.radiusMax, size * CELL_STYLE.radiusRatio));
     const borderWidth = Math.max(
       CELL_STYLE.edgeWidthMin,
       Math.min(CELL_STYLE.edgeWidthMax, size * CELL_STYLE.edgeWidthRatio),
     );
-    graphics
-      .roundRect(x, y, size, size, radius)
-      .fill({ fill: this.gradientFor(type), alpha })
-      .stroke({
-        color: active ? material.innerEdge : material.edge,
-        alpha: active ? Math.min(1, alpha) : Math.min(.92, alpha * .9),
-        width: borderWidth,
-      });
+    const occupied = new Set(cells.map((cell) => `${cell.x},${cell.y}`));
+    const geometry = exposedCellEdges(cells).map(({ cell, exposed }) => {
+      const baseX = options.originX + cell.x * options.unit;
+      const baseY = options.originY + cell.y * options.unit;
+      return {
+        cell,
+        exposed,
+        x: centerX + (baseX - centerX) * scale + offsetX + gap,
+        y: centerY + (baseY - centerY) * scale + offsetY + gap,
+      };
+    });
+
+    if (!options.ghost) {
+      for (const entry of geometry) graphics.roundRect(entry.x, entry.y, size, size, radius);
+      for (const entry of geometry) {
+        if (!entry.exposed.right) graphics.rect(entry.x + size, entry.y, gap * 2, size);
+        if (!entry.exposed.bottom) graphics.rect(entry.x, entry.y + size, size, gap * 2);
+        if (
+          !entry.exposed.right
+          && !entry.exposed.bottom
+          && occupied.has(`${entry.cell.x + 1},${entry.cell.y + 1}`)
+        ) {
+          graphics.rect(entry.x + size, entry.y + size, gap * 2, gap * 2);
+        }
+      }
+      if (options.faceColor === undefined) graphics.fill({ fill: this.gradientFor(type), alpha });
+      else graphics.fill({ color: options.faceColor, alpha });
+      if (options.faceColor !== undefined) return;
+    }
+
+    const segments = new Map<CellEdge, Array<[number, number, number, number]>>([
+      ['top', []], ['right', []], ['bottom', []], ['left', []],
+    ]);
+    for (const entry of geometry) {
+      const left = entry.x;
+      const top = entry.y;
+      const right = entry.x + size;
+      const bottom = entry.y + size;
+      const corner = options.ghost ? 0 : radius * 0.55;
+      if (entry.exposed.top) segments.get('top')!.push([
+        left + (entry.exposed.left ? corner : -gap), top,
+        right + (entry.exposed.right ? -corner : gap), top,
+      ]);
+      if (entry.exposed.right) segments.get('right')!.push([
+        right, top + (entry.exposed.top ? corner : -gap),
+        right, bottom + (entry.exposed.bottom ? -corner : gap),
+      ]);
+      if (entry.exposed.bottom) segments.get('bottom')!.push([
+        right + (entry.exposed.right ? -corner : gap), bottom,
+        left + (entry.exposed.left ? corner : -gap), bottom,
+      ]);
+      if (entry.exposed.left) segments.get('left')!.push([
+        left, bottom + (entry.exposed.bottom ? -corner : gap),
+        left, top + (entry.exposed.top ? corner : -gap),
+      ]);
+    }
+
+    if (options.ghost) {
+      this.strokeSegments(graphics, [...segments.values()].flat(), material.innerEdge,
+        Math.min(CELL_STYLE.ghostStrokeAlpha, alpha), CELL_STYLE.ghostStrokeWidth);
+    } else if (options.active) {
+      this.strokeSegments(graphics, [...segments.values()].flat(), material.innerEdge, Math.min(1, alpha), borderWidth);
+    } else {
+      this.strokeSegments(graphics, [...segments.get('top')!, ...segments.get('left')!], material.innerEdge,
+        Math.min(CELL_STYLE.reliefSignalAlpha, alpha), borderWidth);
+      this.strokeSegments(graphics, [...segments.get('bottom')!, ...segments.get('right')!], material.edge,
+        Math.min(CELL_STYLE.reliefDarkAlpha, alpha), borderWidth);
+    }
   }
 
-  private drawGhostCell(
+  private strokeSegments(
     graphics: Graphics,
-    x: number,
-    y: number,
-    size: number,
-    type: PieceType,
+    segments: ReadonlyArray<readonly [number, number, number, number]>,
+    color: number,
     alpha: number,
+    width: number,
   ): void {
-    const material = PIECE_MATERIALS[type];
-    const inset = Math.max(CELL_STYLE.ghostInsetMin, size * CELL_STYLE.ghostInsetRatio);
-    const ghostSize = size - inset * 2;
-    const radius = Math.max(
-      CELL_STYLE.radiusMin,
-      Math.min(CELL_STYLE.radiusMax, ghostSize * CELL_STYLE.radiusRatio),
-    );
-    graphics
-      .roundRect(x + inset, y + inset, ghostSize, ghostSize, radius)
-      .stroke({
-        color: material.innerEdge,
-        alpha: Math.min(CELL_STYLE.ghostStrokeAlpha, alpha),
-        width: CELL_STYLE.ghostStrokeWidth,
-      });
+    if (!segments.length || alpha <= 0) return;
+    for (const [startX, startY, endX, endY] of segments) {
+      graphics.moveTo(startX, startY).lineTo(endX, endY);
+    }
+    graphics.stroke({ color, alpha, width });
   }
 
   private drawEffects(state: GameState, layout: BoardLayout): void {
     const graphics = this.effectGraphics;
     graphics.clear();
-    if (state.phase === 'line-clear') {
-      const progress = Math.min(1, state.phaseTicks / LINE_CLEAR_DELAY_TICKS);
+    if (state.phase === 'line-clear' && !this.options.reducedMotion) {
+      const progress = lineClearPresentationProgress(state.phaseTicks, false);
       const width = layout.width * Math.sin(progress * Math.PI);
       for (const row of state.pendingClearRows) {
         if (row < VISIBLE_START_ROW) continue;
         const y = layout.y + (row - VISIBLE_START_ROW) * layout.cell;
         graphics
           .rect(layout.x + (layout.width - width) / 2, y + layout.cell * 0.12, width, layout.cell * 0.76)
-          .fill({ color: COLORS.classic, alpha: this.options.reducedMotion ? 0.28 : 0.18 + progress * 0.4 });
+          .fill({ color: COLORS.classic, alpha: 0.18 + progress * 0.4 });
       }
     }
 
@@ -442,19 +523,20 @@ export class TetrisRenderer {
       const progress = Math.min(1, this.lockPulse.elapsed / this.lockPulse.duration);
       const material = PIECE_MATERIALS[this.lockPulse.piece];
       const alpha = (1 - easeOutCubic(progress)) * CELL_STYLE.lockFillAlpha;
-      for (const cell of this.lockPulse.cells) {
-        if (cell.y < VISIBLE_START_ROW) continue;
-        const x = layout.x + cell.x * layout.cell + layout.cell * 0.06;
-        const y = layout.y + (cell.y - VISIBLE_START_ROW) * layout.cell + layout.cell * 0.06;
-        const size = layout.cell * 0.88;
-        const radius = Math.max(
-          CELL_STYLE.radiusMin,
-          Math.min(CELL_STYLE.radiusMax, size * CELL_STYLE.radiusRatio),
-        );
-        graphics
-          .roundRect(x, y, size, size, radius)
-          .fill({ color: material.innerEdge, alpha });
-      }
+      this.drawCellGroups(
+        graphics,
+        this.lockPulse.cells
+          .filter((cell) => cell.y >= VISIBLE_START_ROW)
+          .map((cell) => ({ x: cell.x, y: cell.y - VISIBLE_START_ROW })),
+        this.lockPulse.piece,
+        alpha,
+        {
+          originX: layout.x,
+          originY: layout.y,
+          unit: layout.cell,
+          faceColor: material.innerEdge,
+        },
+      );
     }
   }
 
@@ -529,11 +611,11 @@ export class TetrisRenderer {
     const maxY = Math.max(...shape.map((cell) => cell.y));
     const width = (maxX - minX + 1) * unit;
     const height = (maxY - minY + 1) * unit;
-    for (const cell of shape) {
-      const x = centerX - width / 2 + (cell.x - minX) * unit;
-      const y = centerY - height / 2 + (cell.y - minY) * unit;
-      this.drawPlateCell(graphics, x + 0.7, y + 0.7, unit - 1.4, type, 0.96, false);
-    }
+    this.drawCellGroups(graphics, shape, type, 0.96, {
+      originX: centerX - width / 2 - minX * unit,
+      originY: centerY - height / 2 - minY * unit,
+      unit,
+    });
   }
 
   private consumeEvents(events: readonly GameEvent[]): void {

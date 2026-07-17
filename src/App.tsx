@@ -171,11 +171,11 @@ function cssHex(color: number): string {
 export function puzzleSilhouettePaths(id: PuzzleId): ReadonlyMap<PieceType, string> {
   const board = createInitialState(APP_SEED, 'puzzle', id).board.slice(-12);
   const unit = 4;
-  const face = 3.25;
+  const face = 3.8;
   const paths = new Map<PieceType, string>();
   for (const type of PIECE_TYPES) {
     const path = board.flatMap((row, y) => row.map((cell, x) => (
-      cell === type ? `M${x * unit + .375} ${y * unit + .375}h${face}v${face}h-${face}z` : ''
+      cell === type ? `M${x * unit + .1} ${y * unit + .1}h${face}v${face}h-${face}z` : ''
     ))).join('');
     if (path) paths.set(type, path);
   }

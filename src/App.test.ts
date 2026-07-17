@@ -121,6 +121,7 @@ describe('T5 frontend campaign binding', () => {
       expect(canonical.queue[0]).toBeTruthy();
       expect(lockedTypes.size).toBeGreaterThanOrEqual(5);
       expect(puzzleSilhouettePaths(level.id).size).toBe(lockedTypes.size);
+      expect([...puzzleSilhouettePaths(level.id).values()].every((path) => path.includes('h3.8v3.8'))).toBe(true);
     }
 
     const desktopStart = view.container.querySelector<HTMLButtonElement>('[data-testid="start-selected-puzzle"]');
