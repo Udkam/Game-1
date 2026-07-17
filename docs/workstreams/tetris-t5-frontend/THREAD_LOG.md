@@ -336,3 +336,74 @@ accepted `c9135f3` behavioral baseline.
 - Push: not performed; the coordinator owns QA routing, integration, and push.
 - Next: independent read-only visual and functional QA audits the exact candidate SHA
   before the coordinator regenerates T5 evidence or updates the changelog.
+
+## 2026-07-17 — LIGHT NEO-TECH MINIMAL QA FIX CANDIDATE READY
+
+- Task: `TETRIS-T5-FRONTEND-TECH-MINIMAL-FIX-004`.
+- Branch: `codex/tetris-recovery`.
+- Base SHA: `f66c118fd93eb95e752fd4335801b7d268938655`.
+- Intake: branch and HEAD matched the coordinator instruction and the working tree was
+  clean before the first source edit.
+- Independent QA findings: three mobile home labels computed at 10–11 px, and the
+  844 × 390 Puzzle library required root-page scrolling to reach all levels/actions.
+
+### Exact changed paths
+
+- `src/styles.css`
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md`
+
+No product or tracked documentation path outside this two-file boundary changed.
+`App.tsx`, renderer/theme, tests, Core/runtime/Puzzle data, `index.html`, dependencies,
+coordinator documents, changelog, and evidence directories have no writer diff.
+
+### Delivered correction
+
+- Raised the three `max-width: 599px` home labels — `当前选择`,
+  `键盘与触控均可操作`, and `随时开始，也可随时退出` — to a computed 12 px.
+- Added a height-bounded landscape Puzzle-library layout for widths at least 600 px
+  and heights at most 520 px. At 844 × 390 it uses fixed header/intro rows, a
+  min-height-zero content track, six equal 44 px-or-larger level tracks, and a compact
+  detail/action column. The decorative starting-board silhouette is omitted only in
+  this short landscape layout so the six choices and selected start action remain
+  complete and actionable without root-page scrolling.
+- Desktop library, portrait home, landscape home, and landscape gameplay structures
+  remain unchanged outside those responsive overrides.
+
+### Commands and evidence actually run
+
+- Before final gates, ran a real Playwright targeted matrix against the Vite page.
+  At both 390 × 844 DPR3 and 360 × 800 DPR3, all three named home labels computed at
+  exactly 12 px, all three mode buttons were fully inside the first viewport, the
+  document exactly matched the viewport, and console/page errors were `[]`.
+- At 844 × 390 DPR3 Puzzle library, `scrollWidth = 844` and `scrollHeight = 390`.
+  The six level-row vertical bounds were `108–153.65625`,
+  `154.65625–200.328125`, `201.328125–247`, `248–293.65625`,
+  `294.65625–340.328125`, and `341.328125–388` px; every row used horizontal bounds
+  `11–542` px. The selected start action measured
+  `x 557–819, y 336–380, 262 × 44` px, was enabled, and a real click entered the game.
+  Minimum visible button height was 44 px and console/page errors were `[]`.
+- The same targeted pass checked 1440 × 900 library plus 844 × 390 home/game with
+  exact viewport-sized documents, no overflow, minimum 44 px buttons, and errors
+  `[]`.
+- Opened and visually inspected the actual `portrait-home.png`, `narrow-home.png`,
+  `landscape-library.png`, `desktop-library.png`, `landscape-home.png`, and
+  `landscape-marathon.png` captures under the existing ignored
+  `.local/t5-tech-writer-smoke/pages/` directory. Essential copy, all six rows, the
+  selected action, board, statistics, Next, and controls showed no clipping or overlap.
+- After the final product source change, exactly one final
+  `npm.cmd run typecheck` — PASS.
+- After the final product source change, exactly one final `npm.cmd run test` — PASS,
+  38 files / 238 tests.
+- After the final product source change, exactly one final `npm.cmd run build` — PASS;
+  Vite transformed 739 modules.
+- Ran one affected-page smoke against the frozen production build after those gates.
+  It reproduced the same home fonts and 844 × 390 library geometry, kept all tested
+  documents within their viewports, recorded minimum button height 44 px and errors
+  `[]`, and its six requested captures were opened and inspected again.
+
+### Handoff
+
+- Blocker: none.
+- Push: not performed; the coordinator owns the push decision after QA.
+- Next: create the bounded two-path candidate commit and route its exact SHA to
+  independent read-only QA.
