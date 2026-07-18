@@ -1,33 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-  color: #edf2f7;
-  background: #0b1422;
+  color: #14243a;
+  background: #dce7f2;
   font-family: "Space Grotesk", "Noto Sans SC", "Segoe UI", "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --page: #0b1422;
-  --surface: #111d2e;
-  --raised: #172538;
-  --selected: #1d2d43;
-  --well: #07101c;
-  --ink: #edf2f7;
-  --muted: #aab5c4;
-  --line: #34445a;
-  --edge: #566981;
-  --classic: #5a918b;
-  --race: #6f87b7;
-  --puzzle: #9a81a8;
-  --selection: #b57686;
-  --action: #365b8d;
-  --hover: #426a9d;
-  --focus: #9abce6;
-  --success: #6f9a7d;
-  --danger: #b16a78;
-  --phase: linear-gradient(90deg, #5a918b, #6f87b7, #9a81a8);
-  --shadow: 0 22px 60px rgba(2, 7, 14, .28);
+  --page: #dce7f2;
+  --surface: #f7fafd;
+  --raised: #eaf1f7;
+  --selected: #dce8f2;
+  --well: #0b1726;
+  --ink: #14243a;
+  --muted: #52677f;
+  --line: #b5c5d5;
+  --edge: #879db3;
+  --classic: #357f78;
+  --race: #526eb0;
+  --puzzle: #80639d;
+  --selection: #a75e71;
+  --action: #315f96;
+  --hover: #3d70a8;
+  --focus: #245e9c;
+  --action-ink: #f7fafd;
+  --success: #3f7f5d;
+  --danger: #a64e61;
+  --phase: linear-gradient(90deg, #357f78, #526eb0, #80639d);
+  --shadow: 0 18px 44px rgba(31, 59, 86, .14);
   --ease: cubic-bezier(.2, .82, .24, 1);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -85,7 +86,7 @@ p {
   left: 10px;
   min-height: 44px;
   padding: 11px 16px;
-  color: var(--ink);
+  color: var(--action-ink);
   background: var(--action);
   border-radius: 10px;
   transform: translateY(-180%);
@@ -329,7 +330,7 @@ p {
 
 .mode-gate:hover .mode-gate__action b,
 .mode-gate--active .mode-gate__action b {
-  color: var(--ink);
+  color: var(--action-ink);
   background: var(--action);
   transform: translateX(2px);
 }
@@ -370,7 +371,7 @@ p {
 }
 
 .primary-action {
-  color: var(--ink);
+  color: var(--action-ink);
   background: var(--action);
 }
 
@@ -607,7 +608,7 @@ p {
 
 .topbar-action:last-child {
   justify-self: end;
-  color: var(--ink);
+  color: var(--action-ink);
   background: var(--action);
 }
 
@@ -845,7 +846,7 @@ p {
 
 .touch-key:hover,
 .touch-key:active {
-  color: var(--ink);
+  color: var(--action-ink);
   background: var(--action);
 }
 
@@ -868,7 +869,7 @@ p {
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(7, 16, 28, .72);
+  background: rgba(11, 23, 38, .72);
   animation: sheet-backdrop-in 160ms ease both;
 }
 
