@@ -6,7 +6,7 @@ export const BUFFER_HEIGHT = 20;
 export const BOARD_HEIGHT = VISIBLE_HEIGHT + BUFFER_HEIGHT;
 export const VISIBLE_START_ROW = BUFFER_HEIGHT;
 
-export const LOCK_DELAY_TICKS = 30;
+export const LOCK_DELAY_TICKS = 18;
 export const MAX_LOCK_RESETS = 15;
 export const ENTRY_DELAY_TICKS = 3;
 export const LINE_CLEAR_DELAY_TICKS = 12;

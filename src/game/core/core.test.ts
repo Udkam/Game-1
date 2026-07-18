@@ -92,7 +92,8 @@ describe('movement, rotation, drop, and lock', () => {
     expect(startY + dropEvent.distance).toBeGreaterThan(startY);
   });
 
-  it('locks a grounded piece after exactly the lock delay', () => {
+  it('keeps a grounded piece movable through tick 17 and locks it on tick 18', () => {
+    expect(LOCK_DELAY_TICKS).toBe(18);
     const state: GameState = {
       ...playing(),
       board: createBoard(),
@@ -100,11 +101,27 @@ describe('movement, rotation, drop, and lock', () => {
       gravityTicks: 0,
       lockTicks: 0,
     };
-    const beforeLock = advance(state, LOCK_DELAY_TICKS - 1);
-    expect(beforeLock.active).not.toBeNull();
-    const locked = advance(beforeLock, 1);
-    expect(locked.active).toBeNull();
-    expect(locked.board.flat().filter(Boolean)).toHaveLength(4);
+    const tick17 = advance(state, 17);
+    expect(tick17.lockTicks).toBe(17);
+    expect(tick17.active).not.toBeNull();
+    expect(tick17.board.flat().filter(Boolean)).toHaveLength(0);
+
+    const movedAtTick17 = dispatch(tick17, { type: 'move', dx: -1 });
+    expect(movedAtTick17.state.active?.x).toBe(3);
+    expect(movedAtTick17.state.lockTicks).toBe(0);
+    expect(movedAtTick17.events).toContainEqual({
+      type: 'piece-moved',
+      piece: 'O',
+      dx: -1,
+      dy: 0,
+      cause: 'move',
+    });
+
+    const tick18 = dispatch(tick17, { type: 'tick' });
+    expect(tick18.state.active).toBeNull();
+    expect(tick18.state.pieceCount).toBe(state.pieceCount + 1);
+    expect(tick18.state.board.flat().filter(Boolean)).toHaveLength(4);
+    expect(tick18.events.some((event) => event.type === 'piece-locked')).toBe(true);
   });
 });
 
