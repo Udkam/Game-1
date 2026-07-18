@@ -1114,3 +1114,63 @@ remain untouched. No generated browser artifact is part of the candidate.
 - Blocker: none. Push: not performed.
 - Next: independent read-only static/functional and visual/browser QA audits exact
   source range `bcc25d6..effb353`; the coordinator owns acceptance, changelog, and push.
+
+## 2026-07-18 — DIVIDED COHESIVE FACETS CANDIDATE READY
+
+- Task: `TETRIS-T5-MINERAL-DIVIDED-FACETS-013`.
+- Branch/intake: clean `codex/tetris-recovery` at
+  `028c1580cec7eff92013db614b40491fa4eac9d6`.
+- Contract checkpoint: `423d2e3` — `docs(t5): define divided cohesive facets`;
+  changed only `DESIGN.md` and `CURRENT_TASK.md`.
+- Frozen product checkpoint: `acaf40589a2a4e802f0cfcd253f0c37161f3219d` —
+  `feat(render): divide cohesive mineral facets`; changed only
+  `src/game/render/TetrisRenderer.ts`, `presentation.ts`, `presentation.test.ts`,
+  `theme.ts`, and `theme.test.ts`.
+- The exact palette, layout, rules, copy, and `index.html` remain unchanged. Separate
+  material components retain the larger board-well channel; each joined component now
+  keeps every shared unit boundary as a narrower dark groove plus lower/right light
+  lip over the continuous material base.
+- Filled cells add a restrained inset top/left signal and bottom/right dark chamfer,
+  while the joined component retains the stronger outer bevel. Active, locked, Next,
+  Ghost, and fragmented groups reuse the same deterministic seam enumeration.
+
+### Verification actually run
+
+- Focused `npm.cmd run test -- src/game/render/presentation.test.ts
+  src/game/render/theme.test.ts` passed 4 files / 17 tests. The seven canonical pieces
+  expose exact seam counts `I=3`, `O=4`, and `T/S/Z/J/L=3`, with no duplicate seam;
+  split-fragment coverage also passed.
+- Final `npm.cmd run typecheck` passed. Final `npm.cmd run test` passed 40 files
+  (39 passed / 1 skipped) and 258 tests (256 passed / 2 skipped). Final
+  `npm.cmd run build` passed with 739 transformed modules.
+- The prescribed client initially failed before product execution because the skill
+  directory could not resolve package `playwright`. The environment issue was closed
+  first by installing Playwright only under
+  `C:\Users\Alex Chen\.codex\skills\develop-web-game` and installing its Chromium
+  runtime; repository dependency files stayed unchanged. The same prescribed client
+  then passed three iterations against Classic with no error artifact. Final text state
+  was playing, 3 placed pieces, score 104, active Z, and Next L; `shot-0.png` and
+  `shot-2.png` were opened at original detail under ignored
+  `.local/slice-kr3-action/`.
+- A visible-control all-level browser pass captured all fifteen Puzzle boards under
+  ignored `.local/slice-kr3-visual/all-layouts/`: 15/15 captures, all seven materials
+  in every board, and errors `[]`. The contact sheet and Level 8 board were inspected
+  at original detail.
+- The fresh exact-source matrix under ignored `.local/slice-kr3-final-matrix/` is tied
+  to full source SHA `acaf40589a2a4e802f0cfcd253f0c37161f3219d`. It produced 23
+  screenshots across 1440 × 900, 2048 × 1152, 390 × 844 DPR3, 844 × 390 DPR3, and
+  360 × 800 with errors `[]`; loaded and blocked-font paths both passed.
+- Original-detail review covered dense Level 8, three-lock portrait Puzzle, landscape
+  Classic, narrow Level 15, and wide Race. Larger external board-well channels remain
+  visibly dominant over the finer internal grooves; active, locked, Next, and Ghost
+  retain readable unit divisions and one connected outer silhouette at every size.
+  The matrix also passed three normal-gravity locks, Race top-out, Level 1 completion
+  at 35 pieces / 22 lines, one canvas, zero DOM cells, exact 2:1 boards, 44 px controls,
+  lifecycle teardown, and zero unexpected console/page errors.
+
+### Handoff
+
+- Blocker: none. Push: not performed.
+- Next: independent read-only static/functional and visual/browser QA audit exact
+  source range `423d2e3..acaf405`. If accepted, the coordinator regenerates formal T5
+  evidence for the new source, records the changelog disposition, and decides push.
