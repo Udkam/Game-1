@@ -11,6 +11,7 @@ export interface RuntimeOptions {
   seed?: number;
   mode?: GameMode;
   puzzleId?: PuzzleId;
+  inputEnabled?: boolean;
   reducedMotion?: boolean;
   audioEnabled?: boolean;
   onState?: (state: GameState, events: readonly GameEvent[]) => void;
@@ -48,10 +49,12 @@ export class GameRuntime {
   private uiStateDirty = false;
   private destroyed = false;
   private qaFrozen = false;
+  private inputEnabled: boolean;
   private readonly onState?: RuntimeOptions['onState'];
 
   constructor(private readonly options: RuntimeOptions = {}) {
     this.state = createInitialState(options.seed, options.mode, options.puzzleId);
+    this.inputEnabled = options.inputEnabled ?? true;
     this.onState = options.onState;
     this.audio.setEnabled(options.audioEnabled ?? true);
   }
@@ -100,6 +103,7 @@ export class GameRuntime {
   }
 
   start(): void {
+    if (!this.inputEnabled) return;
     void this.audio.prime();
     this.apply({ type: 'start' });
   }
@@ -134,6 +138,12 @@ export class GameRuntime {
 
   setReducedMotion(reducedMotion: boolean): void {
     this.renderer.setOptions({ reducedMotion });
+  }
+
+  setInputEnabled(enabled: boolean): void {
+    if (this.inputEnabled === enabled) return;
+    this.inputEnabled = enabled;
+    this.input?.clearHeld();
   }
 
   release(action: InputAction): void {
@@ -216,6 +226,7 @@ export class GameRuntime {
   }
 
   private readonly handleAction = (action: InputAction, shouldPrimeAudio: boolean): void => {
+    if (!this.inputEnabled) return;
     if (shouldPrimeAudio) void this.audio.prime();
     if (action === 'pause') {
       if (this.state.status === 'paused') this.apply({ type: 'resume' });

@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { GameRuntime } from './GameRuntime';
 
 const rendererSetOptions = vi.hoisted(() => vi.fn());
+const inputClearHeld = vi.hoisted(() => vi.fn());
+const inputHarness = vi.hoisted(() => ({ emit: null as ((action: string) => void) | null }));
 
 vi.mock('../audio/AudioEngine', () => ({
   AudioEngine: class {
@@ -17,10 +19,11 @@ vi.mock('../audio/AudioEngine', () => ({
 
 vi.mock('../input/InputController', () => ({
   InputController: class {
-    press(): void {}
+    constructor(emit: (action: string) => void) { inputHarness.emit = emit; }
+    press(action: string): void { inputHarness.emit?.(action); }
     release(): void {}
     step(): void {}
-    clearHeld(): void {}
+    clearHeld(): void { inputClearHeld(); }
     destroy(): void {}
   },
 }));
@@ -47,6 +50,39 @@ describe('GameRuntime public state boundary', () => {
     expect(runtime.getState().queue).toHaveLength(5);
     expect(runtime.getState().active).not.toBeNull();
     expect(onState).not.toHaveBeenCalled();
+  });
+
+  it('gates public start, touch input, QA actions, and pause until input is enabled', async () => {
+    const onState = vi.fn();
+    const runtime = new GameRuntime({ seed: 123, onState, audioEnabled: false, inputEnabled: false });
+    await runtime.mount(document.createElement('div'));
+    onState.mockClear();
+    inputClearHeld.mockClear();
+    const ready = structuredClone(runtime.getState());
+
+    runtime.start();
+    runtime.press('left');
+    runtime.togglePause();
+    window.__SIGNAL_FOUNDRY_QA__?.action('hard-drop');
+    window.__SIGNAL_FOUNDRY_QA__?.advanceTicks(180);
+
+    expect(runtime.getState()).toEqual(ready);
+    expect(onState).not.toHaveBeenCalled();
+    expect(inputClearHeld).not.toHaveBeenCalled();
+
+    runtime.setInputEnabled(true);
+    expect(inputClearHeld).toHaveBeenCalledTimes(1);
+    runtime.setInputEnabled(true);
+    expect(inputClearHeld).toHaveBeenCalledTimes(1);
+    runtime.start();
+
+    expect(runtime.getState().status).toBe('playing');
+    expect(onState).toHaveBeenCalledTimes(1);
+    expect(onState.mock.calls[0]?.[1]).toEqual([{ type: 'started' }]);
+
+    runtime.setInputEnabled(false);
+    expect(inputClearHeld).toHaveBeenCalledTimes(2);
+    runtime.destroy();
   });
 
   it('coalesces ordinary simulation ticks before publishing React-facing state', () => {

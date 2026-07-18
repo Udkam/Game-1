@@ -697,6 +697,32 @@ p {
   pointer-events: none;
 }
 
+.board-frame--countdown {
+  position: relative;
+  z-index: 5;
+}
+
+.entry-countdown {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--action-ink);
+  background: color-mix(in srgb, var(--well) 54%, transparent);
+  border-radius: 10px;
+}
+
+.entry-countdown__digit {
+  font-family: "Space Grotesk", "Noto Sans SC", "Segoe UI", "Microsoft YaHei UI", "PingFang SC", system-ui, sans-serif;
+  font-size: clamp(56px, 12vmin, 92px);
+  font-weight: 620;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.04em;
+  line-height: 1;
+  animation: entry-countdown-in 180ms var(--ease) both;
+}
+
 .game-side-panel {
   position: relative;
   z-index: 3;
@@ -848,6 +874,12 @@ p {
 .touch-key:active {
   color: var(--action-ink);
   background: var(--action);
+}
+
+.touch-key:disabled {
+  color: var(--muted);
+  background: var(--raised);
+  cursor: not-allowed;
 }
 
 .touch-key b {
@@ -1778,6 +1810,10 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .entry-countdown__digit {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {
@@ -1785,5 +1821,17 @@ p {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
+  }
+}
+
+@keyframes entry-countdown-in {
+  from {
+    opacity: .24;
+    transform: scale(.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

@@ -26,6 +26,7 @@ import { ActionSheet } from './ui/ActionSheet';
 
 type AppScreen = 'home' | 'puzzle-library' | 'game';
 type ExitDestination = 'home' | 'puzzle-library';
+type EntryCountdownDigit = 3 | 2 | 1;
 
 const APP_SEED = 0x51a1f00d;
 
@@ -280,9 +281,10 @@ interface TouchButtonProps {
   label: string;
   glyph: string;
   runtime: GameRuntime | null;
+  disabled?: boolean;
 }
 
-function TouchButton({ action, label, glyph, runtime }: TouchButtonProps) {
+function TouchButton({ action, label, glyph, runtime, disabled = false }: TouchButtonProps) {
   const release = useCallback(() => runtime?.release(action), [action, runtime]);
   return (
     <button
@@ -290,6 +292,7 @@ function TouchButton({ action, label, glyph, runtime }: TouchButtonProps) {
       type="button"
       data-testid={`touch-${action}`}
       aria-label={label}
+      disabled={disabled}
       onPointerDown={(event) => {
         event.preventDefault();
         event.currentTarget.setPointerCapture(event.pointerId);
@@ -359,7 +362,7 @@ declare global {
   }
 }
 
-function GameSession({
+export function GameSession({
   mode,
   puzzleId,
   onExit,
@@ -375,8 +378,9 @@ function GameSession({
   const exitWasPlayingRef = useRef(false);
   const [runtime, setRuntime] = useState<GameRuntime | null>(null);
   const [state, setState] = useState<GameState>(() => createInitialState(APP_SEED, mode, mode === 'puzzle' ? puzzleId : undefined));
+  const [countdownDigit, setCountdownDigit] = useState<EntryCountdownDigit | null>(3);
   const [exitOpen, setExitOpen] = useState(false);
-  const [liveMessage, setLiveMessage] = useState('Tetris 已开始。');
+  const [liveMessage, setLiveMessage] = useState('');
 
   const focusBoard = useCallback(() => {
     requestAnimationFrame(() => hostRef.current?.querySelector('canvas')?.focus({ preventScroll: true }));
@@ -386,11 +390,13 @@ function GameSession({
     const host = hostRef.current;
     if (!host) return;
     let disposed = false;
+    let countdownComplete = false;
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const nextRuntime = new GameRuntime({
       seed: APP_SEED,
       mode,
       puzzleId: mode === 'puzzle' ? puzzleId : undefined,
+      inputEnabled: false,
       reducedMotion: motionQuery.matches,
       onState: (nextState, events) => {
         if (disposed) return;
@@ -412,15 +418,32 @@ function GameSession({
     motionQuery.addEventListener('change', handleMotionChange);
     runtimeRef.current = nextRuntime;
     setRuntime(nextRuntime);
+    const countdownTimers = [
+      window.setTimeout(() => {
+        if (!disposed) setCountdownDigit(2);
+      }, 1000),
+      window.setTimeout(() => {
+        if (!disposed) setCountdownDigit(1);
+      }, 2000),
+      window.setTimeout(() => {
+        if (disposed) return;
+        countdownComplete = true;
+        nextRuntime.setInputEnabled(true);
+        nextRuntime.start();
+        setCountdownDigit(null);
+        setLiveMessage('Tetris 已开始。');
+        focusBoard();
+      }, 3000),
+    ];
     void nextRuntime.mount(host).then(() => {
       if (disposed) return;
       nextRuntime.setReducedMotion(motionQuery.matches);
-      nextRuntime.start();
-      focusBoard();
+      if (countdownComplete) focusBoard();
     });
 
     return () => {
       disposed = true;
+      for (const timer of countdownTimers) window.clearTimeout(timer);
       motionQuery.removeEventListener('change', handleMotionChange);
       nextRuntime.destroy();
       if (runtimeRef.current === nextRuntime) runtimeRef.current = null;
@@ -434,6 +457,7 @@ function GameSession({
       screen: 'game',
       mode: state.mode,
       status: state.status,
+      countdown: countdownDigit,
       phase: state.phase,
       puzzleId: state.puzzleId,
       puzzleCompletion: state.puzzleCompletion,
@@ -454,6 +478,7 @@ function GameSession({
         const buttons = [...document.querySelectorAll<HTMLElement>('button')].map((button) => button.getBoundingClientRect());
         return {
           screen: 'game',
+          countdown: countdownDigit,
           state: cloneQaState(runtime.getState()),
           renderer: runtime.getRendererSnapshot(),
           viewport: {
@@ -484,7 +509,7 @@ function GameSession({
       delete window.advanceTime;
       delete window.__TETRIS_D4_QA__;
     };
-  }, [runtime, state]);
+  }, [countdownDigit, runtime, state]);
 
   const restartRun = useCallback(() => {
     setExitOpen(false);
@@ -539,14 +564,31 @@ function GameSession({
             event.currentTarget.focus({ preventScroll: true });
             runtime?.togglePause();
           }}
-          disabled={state.status !== 'playing' && state.status !== 'paused'}
+          disabled={countdownDigit !== null || (state.status !== 'playing' && state.status !== 'paused')}
         >{state.status === 'paused' ? '继续' : '暂停'}</button>
       </header>
 
       <section className="play-surface" aria-label={`${MODE_COPY[state.mode].label}游戏面板`}>
         <section className="game-arena" data-testid="game-cluster" aria-label={`${MODE_COPY[state.mode].label}游戏区`}>
           <div ref={hostRef} className="canvas-host" data-testid="canvas-host" />
-          <section className="board-frame" data-testid="board-frame" aria-label="10 × 20 游戏棋盘" />
+          <section
+            className={`board-frame ${countdownDigit !== null ? 'board-frame--countdown' : ''}`}
+            data-testid="board-frame"
+            aria-label="10 × 20 游戏棋盘"
+          >
+            {countdownDigit !== null && (
+              <div
+                className="entry-countdown"
+                data-testid="entry-countdown"
+                data-countdown={countdownDigit}
+                role="status"
+                aria-live="assertive"
+                aria-atomic="true"
+              >
+                <span key={countdownDigit} className="entry-countdown__digit">{countdownDigit}</span>
+              </div>
+            )}
+          </section>
           <aside className="game-side-panel" data-testid="side-rail">
             <div className="info-rail" data-testid="context-top">
               <RunStats state={state} />
@@ -560,11 +602,11 @@ function GameSession({
         </section>
 
         <section className="touch-deck" data-testid="touch-rail" aria-label="触控操作">
-          <TouchButton action="left" label="左移" glyph="←" runtime={runtime} />
-          <TouchButton action="right" label="右移" glyph="→" runtime={runtime} />
-          <TouchButton action="rotate-cw" label="旋转" glyph="↻" runtime={runtime} />
-          <TouchButton action="soft-drop" label="快速下落" glyph="↓" runtime={runtime} />
-          <TouchButton action="hard-drop" label="直接落底" glyph="⇣" runtime={runtime} />
+          <TouchButton action="left" label="左移" glyph="←" runtime={runtime} disabled={countdownDigit !== null} />
+          <TouchButton action="right" label="右移" glyph="→" runtime={runtime} disabled={countdownDigit !== null} />
+          <TouchButton action="rotate-cw" label="旋转" glyph="↻" runtime={runtime} disabled={countdownDigit !== null} />
+          <TouchButton action="soft-drop" label="快速下落" glyph="↓" runtime={runtime} disabled={countdownDigit !== null} />
+          <TouchButton action="hard-drop" label="直接落底" glyph="⇣" runtime={runtime} disabled={countdownDigit !== null} />
         </section>
       </section>
 

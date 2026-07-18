@@ -2,13 +2,69 @@
 
 import { act, createElement, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import styles from './styles.css?raw';
-import { createInitialState, type PuzzleId } from './game/core';
-import { cloneQaState, ModeHome, PuzzleLibrary, puzzleSilhouettePaths, RunStats } from './App';
+import { createInitialState, type GameEvent, type GameMode, type GameState, type PuzzleId } from './game/core';
+import { cloneQaState, GameSession, ModeHome, PuzzleLibrary, puzzleSilhouettePaths, RunStats } from './App';
 import { CAMPAIGN_LEVELS, defaultPuzzleProgress } from './puzzleProgress';
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+
+interface RuntimeTestOptions {
+  seed?: number;
+  mode?: GameMode;
+  puzzleId?: PuzzleId;
+  inputEnabled?: boolean;
+  onState?: (state: GameState, events: readonly GameEvent[]) => void;
+}
+
+interface RuntimeTestInstance {
+  options: RuntimeTestOptions;
+  setInputEnabled: ReturnType<typeof vi.fn>;
+  start: ReturnType<typeof vi.fn>;
+}
+
+const runtimeHarness = vi.hoisted(() => ({ instances: [] as RuntimeTestInstance[] }));
+
+vi.mock('./game/runtime/GameRuntime', async () => {
+  const core = await vi.importActual<typeof import('./game/core')>('./game/core');
+  return { GameRuntime: class {
+    private state: GameState;
+    private canvas: HTMLCanvasElement | null = null;
+    readonly setInputEnabled = vi.fn();
+    readonly setReducedMotion = vi.fn();
+    readonly start = vi.fn(() => {
+      const transition = core.dispatch(this.state, { type: 'start' });
+      this.state = transition.state;
+      this.options.onState?.(this.state, transition.events);
+    });
+
+    constructor(readonly options: RuntimeTestOptions) {
+      this.state = core.createInitialState(options.seed, options.mode, options.puzzleId);
+      runtimeHarness.instances.push(this);
+    }
+
+    async mount(host: HTMLElement): Promise<void> {
+      this.canvas = document.createElement('canvas');
+      this.canvas.tabIndex = 0;
+      host.append(this.canvas);
+    }
+
+    press(): void {}
+    release(): void {}
+    togglePause(): void {}
+    restart(): void {}
+    getState(): GameState { return this.state; }
+    getRendererSnapshot(): Record<string, never> { return {}; }
+    destroy(): void { this.canvas?.remove(); }
+  } };
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+  runtimeHarness.instances.length = 0;
+});
 
 function render(element: ReactNode): {
   container: HTMLDivElement;
@@ -47,6 +103,63 @@ describe('DEV QA state snapshot isolation', () => {
     snapshot.board[0]![0] = snapshot.board[0]![0] === 'O' ? 'Z' : 'O';
 
     expect(canonical).toEqual(original);
+  });
+});
+
+describe('entry countdown', () => {
+  it('holds ready for three exact seconds, then enables input, starts once, and focuses the board', async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('matchMedia', vi.fn(() => ({
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })));
+    vi.stubGlobal('requestAnimationFrame', vi.fn((callback: FrameRequestCallback) => {
+      callback(0);
+      return 1;
+    }));
+    const view = render(createElement(GameSession, {
+      mode: 'marathon',
+      puzzleId: CAMPAIGN_LEVELS[0]!.id,
+      onExit: vi.fn(),
+      onCanonicalCompletion: vi.fn(),
+    }));
+    await act(async () => Promise.resolve());
+
+    const runtime = runtimeHarness.instances[0]!;
+    const countdown = () => view.container.querySelector<HTMLElement>('[data-testid="entry-countdown"]');
+    const pause = [...view.container.querySelectorAll<HTMLButtonElement>('.topbar-action')].at(-1)!;
+    const touchButtons = [...view.container.querySelectorAll<HTMLButtonElement>('.touch-key')];
+
+    expect(runtime.options.inputEnabled).toBe(false);
+    expect(countdown()?.dataset.countdown).toBe('3');
+    expect(pause.disabled).toBe(true);
+    expect(touchButtons).toHaveLength(5);
+    expect(touchButtons.every((button) => button.disabled)).toBe(true);
+    expect(runtime.start).not.toHaveBeenCalled();
+
+    await act(async () => vi.advanceTimersByTimeAsync(999));
+    expect(countdown()?.dataset.countdown).toBe('3');
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    expect(countdown()?.dataset.countdown).toBe('2');
+    await act(async () => vi.advanceTimersByTimeAsync(999));
+    expect(countdown()?.dataset.countdown).toBe('2');
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+    expect(countdown()?.dataset.countdown).toBe('1');
+    await act(async () => vi.advanceTimersByTimeAsync(999));
+    expect(countdown()?.dataset.countdown).toBe('1');
+    expect(runtime.start).not.toHaveBeenCalled();
+
+    await act(async () => vi.advanceTimersByTimeAsync(1));
+
+    expect(countdown()).toBeNull();
+    expect(runtime.setInputEnabled).toHaveBeenCalledExactlyOnceWith(true);
+    expect(runtime.start).toHaveBeenCalledTimes(1);
+    expect(runtime.setInputEnabled.mock.invocationCallOrder[0]).toBeLessThan(runtime.start.mock.invocationCallOrder[0]!);
+    expect(pause.disabled).toBe(false);
+    expect(touchButtons.every((button) => !button.disabled)).toBe(true);
+    expect(document.activeElement).toBe(view.container.querySelector('canvas'));
+    view.unmount();
   });
 });
 
