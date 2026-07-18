@@ -11,9 +11,9 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **active — the current composition and divided-facet renderer are preserved;
-bounded Slices K-R4 and K-R5 own only timing and retone, while queued Slice K-R6 adds
-one input-gated `3 / 2 / 1` entry countdown**
+Status: **COMPLETE / ACCEPTED — final product source `48176fe`; exact-source evidence
+`7d37418`; independent Core and frontend/browser cross-QA both ACCEPT with no open
+finding**
 
 ## User-visible problems to resolve
 
@@ -878,9 +878,9 @@ JSON and checksum manifest.
 
 Task ID: `TETRIS-T5-MINERAL-DIVIDED-FACETS-013`
 
-Status: **SOURCE READY / ADOPTED AS THE NEW VISUAL BASELINE** at `acaf405`; its final
-standalone QA was stopped because the user immediately opened the timing and bright
-palette follow-up. The geometry and facet structure remain frozen inputs to K-R5.
+Status: **ACCEPTED AS PART OF FINAL SOURCE `48176fe`**. Source checkpoint `acaf405`
+remains the frozen geometry/facet baseline and independent frontend cross-QA accepted
+it together with K-R5/K-R6.
 
 Branch base: `028c1580cec7eff92013db614b40491fa4eac9d6`; frozen behavior/layout source is
 `effb353c0a4d1bef26fa524ed38d3d3653f45eb8`. The previously accepted evidence is a
@@ -924,7 +924,8 @@ Slice K-R3 acceptance:
 
 Task ID: `TETRIS-T5-SHORT-LOCK-WINDOW-014`
 
-Status: **OPEN — Core timing writer boundary**.
+Status: **ACCEPTED**. Source `f0ec47c`; log `4fed07c`; independent Core cross-QA
+accepted the exact source with no finding.
 
 Writer base: the contract checkpoint created from log candidate `400916c`. The writer
 may change only:
@@ -949,7 +950,8 @@ K-R4 acceptance:
 
 Task ID: `TETRIS-T5-BRIGHT-MINERAL-RETONE-015`
 
-Status: **OPEN — frontend/theme writer boundary**.
+Status: **ACCEPTED**. Source `fd5f901`; log `1e7e5e3`; independent frontend cross-QA
+accepted the exact retone and frozen renderer geometry with no finding.
 
 Writer base: the same contract checkpoint. The writer may change only:
 
@@ -983,7 +985,10 @@ push.
 
 Task ID: `TETRIS-T5-ENTRY-COUNTDOWN-016`
 
-Status: **QUEUED — opens only after K-R5 releases `src/styles.css`**.
+Status: **ACCEPTED AFTER REPAIR**. Initial source `7f0b766`; gate repair `48176fe`;
+final log tip `d292b15`. Independent frontend cross-QA rejected the first candidate's
+DEV-QA reset/selection bypass, then accepted repaired source `48176fe` with no open
+finding.
 
 Writer base: the combined K-R4 + K-R5 log candidate. One writer may change only:
 
@@ -1013,3 +1018,18 @@ K-R6 acceptance:
 The coordinator runs the single final typecheck, full suite, build, and five-viewport
 matrix only after K-R6 is source-frozen. Cross-QA acceptance of the exact combined
 candidate is required before evidence integration or push.
+
+Disposition: **ACCEPTED**. Final product source
+`48176fe3d23cbc450fe39b38310c8a6b6eb71945` retains the mature layout and divided
+cohesive facet renderer, applies the exact light `雾昼矿物` palette, shortens the shared
+grounded lock delay to 18 ticks, and adds one input-gated three-second entry countdown.
+Final post-repair gates passed typecheck; 40 test files with 39 passed / 1 skipped;
+262 tests with 260 passed / 2 skipped; the 739-module production build; the prescribed
+action client; and an exact-source five-viewport matrix. Independent Core QA accepted
+K-R4 and independent frontend/browser QA accepted K-R3/K-R5/K-R6 after repair.
+Evidence commit `7d374188b8672cef32b5d90023db4f677421d178` contains 24 captures tied to source
+`48176fe` and candidate tip `d292b15`, 26/26 matching SHA-256 entries, a visible digit-3
+countdown proof, canonical immutability under QA start/reset/selection/action attempts,
+one canvas, zero DOM cells, and zero unexpected browser errors. `index.html`,
+dependencies, Puzzle definitions/references, and separate game repositories were not
+changed by these refinements.

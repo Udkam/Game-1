@@ -180,3 +180,26 @@
   boards, 44 px controls, lifecycle teardown, and zero unexpected browser errors pass.
 - `index.html`, dependencies, historical T3/T4 evidence, and all separate game
   repositories remain unchanged by the accepted final repair.
+
+## 2026-07-18 — Brighter divided facets, faster lock, and entry countdown
+
+- Preserved the accepted T5 layout and rebuilt the Pixi cell material so connected
+  tetrominoes keep one outer silhouette, a larger inter-piece channel, narrower
+  internal seams, individually readable facets, and restrained dimensional depth.
+- Applied the exact light `雾昼矿物` palette without changing layout, copy, responsive
+  geometry, dividers, controls, or the plain-text `Tetris` identity.
+- Reduced the shared grounded lock delay from 30 to 18 fixed ticks while retaining the
+  existing movement/rotation reset rules and 15-reset cap.
+- Added an input-gated `3 / 2 / 1` countdown on initial Classic, Race, and selected
+  Puzzle entry. Gravity, audio, keyboard, touch, and DEV-QA reset/selection/action
+  routes cannot advance or mutate the canonical ready state before the countdown ends.
+- Final product source is `48176fe3d23cbc450fe39b38310c8a6b6eb71945`;
+  candidate log tip is `d292b15dd012ade4c635b15595d276505ac72c58`.
+  Final gates passed typecheck, 260 passed / 2 skipped tests across 40 files, the
+  739-module build, the prescribed action client, and the five-viewport browser matrix.
+- Independent Core and frontend/browser cross-QA accepted the exact repaired source
+  with no open finding. Evidence `7d374188b8672cef32b5d90023db4f677421d178`
+  contains 24 source-bound screenshots and 26/26 matching SHA-256 entries with zero
+  unexpected browser errors.
+- `index.html`, dependencies, Puzzle definitions/references, and separate game
+  repositories were not changed.

@@ -279,3 +279,30 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
 - `index.html`, dependencies, historical T3/T4 evidence, and other game repositories
   were not changed by the final frontend/evidence repairs. Next action: coordinator
   push of `codex/tetris-recovery`.
+
+## 2026-07-18 — bright divided-facet refinement and entry countdown accepted
+
+- Preserved the mature T5 composition while making each tetromino read as one cohesive
+  silhouette with a larger gap between pieces, a narrower internal groove, visible
+  per-cell facets, and restrained directional depth. Renderer geometry source is
+  `acaf405`.
+- Retoned only page/state/piece colors, shadow, `color-scheme`, and action ink into the
+  exact light `雾昼矿物` system at `fd5f901`. Layout, typography scale, dividers,
+  controls, copy, phase motion, and renderer geometry did not change.
+- Shortened the shared grounded lock delay from 30 to 18 fixed ticks at `f0ec47c`.
+  Direct tests prove tick 17 remains movable and resets the timer while tick 18 locks;
+  independent Core QA confirmed Classic, Race, and Puzzle share the same deterministic
+  branch and that the 15-reset cap and all other rules remain unchanged.
+- Added one board-local `3 / 2 / 1` countdown on initial mode entry at `7f0b766`.
+  Each digit lasts exactly one second; canonical state stays `ready`, input is disabled,
+  and the runtime starts exactly once after `1`. Repair `48176fe` also fail-closes the
+  public and DEV-QA restart/mode/Puzzle-selection paths during the gate.
+- Final post-repair gates passed: typecheck; 40 files with 39 passed / 1 skipped;
+  262 tests with 260 passed / 2 skipped; 739-module build; prescribed action client;
+  and a five-viewport exact-source browser matrix.
+- Independent Core and frontend/browser cross-QA both accepted with no open finding.
+  Evidence `7d37418` binds 24 captures to source `48176fe` and log tip `d292b15`, with
+  26/26 matching checksums, one canvas, zero DOM cells, zero unexpected browser errors,
+  and explicit digit-3 / ready / zero-piece / disabled-input countdown proof.
+- `index.html`, dependencies, Puzzle boards/routes, and every separate game repository
+  remain unchanged. The branch is eligible for coordinator push.
