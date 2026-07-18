@@ -1,4 +1,4 @@
-# Current Task — T5 Rules Repair and Tetris Frontend Redesign
+# Current Task — T6 Three Independent Mode Rules
 
 Branch: `codex/tetris-recovery`
 
@@ -11,9 +11,62 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **COMPLETE / ACCEPTED — final product source `48176fe`; exact-source evidence
-`7d37418`; independent Core and frontend/browser cross-QA both ACCEPT with no open
-finding**
+Status: **ACTIVE — T5 remains accepted at product source `48176fe`; T6 changes only
+Classic/Race/Puzzle rule identity and the matching Classic statistic binding**
+
+## Slice L — three independent mode rules
+
+Task ID: `TETRIS-T6-THREE-DISTINCT-MODES-017`
+
+Contract base: accepted and pushed T5 coordinator tip
+`c0340b1d3e30007473da6a7a4ec0fed72a22df38`.
+
+User-visible outcome:
+
+- Classic is fixed-speed score survival: 48 ticks per automatic cell for the full
+  run, fixed base line-clear scoring, no level display, no level acceleration, and no
+  level score multiplier;
+- Race begins at Classic's exact 48-tick speed and is the only mode that accelerates,
+  using `floor(pieceCount / 5) + floor(lines / 4)` and ending only on top-out or exit;
+- Puzzle shares Classic's fixed 48-tick speed but starts from one of fifteen authored
+  legal endgames and wins only when the complete canonical board becomes empty.
+
+Core writer boundary:
+
+- `src/game/core/constants.ts` and `src/game/core/engine.ts`;
+- directly related tests under `src/game/core/*.test.ts`;
+- `docs/workstreams/tetris-t5-core/THREAD_LOG.md` after the source checkpoint.
+
+Core acceptance:
+
+- Classic and Puzzle remain at 48 ticks after any line or piece count;
+- Race tier zero is 48 ticks, then decreases monotonically to its existing safe cap;
+- all modes use fixed base line-clear scores `40 / 100 / 300 / 1200`;
+- the compatibility `state.level` remains exactly `0`, no line threshold emits
+  `level-up`, and Race tiering never reads it;
+- Race has no successful line-count terminal state; Puzzle board-empty success and
+  continuous seeded seven-bag input remain unchanged;
+- focused Core tests and typecheck pass before an exact-path source checkpoint.
+
+Frontend writer boundary after Core source is frozen:
+
+- `src/App.tsx` and `src/App.test.ts`;
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md` after the source checkpoint.
+
+Frontend acceptance:
+
+- Classic statistics are exactly score, cleared lines, and placed pieces;
+- no player-facing or DEV text snapshot describes a Classic level;
+- Race retains score, cleared lines, and speed tier; Puzzle retains its existing
+  level/placed/cleared objective statistics;
+- no CSS, layout, theme, renderer, control, countdown, dependency, or `index.html`
+  change is authorized;
+- focused App tests, typecheck, and the prescribed browser action client pass.
+
+After the two source checkpoints, the coordinator runs exactly one final typecheck,
+complete test suite, build, and browser-evidence pass. Each source boundary receives
+independent read-only cross-QA. Formal evidence, changelog integration, and push occur
+only after both verdicts accept the exact combined source candidate.
 
 ## User-visible problems to resolve
 
