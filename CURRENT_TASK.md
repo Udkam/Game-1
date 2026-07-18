@@ -11,15 +11,15 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **active — the accepted T5 milestone remains the behavior/layout baseline;
-bounded Slice K-R3 now owns only the user's clarified divided, more dimensional
-tetromino material**
+Status: **active — the current composition and divided-facet renderer are preserved;
+bounded Slices K-R4 and K-R5 own only the shorter grounded lock window and the exact
+brighter `雾昼矿物` retone**
 
 ## User-visible problems to resolve
 
-1. Keep the page named only `Tetris`, but replace the rejected bright spectral-glass
-   and plastic-looking pieces with the exact coordinated `暮海矿物` deep-natural theme
-   and matte anodized minos frozen in `DESIGN.md`.
+1. Keep the page named only `Tetris`, preserve the accepted composition and divided
+   facet geometry, and apply only the exact coordinated `雾昼矿物` light retone frozen
+   in `DESIGN.md`.
 2. Keep the dedicated entry page with separate Classic (`经典`), Race, and Puzzle
    entrances. The internal `marathon` key remains compatibility-only.
 3. Make Race endless accelerating normal play. It has no line target and stops only
@@ -878,7 +878,9 @@ JSON and checksum manifest.
 
 Task ID: `TETRIS-T5-MINERAL-DIVIDED-FACETS-013`
 
-Status: **OPEN — sole active product writer boundary**.
+Status: **SOURCE READY / ADOPTED AS THE NEW VISUAL BASELINE** at `acaf405`; its final
+standalone QA was stopped because the user immediately opened the timing and bright
+palette follow-up. The geometry and facet structure remain frozen inputs to K-R5.
 
 Branch base: `028c1580cec7eff92013db614b40491fa4eac9d6`; frozen behavior/layout source is
 `effb353c0a4d1bef26fa524ed38d3d3653f45eb8`. The previously accepted evidence is a
@@ -917,3 +919,62 @@ Slice K-R3 acceptance:
   active, locked, Next, Ghost, and dense Puzzle stacks. Create bounded source and
   log-only checkpoints; do not push before independent static and visual QA accept the
   exact candidate.
+
+## Slice K-R4 — shorter grounded lock window
+
+Task ID: `TETRIS-T5-SHORT-LOCK-WINDOW-014`
+
+Status: **OPEN — Core timing writer boundary**.
+
+Writer base: the contract checkpoint created from log candidate `400916c`. The writer
+may change only:
+
+- `src/game/core/constants.ts`;
+- `src/game/core/core.test.ts` for the direct exact-duration regression;
+- `docs/workstreams/tetris-t5-core/THREAD_LOG.md` after source is frozen.
+
+K-R4 acceptance:
+
+- change `LOCK_DELAY_TICKS` from 30 to exactly 18 (about 300 ms at 60 Hz); preserve
+  `MAX_LOCK_RESETS`, move/rotation reset rules, hard drop, entry/clear delays, gravity,
+  scoring, hashes, and every other Core constant;
+- prove a grounded piece remains movable and unlocked through tick 17 and locks on
+  tick 18 in Classic, while existing shared-delay tests continue to prove the same
+  constant drives Race and Puzzle behavior;
+- run the focused Core tests, typecheck, exact-path staging, and one bounded source
+  checkpoint. Do not change renderer/UI/Puzzle data/references, dependencies,
+  `index.html`, coordinator docs, formal evidence, or push.
+
+## Slice K-R5 — brighter `雾昼矿物` retone
+
+Task ID: `TETRIS-T5-BRIGHT-MINERAL-RETONE-015`
+
+Status: **OPEN — frontend/theme writer boundary**.
+
+Writer base: the same contract checkpoint. The writer may change only:
+
+- `src/styles.css`;
+- `src/game/render/theme.ts` and `src/game/render/theme.test.ts`;
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md` after source is frozen.
+
+K-R5 acceptance:
+
+- replace only page/state/piece color values, shadow, action-ink handling, and
+  `color-scheme` with the exact `雾昼矿物` table in `DESIGN.md`; retain the existing
+  layout, type scale, spacing, semantic dividers, controls, copy, and phase motion;
+- preserve K-R3's joined outer silhouette, larger external gap, narrower internal
+  groove, raised unit facets, Ghost guides, and every geometry token unchanged;
+- keep the board well deep while page and panels become visibly brighter. Technology
+  remains in structural precision, typography, focus, and feedback; add no grid,
+  neon, glow, ambient blob, decorative telemetry, new component, or marketing copy;
+- freeze exact CSS and Pixi tokens in direct tests and retain AA text/action contrast
+  plus at least 3:1 contrast for every piece fill endpoint against the board well;
+- run focused theme/App tests and the prescribed action client while editing, then
+  create one bounded source checkpoint. Do not change Core/runtime/Puzzle data,
+  renderer geometry, dependencies, `index.html`, coordinator docs, formal evidence,
+  or push.
+
+After both source checkpoints, the coordinator runs one combined final typecheck,
+complete suite, build, and five-viewport browser matrix. Independent cross-QA must
+accept the exact combined candidate before formal evidence, changelog integration, or
+push.

@@ -53,6 +53,17 @@ material base, while a consistent top-left light direction gives each unit a sha
 raised face. A board-well gap between same-piece cells, four detached tile shadows, or
 four independent outer boxes is still rejected.
 
+The user's later 2026-07-18 refinement treats the current composition as substantially
+complete and opens no page redesign. It authorizes only two controlled changes:
+
+- shorten the shared grounded lock window from 30 to exactly 18 fixed ticks (about
+  300 ms at 60 Hz), while preserving the existing movement/rotation reset semantics
+  and reset cap;
+- brighten the coordinated page, surface, state, and piece palette into the exact
+  `雾昼矿物` tokens below. Technology must come from the existing measured grid,
+  semantic dividers, typographic rhythm, focus states, and restrained phase motion,
+  not from a dark theme, neon, decorative telemetry, or new interface machinery.
+
 The user's later 2026-07-17 review also rejects the complete second frontend
 presentation at `c9135f3252abfa3bd6d7e94c5eb2e11fc3c72a18`. It is not a visual baseline
 that can be accepted through local polish. The new authority is light neo-tech
@@ -158,6 +169,9 @@ evidence only. T5 uses new paths and does not rewrite those artifacts.
   Mutating any object returned by a QA collector must not change the live run; no
   collector may expose a writable state reference or state-replacement path.
 - There is no Hold mechanic.
+- Grounded pieces lock after exactly 18 fixed ticks unless an already-supported legal
+  move or rotation resets the timer within the unchanged reset cap. The same shortened
+  window applies to Classic, Race, and Puzzle and remains deterministic.
 - Keyboard and touch expose left, right, clockwise rotation, soft drop, hard drop,
   pause/resume, restart, and an explicit route back to the mode home.
 - Restart, mode exit, and unmount must not multiply listeners, tickers, audio nodes, or
@@ -277,16 +291,18 @@ otherwise follow ordinary Classic play.
   solutions, but production never generates a board at runtime. A copied mask,
   recolored duplicate, random hole field, or one-obvious-answer opener is rejected.
 
-## T5 `暮海矿物` deep-tech minimal visual direction
+## T5 `雾昼矿物` precise-light visual direction
 
-The accepted visual target is a precise dark-navy game interface built from one
-natural deep-sea/mineral spectrum. It replaces the rejected Aqua Blueprint, rounded
-ceramic, bright spectral-glass, and plastic luminous-slab candidates rather than
-combining or recoloring them. The only player-facing brand is `Tetris` set as ordinary
-text in the product type system.
+The accepted visual target is the existing precise interface re-toned into one bright,
+cool mineral daylight spectrum. The page and panels become light; the board well stays
+deep so piece geometry remains dominant. This replaces the dark-shell dependency
+without changing composition or returning to Aqua Blueprint, rounded ceramic, bright
+spectral glass, or plastic luminous slabs. The only player-facing brand is `Tetris`
+set as ordinary text in the product type system.
 
-- Technology comes from measured spacing, deep structural planes, restrained mineral
-  state colors, functional feedback, and disciplined composition. It does not come
+- Technology comes from measured spacing, crisp structural planes, semantic divider
+  logic, restrained mineral state colors, functional feedback, and disciplined
+  composition. It does not come
   from CAD, dashboards, decorative telemetry, generic neon futurism, or unrelated
   rainbow accents.
 - Remove the custom brand glyph, `青流方阵`, `AQUA ROUTE`, coordinates, route lines,
@@ -307,21 +323,21 @@ text in the product type system.
 
 | Role | Token |
 | --- | --- |
-| Page | `#0B1422` |
-| Main / raised / selected surface | `#111D2E` / `#172538` / `#1D2D43` |
-| Board well | `#07101C` |
-| Primary / secondary text | `#EDF2F7` / `#AAB5C4` |
-| Line / structural edge | `#34445A` / `#566981` |
-| Classic / Race / Puzzle / selection | `#5A918B` / `#6F87B7` / `#9A81A8` / `#B57686` |
-| Action / hover / focus | `#365B8D` / `#426A9D` / `#9ABCE6` |
-| Success / failure | `#6F9A7D` / `#B16A78` |
+| Page | `#DCE7F2` |
+| Main / raised / selected surface | `#F7FAFD` / `#EAF1F7` / `#DCE8F2` |
+| Board well | `#0B1726` |
+| Primary / secondary text | `#14243A` / `#52677F` |
+| Line / structural edge | `#B5C5D5` / `#879DB3` |
+| Classic / Race / Puzzle / selection | `#357F78` / `#526EB0` / `#80639D` / `#A75E71` |
+| Action / hover / focus / action ink | `#315F96` / `#3D70A8` / `#245E9C` / `#F7FAFD` |
+| Success / failure | `#3F7F5D` / `#A64E61` |
 
 The only page gradient is the signature
-`linear-gradient(90deg, #5A918B, #6F87B7, #9A81A8)` phase seam. Buttons use solid
-colors. Primary text on the main surface measures 15.05:1, secondary text 8.16:1,
-and primary button text on `#365B8D` 6.14:1. The `#34445A` divider is only a
-non-essential separator because its surface contrast is below 3:1; selection, focus,
-and error states always add a higher-contrast or non-color cue.
+`linear-gradient(90deg, #357F78, #526EB0, #80639D)` phase seam. Buttons use solid
+colors. Primary text on the main surface measures 14.93:1, secondary text 5.56:1,
+and action ink on `#315F96` measures 6.25:1. The `#B5C5D5` divider is only a
+non-essential separator; selection, focus, and error states always add a stronger or
+non-color cue.
 
 ### Typography, surfaces, and piece language
 
@@ -332,11 +348,12 @@ and error states always add a higher-contrast or non-color cue.
   numerals; `Noto Sans SC` owns Chinese glyphs. Both fall back through Segoe UI /
   Microsoft YaHei UI / PingFang SC / system sans so a blocked font request remains
   readable, does not create blank text, and preserves the responsive geometry.
-- The page uses solid deep structural planes. It has no colored ambient field,
+- The page uses solid light cool structural planes around one deep board well. It has
+  no colored ambient field,
   `backdrop-filter`, repeating grid, measurement mark, grain, diagonal stripe, route
   diagram, gradient CTA, or glow shadow.
-- Only the main page/game container may use the restrained `0 22px 60px
-  rgba(2, 7, 14, .28)` depth. Internal regions rely on one-pixel structural edges,
+- Only the main page/game container may use the restrained `0 18px 44px
+  rgba(31, 59, 86, .14)` depth. Internal regions rely on one-pixel structural edges,
   spacing, and tone rather than repeated shadows.
 - Primary surfaces use 12–18 px radii. Buttons, action sheets, the board, and cells
   have no clipped corners; nested large pill/card stacks are forbidden.
@@ -385,15 +402,16 @@ and error states always add a higher-contrast or non-color cue.
 
 | Piece | Fill start | Fill end | Edge | Inner edge |
 | --- | --- | --- | --- | --- |
-| I | `#AE4761` | `#A1445A` | `#542532` | `#C78A99` |
-| O | `#3E988F` | `#347F78` | `#204944` | `#80B9B4` |
-| T | `#AD7D43` | `#946C3C` | `#503A22` | `#C6A078` |
-| S | `#4F67B0` | `#5264A2` | `#283653` | `#8795C2` |
-| Z | `#759A4C` | `#637F43` | `#3A4A2A` | `#A0B584` |
-| J | `#8A53A2` | `#835294` | `#432A4D` | `#AF8FBA` |
-| L | `#43829D` | `#386E86` | `#244452` | `#81AABB` |
-- Every fill endpoint has at least 3:1 non-text contrast against the `#07101C` board
-  well; the measured range is 3.17:1–5.89:1. Active/locked distinction cannot depend
+| I | `#C85A72` | `#B14F65` | `#713443` | `#E69AAA` |
+| O | `#47AAA1` | `#3C918A` | `#245B57` | `#91D4CF` |
+| T | `#C58E4A` | `#AD783D` | `#694824` | `#E8BD83` |
+| S | `#647BC0` | `#576DAE` | `#354675` | `#A9B7E3` |
+| Z | `#83AA57` | `#6F914A` | `#425A2B` | `#BCD79A` |
+| J | `#9A65B1` | `#87579E` | `#553663` | `#CFA9DC` |
+| L | `#4D91AD` | `#407D99` | `#295567` | `#95C8D9` |
+- Every fill endpoint has at least 3:1 non-text contrast against the `#0B1726` board
+  well; the measured range is 3.34:1–6.74:1.
+  Active/locked distinction cannot depend
   on glow or color alone.
 - Board and Next reuse the exact drawing primitive. Page entrance is 180 ms over at
   most 4 px; line clear is one local 120–160 ms tonal sweep. No ornamental animation
@@ -557,7 +575,7 @@ only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
   rejected detached tiles, bright plastic, blurred aura, double outer outline,
   toy/candy, cut-corner, ceramic, highlight-bar, thick-lip, and bracket-ghost styles
   are absent;
-- the page uses the exact `暮海矿物` solid tokens, no backdrop blur, ambient color
+- the page uses the exact `雾昼矿物` solid tokens, no backdrop blur, ambient color
   blobs, gradient CTA, glow shadow, or page gradient outside the single phase seam;
 - visible home/library/game copy matches the frozen minimal lists above. Repeated
   gameplay explanations and the banned strings `当前选择`, `三种玩法`,
