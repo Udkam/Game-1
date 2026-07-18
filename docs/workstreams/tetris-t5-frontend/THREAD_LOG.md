@@ -1606,3 +1606,17 @@ remain untouched. No generated browser artifact is part of the candidate.
 - Blocker: none. Push: not performed.
 - Next: independent QA re-audits only the two rejected P2 findings against product
   `356440c` and evidence `9ef2708`; coordinator acceptance remains pending.
+
+## 2026-07-18 — T7 INDEPENDENT QA ACCEPTED
+
+- Static QA: `ACCEPT`, no P0–P3. It confirmed both former P2 findings are closed,
+  ran the 7-file / 28-test focused set, verified product paths equal `356440c`, and
+  reproduced 27/27 raw-Git-blob evidence hashes.
+- Visual QA: `ACCEPT`, no P0–P3. It reviewed all 24 first-candidate originals, then
+  the five changed/new repair originals. The reward capture visibly shows five lines,
+  zero bedrock, and 38 seconds; rise remains one full warm bedrock row at 40 seconds;
+  top-out, landscape Classic, and narrow Puzzle show no regression.
+- Evidence `9ef2708` contains 25 captures, zero unexpected errors, computed reduced
+  motion values all `none`, and canonical rise/removal milestones. Product source is
+  `356440cf0f785b2558745c6eddd307b1654525e6`.
+- Blocker: none. Next: coordinator acceptance documents and push.
