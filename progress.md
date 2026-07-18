@@ -306,3 +306,26 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
   and explicit digit-3 / ready / zero-piece / disabled-input countdown proof.
 - `index.html`, dependencies, Puzzle boards/routes, and every separate game repository
   remain unchanged. The branch is eligible for coordinator push.
+
+## 2026-07-18 — T6 three independent modes accepted
+
+- Replaced the overlapping Classic/Race progression with three separate objectives:
+  Classic is fixed-speed chain scoring, player-facing `生存` is fixed-speed endurance
+  against permanent rising bedrock, and Puzzle remains fifteen authored board-clearing
+  endgames with continuous seeded seven-bag play.
+- Classic now exposes `连消`: consecutive clearing pieces score the fixed base table
+  plus `50 × (combo - 1)`, while a non-clearing lock breaks the chain. Classic and
+  Survival remain at 48 ticks per automatic cell with no player-facing level system.
+- Survival retains internal key `race` only for compatibility. Every five cumulative
+  cleared lines resolves normally, then shifts the board up and appends one full
+  `BEDROCK_CELL` row. Bedrock blocks pieces, never clears, renders through its own
+  coordinated mineral material, and accumulates until top-out.
+- Final source is `5a3c35a`; Core source is `34184cb`; formal evidence is `a26d989`.
+  Final gates passed typecheck, 261 passed / 2 skipped tests across 40 files, the
+  739-module build, and one 24-capture browser matrix.
+- Independent Core, combined browser, and evidence QA all accepted with no finding.
+  Public-command browser replay reached 24 lines / 4 bedrock rows on desktop and
+  portrait; formal evidence has zero browser errors and 26/26 matching checksums.
+- `index.html`, dependencies, Puzzle definitions/references, and separate game
+  repositories were not changed. Next action: coordinator push of
+  `codex/tetris-recovery`.

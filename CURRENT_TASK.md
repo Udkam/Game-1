@@ -11,9 +11,9 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **ACTIVE — T5 remains accepted at product source `48176fe`; T6 changes only
-Classic/Survival/Puzzle rule identity, Survival bedrock rendering, and matching
-statistics/QA bindings**
+Status: **COMPLETE / ACCEPTED — final product source `5a3c35a`; formal evidence
+`a26d989`; independent Core, combined browser, and evidence QA all ACCEPT with no
+open finding**
 
 ## Slice L — three independent mode rules
 
@@ -99,6 +99,21 @@ After the two source checkpoints, the coordinator runs exactly one final typeche
 complete test suite, build, and browser-evidence pass. Each source boundary receives
 independent read-only cross-QA. Formal evidence, changelog integration, and push occur
 only after both verdicts accept the exact combined source candidate.
+
+Disposition: **ACCEPTED**.
+
+- Core + type-safe bedrock source: `34184cb`; frontend/runtime binding source:
+  `5a3c35af325e4fa43841190e8acfb4867c8f1ebc`; source-log tip: `2308d80`.
+- Final gates passed: typecheck; 40 test files with 39 passed / 1 skipped; 263 tests
+  with 261 passed / 2 skipped; 739-module production build; one formal browser pass.
+- Independent Core QA accepted `34184cb`. Independent combined browser QA accepted
+  `34184cb + 5a3c35a` after a 695-command public replay reached 24 cleared lines and
+  four canonical bedrock rows at desktop and portrait with zero browser errors.
+- Formal evidence `a26d989` binds 24 captures to exact source `5a3c35a` and candidate
+  tip `2308d80`; independent evidence QA inspected 24/24 original PNGs and reproduced
+  26/26 raw-Git-blob SHA-256 entries with zero integrity failure.
+- `index.html`, dependencies, Puzzle definitions/references, accepted ordinary
+  tetromino geometry/palette, and every separate game repository remain unchanged.
 
 ## User-visible problems to resolve
 

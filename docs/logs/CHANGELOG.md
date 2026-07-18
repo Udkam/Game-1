@@ -203,3 +203,34 @@
   unexpected browser errors.
 - `index.html`, dependencies, Puzzle definitions/references, and separate game
   repositories were not changed.
+
+## 2026-07-18 — Three independent mode rules and rising-floor Survival
+
+- Split the three player-facing modes by objective. Classic is fixed-speed chain-score
+  play, `生存` replaces visible `竞速` with permanent rising-floor pressure, and Puzzle
+  remains the fifteen-level authored canonical-board-empty library.
+- Removed Classic/Survival level acceleration. Both use fixed 48-tick gravity; Classic
+  adds a visible consecutive-clear combo bonus and resets it on a non-clearing lock.
+- Added a type-safe canonical `BEDROCK_CELL`. Every five Survival lines clears and
+  scores first, then pushes the remaining board upward and appends one unbreakable
+  mineral row. Bedrock blocks placement, never clears, has its own renderer material,
+  participates in deterministic Survival state/hash, and resets on restart.
+- Preserved all thirty accepted Puzzle solution event digests and final hashes through
+  an invisible score/event compatibility layer; Puzzle gravity, UI, continuous queue,
+  starting boards, goals, and reference artifacts remain unchanged.
+- Updated the concise UI to `经典 / 生存 / 解谜`; Classic statistics are score, lines,
+  and `连消`, while Survival statistics are score, lines, and bedrock height. Removed
+  visible `竞速`, `等级`, and `速度档` plus the obsolete DEV level snapshot.
+- Final product source is `5a3c35af325e4fa43841190e8acfb4867c8f1ebc`;
+  source-log tip is `2308d80a104177025d0bfcb3d52cab69ac054ac0`.
+  Final gates passed typecheck, 40 files / 263 tests (39 files and 261 tests passed;
+  1 file and 2 tests skipped), the 739-module production build, and one formal
+  browser-evidence pass.
+- Independent Core and combined frontend/browser QA accepted with no finding. Formal
+  evidence `a26d989` contains 24 source-bound captures, a 695-command public Survival
+  replay at 24 lines / 4 bedrock rows, one canvas, zero DOM cells, 44 px controls, and
+  zero unexpected browser errors.
+- Independent evidence QA inspected all 24 PNGs at original detail and reproduced all
+  26 raw-Git-blob SHA-256 entries with zero CRLF or integrity failure.
+- `index.html`, dependencies, Puzzle definitions/references, ordinary tetromino
+  geometry/palette, and every separate game repository remain unchanged.
