@@ -12,6 +12,12 @@ export interface ExposedCellEdges {
   exposed: Record<CellEdge, boolean>;
 }
 
+export interface InternalCellSeam {
+  orientation: 'horizontal' | 'vertical';
+  start: Cell;
+  end: Cell;
+}
+
 export const LINE_CLEAR_SWEEP_TICKS = 9;
 
 const EDGE_OFFSETS: ReadonlyArray<{ edge: CellEdge; dx: number; dy: number }> = [
@@ -67,6 +73,32 @@ export function exposedCellEdges(cells: readonly Cell[]): ExposedCellEdges[] {
       [edge, !occupied.has(`${cell.x + dx},${cell.y + dy}`)]
     ))) as Record<CellEdge, boolean>,
   }));
+}
+
+/** Lists every shared unit boundary exactly once for presentation-only engraving. */
+export function internalCellSeams(cells: readonly Cell[]): InternalCellSeam[] {
+  const ordered = orderedCells(cells);
+  const occupied = new Set(ordered.map(cellKey));
+  const seams: InternalCellSeam[] = [];
+
+  for (const cell of ordered) {
+    if (occupied.has(`${cell.x + 1},${cell.y}`)) {
+      seams.push({
+        orientation: 'vertical',
+        start: { x: cell.x + 1, y: cell.y },
+        end: { x: cell.x + 1, y: cell.y + 1 },
+      });
+    }
+    if (occupied.has(`${cell.x},${cell.y + 1}`)) {
+      seams.push({
+        orientation: 'horizontal',
+        start: { x: cell.x, y: cell.y + 1 },
+        end: { x: cell.x + 1, y: cell.y + 1 },
+      });
+    }
+  }
+
+  return seams;
 }
 
 export function approachPresentationPoint(

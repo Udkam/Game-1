@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   approachPresentationPoint,
   exposedCellEdges,
+  internalCellSeams,
   lineClearCellProgress,
   lineClearPresentationProgress,
   nextPreviewPiece,
@@ -43,8 +44,9 @@ describe('presentation interpolation', () => {
     expect(lineClearCellProgress(1, 9, 10)).toBe(1);
   });
 
-  it('groups every canonical tetromino and exposes only its outer perimeter', () => {
+  it('groups every canonical tetromino, preserves its outer perimeter, and enumerates each inner seam once', () => {
     const expectedPerimeters = { I: 10, O: 8, T: 10, S: 10, Z: 10, J: 10, L: 10 } as const;
+    const expectedSeams = { I: 3, O: 4, T: 3, S: 3, Z: 3, J: 3, L: 3 } as const;
     const opposite = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' } as const;
     const offsets = {
       top: { x: 0, y: -1 },
@@ -59,6 +61,9 @@ describe('presentation interpolation', () => {
       expect(orthogonalCellComponents(cells)).toEqual([ordered]);
       const perimeter = exposedCellEdges(cells);
       expect(perimeter.flatMap(({ exposed }) => Object.values(exposed)).filter(Boolean)).toHaveLength(expectedPerimeters[type]);
+      const seams = internalCellSeams(cells);
+      expect(seams).toHaveLength(expectedSeams[type]);
+      expect(new Set(seams.map(({ start, end }) => `${start.x},${start.y}:${end.x},${end.y}`)).size).toBe(seams.length);
 
       const byCell = new Map(perimeter.map((entry) => [`${entry.cell.x},${entry.cell.y}`, entry]));
       for (const { cell, exposed } of perimeter) {
@@ -80,6 +85,13 @@ describe('presentation interpolation', () => {
     expect(joined[0]?.exposed.right).toBe(false);
     expect(joined[1]?.exposed.left).toBe(false);
     expect(joined.flatMap(({ exposed }) => Object.values(exposed)).filter(Boolean)).toHaveLength(6);
+    expect(internalCellSeams(fragments)).toEqual([
+      {
+        orientation: 'vertical',
+        start: { x: 1, y: 0 },
+        end: { x: 1, y: 1 },
+      },
+    ]);
   });
 
   it('uses the generated shared next item for Puzzle and no terminal preview', () => {

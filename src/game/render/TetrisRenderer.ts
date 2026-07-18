@@ -15,6 +15,7 @@ import { CELL_STYLE, COLORS, PIECE_MATERIALS } from './theme';
 import {
   approachPresentationPoint,
   exposedCellEdges,
+  internalCellSeams,
   lineClearPresentationProgress,
   nextPreviewPiece,
   orthogonalCellComponents,
@@ -408,7 +409,7 @@ export class TetrisRenderer {
     const centerX = options.originX + ((minX + maxX + 1) * options.unit) / 2;
     const centerY = options.originY + ((minY + maxY + 1) * options.unit) / 2;
     const scaledUnit = options.unit * scale;
-    const baseGap = Math.max(0.7, Math.min(CELL_STYLE.gapMin, options.unit * CELL_STYLE.gapRatio));
+    const baseGap = Math.max(CELL_STYLE.gapFloor, Math.min(CELL_STYLE.gapMin, options.unit * CELL_STYLE.gapRatio));
     const ghostInset = options.ghost
       ? Math.max(CELL_STYLE.ghostInsetMin, options.unit * CELL_STYLE.ghostInsetRatio)
       : 0;
@@ -419,6 +420,22 @@ export class TetrisRenderer {
     const borderWidth = Math.max(
       CELL_STYLE.edgeWidthMin,
       Math.min(CELL_STYLE.edgeWidthMax, size * CELL_STYLE.edgeWidthRatio),
+    );
+    const faceInset = Math.max(
+      CELL_STYLE.faceInsetMin,
+      Math.min(CELL_STYLE.faceInsetMax, size * CELL_STYLE.faceInsetRatio),
+    );
+    const faceBevelWidth = Math.max(
+      CELL_STYLE.faceBevelWidthMin,
+      Math.min(CELL_STYLE.faceBevelWidthMax, size * CELL_STYLE.faceBevelWidthRatio),
+    );
+    const seamGrooveWidth = Math.max(
+      CELL_STYLE.seamGrooveWidthMin,
+      Math.min(CELL_STYLE.seamGrooveWidthMax, size * CELL_STYLE.seamGrooveWidthRatio),
+    );
+    const seamLipWidth = Math.max(
+      CELL_STYLE.seamLipWidthMin,
+      Math.min(CELL_STYLE.seamLipWidthMax, size * CELL_STYLE.seamLipWidthRatio),
     );
     const occupied = new Set(cells.map((cell) => `${cell.x},${cell.y}`));
     const geometry = exposedCellEdges(cells).map(({ cell, exposed }) => {
@@ -448,7 +465,49 @@ export class TetrisRenderer {
       if (options.faceColor === undefined) graphics.fill({ fill: this.gradientFor(type), alpha });
       else graphics.fill({ color: options.faceColor, alpha });
       if (options.faceColor !== undefined) return;
+
+      const faceSignalSegments: Array<[number, number, number, number]> = [];
+      const faceDarkSegments: Array<[number, number, number, number]> = [];
+      for (const entry of geometry) {
+        const left = entry.x + faceInset;
+        const top = entry.y + faceInset;
+        const right = entry.x + size - faceInset;
+        const bottom = entry.y + size - faceInset;
+        faceSignalSegments.push([left, top, right, top], [left, bottom, left, top]);
+        faceDarkSegments.push([right, top, right, bottom], [right, bottom, left, bottom]);
+      }
+      this.strokeSegments(
+        graphics,
+        faceSignalSegments,
+        material.innerEdge,
+        Math.min(CELL_STYLE.faceSignalAlpha, alpha),
+        faceBevelWidth,
+      );
+      this.strokeSegments(
+        graphics,
+        faceDarkSegments,
+        material.edge,
+        Math.min(CELL_STYLE.faceDarkAlpha, alpha),
+        faceBevelWidth,
+      );
     }
+
+    const componentX = (x: number): number => (
+      centerX + (options.originX + x * options.unit - centerX) * scale + offsetX
+    );
+    const componentY = (y: number): number => (
+      centerY + (options.originY + y * options.unit - centerY) * scale + offsetY
+    );
+    const seamSegments = internalCellSeams(cells).map((seam) => {
+      const startX = componentX(seam.start.x);
+      const startY = componentY(seam.start.y);
+      const endX = componentX(seam.end.x);
+      const endY = componentY(seam.end.y);
+      return seam.orientation === 'vertical'
+        ? [startX, startY + gap, endX, endY - gap] as const
+        : [startX + gap, startY, endX - gap, endY] as const;
+    });
+    const seamLipOffset = seamGrooveWidth * CELL_STYLE.seamLipOffsetRatio;
 
     const segments = new Map<CellEdge, Array<[number, number, number, number]>>([
       ['top', []], ['right', []], ['bottom', []], ['left', []],
@@ -480,9 +539,52 @@ export class TetrisRenderer {
     if (options.ghost) {
       this.strokeSegments(graphics, [...segments.values()].flat(), material.innerEdge,
         Math.min(CELL_STYLE.ghostStrokeAlpha, alpha), CELL_STYLE.ghostStrokeWidth);
+      this.strokeSegments(
+        graphics,
+        seamSegments,
+        material.innerEdge,
+        Math.min(CELL_STYLE.ghostSeamAlpha, alpha),
+        CELL_STYLE.ghostSeamWidth,
+      );
     } else if (options.active) {
+      this.strokeSegments(
+        graphics,
+        seamSegments,
+        material.edge,
+        Math.min(CELL_STYLE.seamGrooveAlpha, alpha),
+        seamGrooveWidth,
+      );
+      this.strokeSegments(
+        graphics,
+        seamSegments.map(([startX, startY, endX, endY]) => (
+          startX === endX
+            ? [startX + seamLipOffset, startY, endX + seamLipOffset, endY] as const
+            : [startX, startY + seamLipOffset, endX, endY + seamLipOffset] as const
+        )),
+        material.innerEdge,
+        Math.min(CELL_STYLE.seamLipAlpha, alpha),
+        seamLipWidth,
+      );
       this.strokeSegments(graphics, [...segments.values()].flat(), material.innerEdge, Math.min(1, alpha), borderWidth);
     } else {
+      this.strokeSegments(
+        graphics,
+        seamSegments,
+        material.edge,
+        Math.min(CELL_STYLE.seamGrooveAlpha, alpha),
+        seamGrooveWidth,
+      );
+      this.strokeSegments(
+        graphics,
+        seamSegments.map(([startX, startY, endX, endY]) => (
+          startX === endX
+            ? [startX + seamLipOffset, startY, endX + seamLipOffset, endY] as const
+            : [startX, startY + seamLipOffset, endX, endY + seamLipOffset] as const
+        )),
+        material.innerEdge,
+        Math.min(CELL_STYLE.seamLipAlpha, alpha),
+        seamLipWidth,
+      );
       this.strokeSegments(graphics, [...segments.get('top')!, ...segments.get('left')!], material.innerEdge,
         Math.min(CELL_STYLE.reliefSignalAlpha, alpha), borderWidth);
       this.strokeSegments(graphics, [...segments.get('bottom')!, ...segments.get('right')!], material.edge,

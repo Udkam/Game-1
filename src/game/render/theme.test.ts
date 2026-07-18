@@ -40,25 +40,47 @@ describe('T5 deep mineral matte material', () => {
 
   it('freezes the matte plate, signal edge, zero-fill ghost, and lock response', () => {
     expect(CELL_STYLE).toEqual({
+      gapFloor: 0.7,
       gapMin: 1.25,
       gapRatio: 0.055,
       radiusMin: 1.25,
       radiusMax: 1.75,
       radiusRatio: 0.065,
-      edgeWidthMin: 0.75,
-      edgeWidthMax: 1,
-      edgeWidthRatio: 0.032,
-      reliefSignalAlpha: 0.28,
-      reliefDarkAlpha: 0.84,
+      edgeWidthMin: 1,
+      edgeWidthMax: 1.6,
+      edgeWidthRatio: 0.045,
+      reliefSignalAlpha: 0.38,
+      reliefDarkAlpha: 0.92,
+      faceInsetMin: 0.55,
+      faceInsetMax: 1.15,
+      faceInsetRatio: 0.035,
+      faceBevelWidthMin: 0.65,
+      faceBevelWidthMax: 1.6,
+      faceBevelWidthRatio: 0.052,
+      faceSignalAlpha: 0.24,
+      faceDarkAlpha: 0.46,
+      seamGrooveWidthMin: 0.6,
+      seamGrooveWidthMax: 1.2,
+      seamGrooveWidthRatio: 0.038,
+      seamGrooveAlpha: 0.72,
+      seamLipWidthMin: 0.45,
+      seamLipWidthMax: 0.8,
+      seamLipWidthRatio: 0.025,
+      seamLipAlpha: 0.3,
+      seamLipOffsetRatio: 0.55,
       ghostInsetMin: 0.75,
       ghostInsetRatio: 0.045,
       ghostStrokeWidth: 1,
       ghostStrokeAlpha: 0.45,
+      ghostSeamWidth: 0.75,
+      ghostSeamAlpha: 0.28,
       lockFillAlpha: 0.12,
       lockFillDurationMs: 90,
     });
     expect(CELL_STYLE.radiusMax).toBeLessThanOrEqual(1.75);
-    expect(CELL_STYLE.edgeWidthMax).toBeLessThanOrEqual(1);
+    expect(CELL_STYLE.edgeWidthMax).toBeLessThanOrEqual(1.6);
+    expect((CELL_STYLE.gapFloor * 2) / CELL_STYLE.seamGrooveWidthMin).toBeGreaterThanOrEqual(1.6);
+    expect((CELL_STYLE.gapMin * 2) / CELL_STYLE.seamGrooveWidthMax).toBeGreaterThanOrEqual(1.6);
     expect(CELL_STYLE.ghostStrokeWidth).toBe(1);
     expect(CELL_STYLE.lockFillDurationMs).toBeGreaterThanOrEqual(80);
     expect(CELL_STYLE.lockFillDurationMs).toBeLessThanOrEqual(100);
