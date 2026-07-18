@@ -1,25 +1,30 @@
 import { describe, expect, it } from 'vitest';
-import { BEDROCK_CELL, BOARD_WIDTH, TICKS_PER_SECOND, stateHash } from '../core';
-import { SURVIVAL_BEDROCK_QA_ROWS, replayPuzzleChallenge, replaySurvivalBedrock } from './qaScenario';
+import { BEDROCK_CELL, BOARD_WIDTH, TICKS_PER_SECOND, stateHash, survivalIntervalSeconds } from '../core';
+import { replayPuzzleChallenge, replaySurvivalBedrock } from './qaScenario';
 
 describe('Survival bedrock browser QA replay', () => {
   it('reaches the first deterministic timed rise through ordinary gravity and public commands only', () => {
     const first = replaySurvivalBedrock(0x51a1f00d);
     const second = replaySurvivalBedrock(0x51a1f00d);
 
-    expect(first.commands[0]).toEqual({ type: 'start' });
-    expect(first.commands.some((command) => command.type === 'move')).toBe(true);
-    expect(first.commands.some((command) => command.type === 'hard-drop')).toBe(false);
-    expect(first.commands.some((command) => command.type === 'tick')).toBe(true);
+    expect(first.replay.commands[0]).toEqual({ type: 'start' });
+    expect(first.replay.commands.some((command) => command.type === 'move')).toBe(true);
+    expect(first.replay.commands.some((command) => command.type === 'hard-drop')).toBe(true);
+    expect(first.replay.commands.some((command) => command.type === 'tick')).toBe(true);
+    expect(first.replay.firstRiseCommandCount).toBeLessThan(first.replay.removalCommandCount);
     expect(first.state.mode).toBe('race');
     expect(first.state.status).toBe('playing');
-    expect(first.state.elapsedTicks).toBeGreaterThanOrEqual(40 * TICKS_PER_SECOND);
+    expect(first.riseState.elapsedTicks).toBeGreaterThanOrEqual(40 * TICKS_PER_SECOND);
+    expect(first.riseState.survivalBedrockRows).toBe(1);
+    expect(first.riseState.lines).toBeLessThan(5);
+    expect(first.riseState.board.at(-1)).toEqual(Array.from({ length: BOARD_WIDTH }, () => BEDROCK_CELL));
     expect(first.state.active).not.toBeNull();
-    expect(first.state.survivalBedrockRows).toBe(SURVIVAL_BEDROCK_QA_ROWS);
-    expect(first.state.lines).toBeLessThan(5);
-    expect(first.state.board.at(-1)).toEqual(Array.from({ length: BOARD_WIDTH }, () => BEDROCK_CELL));
+    expect(first.state.lines).toBeGreaterThanOrEqual(5);
+    expect(first.state.survivalBedrockRows).toBe(0);
+    expect(first.state.survivalPressureTicks).toBe(0);
+    expect(survivalIntervalSeconds(first.state.lines)).toBe(38);
     expect(stateHash(first.state)).toBe(stateHash(second.state));
-    expect(first.commands).toEqual(second.commands);
+    expect(first.replay).toEqual(second.replay);
   });
 });
 

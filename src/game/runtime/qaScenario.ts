@@ -109,18 +109,20 @@ function settleLandingWithGravity(state: GameState, planned: Route): Route {
   return { state: next, commands };
 }
 
-/**
- * Produces a deterministic, command-only Survival replay that reaches the first
- * timed pressure rise through ordinary gravity. The planner reads normal simulation
- * states and never creates or mutates a canonical board.
- */
-export const SURVIVAL_BEDROCK_QA_ROWS = 1;
+export interface SurvivalBedrockQaReplay {
+  commands: readonly GameCommand[];
+  firstRiseCommandCount: number;
+  removalCommandCount: number;
+}
 
-export function createSurvivalBedrockReplay(seed = 0x51a1f00d): readonly GameCommand[] {
+/** Builds public-command milestones for the first timed rise and five-line removal. */
+export function createSurvivalBedrockQaReplay(seed = 0x51a1f00d): SurvivalBedrockQaReplay {
   let state = dispatch(createInitialState(seed, 'race'), { type: 'start' }).state;
   const commands: GameCommand[] = [{ type: 'start' }];
+  let firstRiseCommandCount = 0;
+  let removalCommandCount = 0;
 
-  for (let piece = 0; piece < 80 && state.status === 'playing' && state.survivalBedrockRows < SURVIVAL_BEDROCK_QA_ROWS; piece += 1) {
+  for (let piece = 0; piece < 120 && state.status === 'playing' && removalCommandCount === 0; piece += 1) {
     const options = reachableLandings(state);
     if (options.length === 0) throw new Error('Survival replay planner found no legal landing.');
     let selected = options[0]!;
@@ -132,22 +134,42 @@ export function createSurvivalBedrockReplay(seed = 0x51a1f00d): readonly GameCom
         selectedCost = candidateCost;
       }
     }
-    const settled = settleLandingWithGravity(state, selected);
+    const previousRows = state.survivalBedrockRows;
+    const settled = firstRiseCommandCount === 0
+      ? settleLandingWithGravity(state, selected)
+      : selected;
     commands.push(...settled.commands);
     state = settled.state;
+    if (firstRiseCommandCount === 0 && state.survivalBedrockRows > previousRows) {
+      firstRiseCommandCount = commands.length;
+    } else if (firstRiseCommandCount > 0 && state.survivalBedrockRows < previousRows && state.lines >= 5) {
+      removalCommandCount = commands.length;
+    }
   }
 
-  if (state.status !== 'playing' || state.survivalBedrockRows < SURVIVAL_BEDROCK_QA_ROWS) {
-    throw new Error(`Survival timed replay missed its live milestone: ${state.status} after ${state.elapsedTicks} ticks.`);
+  if (state.status !== 'playing' || firstRiseCommandCount === 0 || removalCommandCount === 0) {
+    throw new Error(`Survival timed replay missed rise/removal: ${state.status}, ${state.lines} lines, ${state.survivalBedrockRows} rows.`);
   }
-  return commands;
+  return { commands, firstRiseCommandCount, removalCommandCount };
 }
 
-export function replaySurvivalBedrock(seed = 0x51a1f00d): { commands: readonly GameCommand[]; state: GameState } {
-  const commands = createSurvivalBedrockReplay(seed);
+export function createSurvivalBedrockReplay(seed = 0x51a1f00d): readonly GameCommand[] {
+  return createSurvivalBedrockQaReplay(seed).commands;
+}
+
+export function replaySurvivalBedrock(seed = 0x51a1f00d): {
+  replay: SurvivalBedrockQaReplay;
+  riseState: GameState;
+  state: GameState;
+} {
+  const replay = createSurvivalBedrockQaReplay(seed);
   let state = createInitialState(seed, 'race');
-  for (const command of commands) state = dispatch(state, command).state;
-  return { commands, state };
+  let riseState = state;
+  replay.commands.forEach((command, index) => {
+    state = dispatch(state, command).state;
+    if (index + 1 === replay.firstRiseCommandCount) riseState = state;
+  });
+  return { replay, riseState, state };
 }
 
 interface PuzzleQaPlacement {

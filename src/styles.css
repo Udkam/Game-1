@@ -1848,8 +1848,17 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .entry-countdown__digit {
+  .entry-countdown__digit,
+  .mode-gate,
+  .action-sheet,
+  .run-stats [data-stat-role="survival-next"][data-urgent="true"] strong {
     animation: none;
+  }
+
+  .mode-gate__glyph svg,
+  .mode-gate__motif,
+  .touch-key:active {
+    transform: none !important;
   }
 
   *,
