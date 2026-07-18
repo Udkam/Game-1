@@ -1253,3 +1253,80 @@ remain untouched. No generated browser artifact is part of the candidate.
 - Blocker: none. Push: not performed.
 - Next: coordinator runs the single combined final gates/matrix for K-R4 + K-R5 and
   routes the exact candidate to independent cross-QA before formal evidence or push.
+
+## 2026-07-18 — ENTRY COUNTDOWN SOURCE READY
+
+### Intake and ownership
+
+- Task: `TETRIS-T5-ENTRY-COUNTDOWN-016`.
+- Branch/intake: clean `codex/tetris-recovery` at
+  `1e7e5e34005953c8f25f533ce480b73346a0d91a`.
+- Exact source checkpoint:
+  `7f0b7668a0c42dd16d6cedbca58693ed71eb516d` —
+  `feat(start): add input-gated entry countdown`.
+- Exact source paths: `src/App.tsx`, `src/App.test.ts`,
+  `src/game/runtime/GameRuntime.ts`, `src/game/runtime/GameRuntime.test.ts`, and
+  countdown-only additions in `src/styles.css`. No Core, Puzzle definition/reference,
+  renderer/theme token, layout, visible-copy, `index.html`, dependency/configuration,
+  coordinator document, changelog, or evidence path changed.
+- `frontend-design` kept the overlay as one restrained board-local state using the
+  existing mineral tokens, with no card, glow, telemetry, or new composition.
+  `develop-web-game` supplied the prescribed client and action payload. Its ordinary
+  `progress.md` write was replaced by this authorized workstream log; `progress.md`
+  was not edited.
+
+### Delivered countdown and gate
+
+- `GameRuntime` now accepts `inputEnabled`, defaulting to `true` for every existing
+  caller. `setInputEnabled` clears held input on each real gate transition. Both the
+  public `start()` path and the shared keyboard/touch/QA action path fail closed while
+  disabled, so a mounted runtime remains canonical `ready` during entry.
+- Initial Classic, Race, and selected-Puzzle `GameSession` entry constructs the runtime
+  with input disabled and shows board-local `3`, `2`, and `1` for exactly 1000 ms each.
+  The final timer enables input, calls public start once, removes the overlay, announces
+  the existing start message, and restores canvas focus in that order.
+- Pause and all five touch controls are disabled during the countdown. Restart/replay
+  and pause/resume keep their existing immediate paths and do not reset countdown
+  state. Reduced motion removes only the digit opacity/scale interpolation; the three
+  wall-clock seconds are unchanged.
+- DEV text/collector snapshots expose the current countdown digit so the prescribed
+  client can bind browser state evidence to the visible overlay without exposing a
+  mutable canonical state path.
+
+### Commands and evidence actually run
+
+- Focused
+  `npm.cmd run test -- src/App.test.ts src/game/runtime/GameRuntime.test.ts` — PASS,
+  4 files / 17 tests in the focused dependency set. Direct fake timers prove `3`
+  through 999 ms, `2` through 1999 ms, and `1` through 2999 ms even when reduced motion
+  is requested; at 3000 ms input-enable precedes the one start call, the controls enable,
+  and the canvas receives focus. Direct runtime tests prove public start, touch, pause,
+  QA action, and 180 QA ticks cannot mutate the gated ready state, then prove held-input
+  clearing on each real toggle.
+- Final `npm.cmd run typecheck` — PASS. `git diff --check` — PASS.
+- Prescribed client command against the existing root server:
+  `node 'C:\Users\Alex Chen\.codex\skills\develop-web-game\scripts\web_game_playwright_client.js' --url http://127.0.0.1:4173 --click-selector '[data-testid="enter-marathon"]' --actions-file 'C:\Users\Alex Chen\.codex\skills\develop-web-game\references\action_payloads.json' --iterations 6 --pause-ms 500 --screenshot-dir '%TEMP%\tetris-k-r6-countdown-20260718-0936'`
+  — PASS with no `errors-*.json`. Client state stayed `ready`, zero placed pieces,
+  active x/y `3/19`, while sampled countdown values were `2`, `1`, `1`; it changed to
+  `playing` only after countdown became `null`, and only subsequent iterations placed
+  pieces. Thus the prescribed left/hard-drop choreography could not steal the start.
+- Two bounded early-frame probes (`iterations 1`, first at `pause-ms 100` with the
+  prescribed actions and then at `pause-ms 0` with one empty frame) also remained
+  `ready`, zero placed pieces, and produced no error artifact. The client's mandatory
+  post-click/capture overhead sampled `2` rather than `3`; exact `3` duration is covered
+  by the direct fake-timer boundary test above rather than claimed as a browser sample.
+- Opened `shot-0.png`, `shot-1.png`, and `shot-3.png` at original detail. They show the
+  centered board-local `2`, centered board-local `1`, and the subsequent focused
+  playing board respectively, with canonical board geometry, information dock, Next,
+  and controls intact. Temporary client artifacts are outside the repository under
+  `%TEMP%\tetris-k-r6-countdown-20260718-0936`; no generated evidence was staged.
+- Per coordinator instruction, this slice did not run the complete suite, production
+  build, or viewport matrix. The source checkpoint staged exactly the five authorized
+  paths and passed `git diff --cached --check`.
+
+### Handoff
+
+- Blocker: none. Push: not performed.
+- Next: independent read-only QA audits exact source range
+  `1e7e5e34005953c8f25f533ce480b73346a0d91a..7f0b7668a0c42dd16d6cedbca58693ed71eb516d`;
+  the coordinator owns final combined gates, changelog disposition, and push.
