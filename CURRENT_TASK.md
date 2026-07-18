@@ -53,13 +53,15 @@ default ten-path checkpoint budget.
 Core acceptance:
 
 - Classic, Survival, and Puzzle remain at 48 ticks after any line or piece count;
-- all modes use fixed base line-clear scores `40 / 100 / 300 / 1200`; Classic alone
-  adds `50 × (combo - 1)` after the first consecutive clearing piece;
+- Classic and Survival use fixed base line-clear scores `40 / 100 / 300 / 1200`;
+  Classic alone adds `50 × (combo - 1)` after the first consecutive clearing piece;
 - Classic combo starts at `0`, becomes `1` on the first clearing piece, increments on
   every immediately consecutive clearing piece, and resets on a non-clearing lock;
   Survival and Puzzle remain at combo `0` and receive no combo bonus;
-- the compatibility `state.level` remains exactly `0` and no line threshold emits
-  `level-up`;
+- Classic and Survival keep compatibility `state.level` exactly `0` and emit no
+  `level-up`; Puzzle alone preserves its invisible accepted score/event serialization
+  so the thirty frozen solution event digests and final hashes remain unchanged, but
+  gravity, UI, and success never read that level;
 - Survival's internal key remains `race`, but it has no speed curve or successful
   line-count terminal state;
 - each crossed five-line threshold clears/scores first, then shifts the remaining

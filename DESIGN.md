@@ -18,10 +18,12 @@ Classic level progression and the complete Race acceleration rule:
 - Puzzle uses the same fixed standard speed as Classic but changes the initial board
   and terminal objective to an authored board-clearing challenge.
 
-The serialized `level` field remains pinned to `0` for replay/state compatibility in
-this bounded slice. It is not displayed, never increments, never multiplies score,
-and never emits a `level-up` event. Removing the compatibility field or event type is
-outside T6 unless a separately authorized migration proves old replay handling.
+The serialized `level` field remains pinned to `0` in Classic and Survival. Puzzle
+retains its accepted invisible level-based score/event serialization only so all
+thirty frozen public-command solution references keep their event digests and final
+hashes; Puzzle gravity never reads it, the UI never displays it, and success still
+depends only on the canonical board becoming empty. Removing this Puzzle evidence
+compatibility requires a separately authorized reference migration.
 Classic owns one deterministic `combo` counter. Survival and Puzzle keep it at `0`,
 and non-Classic hashes remain stable by excluding that irrelevant field from their
 canonical hash payload. The internal mode key remains `race` only for replay/storage
@@ -280,10 +282,11 @@ piece generation otherwise follow Classic play.
 - There is no authored finite queue, piece budget, remaining-piece counter, or
   `failed-budget` outcome. An unsolved run continues until canonical success, top-out,
   restart, or explicit exit.
-- Puzzle uses Classic fixed gravity, grounded lock delay, entry delay, clear
-  delay, base line scoring, soft drop, hard drop, and SRS rotation, but not Classic's
-  chain counter or chain bonus. A no-clear lock and a clear both continue through the
-  ordinary deterministic spawn path.
+- Puzzle uses Classic fixed gravity, grounded lock delay, entry delay, soft drop,
+  hard drop, and SRS rotation, but not Classic's chain counter or chain bonus. Its
+  invisible legacy score/event serialization remains frozen solely for reference
+  compatibility. A no-clear lock and a clear both continue through the ordinary
+  deterministic spawn path.
 - The initial stack occupies 8–12 visible rows and is produced by 16–22 frozen setup
   pieces. It contains all seven piece types, at least seven distinct non-empty row
   shapes, four row-density classes, covered cavities in at least five columns, and at
