@@ -249,3 +249,27 @@
 - Independent static and visual/evidence QA both accepted with no P0–P3 finding.
   Evidence `367a443` contains zero browser errors, four visible full bedrock rows at
   24 lines, and 26/26 matching raw-Git-blob checksums.
+
+## 2026-07-18 — Timed Survival pressure and restrained motion accepted
+
+- Classic and Survival now share a line-driven gravity curve: speed advances every
+  ten cleared lines from 48 ticks per cell down to the three-tick cap. Puzzle remains
+  fixed at its accepted 48-tick cadence and all thirty signed routes stay unchanged.
+- Survival now raises one permanent bedrock row after a 40-second playing-time timer.
+  Every five cleared lines removes one bottom bedrock row when present, resets pressure,
+  and shortens the next interval by two seconds down to a ten-second minimum.
+- The UI removes the two unexplained decorative horizontal bars and states the three
+  mode rules directly. Classic shows fall cadence; Survival shows bedrock height and
+  next-rise countdown, including pending state.
+- Added only bounded mode-entry/focus feedback and a brief renderer stack shift on
+  bedrock rise/removal. Reduced motion explicitly disables the new animations,
+  transitions, and transforms without altering canonical timing.
+- Core source is `ff90d61`; final product source is
+  `356440cf0f785b2558745c6eddd307b1654525e6`. Final gates passed typecheck,
+  267 passed / 2 skipped tests across 40 files, and the 739-module production build.
+- Formal evidence `9ef2708` contains 25 captures and zero unexpected browser errors.
+  The public-command replay proves one full bedrock row at 2763 ticks, then five lines,
+  zero bedrock, zero pressure, and a visible 38-second next interval. All 27 hashes
+  match. Independent static and visual QA accepted with no P0–P3 finding.
+- `index.html`, dependencies, Puzzle data/references, ordinary piece materials, and
+  every separate game repository remain unchanged.

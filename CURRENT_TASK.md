@@ -11,7 +11,7 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **IN PROGRESS — contract frozen; Core writer first, frontend writer second**
+Status: **ACCEPTED — T7 timed Survival, rules UI, and restrained motion verified**
 
 ## Slice N — progressive gravity and timed Survival pressure
 
@@ -57,6 +57,25 @@ Each writer creates exact-path source and log checkpoints without push. After th
 source edit, the coordinator runs exactly one final typecheck, full suite, build, and
 browser-evidence pass, then routes the exact source and evidence to independent static
 and visual QA before changelog integration or push.
+
+Disposition: **ACCEPTED**.
+
+- Core source `ff90d61` implements the shared Classic/Survival gravity curve, timed
+  pending pressure, safe rise ordering, five-line one-row removal, pause/restart,
+  overflow, replay/hash, and unchanged Puzzle cadence/references.
+- Final product source `356440cf0f785b2558745c6eddd307b1654525e6` removes both
+  decorative bars, exposes complete concise rules and direct cadence/countdown values,
+  adds bounded home/bedrock feedback, and explicitly disables its transforms and
+  transitions for reduced motion.
+- Final gates passed: typecheck; 40 test files with 39 passed / 1 skipped; 269 tests
+  with 267 passed / 2 skipped; 739-module production build; and a completed 25-capture
+  browser matrix with zero unexpected errors.
+- Evidence `9ef2708` proves the public-command first rise at 2763 ticks with one full
+  `BBBBBBBBBB` row, then the five-line reward at zero bedrock / zero pressure / 38
+  seconds. Independent static and visual QA both accepted with no P0–P3 finding and
+  reproduced all 27 evidence hashes.
+- Dependencies, `index.html`, Puzzle definitions/references, ordinary material tokens,
+  and separate game repositories remain unchanged.
 
 ## Slice M — warm mineral bedrock recolor
 

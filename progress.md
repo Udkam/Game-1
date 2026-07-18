@@ -339,3 +339,21 @@ Original prompt: separate Tetris into E:\Proj\Game-1-tetris, diagnose the mixed 
 - Final typecheck, 261 passed / 2 skipped tests, 739-module build, action client, and
   24-capture browser matrix passed. Independent static and visual/evidence QA accepted
   with no finding; evidence `367a443` reproduced 26/26 checksums and zero errors.
+
+## 2026-07-18 — T7 timed Survival and motion accepted
+
+- Final product source `356440c` replaces five-line bedrock generation with timed
+  pressure: 40 seconds initially, minus two seconds every five lines, ten-second floor;
+  each five-line reward removes one existing bottom bedrock row and resets the timer.
+- Classic and Survival use the same ten-line progressive gravity curve; Puzzle keeps
+  its accepted fixed cadence and all fifteen levels / thirty references unchanged.
+- Removed the mode and action-sheet decorative bars, added concise complete rules,
+  direct fall/countdown statistics, restrained entry/focus feedback, and brief
+  rise/removal stack motion with explicit reduced-motion suppression.
+- Final gates passed typecheck, 267 passed / 2 skipped tests, the 739-module build, and
+  a 25-capture browser matrix with zero unexpected errors. Evidence `9ef2708` proves
+  rise at 2763 ticks / one `BBBBBBBBBB` row and reward at five lines / zero rows /
+  zero pressure / 38 seconds; 27/27 hashes match.
+- Independent static and visual QA accepted with no P0–P3 finding. `index.html`,
+  dependencies, Puzzle data, ordinary material tokens, and separate repositories did
+  not change. Next action: coordinator push of `codex/tetris-recovery`.
