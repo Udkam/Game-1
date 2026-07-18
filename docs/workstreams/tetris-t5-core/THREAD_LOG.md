@@ -481,3 +481,51 @@ changelog, T3/T4 evidence, or QA archive was edited.
 - Push: not performed; coordinator owns independent QA integration and push.
 - Next: independent read-only Core/runtime QA reviews the exact contiguous Slice J +
   J-R candidate range before Slice K or push.
+
+## 2026-07-18 — SHORTER GROUNDED LOCK WINDOW CANDIDATE READY
+
+- Task: `TETRIS-T5-SHORT-LOCK-WINDOW-014`.
+- Branch: `codex/tetris-recovery`.
+- Contract/intake base SHA: `8a2c1cb4d4e08d64a3149bbe377940b7d55226b4`.
+- Shared-worktree source parent: `1db3417fd8ae3c9b5cddf482e28eb8ce67b783e0`;
+  this intervening coordinator-only countdown contract checkpoint did not overlap the
+  K-R4 source or log paths.
+- Source checkpoint: `f0ec47c878aa52fd10cd2e5776ed964c9bff013d`
+  (`fix(core): shorten grounded lock window`).
+
+### Exact source paths
+
+- `src/game/core/constants.ts`.
+- `src/game/core/core.test.ts`.
+
+### Delivered timing regression
+
+- `LOCK_DELAY_TICKS` changes only from 30 to exactly 18 fixed ticks. No other Core
+  constant changed; `MAX_LOCK_RESETS`, entry/clear delays, gravity, hard drop,
+  scoring, hashes, and shared mode semantics remain untouched.
+- The direct Classic regression fixes the duration to literal tick 17 / tick 18
+  behavior: after 17 grounded ticks the O piece is still active, the board is empty,
+  and a legal horizontal move succeeds while preserving the existing lock-reset
+  behavior. An independent transition from the same tick-17 state locks on tick 18,
+  increments `pieceCount`, writes exactly four cells, and emits `piece-locked`.
+- Existing focused lockdown and Puzzle-flow tests continued to exercise the shared
+  constant and unchanged reset cap.
+
+### Commands and results
+
+- `npm.cmd run test -- src/game/core/core.test.ts src/game/core/rules.test.ts src/game/core/puzzleFlow.test.ts`
+  — PASS, 7 files / 62 tests.
+- `npm.cmd run typecheck` — PASS.
+- `git diff --check -- src/game/core/constants.ts src/game/core/core.test.ts` — PASS;
+  Git emitted only its existing LF-to-CRLF working-copy notices.
+- Exact source staging and cached checks — PASS; the cached list contained only the
+  two source paths above and `git diff --cached --check` reported no error.
+- Full suite, build, and browser were intentionally not run under the K-R4 boundary.
+
+### Handoff
+
+- Blocker: none.
+- Push: not performed; coordinator owns integration and push.
+- Next: independent read-only Core QA reviews exact source
+  `f0ec47c878aa52fd10cd2e5776ed964c9bff013d`, then the coordinator runs the combined
+  post-K-R4/K-R5/K-R6 final gates required by the active contract.
