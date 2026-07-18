@@ -529,3 +529,66 @@ changelog, T3/T4 evidence, or QA archive was edited.
 - Next: independent read-only Core QA reviews exact source
   `f0ec47c878aa52fd10cd2e5776ed964c9bff013d`, then the coordinator runs the combined
   post-K-R4/K-R5/K-R6 final gates required by the active contract.
+
+## 2026-07-18 — T6 DISTINCT MODES CORE + BEDROCK CANDIDATE READY
+
+- Task: `TETRIS-T6-THREE-DISTINCT-MODES-017`.
+- Branch: `codex/tetris-recovery`.
+- Accepted T5 base: `c0340b1d3e30007473da6a7a4ec0fed72a22df38`.
+- Final pre-source contract tip: `d1705ea` (including the type-safe renderer bridge
+  and Puzzle reference-scoring compatibility discovered during focused verification).
+- Source checkpoint: `34184cb` (`feat(survival): raise permanent bedrock every five lines`).
+
+### Exact source and direct-test paths
+
+- `src/game/core/constants.ts`.
+- `src/game/core/board.ts`.
+- `src/game/core/engine.ts`.
+- `src/game/core/types.ts`.
+- `src/game/core/race.test.ts`.
+- `src/game/core/rules.test.ts`.
+- `src/game/render/theme.ts`.
+- `src/game/render/theme.test.ts`.
+- `src/game/render/TetrisRenderer.ts`.
+
+### Delivered rule identities
+
+- Classic now uses fixed 48-tick gravity and no visible or functional level
+  progression. Consecutive clearing pieces build `combo` 1, 2, ... and add
+  `50 × (combo - 1)` after the fixed base clear score; a non-clearing lock resets it.
+- Internal mode `race` is now Survival: fixed 48-tick gravity, no speed curve, no
+  combo bonus, and one permanent bedrock row after every five cumulative cleared
+  lines. Clearing/scoring resolves before the board is pushed upward.
+- `BEDROCK_CELL` is a real `BoardCell` union member, blocks placement, is excluded
+  from full-row detection and clearing, and renders through its own coordinated
+  mineral material rather than an unsafe `PieceType` cast.
+- A catch-up rise fails closed with `bedrock-overflow` before next spawn when it would
+  discard an occupied canonical top row. Restart resets bedrock height and replay/hash
+  includes Survival bedrock while excluding irrelevant combo state.
+- Puzzle keeps fixed 48-tick gravity and no combo. Its invisible historical
+  score/event serialization is retained so all thirty accepted reference event
+  digests and final hashes remain unchanged; no reference artifact was edited.
+
+### Commands and results
+
+- First focused run exposed two bounded issues: the initial bedrock lower fill had
+  2.90:1 well contrast, and removing Puzzle's invisible score serialization changed
+  all fifteen reference pairs' event/final hashes. The material was corrected above
+  3:1 and the contract/source preserved the accepted Puzzle evidence compatibility.
+- Final `npm.cmd run test -- src/game/core/rules.test.ts src/game/core/race.test.ts
+  src/game/core/puzzleCampaign.test.ts src/game/render/theme.test.ts` — PASS, 10 files
+  / 99 tests.
+- Final `npm.cmd run typecheck` — PASS.
+- `git diff --check` and exact cached-path inspection — PASS; Git emitted only the
+  existing LF-to-CRLF working-copy notices.
+- Full suite, build, browser capture, formal evidence, changelog, and push were not
+  run under this source boundary.
+
+### Handoff
+
+- Blocker: none.
+- Dirty paths after source commit: only this Core log while being recorded.
+- Push: not performed.
+- Next: bind player-facing `生存`, bedrock height, Classic `连消`, and Survival QA in
+  the authorized frontend/runtime slice, then route the combined source to
+  independent read-only Core and browser QA.
