@@ -8,11 +8,13 @@ import { createInitialState, type GameEvent, type GameMode, type GameState, type
 import {
   cloneQaState,
   eventMessage,
+  fallCadenceLabel,
   GameSession,
   ModeHome,
   PuzzleLibrary,
   puzzleSilhouettePaths,
   RunStats,
+  survivalCountdownLabel,
   terminalCopy,
 } from './App';
 import { CAMPAIGN_LEVELS, defaultPuzzleProgress } from './puzzleProgress';
@@ -143,7 +145,7 @@ describe('entry countdown', () => {
 
     expect(runtime.options.inputEnabled).toBe(false);
     expect(textState).not.toHaveProperty('level');
-    expect(textState).toMatchObject({ combo: 0, bedrockRows: 0 });
+    expect(textState).toMatchObject({ combo: 0, bedrockRows: 0, fallTicks: 48 });
     expect(countdown()?.dataset.countdown).toBe('3');
     expect(pause.disabled).toBe(true);
     expect(touchButtons).toHaveLength(5);
@@ -180,8 +182,8 @@ describe('T6 frontend mode binding', () => {
     const classic = { ...createInitialState(0x51a1f00d, 'marathon'), combo: 3 };
     const survival = { ...createInitialState(0x51a1f00d, 'race'), survivalBedrockRows: 4 };
     const cases = [
-      { state: classic, roles: ['score', 'lines', 'classic-combo'], label: '经典模式数据', copy: ['连消', '3'] },
-      { state: survival, roles: ['score', 'lines', 'survival-bedrock'], label: '生存模式数据', copy: ['基岩', '4'] },
+      { state: classic, roles: ['score', 'lines', 'classic-combo', 'fall-cadence'], label: '经典模式数据', copy: ['连消', '3', '0.8 秒/格'] },
+      { state: survival, roles: ['score', 'lines', 'survival-bedrock', 'survival-next'], label: '生存模式数据', copy: ['基岩', '4', '40 秒'] },
       {
         state: createInitialState(0x51a1f00d, 'puzzle', 't3r-shaft-01'),
         roles: ['puzzle-level', 'placed', 'lines', 'objective'],
@@ -217,10 +219,13 @@ describe('T6 frontend mode binding', () => {
     expect(classic?.textContent).toContain('经典');
     expect(view.container.textContent).not.toMatch(/马拉松|竞速|等级|速度档/);
     expect(view.container.textContent?.match(/选择模式/g)).toHaveLength(1);
-    expect(view.container.textContent).toContain('分数 · 消行 · 连消');
-    expect(view.container.textContent).toContain('生存每 5 行 · 基岩上升');
-    expect(view.container.textContent).toContain('15 关残局 · 清空棋盘');
+    expect(view.container.textContent).toContain('连消加分\n每 10 行提高下落速度');
+    expect(view.container.textContent).toContain('生存40 秒/层 → 最短 10 秒\n每 5 行：降 1 层 · -2 秒/层');
+    expect(view.container.textContent).toContain('15 关残局\n目标：清空棋盘');
     expect(view.container.querySelector('.mode-preview')).toBeNull();
+    expect(view.container.querySelector('.phase-seam')).toBeNull();
+    expect(styles).not.toContain('.phase-seam');
+    expect(styles).not.toContain('.action-sheet::before');
 
     for (const banned of ['当前选择', '三种玩法', '随时开始，也可随时退出。', '键盘与触控均可操作']) {
       expect(view.container.textContent).not.toContain(banned);
@@ -252,6 +257,18 @@ describe('T6 frontend mode binding', () => {
       success: false,
     });
     expect(eventMessage({ type: 'bedrock-raised', count: 1, height: 4 })).toBe('基岩升至 4 层。');
+    expect(eventMessage({ type: 'bedrock-lowered', count: 1, height: 3 })).toBe('基岩降至 3 层。');
+  });
+
+  it('shows direct progressive cadence and pending pressure instead of a level label', () => {
+    const classic = { ...createInitialState(0x51a1f00d, 'marathon'), lines: 10 };
+    const pending = {
+      ...createInitialState(0x51a1f00d, 'race'),
+      lines: 5,
+      survivalRisePending: true,
+    };
+    expect(fallCadenceLabel(classic)).toBe('0.7 秒/格');
+    expect(survivalCountdownLabel(pending)).toBe('待上升');
   });
 
   it('mounts all fifteen enabled levels and binds first, eighth, and fifteenth selections', () => {

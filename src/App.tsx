@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   PIECE_TYPES,
+  TICKS_PER_SECOND,
   type GameEvent,
   type GameMode,
   type GameState,
   type PieceType,
   type PuzzleId,
   createInitialState,
+  gravityForMode,
+  survivalIntervalSeconds,
+  survivalIntervalTicks,
 } from './game/core';
 import { type InputAction } from './game/input/InputController';
 import { GameRuntime } from './game/runtime/GameRuntime';
@@ -36,17 +40,17 @@ const MODE_COPY: Record<GameMode, {
 }> = {
   marathon: {
     label: '经典',
-    detail: '分数 · 消行 · 连消',
+    detail: '连消加分\n每 10 行提高下落速度',
     action: '开始',
   },
   race: {
     label: '生存',
-    detail: '每 5 行 · 基岩上升',
+    detail: '40 秒/层 → 最短 10 秒\n每 5 行：降 1 层 · -2 秒/层',
     action: '开始',
   },
   puzzle: {
     label: '解谜',
-    detail: `${CAMPAIGN_LEVELS.length} 关残局 · 清空棋盘`,
+    detail: `${CAMPAIGN_LEVELS.length} 关残局\n目标：清空棋盘`,
     action: '选关',
   },
 };
@@ -69,6 +73,21 @@ function readPuzzleProgress(): PuzzleProgress {
 
 function formatScore(value: number): string {
   return Math.max(0, value).toLocaleString('zh-CN');
+}
+
+export function fallCadenceLabel(state: GameState): string {
+  const ticks = gravityForMode(state.mode, state.level, state.pieceCount, state.lines);
+  const seconds = ticks / TICKS_PER_SECOND;
+  return `${seconds.toFixed(seconds < 0.1 ? 2 : 1).replace(/\.0$/, '')} 秒/格`;
+}
+
+export function survivalCountdownSeconds(state: GameState): number {
+  if (state.mode !== 'race' || state.survivalRisePending) return 0;
+  return Math.max(0, Math.ceil((survivalIntervalTicks(state.lines) - state.survivalPressureTicks) / TICKS_PER_SECOND));
+}
+
+export function survivalCountdownLabel(state: GameState): string {
+  return state.survivalRisePending ? '待上升' : `${survivalCountdownSeconds(state)} 秒`;
 }
 
 function campaignLevel(id: PuzzleId | null) {
@@ -132,7 +151,6 @@ export function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
             aria-label="选择游戏模式"
             data-testid="mode-list"
           >
-            <span className="phase-seam" data-testid="phase-seam" aria-hidden="true" />
             {MODE_ORDER.map((mode) => {
               const item = MODE_COPY[mode];
               const active = previewMode === mode;
@@ -153,6 +171,9 @@ export function ModeHome({ onEnter }: { onEnter: (mode: GameMode) => void }) {
                     <strong>{item.label}</strong>
                     <span>{item.detail}</span>
                   </span>
+                  {mode === 'marathon' && (
+                    <span className="mode-gate__motif" aria-hidden="true"><i /><i /><i /><i /></span>
+                  )}
                   <span className="mode-gate__action"><span>{item.action}</span><b aria-hidden="true">→</b></span>
                 </button>
               );
@@ -309,11 +330,15 @@ function TouchButton({ action, label, glyph, runtime, disabled = false }: TouchB
 
 export function RunStats({ state }: { state: GameState }) {
   if (state.mode === 'race') {
+    const nextSeconds = survivalCountdownSeconds(state);
     return (
       <section className="run-stats" data-testid="stats" aria-label="生存模式数据">
         <article data-stat-role="score"><span>分数</span><strong>{formatScore(state.score)}</strong></article>
         <article data-stat-role="lines"><span>消行</span><strong>{state.lines}</strong></article>
         <article data-stat-role="survival-bedrock"><span>基岩</span><strong>{state.survivalBedrockRows}</strong></article>
+        <article data-stat-role="survival-next" data-urgent={state.survivalRisePending || nextSeconds <= 5 || undefined}>
+          <span>下一层</span><strong>{survivalCountdownLabel(state)}</strong>
+        </article>
       </section>
     );
   }
@@ -333,6 +358,7 @@ export function RunStats({ state }: { state: GameState }) {
       <article data-stat-role="score"><span>分数</span><strong>{formatScore(state.score)}</strong></article>
       <article data-stat-role="lines"><span>消行</span><strong>{state.lines}</strong></article>
       <article data-stat-role="classic-combo"><span>连消</span><strong>{state.combo}</strong></article>
+      <article data-stat-role="fall-cadence"><span>下落</span><strong>{fallCadenceLabel(state)}</strong></article>
     </section>
   );
 }
@@ -340,6 +366,7 @@ export function RunStats({ state }: { state: GameState }) {
 export function eventMessage(event: GameEvent): string {
   if (event.type === 'lines-cleared') return `消除了 ${event.count} 行。`;
   if (event.type === 'bedrock-raised') return `基岩升至 ${event.height} 层。`;
+  if (event.type === 'bedrock-lowered') return `基岩降至 ${event.height} 层。`;
   if (event.type === 'paused') return '本局已暂停。';
   if (event.type === 'resumed') return '继续本局。';
   if (event.type === 'finished') return '棋盘已清空。';
@@ -404,6 +431,7 @@ export function GameSession({
         const notable = [...events].reverse().find((event) => (
           event.type === 'lines-cleared'
           || event.type === 'bedrock-raised'
+          || event.type === 'bedrock-lowered'
           || event.type === 'paused'
           || event.type === 'resumed'
           || event.type === 'finished'
@@ -466,6 +494,10 @@ export function GameSession({
       lines: state.lines,
       combo: state.combo,
       bedrockRows: state.survivalBedrockRows,
+      bedrockIntervalSeconds: state.mode === 'race' ? survivalIntervalSeconds(state.lines) : null,
+      bedrockNextSeconds: state.mode === 'race' ? survivalCountdownSeconds(state) : null,
+      bedrockPending: state.mode === 'race' ? state.survivalRisePending : false,
+      fallTicks: gravityForMode(state.mode, state.level, state.pieceCount, state.lines),
       placedPieces: state.pieceCount,
       active: state.active ? { type: state.active.type, x: state.active.x, y: state.active.y, rotation: state.active.rotation } : null,
       next: state.queue[0] ?? null,

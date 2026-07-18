@@ -194,33 +194,6 @@ p {
   border-radius: 16px;
 }
 
-.phase-seam {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 24px;
-  width: 72px;
-  height: 2px;
-  background: var(--phase);
-  pointer-events: none;
-  transition: top 220ms var(--ease), left 220ms var(--ease), width 220ms var(--ease);
-}
-
-.mode-gates:focus-within .phase-seam,
-.mode-gates:hover .phase-seam {
-  width: 168px;
-}
-
-.mode-gates[data-selection="race"] .phase-seam {
-  top: 50%;
-  left: 24px;
-}
-
-.mode-gates[data-selection="puzzle"] .phase-seam {
-  top: 50%;
-  left: calc(50% + 24px);
-}
-
 .mode-gate {
   position: relative;
   display: grid;
@@ -233,6 +206,15 @@ p {
   text-align: left;
   background: transparent;
   transition: background-color 180ms ease;
+  animation: mode-gate-in 320ms var(--ease) both;
+}
+
+.mode-gate:nth-child(2) {
+  animation-delay: 55ms;
+}
+
+.mode-gate:nth-child(3) {
+  animation-delay: 110ms;
 }
 
 .mode-gate--marathon {
@@ -278,6 +260,26 @@ p {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2.5;
+  transition: transform 220ms var(--ease), stroke-width 220ms ease;
+}
+
+.mode-gate:hover .mode-gate__glyph svg,
+.mode-gate:focus-visible .mode-gate__glyph svg,
+.mode-gate--active .mode-gate__glyph svg {
+  stroke-width: 2.8;
+  transform: translateY(-2px);
+}
+
+.mode-gate--race:hover .mode-gate__glyph svg,
+.mode-gate--race:focus-visible .mode-gate__glyph svg,
+.mode-gate--race.mode-gate--active .mode-gate__glyph svg {
+  transform: translateY(-3px);
+}
+
+.mode-gate--puzzle:hover .mode-gate__glyph svg,
+.mode-gate--puzzle:focus-visible .mode-gate__glyph svg,
+.mode-gate--puzzle.mode-gate--active .mode-gate__glyph svg {
+  transform: translateY(-2px) rotate(3deg);
 }
 
 .mode-glyph__soft {
@@ -301,6 +303,53 @@ p {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.5;
+  white-space: pre-line;
+}
+
+.mode-gate__motif {
+  position: absolute;
+  right: 118px;
+  display: grid;
+  grid-template-columns: repeat(3, 12px);
+  grid-template-rows: repeat(2, 12px);
+  opacity: .18;
+  pointer-events: none;
+  transform: translateY(2px);
+  transition: opacity 220ms ease, transform 260ms var(--ease);
+}
+
+.mode-gate__motif i {
+  width: 11px;
+  height: 11px;
+  background: var(--classic);
+  border: 1px solid color-mix(in srgb, var(--classic) 70%, var(--ink));
+  border-radius: 2px;
+}
+
+.mode-gate__motif i:first-child {
+  grid-column: 2;
+}
+
+.mode-gate__motif i:nth-child(2) {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.mode-gate__motif i:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.mode-gate__motif i:nth-child(4) {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.mode-gate:hover .mode-gate__motif,
+.mode-gate:focus-visible .mode-gate__motif,
+.mode-gate--active .mode-gate__motif {
+  opacity: .42;
+  transform: translateY(-3px) rotate(-2deg);
 }
 
 .mode-gate__action {
@@ -777,7 +826,10 @@ p {
 }
 
 .run-stats:not(.run-stats--puzzle) [data-stat-role="classic-combo"],
-.run-stats:not(.run-stats--puzzle) [data-stat-role="survival-bedrock"],
+.run-stats:not(.run-stats--puzzle) [data-stat-role="survival-bedrock"] {
+  border-right: 1px solid var(--line);
+}
+
 .run-stats--puzzle [data-stat-role="puzzle-level"],
 .run-stats--puzzle [data-stat-role="objective"] {
   grid-column: 1 / -1;
@@ -804,6 +856,11 @@ p {
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.run-stats [data-stat-role="survival-next"][data-urgent="true"] strong {
+  color: var(--danger);
+  animation: pressure-urgent 720ms ease-in-out infinite alternate;
 }
 
 .preview-rail {
@@ -876,6 +933,10 @@ p {
   background: var(--action);
 }
 
+.touch-key:active {
+  transform: translateY(1px);
+}
+
 .touch-key:disabled {
   color: var(--muted);
   background: var(--raised);
@@ -912,24 +973,8 @@ p {
   background: var(--surface);
   border: 1px solid var(--edge);
   border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(11, 23, 38, .22);
   animation: sheet-in 180ms var(--ease) both;
-}
-
-.action-sheet::before {
-  display: block;
-  width: 72px;
-  height: 2px;
-  margin-bottom: 18px;
-  content: "";
-  background: var(--action);
-}
-
-.action-sheet--success::before {
-  background: var(--success);
-}
-
-.action-sheet--danger::before {
-  background: var(--danger);
 }
 
 .action-sheet h2 {
@@ -977,9 +1022,19 @@ p {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes sheet-in {
-  from { opacity: 0; transform: translateY(4px); }
+@keyframes mode-gate-in {
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(6px) scale(.985); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pressure-urgent {
+  from { opacity: .62; }
+  to { opacity: 1; }
 }
 
 @keyframes sheet-backdrop-in {
@@ -1103,23 +1158,6 @@ p {
     border-radius: 14px;
   }
 
-  .phase-seam {
-    left: 14px;
-  }
-
-  .mode-gates:focus-within .phase-seam,
-  .mode-gates:hover .phase-seam {
-    width: 132px;
-  }
-
-  .mode-gates[data-selection="race"] .phase-seam {
-    left: 14px;
-  }
-
-  .mode-gates[data-selection="puzzle"] .phase-seam {
-    left: calc(50% + 14px);
-  }
-
   .mode-gate {
     grid-template-columns: 48px minmax(0, 1fr) auto;
     gap: 11px;
@@ -1173,6 +1211,10 @@ p {
     line-height: 1.35;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+  }
+
+  .mode-gate__motif {
+    display: none;
   }
 
   .mode-gate--race .mode-gate__body span,
@@ -1793,10 +1835,6 @@ p {
   .action-sheet {
     width: min(560px, 90%);
     padding: 16px 20px;
-  }
-
-  .action-sheet::before {
-    margin-bottom: 9px;
   }
 
   .action-sheet h2 {
