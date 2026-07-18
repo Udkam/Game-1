@@ -2,10 +2,12 @@
 
 ## Status and authority
 
-Final disposition (2026-07-17): this T5 contract is implemented and independently
-accepted at product source `effb353c0a4d1bef26fa524ed38d3d3653f45eb8` with formal
-evidence `c0832e43dc1cdd31c074066919c229d4a9fe5518`. There is no active
-product writer; any later behavior or visual change requires a new bounded slice.
+The 2026-07-17 T5 milestone was independently accepted at product source
+`effb353c0a4d1bef26fa524ed38d3d3653f45eb8` with formal evidence
+`c0832e43dc1cdd31c074066919c229d4a9fe5518`. The user's 2026-07-18 block review
+reopens only the tetromino material presentation through bounded Slice K-R3; the
+accepted gameplay, layout, typography, palette, copy, and responsive behavior remain
+frozen.
 
 The user's 2026-07-16 direction opens T5 and supersedes every conflicting T3/T4
 product rule. The later Puzzle clarification in the same session also supersedes the
@@ -42,6 +44,14 @@ Four-cell tetrominoes must read as cohesive dimensional forms rather than four s
 plates with four complete outlines. The permitted depth is a restrained machined
 mineral relief; this supersedes the earlier flat-cell edge rule but does not restore
 plastic gloss, glass, glow, detached shadow, or candy bevels.
+
+The user's 2026-07-18 clarification supersedes only the earlier instruction to make
+internal seams nearly disappear. Cohesion belongs to the tetromino's connected outer
+silhouette, not to an undivided flat face: all four unit cells remain clearly legible
+inside that silhouette. Shared boundaries use engraved two-tone grooves over the same
+material base, while a consistent top-left light direction gives each unit a shallow
+raised face. A board-well gap between same-piece cells, four detached tile shadows, or
+four independent outer boxes is still rejected.
 
 The user's later 2026-07-17 review also rejects the complete second frontend
 presentation at `c9135f3252abfa3bd6d7e94c5eb2e11fc3c72a18`. It is not a visual baseline
@@ -330,17 +340,28 @@ and error states always add a higher-contrast or non-color cue.
   spacing, and tone rather than repeated shadows.
 - Primary surfaces use 12–18 px radii. Buttons, action sheets, the board, and cells
   have no clipped corners; nested large pill/card stacks are forbidden.
-- Every tetromino uses a joined `matte machined mineral` face: the existing 135-degree
-  two-stop field remains within about 8% lightness difference, but orthogonally
-  adjacent same-material cells bridge their gap and suppress complete internal
-  borders. An optional internal seam is at most 0.35 px and 22% alpha. Different
-  materials retain a narrow well-colored separation so dense残局 remain readable.
-- Depth comes from one outer directional bevel only: exposed top/left edges use the
-  existing lighter `innerEdge` signal at 22–32% alpha, while exposed bottom/right
-  edges use the material dark edge at 72–92% alpha. The bevel is 0.75–1.25 px and
-  follows the joined component perimeter. It is not a second full outline and adds no
-  white specular bar, lower lip, emboss texture, glow, blur, glass, detached shadow,
-  universal black stroke, or plastic/candy highlight.
+- Every tetromino uses one joined `matte machined mineral` base: the existing
+  135-degree two-stop field remains within about 8% lightness difference and
+  orthogonally adjacent same-material cells bridge the board-well gap. The connected
+  component therefore owns one uninterrupted outer silhouette rather than four
+  detached plates. Different materials retain their narrow well-colored separation so
+  dense残局 remain readable.
+- Every shared unit boundary remains visibly divided by one engraved two-tone seam.
+  The material-edge groove is 0.85–1.35 px at 58–76% alpha; a 0.45–0.8 px lower/right
+  lip uses `innerEdge` at 22–34% alpha. Seams cover the complete shared edge exactly
+  once, never open through to the board well, and never become four complete cell
+  outlines.
+- Spacing establishes the hierarchy: separate material components retain a board-well
+  channel at least 1.6 times the perceived width of an internal engraved seam. The
+  external channel is therefore read before the finer internal division. Active and
+  Next pieces use their exact canonical four-cell component; authored Puzzle source
+  pieces already remain separate same-material components by contract.
+- Depth uses one consistent top-left light direction at two scales. The joined outer
+  perimeter uses a 1–1.6 px light top/left and dark bottom/right bevel. Each unit face
+  adds an inset 1–2.25 px light top/left and dark bottom/right chamfer over the joined
+  base, so cells are readable as shallow raised facets within one piece. There is no
+  white specular bar, thick lower lip, emboss texture, glow, blur, glass, detached
+  shadow, universal black stroke, or plastic/candy gloss.
 - Active and Next pieces group their exact four canonical cells. Active replaces the
   locked outer contour with one higher-contrast signal contour; it never adds a second
   perimeter. Locked-board grouping joins only orthogonally adjacent cells with the
@@ -348,9 +369,10 @@ and error states always add a higher-contrast or non-color cue.
   components are exact source tetrominoes; later line clears may naturally split a
   contour and same-material contacts may naturally merge it without changing Core.
 - Ghost uses zero fill and one complete 1 px signal outline around the whole active
-  tetromino perimeter at about 45% alpha, with no four independent cell boxes. The
+  tetromino perimeter at about 45% alpha. Its shared cell boundaries remain as one
+  lower-alpha guide per seam, but they do not close into four independent boxes. The
   lock response remains an 80–100 ms low-alpha face change and never draws a second
-  border.
+  outer border.
 - Board, Next, canonical silhouettes, active cells, and locked cells use the same
   exact material mapping and cohesive component principle. Board and Next share the
   same Pixi group primitive. The silhouette keeps at most one path per piece type,
@@ -530,8 +552,9 @@ only under `docs/workstreams/tetris-t5-*` and `docs/qa/evidence/tetris-t5`.
 - the home is one coherent 1+2 mode surface and the `phase seam` is its only
   ornamental motion;
 - the mobile Puzzle selector has no overlay covering any level content;
-- coordinated deep mineral matte minos, zero-fill full-outline ghost cells, and Next
-  share one drawing primitive; rejected bright-plastic, blurred aura, double-outline,
+- coordinated deep mineral matte minos, clearly divided raised unit facets, zero-fill
+  whole-silhouette Ghost with internal guides, and Next share one drawing primitive;
+  rejected detached tiles, bright plastic, blurred aura, double outer outline,
   toy/candy, cut-corner, ceramic, highlight-bar, thick-lip, and bracket-ghost styles
   are absent;
 - the page uses the exact `暮海矿物` solid tokens, no backdrop blur, ambient color

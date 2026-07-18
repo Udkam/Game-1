@@ -11,9 +11,9 @@ Preserved rejected follow-up: local branch
 `codex/tetris-t4-rejected-preservation` at
 `1362c664629b2a83f0659f836259b84c21750fee`
 
-Status: **complete — final product source `effb353` and formal evidence `c0832e4`
-are independently accepted; no product writer remains active and the branch is
-eligible for coordinator push**
+Status: **active — the accepted T5 milestone remains the behavior/layout baseline;
+bounded Slice K-R3 now owns only the user's clarified divided, more dimensional
+tetromino material**
 
 ## User-visible problems to resolve
 
@@ -873,3 +873,47 @@ frontend workstream log. Formal generator `4d2733b` produced 23 screenshots and
 evidence child `c0832e4`; independent evidence QA accepted 23/23 original-detail
 captures and reproduced all 25/25 raw-Git-blob SHA-256 entries with zero CRLF in the
 JSON and checksum manifest.
+
+## Slice K-R3 — divided cohesive facets and stronger mineral depth
+
+Task ID: `TETRIS-T5-MINERAL-DIVIDED-FACETS-013`
+
+Status: **OPEN — sole active product writer boundary**.
+
+Branch base: `028c1580cec7eff92013db614b40491fa4eac9d6`; frozen behavior/layout source is
+`effb353c0a4d1bef26fa524ed38d3d3653f45eb8`. The previously accepted evidence is a
+historical baseline and must be regenerated after this renderer change.
+
+The renderer writer may change only:
+
+- `src/game/render/theme.ts` and `src/game/render/theme.test.ts`;
+- `src/game/render/presentation.ts` and `src/game/render/presentation.test.ts`;
+- `src/game/render/TetrisRenderer.ts`;
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md` after source is frozen.
+
+Slice K-R3 acceptance:
+
+- preserve the exact seven-piece palette and one connected outer silhouette for every
+  orthogonally joined same-material component; same-piece neighbours never expose the
+  board well or regain four detached shadows/outer boxes;
+- keep the board-well channel between separate material components at least 1.6 times
+  the perceived internal groove width. The larger outer gap and finer inner seam must
+  make whole-piece grouping readable without changing board geometry;
+- draw every shared cell boundary exactly once as the frozen dark groove plus
+  lower/right light lip, so all four canonical units remain visible in active, locked,
+  Next, and Ghost pieces;
+- give each filled unit one restrained inset top/left light and bottom/right dark
+  facet while keeping the stronger joined outer bevel. The result must read more
+  dimensional without white gloss, plastic, candy, glass, blur, glow, or detached
+  depth;
+- add deterministic seam enumeration tests for I/O/T/S/Z/J/L, including exact shared
+  boundary counts, no duplicate seams, complete outer perimeter, and split fragments;
+- preserve typography, statistic dividers, visible Next/keyboard map, concise copy,
+  `经典`, fifteen enabled legal残局, endless Race, responsive geometry, 44 px controls,
+  reduced motion, one canvas, zero DOM cells, lifecycle, and `index.html` unchanged;
+- run focused presentation/theme tests while editing. After the final source change,
+  run one typecheck, one complete suite, one production build, the prescribed action
+  client, and a fresh five-viewport browser pass with original-detail inspection of
+  active, locked, Next, Ghost, and dense Puzzle stacks. Create bounded source and
+  log-only checkpoints; do not push before independent static and visual QA accept the
+  exact candidate.
