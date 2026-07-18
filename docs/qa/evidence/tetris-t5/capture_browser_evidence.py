@@ -534,15 +534,90 @@ def validate_layout(metrics: dict[str, Any], *, gameplay: bool) -> None:
 
 
 def capture(page: Page, name: str, *, gameplay: bool, extra: dict[str, Any] | None = None) -> dict[str, Any]:
-    page.wait_for_timeout(100)
+    frozen = False
+    if gameplay:
+        page.wait_for_function("() => Boolean(window.__SIGNAL_FOUNDRY_QA__)")
+        page.evaluate("window.__SIGNAL_FOUNDRY_QA__.setFrozen(true)")
+        frozen = True
+    try:
+        page.wait_for_timeout(100)
+        metrics = rect_metrics(page)
+        validate_layout(metrics, gameplay=gameplay)
+        path = OUTPUT_DIR / name
+        page.screenshot(path=str(path), full_page=False)
+        record: dict[str, Any] = {"file": name, "sha256": sha256(path), "metrics": metrics}
+        if extra:
+            record["checks"] = extra
+        CAPTURES.append(record)
+        return record
+    finally:
+        if frozen:
+            page.evaluate("window.__SIGNAL_FOUNDRY_QA__?.setFrozen(false)")
+
+
+def capture_entry_countdown(page: Page, name: str, expected_mode: str) -> dict[str, Any]:
+    page.locator('[data-testid="game-screen"]').wait_for(state="visible")
+    overlay = page.locator('[data-testid="entry-countdown"]')
+    overlay.wait_for(state="visible")
+    page.wait_for_function(
+        "mode => Boolean(window.__SIGNAL_FOUNDRY_QA__)"
+        " && window.__SIGNAL_FOUNDRY_QA__.getState().mode === mode"
+        " && window.__SIGNAL_FOUNDRY_QA__.getState().status === 'ready'",
+        arg=expected_mode,
+    )
+
+    before = qa_state(page)
+    require(before is not None, "Countdown canonical state is unavailable.")
+    page.evaluate(
+        """() => {
+          const qa = window.__SIGNAL_FOUNDRY_QA__;
+          qa.start();
+          qa.restart();
+          qa.selectMode('race');
+          qa.selectPuzzle('t3r-cascade-06');
+          qa.action('hard-drop');
+          qa.advanceTicks(180);
+        }"""
+    )
+    after = qa_state(page)
+    require(after == before, "Countdown QA entry points mutated canonical state.")
+    require(after["status"] == "ready", f"Countdown escaped ready state: {after}")
+    require(after["mode"] == expected_mode, f"Countdown changed mode: {after}")
+    require(after["pieceCount"] == 0, f"Countdown placed a piece: {after}")
+    require(after["score"] == 0 and after["lines"] == 0, f"Countdown changed score or lines: {after}")
+
+    digit = overlay.inner_text().strip()
+    require(digit in {"3", "2", "1"}, f"Unexpected countdown digit: {digit}")
+    pause = page.get_by_role("button", name="暂停", exact=True)
+    touch = page.locator('button[data-testid^="touch-"]')
+    require(pause.is_disabled(), "Pause must be disabled during entry countdown.")
+    require(touch.count() == 5, "Countdown is missing touch controls.")
+    require(all(touch.nth(index).is_disabled() for index in range(touch.count())), "Touch input is enabled during countdown.")
+
     metrics = rect_metrics(page)
-    validate_layout(metrics, gameplay=gameplay)
+    viewport = metrics["viewport"]
+    document = metrics["document"]
+    require(metrics["canvasCount"] == 1 and metrics["domCellCount"] == 0, "Countdown canvas/DOM-cell invariant failed.")
+    require(document["scrollWidth"] <= viewport["width"] + 1, f"Countdown horizontal overflow: {metrics}")
+    require(document["scrollHeight"] <= viewport["height"] + 1, f"Countdown vertical overflow: {metrics}")
+    require(abs(float(metrics["boardRatio"]) - 2.0) <= 0.03, f"Countdown board is not 1:2: {metrics['boardRatio']}")
+    runtime_assertions = metrics["runtimeAssertions"]
+    require(runtime_assertions["minButtonWidth"] >= 43.5 and runtime_assertions["minButtonHeight"] >= 43.5, f"Countdown control below 44 px: {runtime_assertions}")
+
+    checks = {
+        "digit": digit,
+        "mode": after["mode"],
+        "status": after["status"],
+        "pieceCount": after["pieceCount"],
+        "canonicalUnchangedAfterQaAttempts": after == before,
+        "pauseDisabled": pause.is_disabled(),
+        "disabledTouchControls": sum(touch.nth(index).is_disabled() for index in range(touch.count())),
+    }
     path = OUTPUT_DIR / name
     page.screenshot(path=str(path), full_page=False)
-    record: dict[str, Any] = {"file": name, "sha256": sha256(path), "metrics": metrics}
-    if extra:
-        record["checks"] = extra
+    record = {"file": name, "sha256": sha256(path), "metrics": metrics, "checks": checks}
     CAPTURES.append(record)
+    CHECKS["entryCountdown"] = checks
     return record
 
 
@@ -579,7 +654,9 @@ def exercise_marathon_desktop(browser: Browser) -> None:
             "puzzleX": puzzle_phase["x"],
         }
 
-        enter_mode(page, "marathon")
+        page.locator('[data-testid="enter-marathon"]').click()
+        capture_entry_countdown(page, "desktop-classic-countdown-1440x900.png", "marathon")
+        wait_for_game(page, "marathon")
         hard_drop(page)
         hard_drop(page)
         capture(page, "desktop-classic-playing-1440x900.png", gameplay=True)
@@ -926,23 +1003,24 @@ def exercise_puzzle_success(browser: Browser) -> None:
 
 def write_manifest(source_sha: str, candidate_tip: str, capture_head: str) -> None:
     manifest = {
-        "taskId": "TETRIS-T5-FINAL-BROWSER-003",
+        "taskId": "TETRIS-T5-FINAL-BROWSER-004",
         "candidateSha": source_sha,
         "sourceSha": source_sha,
         "candidateTip": candidate_tip,
         "captureHead": capture_head,
         "independentQa": {
-            "staticFunctional": "ACCEPT",
-            "visualBrowser": "ACCEPT",
-            "visualChecks": "203/203",
+            "coreRules": "ACCEPT — independent cross-QA of f0ec47c",
+            "staticFunctional": "ACCEPT — independent cross-QA of repaired source 48176fe",
+            "visualBrowser": "ACCEPT — exact-source original-detail matrix review",
+            "visualChecks": "24/24 captures; 26/26 checksums; zero integrity failures",
             "matrixExecutionErrors": 0,
         },
         "baseUrl": BASE_URL,
         "method": (
             "First-viewport screenshots from visible UI; loaded and deliberately blocked Google Fonts; active 844x390 mode actions; "
             "first/eighth/fifteenth Puzzle binding; real keyboard and touch input; three Puzzle locks by normal gravity; detached "
-            "canonical/text/renderer snapshot comparison only. Deterministic time advances ticks without replacing state, and no "
-            "terminal state is fabricated."
+            "entry countdown QA entry-point gating; canonical/text/renderer snapshot comparison only. Deterministic time advances "
+            "ticks without replacing state, and no terminal state is fabricated."
         ),
         "captures": CAPTURES,
         "checks": CHECKS,

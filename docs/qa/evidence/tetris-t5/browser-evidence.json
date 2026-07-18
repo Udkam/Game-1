@@ -1,21 +1,22 @@
 {
-  "taskId": "TETRIS-T5-FINAL-BROWSER-003",
-  "candidateSha": "effb353c0a4d1bef26fa524ed38d3d3653f45eb8",
-  "sourceSha": "effb353c0a4d1bef26fa524ed38d3d3653f45eb8",
-  "candidateTip": "ba5d387f6c32224a4869ccc4e84564d7bcd64b50",
-  "captureHead": "4d2733b0c9b07868d714add906686eec50500f9c",
+  "taskId": "TETRIS-T5-FINAL-BROWSER-004",
+  "candidateSha": "48176fe3d23cbc450fe39b38310c8a6b6eb71945",
+  "sourceSha": "48176fe3d23cbc450fe39b38310c8a6b6eb71945",
+  "candidateTip": "d292b15dd012ade4c635b15595d276505ac72c58",
+  "captureHead": "d292b15dd012ade4c635b15595d276505ac72c58",
   "independentQa": {
-    "staticFunctional": "ACCEPT",
-    "visualBrowser": "ACCEPT",
-    "visualChecks": "203/203",
+    "coreRules": "ACCEPT — independent cross-QA of f0ec47c",
+    "staticFunctional": "ACCEPT — independent cross-QA of repaired source 48176fe",
+    "visualBrowser": "ACCEPT — exact-source original-detail matrix review",
+    "visualChecks": "24/24 captures; 26/26 checksums; zero integrity failures",
     "matrixExecutionErrors": 0
   },
-  "baseUrl": "http://127.0.0.1:4175/",
-  "method": "First-viewport screenshots from visible UI; loaded and deliberately blocked Google Fonts; active 844x390 mode actions; first/eighth/fifteenth Puzzle binding; real keyboard and touch input; three Puzzle locks by normal gravity; detached canonical/text/renderer snapshot comparison only. Deterministic time advances ticks without replacing state, and no terminal state is fabricated.",
+  "baseUrl": "http://127.0.0.1:4173/",
+  "method": "First-viewport screenshots from visible UI; loaded and deliberately blocked Google Fonts; active 844x390 mode actions; first/eighth/fifteenth Puzzle binding; real keyboard and touch input; three Puzzle locks by normal gravity; detached entry countdown QA entry-point gating; canonical/text/renderer snapshot comparison only. Deterministic time advances ticks without replacing state, and no terminal state is fabricated.",
   "captures": [
     {
       "file": "desktop-home-1440x900.png",
-      "sha256": "09e211491dfc254583518d7147b7616530075258418ec86444723677336470ef",
+      "sha256": "09f803fc65c8cc44a173dde1100b49454cfc7c59c02cef88143bc40bd8878756",
       "metrics": {
         "viewport": {
           "width": 1440,
@@ -304,7 +305,7 @@
     },
     {
       "file": "desktop-home-phase-focus-1440x900.png",
-      "sha256": "5d9587bd8cecda8f1b7a71d9da5722b5c0c4d5b2f65732e0b808bea9762c25d1",
+      "sha256": "1dcffece70171b90fe6b1a49c349b563ef686c11bf3175d38ab5bb0b4c519907",
       "metrics": {
         "viewport": {
           "width": 1440,
@@ -592,8 +593,419 @@
       }
     },
     {
+      "file": "desktop-classic-countdown-1440x900.png",
+      "sha256": "312c9c4dc9cbdd0db2e9bf104e72959bed16d3d440b3d87a517ea5b92ae0a285",
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 900,
+          "dpr": 1
+        },
+        "document": {
+          "scrollWidth": 1440,
+          "scrollHeight": 900,
+          "clientWidth": 1440,
+          "clientHeight": 900
+        },
+        "screen": "game-screen",
+        "canvasCount": 1,
+        "domCellCount": 0,
+        "runtimeQaPresent": true,
+        "qaCollectPresent": true,
+        "brand": {
+          "count": 1,
+          "texts": [
+            "Tetris"
+          ],
+          "hasGraphic": false
+        },
+        "bannedVisibleText": [],
+        "buttonMinimum": {
+          "width": 58,
+          "height": 44
+        },
+        "buttons": [
+          {
+            "text": "← 返回",
+            "width": 74.3125,
+            "height": 44
+          },
+          {
+            "text": "暂停",
+            "width": 58,
+            "height": 44
+          },
+          {
+            "text": "←左移",
+            "width": 185.59375,
+            "height": 71
+          },
+          {
+            "text": "→右移",
+            "width": 185.59375,
+            "height": 71
+          },
+          {
+            "text": "↻旋转",
+            "width": 185.609375,
+            "height": 71
+          },
+          {
+            "text": "↓快速下落",
+            "width": 185.59375,
+            "height": 71
+          },
+          {
+            "text": "⇣直接落底",
+            "width": 185.609375,
+            "height": 71
+          }
+        ],
+        "home": {
+          "modes": {
+            "marathon": null,
+            "race": null,
+            "puzzle": null
+          },
+          "phaseCount": 0,
+          "phase": null,
+          "selection": null,
+          "actions": {
+            "marathon": {
+              "button": null,
+              "action": null,
+              "arrow": null,
+              "actionInsideButton": false,
+              "arrowInsideButton": false,
+              "actionInsideSurface": false,
+              "arrowStyle": null
+            },
+            "race": {
+              "button": null,
+              "action": null,
+              "arrow": null,
+              "actionInsideButton": false,
+              "arrowInsideButton": false,
+              "actionInsideSurface": false,
+              "arrowStyle": null
+            },
+            "puzzle": {
+              "button": null,
+              "action": null,
+              "arrow": null,
+              "actionInsideButton": false,
+              "arrowInsideButton": false,
+              "actionInsideSurface": false,
+              "arrowStyle": null
+            }
+          },
+          "fonts": {
+            "previewKicker": [],
+            "previewCopy": [],
+            "input": [],
+            "intro": [],
+            "modeCopy": []
+          }
+        },
+        "library": {
+          "rows": [],
+          "starts": []
+        },
+        "fonts": {
+          "statLabels": [
+            14,
+            14,
+            14
+          ],
+          "statValues": [
+            20,
+            20,
+            20
+          ],
+          "touchLabels": [
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "nextLabels": [
+            12
+          ],
+          "keyboard": [
+            12
+          ],
+          "spaceGroteskReady": true,
+          "notoSansReady": true
+        },
+        "motion": {
+          "animatedCount": 2,
+          "infiniteCount": 0
+        },
+        "stats": {
+          "roles": [
+            "score",
+            "lines",
+            "classic-level"
+          ],
+          "borders": [
+            {
+              "role": "score",
+              "top": 0,
+              "right": 1,
+              "bottom": 1,
+              "left": 0
+            },
+            {
+              "role": "lines",
+              "top": 0,
+              "right": 0,
+              "bottom": 1,
+              "left": 0
+            },
+            {
+              "role": "classic-level",
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            }
+          ]
+        },
+        "bounds": {
+          "board": {
+            "x": 409,
+            "y": 85,
+            "width": 358,
+            "height": 716,
+            "right": 767,
+            "bottom": 801,
+            "clientWidth": 358,
+            "clientHeight": 716,
+            "scrollWidth": 358,
+            "scrollHeight": 716
+          },
+          "stats": {
+            "x": 816,
+            "y": 252.625,
+            "width": 215,
+            "height": 127.1875,
+            "right": 1031,
+            "bottom": 379.8125,
+            "clientWidth": 215,
+            "clientHeight": 125,
+            "scrollWidth": 215,
+            "scrollHeight": 125
+          },
+          "next": {
+            "x": 816,
+            "y": 433.8125,
+            "width": 215,
+            "height": 112,
+            "right": 1031,
+            "bottom": 545.8125,
+            "clientWidth": 213,
+            "clientHeight": 110,
+            "scrollWidth": 213,
+            "scrollHeight": 110
+          },
+          "touch": {
+            "x": 256,
+            "y": 815,
+            "width": 928,
+            "height": 72,
+            "right": 1184,
+            "bottom": 887,
+            "clientWidth": 928,
+            "clientHeight": 71,
+            "scrollWidth": 928,
+            "scrollHeight": 71
+          },
+          "nextLabel": {
+            "x": 816,
+            "y": 408.8125,
+            "width": 215,
+            "height": 16,
+            "right": 1031,
+            "bottom": 424.8125,
+            "clientWidth": 215,
+            "clientHeight": 16,
+            "scrollWidth": 215,
+            "scrollHeight": 16
+          },
+          "keyboard": {
+            "x": 816,
+            "y": 560.8125,
+            "width": 215,
+            "height": 72.5625,
+            "right": 1031,
+            "bottom": 633.375,
+            "clientWidth": 215,
+            "clientHeight": 72,
+            "scrollWidth": 215,
+            "scrollHeight": 72
+          },
+          "goal": null,
+          "canvasHost": {
+            "x": 256,
+            "y": 71,
+            "width": 928,
+            "height": 744,
+            "right": 1184,
+            "bottom": 815,
+            "clientWidth": 928,
+            "clientHeight": 744,
+            "scrollWidth": 928,
+            "scrollHeight": 744
+          }
+        },
+        "boardRatio": 2,
+        "overlap": {
+          "statsBoard": 0,
+          "nextBoard": 0,
+          "touchBoard": 0
+        },
+        "state": {
+          "mode": "marathon",
+          "status": "ready",
+          "phase": "active",
+          "puzzleId": null,
+          "puzzleCompletion": null,
+          "pieceCount": 0,
+          "lines": 0,
+          "active": {
+            "type": "J",
+            "x": 3,
+            "y": 19,
+            "rotation": 0
+          },
+          "next": "O"
+        },
+        "textState": {
+          "coordinateSystem": "board origin is top-left; x increases right; y increases down; visible board is 10 columns by 20 rows",
+          "screen": "game",
+          "mode": "marathon",
+          "status": "ready",
+          "countdown": 3,
+          "phase": "active",
+          "puzzleId": null,
+          "puzzleCompletion": null,
+          "score": 0,
+          "lines": 0,
+          "level": 0,
+          "placedPieces": 0,
+          "active": {
+            "type": "J",
+            "x": 3,
+            "y": 19,
+            "rotation": 0
+          },
+          "next": "O",
+          "visibleBoard": [
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            ".........."
+          ]
+        },
+        "renderer": {
+          "canvas": {
+            "width": 928,
+            "height": 744,
+            "resolution": 1
+          },
+          "board": {
+            "x": 153,
+            "y": 14,
+            "width": 358,
+            "height": 716,
+            "cell": 35.8
+          },
+          "preview": null,
+          "previewLayerVisible": false,
+          "previewPiece": null,
+          "activeCells": [
+            {
+              "x": 3,
+              "y": 19
+            },
+            {
+              "x": 3,
+              "y": 20
+            },
+            {
+              "x": 4,
+              "y": 20
+            },
+            {
+              "x": 5,
+              "y": 20
+            }
+          ],
+          "ghostCells": [
+            {
+              "x": 3,
+              "y": 38
+            },
+            {
+              "x": 3,
+              "y": 39
+            },
+            {
+              "x": 4,
+              "y": 39
+            },
+            {
+              "x": 5,
+              "y": 39
+            }
+          ],
+          "visibleLockedCells": 0,
+          "presentation": {
+            "x": 3,
+            "y": 19,
+            "offsetX": 0,
+            "offsetY": 0
+          }
+        },
+        "runtimeAssertions": {
+          "canvasCount": 1,
+          "domCellCount": 0,
+          "minButtonWidth": 58,
+          "minButtonHeight": 44,
+          "noHorizontalOverflow": true,
+          "noVerticalOverflow": true
+        }
+      },
+      "checks": {
+        "digit": "3",
+        "mode": "marathon",
+        "status": "ready",
+        "pieceCount": 0,
+        "canonicalUnchangedAfterQaAttempts": true,
+        "pauseDisabled": true,
+        "disabledTouchControls": 5
+      }
+    },
+    {
       "file": "desktop-classic-playing-1440x900.png",
-      "sha256": "d83bfbf282fdcf7471b031c50794c384317dff2b3d308491566585e290c94ea1",
+      "sha256": "ebad4f642de1372035e24b1a88f66644b380ebac088bb6bd4d88521ddbca36fa",
       "metrics": {
         "viewport": {
           "width": 1440,
@@ -885,6 +1297,7 @@
           "screen": "game",
           "mode": "marathon",
           "status": "playing",
+          "countdown": null,
           "phase": "active",
           "puzzleId": null,
           "puzzleCompletion": null,
@@ -999,7 +1412,7 @@
     },
     {
       "file": "desktop-classic-paused-1440x900.png",
-      "sha256": "9182959d75d455890ff455a49b2a129ac35e5bb900a003195c562ec0ac4406b5",
+      "sha256": "285c0d61c0e464cd9b2597f921021c3b083813276f3007659c8135592b9c2966",
       "metrics": {
         "viewport": {
           "width": 1440,
@@ -1078,7 +1491,7 @@
           {
             "text": "离开本局",
             "width": 442,
-            "height": 44.000030517578125
+            "height": 44
           }
         ],
         "home": {
@@ -1306,6 +1719,7 @@
           "screen": "game",
           "mode": "marathon",
           "status": "paused",
+          "countdown": null,
           "phase": "active",
           "puzzleId": null,
           "puzzleCompletion": null,
@@ -1420,7 +1834,7 @@
     },
     {
       "file": "desktop-home-returned-1440x900.png",
-      "sha256": "83e47c5ca3d8dc15cae9dbb38c99dc64d219f12a77dc83e9e7da7de3375f328c",
+      "sha256": "64f6ba0c85a135b6a82aa715bb8717db7004228ebb84befd01d799babbfd3355",
       "metrics": {
         "viewport": {
           "width": 1440,
@@ -1471,11 +1885,11 @@
           "modes": {
             "marathon": {
               "x": 360,
-              "y": 290.03948974609375,
+              "y": 290.0142822265625,
               "width": 720,
               "height": 227.96875,
               "right": 1080,
-              "bottom": 518.0082397460938,
+              "bottom": 517.9830322265625,
               "clientWidth": 720,
               "clientHeight": 227,
               "scrollWidth": 720,
@@ -1483,11 +1897,11 @@
             },
             "race": {
               "x": 360,
-              "y": 518.0082397460938,
+              "y": 517.9830322265625,
               "width": 360,
               "height": 219.03125,
               "right": 720,
-              "bottom": 737.0394897460938,
+              "bottom": 737.0142822265625,
               "clientWidth": 359,
               "clientHeight": 219,
               "scrollWidth": 359,
@@ -1495,11 +1909,11 @@
             },
             "puzzle": {
               "x": 720,
-              "y": 518.0082397460938,
+              "y": 517.9830322265625,
               "width": 360,
               "height": 219.03125,
               "right": 1080,
-              "bottom": 737.0394897460938,
+              "bottom": 737.0142822265625,
               "clientWidth": 360,
               "clientHeight": 219,
               "scrollWidth": 360,
@@ -1509,8 +1923,8 @@
           "phaseCount": 1,
           "phase": {
             "x": 384,
-            "y": 290.03948974609375,
-            "width": 165.265625,
+            "y": 290.0142822265625,
+            "width": 166.421875,
             "height": 2,
             "transitionDuration": "0.22s, 0.22s, 0.22s"
           },
@@ -1519,11 +1933,11 @@
             "marathon": {
               "button": {
                 "x": 360,
-                "y": 290.03948974609375,
+                "y": 290.0142822265625,
                 "width": 720,
                 "height": 227.96875,
                 "right": 1080,
-                "bottom": 518.0082397460938,
+                "bottom": 517.9830322265625,
                 "clientWidth": 720,
                 "clientHeight": 227,
                 "scrollWidth": 720,
@@ -1531,11 +1945,11 @@
               },
               "action": {
                 "x": 979,
-                "y": 381.52386474609375,
+                "y": 381.4986572265625,
                 "width": 77,
                 "height": 44,
                 "right": 1056,
-                "bottom": 425.52386474609375,
+                "bottom": 425.4986572265625,
                 "clientWidth": 77,
                 "clientHeight": 44,
                 "scrollWidth": 77,
@@ -1543,11 +1957,11 @@
               },
               "arrow": {
                 "x": 1014,
-                "y": 382.52386474609375,
+                "y": 382.4986572265625,
                 "width": 42,
                 "height": 42,
                 "right": 1056,
-                "bottom": 424.52386474609375,
+                "bottom": 424.4986572265625,
                 "clientWidth": 40,
                 "clientHeight": 40,
                 "scrollWidth": 40,
@@ -1564,11 +1978,11 @@
             "race": {
               "button": {
                 "x": 360,
-                "y": 518.0082397460938,
+                "y": 517.9830322265625,
                 "width": 360,
                 "height": 219.03125,
                 "right": 720,
-                "bottom": 737.0394897460938,
+                "bottom": 737.0142822265625,
                 "clientWidth": 359,
                 "clientHeight": 219,
                 "scrollWidth": 359,
@@ -1576,11 +1990,11 @@
               },
               "action": {
                 "x": 618,
-                "y": 605.5238647460938,
+                "y": 605.4986572265625,
                 "width": 77,
                 "height": 44,
                 "right": 695,
-                "bottom": 649.5238647460938,
+                "bottom": 649.4986572265625,
                 "clientWidth": 77,
                 "clientHeight": 44,
                 "scrollWidth": 77,
@@ -1588,11 +2002,11 @@
               },
               "arrow": {
                 "x": 651,
-                "y": 606.5238647460938,
+                "y": 606.4986572265625,
                 "width": 42,
                 "height": 42,
                 "right": 693,
-                "bottom": 648.5238647460938,
+                "bottom": 648.4986572265625,
                 "clientWidth": 40,
                 "clientHeight": 40,
                 "scrollWidth": 40,
@@ -1609,11 +2023,11 @@
             "puzzle": {
               "button": {
                 "x": 720,
-                "y": 518.0082397460938,
+                "y": 517.9830322265625,
                 "width": 360,
                 "height": 219.03125,
                 "right": 1080,
-                "bottom": 737.0394897460938,
+                "bottom": 737.0142822265625,
                 "clientWidth": 360,
                 "clientHeight": 219,
                 "scrollWidth": 360,
@@ -1621,11 +2035,11 @@
               },
               "action": {
                 "x": 979,
-                "y": 605.5238647460938,
+                "y": 605.4986572265625,
                 "width": 77,
                 "height": 44,
                 "right": 1056,
-                "bottom": 649.5238647460938,
+                "bottom": 649.4986572265625,
                 "clientWidth": 77,
                 "clientHeight": 44,
                 "scrollWidth": 77,
@@ -1633,11 +2047,11 @@
               },
               "arrow": {
                 "x": 1012,
-                "y": 606.5238647460938,
+                "y": 606.4986572265625,
                 "width": 42,
                 "height": 42,
                 "right": 1054,
-                "bottom": 648.5238647460938,
+                "bottom": 648.4986572265625,
                 "clientWidth": 40,
                 "clientHeight": 40,
                 "scrollWidth": 40,
@@ -1709,7 +2123,7 @@
     },
     {
       "file": "wide-race-playing-2048x1152.png",
-      "sha256": "2dc5d70df6869b3e1e0e04c4dce7b809d962c7e7f7a1684b2b093deefa2789bc",
+      "sha256": "f5c9c97a206d5878125b6518df798b2f4e8e8598d6c91f4ae95c35ba04d9d093",
       "metrics": {
         "viewport": {
           "width": 2048,
@@ -2001,6 +2415,7 @@
           "screen": "game",
           "mode": "race",
           "status": "playing",
+          "countdown": null,
           "phase": "active",
           "puzzleId": null,
           "puzzleCompletion": null,
@@ -2115,7 +2530,7 @@
     },
     {
       "file": "wide-race-topout-2048x1152.png",
-      "sha256": "be9aa493394c6afefdf2ba17623ea7123c98d90006bb2d97d34ca15b12ccb679",
+      "sha256": "a5711b813bd0e51fa10528c714264fc15df28f13431ac6be96bb8e57f911c551",
       "metrics": {
         "viewport": {
           "width": 2048,
@@ -2412,10 +2827,11 @@
           "screen": "game",
           "mode": "race",
           "status": "game-over",
+          "countdown": null,
           "phase": "active",
           "puzzleId": null,
           "puzzleCompletion": null,
-          "score": 228,
+          "score": 224,
           "lines": 0,
           "level": 0,
           "placedPieces": 12,
@@ -2477,7 +2893,7 @@
     },
     {
       "file": "portrait-home-390x844-dpr3.png",
-      "sha256": "fc6e40431aa30ee98a86cc71f018e12ea0832c1ae24ed2a3e735e0f9c1fac98c",
+      "sha256": "7ae811a7a465cbb69ef19c9b8a6b7c15bf20208f6f08c9b69d9e2f1ea1601cc4",
       "metrics": {
         "viewport": {
           "width": 390,
@@ -2766,7 +3182,7 @@
     },
     {
       "file": "portrait-puzzle-library-390x844-dpr3.png",
-      "sha256": "968ab61ae704d145e7f97fbbdfc51f6542383c990c170c77dd03db7a49a02d9b",
+      "sha256": "f91ec114ad3e63b18ca3e8aac37b26557fef061f66dac8da447f2533fea76398",
       "metrics": {
         "viewport": {
           "width": 390,
@@ -2855,12 +3271,12 @@
           {
             "text": "11棱湾交错",
             "width": 166.5,
-            "height": 68
+            "height": 67.99996948242188
           },
           {
             "text": "12双潮折线",
             "width": 166.5,
-            "height": 68
+            "height": 67.99996948242188
           },
           {
             "text": "13静弧深槽",
@@ -2934,165 +3350,165 @@
             {
               "text": "01青脊回旋",
               "x": 25,
-              "y": 137.01434326171875,
+              "y": 137.01431274414062,
               "width": 166.5,
               "height": 68,
               "right": 191.5,
-              "bottom": 205.01434326171875,
+              "bottom": 205.01431274414062,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "02深湾折返",
               "x": 198.5,
-              "y": 137.01434326171875,
+              "y": 137.01431274414062,
               "width": 166.5,
               "height": 68,
               "right": 365,
-              "bottom": 205.01434326171875,
+              "bottom": 205.01431274414062,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "03双岸错层",
               "x": 25,
-              "y": 208.01434326171875,
+              "y": 208.01431274414062,
               "width": 166.5,
               "height": 68,
               "right": 191.5,
-              "bottom": 276.01434326171875,
+              "bottom": 276.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "04侧槽逆流",
               "x": 198.5,
-              "y": 208.01434326171875,
+              "y": 208.01431274414062,
               "width": 166.5,
               "height": 68,
               "right": 365,
-              "bottom": 276.01434326171875,
+              "bottom": 276.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "05潮线汇流",
               "x": 25,
-              "y": 279.01434326171875,
+              "y": 279.0143127441406,
               "width": 166.5,
               "height": 68,
               "right": 191.5,
-              "bottom": 347.01434326171875,
+              "bottom": 347.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "06远岸终局",
               "x": 198.5,
-              "y": 279.01434326171875,
+              "y": 279.0143127441406,
               "width": 166.5,
               "height": 68,
               "right": 365,
-              "bottom": 347.01434326171875,
+              "bottom": 347.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "07折光浅湾",
               "x": 25,
-              "y": 350.01434326171875,
+              "y": 350.0143127441406,
               "width": 166.5,
               "height": 68,
               "right": 191.5,
-              "bottom": 418.01434326171875,
+              "bottom": 418.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "08微澜错屿",
               "x": 198.5,
-              "y": 350.01434326171875,
+              "y": 350.0143127441406,
               "width": 166.5,
               "height": 68,
               "right": 365,
-              "bottom": 418.01434326171875,
+              "bottom": 418.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "09蓝桥叠汐",
               "x": 25,
-              "y": 421.01434326171875,
+              "y": 421.0143127441406,
               "width": 166.5,
               "height": 68,
               "right": 191.5,
-              "bottom": 489.01434326171875,
+              "bottom": 489.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "10薄雾回廊",
               "x": 198.5,
-              "y": 421.01434326171875,
+              "y": 421.0143127441406,
               "width": 166.5,
               "height": 68,
               "right": 365,
-              "bottom": 489.01434326171875,
+              "bottom": 489.0143127441406,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "11棱湾交错",
               "x": 25,
-              "y": 492.01434326171875,
+              "y": 492.0143127441406,
               "width": 166.5,
-              "height": 68,
+              "height": 67.99996948242188,
               "right": 191.5,
-              "bottom": 560.0143432617188,
+              "bottom": 560.0142822265625,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "12双潮折线",
               "x": 198.5,
-              "y": 492.01434326171875,
+              "y": 492.0143127441406,
               "width": 166.5,
-              "height": 68,
+              "height": 67.99996948242188,
               "right": 365,
-              "bottom": 560.0143432617188,
+              "bottom": 560.0142822265625,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "13静弧深槽",
               "x": 25,
-              "y": 563.0143432617188,
+              "y": 563.0142822265625,
               "width": 166.5,
               "height": 68,
               "right": 191.5,
-              "bottom": 631.0143432617188,
+              "bottom": 631.0142822265625,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "14脉光群岛",
               "x": 198.5,
-              "y": 563.0143432617188,
+              "y": 563.0142822265625,
               "width": 166.5,
               "height": 68,
               "right": 365,
-              "bottom": 631.0143432617188,
+              "bottom": 631.0142822265625,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "15远蓝合流",
               "x": 25,
-              "y": 634.0143432617188,
+              "y": 634.0142822265625,
               "width": 340,
               "height": 68,
               "right": 365,
-              "bottom": 702.0143432617188,
+              "bottom": 702.0142822265625,
               "disabled": false,
               "firstViewport": true
             }
@@ -3101,11 +3517,11 @@
             {
               "text": "开始",
               "x": 25,
-              "y": 820.0143432617188,
+              "y": 820.0142822265625,
               "width": 340,
               "height": 44,
               "right": 365,
-              "bottom": 864.0143432617188,
+              "bottom": 864.0142822265625,
               "disabled": false,
               "firstViewport": false
             }
@@ -3152,7 +3568,7 @@
     },
     {
       "file": "portrait-puzzle-three-locks-390x844-dpr3.png",
-      "sha256": "26c06278d0808973af16094f3995eff48aa970549c3256c5c913cd9d58753c96",
+      "sha256": "70a6aa9c0e5fd648e4bb90b93961155328503123bec5f09a22dc97601502de01",
       "metrics": {
         "viewport": {
           "width": 390,
@@ -3453,7 +3869,7 @@
           "active": {
             "type": "T",
             "x": 3,
-            "y": 19,
+            "y": 20,
             "rotation": 0
           },
           "next": "J"
@@ -3463,6 +3879,7 @@
           "screen": "game",
           "mode": "puzzle",
           "status": "playing",
+          "countdown": null,
           "phase": "active",
           "puzzleId": "t3r-shaft-01",
           "puzzleCompletion": "active",
@@ -3473,7 +3890,7 @@
           "active": {
             "type": "T",
             "x": 3,
-            "y": 19,
+            "y": 20,
             "rotation": 0
           },
           "next": "J",
@@ -3524,19 +3941,19 @@
           "activeCells": [
             {
               "x": 4,
-              "y": 19
+              "y": 20
             },
             {
               "x": 3,
-              "y": 20
+              "y": 21
             },
             {
               "x": 4,
-              "y": 20
+              "y": 21
             },
             {
               "x": 5,
-              "y": 20
+              "y": 21
             }
           ],
           "ghostCells": [
@@ -3560,7 +3977,7 @@
           "visibleLockedCells": 92,
           "presentation": {
             "x": 3,
-            "y": 19,
+            "y": 20,
             "offsetX": 0,
             "offsetY": 0
           }
@@ -3584,7 +4001,7 @@
     },
     {
       "file": "landscape-home-844x390-dpr3.png",
-      "sha256": "85b6ecf826bfb7ccba2a31513d19e0f3f3e0f552666cc2f040235eb7179ab89a",
+      "sha256": "43e90c8f0eeda47cd92760a06e8758b86af2ef1b01c2327bfe21ae17122f5b3e",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -3873,7 +4290,7 @@
     },
     {
       "file": "landscape-home-race-active-844x390-dpr3.png",
-      "sha256": "2a56d438f59d3a51ce97e9aa9968da88b7bfa976d2973c397ce5428507d1214c",
+      "sha256": "392c54952f47d4158e04d4080cd73e5d2b79986f7dbc4b3a8338e23c7db179e1",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -4162,7 +4579,7 @@
     },
     {
       "file": "landscape-home-puzzle-active-844x390-dpr3.png",
-      "sha256": "e6cf868303242e65dbcdba898c26f8b72d437e0613a91d113410b48227c315e5",
+      "sha256": "6efe88aea0e6fbfb67b7919883f129ca4fab30716aca9df5d9cd52dac54013bf",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -4451,7 +4868,7 @@
     },
     {
       "file": "landscape-puzzle-library-844x390-dpr3.png",
-      "sha256": "58216f3531050c639a632c1ebce419a5cc2e5f6c449c2b11fa1433c8de75bf2d",
+      "sha256": "d768be155d0e8b0737c07008eb2872054c315c623ce7a23876be3b432a84935e",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -4490,17 +4907,17 @@
           {
             "text": "01青脊回旋",
             "width": 166,
-            "height": 51.59375762939453
+            "height": 51.59375
           },
           {
             "text": "02深湾折返",
             "width": 169,
-            "height": 51.59375762939453
+            "height": 51.59375
           },
           {
             "text": "03双岸错层",
             "width": 169,
-            "height": 51.59375762939453
+            "height": 51.59375
           },
           {
             "text": "04侧槽逆流",
@@ -4520,17 +4937,17 @@
           {
             "text": "07折光浅湾",
             "width": 169,
-            "height": 51.609375
+            "height": 51.60935974121094
           },
           {
             "text": "08微澜错屿",
             "width": 169,
-            "height": 51.609375
+            "height": 51.60935974121094
           },
           {
             "text": "09蓝桥叠汐",
             "width": 169,
-            "height": 51.609375
+            "height": 51.60935974121094
           },
           {
             "text": "10薄雾回廊",
@@ -4619,165 +5036,165 @@
             {
               "text": "01青脊回旋",
               "x": 21,
-              "y": 109.08455657958984,
+              "y": 109.03974914550781,
               "width": 166,
-              "height": 51.59375762939453,
+              "height": 51.59375,
               "right": 187,
-              "bottom": 160.67831420898438,
+              "bottom": 160.6334991455078,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "02深湾折返",
               "x": 192,
-              "y": 109.08455657958984,
+              "y": 109.03974914550781,
               "width": 169,
-              "height": 51.59375762939453,
+              "height": 51.59375,
               "right": 361,
-              "bottom": 160.67831420898438,
+              "bottom": 160.6334991455078,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "03双岸错层",
               "x": 366,
-              "y": 109.08455657958984,
+              "y": 109.03974914550781,
               "width": 169,
-              "height": 51.59375762939453,
+              "height": 51.59375,
               "right": 535,
-              "bottom": 160.67831420898438,
+              "bottom": 160.6334991455078,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "04侧槽逆流",
               "x": 18,
-              "y": 162.67831420898438,
+              "y": 162.6334991455078,
               "width": 169,
               "height": 51.59375,
               "right": 187,
-              "bottom": 214.27206420898438,
+              "bottom": 214.2272491455078,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "05潮线汇流",
               "x": 192,
-              "y": 162.67831420898438,
+              "y": 162.6334991455078,
               "width": 169,
               "height": 51.59375,
               "right": 361,
-              "bottom": 214.27206420898438,
+              "bottom": 214.2272491455078,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "06远岸终局",
               "x": 366,
-              "y": 162.67831420898438,
+              "y": 162.6334991455078,
               "width": 169,
               "height": 51.59375,
               "right": 535,
-              "bottom": 214.27206420898438,
+              "bottom": 214.2272491455078,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "07折光浅湾",
               "x": 18,
-              "y": 216.27206420898438,
+              "y": 216.2272491455078,
               "width": 169,
-              "height": 51.609375,
+              "height": 51.60935974121094,
               "right": 187,
-              "bottom": 267.8814392089844,
+              "bottom": 267.83660888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "08微澜错屿",
               "x": 192,
-              "y": 216.27206420898438,
+              "y": 216.2272491455078,
               "width": 169,
-              "height": 51.609375,
+              "height": 51.60935974121094,
               "right": 361,
-              "bottom": 267.8814392089844,
+              "bottom": 267.83660888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "09蓝桥叠汐",
               "x": 366,
-              "y": 216.27206420898438,
+              "y": 216.2272491455078,
               "width": 169,
-              "height": 51.609375,
+              "height": 51.60935974121094,
               "right": 535,
-              "bottom": 267.8814392089844,
+              "bottom": 267.83660888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "10薄雾回廊",
               "x": 18,
-              "y": 269.8814392089844,
+              "y": 269.83660888671875,
               "width": 169,
               "height": 51.59375,
               "right": 187,
-              "bottom": 321.4751892089844,
+              "bottom": 321.43035888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "11棱湾交错",
               "x": 192,
-              "y": 269.8814392089844,
+              "y": 269.83660888671875,
               "width": 169,
               "height": 51.59375,
               "right": 361,
-              "bottom": 321.4751892089844,
+              "bottom": 321.43035888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "12双潮折线",
               "x": 366,
-              "y": 269.8814392089844,
+              "y": 269.83660888671875,
               "width": 169,
               "height": 51.59375,
               "right": 535,
-              "bottom": 321.4751892089844,
+              "bottom": 321.43035888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "13静弧深槽",
               "x": 18,
-              "y": 323.4751892089844,
+              "y": 323.43035888671875,
               "width": 169,
               "height": 51.59375,
               "right": 187,
-              "bottom": 375.0689392089844,
+              "bottom": 375.02410888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "14脉光群岛",
               "x": 192,
-              "y": 323.4751892089844,
+              "y": 323.43035888671875,
               "width": 169,
               "height": 51.59375,
               "right": 361,
-              "bottom": 375.0689392089844,
+              "bottom": 375.02410888671875,
               "disabled": false,
               "firstViewport": true
             },
             {
               "text": "15远蓝合流",
               "x": 366,
-              "y": 323.4751892089844,
+              "y": 323.43035888671875,
               "width": 169,
               "height": 51.59375,
               "right": 535,
-              "bottom": 375.0689392089844,
+              "bottom": 375.02410888671875,
               "disabled": false,
               "firstViewport": true
             }
@@ -4786,11 +5203,11 @@
             {
               "text": "开始",
               "x": 557,
-              "y": 330.0845642089844,
+              "y": 330.03973388671875,
               "width": 262,
               "height": 44,
               "right": 819,
-              "bottom": 374.0845642089844,
+              "bottom": 374.03973388671875,
               "disabled": false,
               "firstViewport": true
             }
@@ -4837,7 +5254,7 @@
     },
     {
       "file": "landscape-classic-844x390-dpr3.png",
-      "sha256": "ed1c56cab2d184ab213924bc8581dca0fb8db1bbd4ecd88007c2bceb4a4ab0b6",
+      "sha256": "d34da68e5df3ea9b07c89f12c30b18ee51d44ff5c226c40d9a3fcb0098af8f81",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -5127,6 +5544,7 @@
           "screen": "game",
           "mode": "marathon",
           "status": "playing",
+          "countdown": null,
           "phase": "active",
           "puzzleId": null,
           "puzzleCompletion": null,
@@ -5241,7 +5659,7 @@
     },
     {
       "file": "narrow-home-360x800.png",
-      "sha256": "582cbf0b429be138273ddf944848432a51fb4e0e4b1bbbf86aabaf2608effc81",
+      "sha256": "b9c0db32bbfff92db8ada49924910523d994fccc22ffb5a1b6a5096b08c7dcdf",
       "metrics": {
         "viewport": {
           "width": 360,
@@ -5530,7 +5948,7 @@
     },
     {
       "file": "narrow-puzzle-360x800.png",
-      "sha256": "5fc996a24652a14a35d5cdd3aee773ca22d718d5960fa622270f39873f1f0826",
+      "sha256": "3f175e61eebe48b351eae8d0b6f8522391adc885d28143640a1622848e6b0540",
       "metrics": {
         "viewport": {
           "width": 360,
@@ -5841,10 +6259,11 @@
           "screen": "game",
           "mode": "puzzle",
           "status": "playing",
+          "countdown": null,
           "phase": "active",
           "puzzleId": "t5r-horizon-15",
           "puzzleCompletion": "active",
-          "score": 20,
+          "score": 14,
           "lines": 0,
           "level": 0,
           "placedPieces": 1,
@@ -5955,7 +6374,7 @@
     },
     {
       "file": "landscape-home-font-fallback-844x390-dpr3.png",
-      "sha256": "71479e03099e18ea83b84cf86bca57ba1c92179ccc90c65c872ae121f85299f7",
+      "sha256": "eaede40ddc52d234c74cfe62b7812d2b6c6f7cddaa60927656dda13401bc1274",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -6244,7 +6663,7 @@
     },
     {
       "file": "landscape-home-race-active-font-fallback-844x390-dpr3.png",
-      "sha256": "63a7af7cb89554277f82baae273ad3f20c1a31e4a1a4324bd4ec28b79ef1065a",
+      "sha256": "de3a663325a79315cbd4074e2d138435fd0d414b07db0041aae0b6fd91154eb4",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -6533,7 +6952,7 @@
     },
     {
       "file": "landscape-home-puzzle-active-font-fallback-844x390-dpr3.png",
-      "sha256": "ad1cda21265ab3a40a43a112d5131ef3757f66e2bff806befdd4e73880f59dc8",
+      "sha256": "79801fd8c26c3ef745b9f40409423786d52c18f1630cea4e952053ee87564aa2",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -6822,7 +7241,7 @@
     },
     {
       "file": "landscape-puzzle-font-fallback-844x390-dpr3.png",
-      "sha256": "31a1ec853ad21a2801c4afc9223ca2d2a8feb00fd7a3e9f640c63a9e2a85d931",
+      "sha256": "c789dad08c298234f9a826d247076876098ac3cb5e1376d904567705441e4732",
       "metrics": {
         "viewport": {
           "width": 844,
@@ -7133,6 +7552,7 @@
           "screen": "game",
           "mode": "puzzle",
           "status": "playing",
+          "countdown": null,
           "phase": "active",
           "puzzleId": "t5r-horizon-15",
           "puzzleCompletion": "active",
@@ -7247,7 +7667,7 @@
     },
     {
       "file": "desktop-puzzle-level-08-1440x900.png",
-      "sha256": "c6b6b9ed811ad5d25f2b33e83707faff1f60611a7989d246e7cf366d30f42434",
+      "sha256": "80bb988708168e5078bbbe6df0dd630268e72a33463a9a0a001aced18790e0d9",
       "metrics": {
         "viewport": {
           "width": 1440,
@@ -7560,6 +7980,7 @@
           "screen": "game",
           "mode": "puzzle",
           "status": "playing",
+          "countdown": null,
           "phase": "active",
           "puzzleId": "t5r-drift-08",
           "puzzleCompletion": "active",
@@ -7674,7 +8095,7 @@
     },
     {
       "file": "desktop-puzzle-success-1440x900.png",
-      "sha256": "fbc0bfff6e2c8618bd27f3227ce9dcc4b7c206941e620a1f590abebb85780dc6",
+      "sha256": "1840634cee9a1a5c1399cbae799c2d684f19c403af57ebb89e70c7d43b8f184f",
       "metrics": {
         "viewport": {
           "width": 1440,
@@ -7702,7 +8123,7 @@
         "bannedVisibleText": [],
         "buttonMinimum": {
           "width": 58,
-          "height": 44
+          "height": 43.999969482421875
         },
         "buttons": [
           {
@@ -7743,12 +8164,12 @@
           {
             "text": "再来一局",
             "width": 217,
-            "height": 44
+            "height": 43.999969482421875
           },
           {
             "text": "返回关卡库",
             "width": 217,
-            "height": 44
+            "height": 43.999969482421875
           }
         ],
         "home": {
@@ -7992,6 +8413,7 @@
           "screen": "game",
           "mode": "puzzle",
           "status": "finished",
+          "countdown": null,
           "phase": "active",
           "puzzleId": "t3r-shaft-01",
           "puzzleCompletion": "finished",
@@ -8049,7 +8471,7 @@
           "canvasCount": 1,
           "domCellCount": 0,
           "minButtonWidth": 58,
-          "minButtonHeight": 44,
+          "minButtonHeight": 43.999969482421875,
           "noHorizontalOverflow": true,
           "noVerticalOverflow": true
         }
@@ -8068,6 +8490,15 @@
       "focusWidth": 168,
       "raceY": 513.5,
       "puzzleX": 744
+    },
+    "entryCountdown": {
+      "digit": "3",
+      "mode": "marathon",
+      "status": "ready",
+      "pieceCount": 0,
+      "canonicalUnchangedAfterQaAttempts": true,
+      "pauseDisabled": true,
+      "disabledTouchControls": 5
     },
     "restartVisibleUi": true,
     "homeGameHomeTeardown": {
