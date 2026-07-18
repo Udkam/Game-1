@@ -12,8 +12,8 @@ Preserved rejected follow-up: local branch
 `1362c664629b2a83f0659f836259b84c21750fee`
 
 Status: **active — the current composition and divided-facet renderer are preserved;
-bounded Slices K-R4 and K-R5 own only the shorter grounded lock window and the exact
-brighter `雾昼矿物` retone**
+bounded Slices K-R4 and K-R5 own only timing and retone, while queued Slice K-R6 adds
+one input-gated `3 / 2 / 1` entry countdown**
 
 ## User-visible problems to resolve
 
@@ -978,3 +978,38 @@ After both source checkpoints, the coordinator runs one combined final typecheck
 complete suite, build, and five-viewport browser matrix. Independent cross-QA must
 accept the exact combined candidate before formal evidence, changelog integration, or
 push.
+
+## Slice K-R6 — input-gated entry countdown
+
+Task ID: `TETRIS-T5-ENTRY-COUNTDOWN-016`
+
+Status: **QUEUED — opens only after K-R5 releases `src/styles.css`**.
+
+Writer base: the combined K-R4 + K-R5 log candidate. One writer may change only:
+
+- `src/App.tsx` and `src/App.test.ts`;
+- `src/game/runtime/GameRuntime.ts` and `src/game/runtime/GameRuntime.test.ts`;
+- `src/styles.css` for the countdown overlay only;
+- `docs/workstreams/tetris-t5-frontend/THREAD_LOG.md` after source is frozen.
+
+K-R6 acceptance:
+
+- Classic/Race mode start and the selected Puzzle start show the existing game shell
+  with centered `3`, `2`, `1`, each for exactly 1000 ms; after `1`, remove the overlay,
+  enable input, call the public runtime start path exactly once, and focus the canvas;
+- keep the canonical game state `ready` for all three seconds. Keyboard, touch, QA,
+  gravity, ticks, scoring, audio events, and pause cannot start or mutate the run early;
+- expose an explicit runtime input gate with a direct regression test. Keep the gate
+  disabled only for the entry countdown and clear held input whenever it changes;
+- restarting/replaying an existing run starts immediately under current behavior and
+  must not create another countdown. Reduced-motion removes visual interpolation only;
+- style one restrained board-local countdown layer using existing palette/type tokens;
+  add no new card, copy, neon, glow, telemetry, layout change, or renderer primitive;
+- run focused App/runtime tests and the prescribed browser client, then create bounded
+  source and log-only checkpoints. Do not change Core rules, Puzzle definitions,
+  renderer geometry, dependencies, `index.html`, coordinator evidence/changelog, or
+  push.
+
+The coordinator runs the single final typecheck, full suite, build, and five-viewport
+matrix only after K-R6 is source-frozen. Cross-QA acceptance of the exact combined
+candidate is required before evidence integration or push.

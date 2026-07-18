@@ -64,6 +64,17 @@ complete and opens no page redesign. It authorizes only two controlled changes:
   semantic dividers, typographic rhythm, focus states, and restrained phase motion,
   not from a dark theme, neon, decorative telemetry, or new interface machinery.
 
+The subsequent start-flow refinement adds one functional layer without reopening the
+page design. After a player activates Classic or Race `开始`, or activates `开始` for a
+selected Puzzle level, the game shell appears with a centered `3`, `2`, `1` countdown.
+Each number occupies exactly one second. The runtime remains in its deterministic
+`ready` state throughout the countdown: gravity, elapsed ticks, audio events, keyboard
+commands, and touch commands cannot start or mutate the run early. Immediately after
+`1`, the overlay is removed, input is enabled, the public runtime start path is called
+once, and board focus is restored. Pause/resume, restart, and replay do not create a
+second entry countdown. Reduced-motion removes digit transform/opacity animation but
+does not shorten or skip the three-second preparation window.
+
 The user's later 2026-07-17 review also rejects the complete second frontend
 presentation at `c9135f3252abfa3bd6d7e94c5eb2e11fc3c72a18`. It is not a visual baseline
 that can be accepted through local polish. The new authority is light neo-tech
@@ -172,6 +183,9 @@ evidence only. T5 uses new paths and does not rewrite those artifacts.
 - Grounded pieces lock after exactly 18 fixed ticks unless an already-supported legal
   move or rotation resets the timer within the unchanged reset cap. The same shortened
   window applies to Classic, Race, and Puzzle and remains deterministic.
+- Initial entry into a run has exactly one `3`, `2`, `1` countdown. While it is visible,
+  the canonical state remains `ready`, every gameplay input is gated, and the runtime
+  starts exactly once only after the final second.
 - Keyboard and touch expose left, right, clockwise rotation, soft drop, hard drop,
   pause/resume, restart, and an explicit route back to the mode home.
 - Restart, mode exit, and unmount must not multiply listeners, tickers, audio nodes, or
