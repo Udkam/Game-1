@@ -592,3 +592,62 @@ changelog, T3/T4 evidence, or QA archive was edited.
 - Next: bind player-facing `生存`, bedrock height, Classic `连消`, and Survival QA in
   the authorized frontend/runtime slice, then route the combined source to
   independent read-only Core and browser QA.
+
+## 2026-07-18 — T7 TIMED SURVIVAL PRESSURE CORE CANDIDATE READY
+
+- Task: `TETRIS-T7-TIMED-SURVIVAL-MOTION-019`.
+- Branch: `codex/tetris-recovery`.
+- Clean contract/base SHA: `2221b3e265b5ba16a2f9e7df22977a2d86385653`.
+- Source checkpoint: `ff90d61b52acf6e0438a4a7233832bae1a26778a`
+  (`feat(survival): add timed bedrock pressure`).
+
+### Exact source and direct-test paths
+
+- `src/game/core/constants.ts`.
+- `src/game/core/types.ts`.
+- `src/game/core/board.ts`.
+- `src/game/core/engine.ts`.
+- `src/game/core/race.test.ts`.
+- `src/game/core/rules.test.ts`.
+
+### Delivered deterministic rules
+
+- Classic and Survival now share the exact ten-line gravity table
+  `48, 43, 38, 33, 28, 23, 18, 13, 10, 8, 6, 5, 4, 3`, capped at three ticks;
+  Puzzle remains fixed at 48 ticks.
+- Survival pressure starts at 40 seconds and uses
+  `max(10, 40 - 2 × floor(lines / 5))`. `survivalPressureTicks` advances only while
+  canonical status is `playing`; at the exact interval it freezes with
+  `survivalRisePending=true` until a safe resolution.
+- A pending row resolves after a lock/clear and before the next spawn. A normal clear
+  resolves first; crossing a five-line threshold then lowers exactly one bottom
+  bedrock row if present and always resets the timer under the shorter interval.
+  `bedrock-raised` and the new `bedrock-lowered` events preserve this ordering.
+- A timed rise shifts the board up, appends one bedrock row, and top-outs with
+  `bedrock-overflow` when the canonical top was occupied. Pause freezes pressure;
+  restart clears the timer, pending flag, height, and board bedrock.
+- Survival hashes include pressure ticks and pending state. Classic and Puzzle hashes
+  exclude these irrelevant fields; all thirty Puzzle reference routes, hashes, and
+  event digests remain unchanged.
+
+### Commands and results
+
+- Development `npm.cmd run test -- src/game/core/race.test.ts src/game/core/rules.test.ts
+  src/game/core/puzzleCampaign.test.ts` — PASS, 9 files / 98 tests.
+- Development `npm.cmd run typecheck` — PASS.
+- Final `npm.cmd run test -- src/game/core` — PASS, 16 files / 151 tests.
+- Final `npm.cmd run typecheck` — PASS.
+- `git diff --check`, exact cached-path inspection, and
+  `git diff --cached --check` — PASS; Git emitted only the existing LF-to-CRLF
+  working-copy notices.
+- Full suite, build, browser capture, coordinator evidence, and push were intentionally
+  not run under this Core writer boundary.
+
+### Handoff
+
+- Blocker: none.
+- Push: not performed; coordinator owns combined verification, QA, integration, and
+  push.
+- Next: the authorized frontend/runtime writer binds the new pressure fields and
+  events, then independent read-only Core QA reviews source `ff90d61` in the combined
+  T7 candidate.
