@@ -5,7 +5,16 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import styles from './styles.css?raw';
 import { createInitialState, type GameEvent, type GameMode, type GameState, type PuzzleId } from './game/core';
-import { cloneQaState, GameSession, ModeHome, PuzzleLibrary, puzzleSilhouettePaths, RunStats } from './App';
+import {
+  cloneQaState,
+  eventMessage,
+  GameSession,
+  ModeHome,
+  PuzzleLibrary,
+  puzzleSilhouettePaths,
+  RunStats,
+  terminalCopy,
+} from './App';
 import { CAMPAIGN_LEVELS, defaultPuzzleProgress } from './puzzleProgress';
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -130,8 +139,11 @@ describe('entry countdown', () => {
     const countdown = () => view.container.querySelector<HTMLElement>('[data-testid="entry-countdown"]');
     const pause = [...view.container.querySelectorAll<HTMLButtonElement>('.topbar-action')].at(-1)!;
     const touchButtons = [...view.container.querySelectorAll<HTMLButtonElement>('.touch-key')];
+    const textState = JSON.parse(window.render_game_to_text?.() ?? '{}') as Record<string, unknown>;
 
     expect(runtime.options.inputEnabled).toBe(false);
+    expect(textState).not.toHaveProperty('level');
+    expect(textState).toMatchObject({ combo: 0, bedrockRows: 0 });
     expect(countdown()?.dataset.countdown).toBe('3');
     expect(pause.disabled).toBe(true);
     expect(touchButtons).toHaveLength(5);
@@ -163,22 +175,30 @@ describe('entry countdown', () => {
   });
 });
 
-describe('T5 frontend campaign binding', () => {
+describe('T6 frontend mode binding', () => {
   it('binds every statistic to an explicit role without positional CSS inference', () => {
+    const classic = { ...createInitialState(0x51a1f00d, 'marathon'), combo: 3 };
+    const survival = { ...createInitialState(0x51a1f00d, 'race'), survivalBedrockRows: 4 };
     const cases = [
-      { state: createInitialState(0x51a1f00d, 'marathon'), roles: ['score', 'lines', 'classic-level'] },
-      { state: createInitialState(0x51a1f00d, 'race'), roles: ['score', 'lines', 'race-speed'] },
+      { state: classic, roles: ['score', 'lines', 'classic-combo'], label: '经典模式数据', copy: ['连消', '3'] },
+      { state: survival, roles: ['score', 'lines', 'survival-bedrock'], label: '生存模式数据', copy: ['基岩', '4'] },
       {
         state: createInitialState(0x51a1f00d, 'puzzle', 't3r-shaft-01'),
         roles: ['puzzle-level', 'placed', 'lines', 'objective'],
+        label: '解谜模式数据',
+        copy: ['目标', '清空棋盘'],
       },
     ];
 
-    for (const { state, roles } of cases) {
+    for (const { state, roles, label, copy } of cases) {
       const view = render(createElement(RunStats, { state }));
-      const articles = [...view.container.querySelectorAll<HTMLElement>('[data-testid="stats"] article')];
+      const stats = view.container.querySelector<HTMLElement>('[data-testid="stats"]');
+      const articles = [...(stats?.querySelectorAll<HTMLElement>('article') ?? [])];
       expect(articles.map((article) => article.dataset.statRole)).toEqual(roles);
       expect(new Set(articles.map((article) => article.dataset.statRole)).size).toBe(roles.length);
+      expect(stats?.getAttribute('aria-label')).toBe(label);
+      for (const fragment of copy) expect(stats?.textContent).toContain(fragment);
+      expect(stats?.textContent).not.toMatch(/竞速|等级|速度档/);
       view.unmount();
     }
 
@@ -188,17 +208,17 @@ describe('T5 frontend campaign binding', () => {
     expect(statisticSelectors).not.toMatch(/nth-child|nth-of-type|\bodd\b|\beven\b/);
   });
 
-  it('shows 经典 while retaining the internal marathon entry selector', () => {
+  it('shows the distinct Classic, Survival, and Puzzle copy while retaining internal selectors', () => {
     const onEnter = vi.fn();
     const view = render(createElement(ModeHome, { onEnter }));
     const classic = view.container.querySelector<HTMLButtonElement>('[data-testid="enter-marathon"]');
 
     expect(classic).not.toBeNull();
     expect(classic?.textContent).toContain('经典');
-    expect(view.container.textContent).not.toContain('马拉松');
+    expect(view.container.textContent).not.toMatch(/马拉松|竞速|等级|速度档/);
     expect(view.container.textContent?.match(/选择模式/g)).toHaveLength(1);
-    expect(view.container.textContent).toContain('分数 · 消行 · 等级');
-    expect(view.container.textContent).toContain('速度递增 · 无终点');
+    expect(view.container.textContent).toContain('分数 · 消行 · 连消');
+    expect(view.container.textContent).toContain('生存每 5 行 · 基岩上升');
     expect(view.container.textContent).toContain('15 关残局 · 清空棋盘');
     expect(view.container.querySelector('.mode-preview')).toBeNull();
 
@@ -215,6 +235,23 @@ describe('T5 frontend campaign binding', () => {
     act(() => classic?.click());
     expect(onEnter).toHaveBeenCalledWith('marathon');
     view.unmount();
+  });
+
+  it('reports Survival terminal data and bedrock rise announcements', () => {
+    const terminalState: GameState = {
+      ...createInitialState(0x51a1f00d, 'race'),
+      status: 'game-over',
+      lines: 24,
+      pieceCount: 72,
+      survivalBedrockRows: 4,
+    };
+
+    expect(terminalCopy(terminalState)).toEqual({
+      title: '生存结束',
+      detail: '24 消行 · 72 方块 · 4 层基岩',
+      success: false,
+    });
+    expect(eventMessage({ type: 'bedrock-raised', count: 1, height: 4 })).toBe('基岩升至 4 层。');
   });
 
   it('mounts all fifteen enabled levels and binds first, eighth, and fifteenth selections', () => {

@@ -776,8 +776,8 @@ p {
   border-bottom: 1px solid var(--line);
 }
 
-.run-stats:not(.run-stats--puzzle) [data-stat-role="classic-level"],
-.run-stats:not(.run-stats--puzzle) [data-stat-role="race-speed"],
+.run-stats:not(.run-stats--puzzle) [data-stat-role="classic-combo"],
+.run-stats:not(.run-stats--puzzle) [data-stat-role="survival-bedrock"],
 .run-stats--puzzle [data-stat-role="puzzle-level"],
 .run-stats--puzzle [data-stat-role="objective"] {
   grid-column: 1 / -1;

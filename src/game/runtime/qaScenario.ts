@@ -90,19 +90,19 @@ function reachableLandings(state: GameState): Route[] {
 }
 
 /**
- * Produces a deterministic, command-only endless Race endurance replay. The planner reads
+ * Produces a deterministic, command-only Survival bedrock replay. The planner reads
  * normal simulation states to choose public movement, rotation, hard-drop, and tick
  * commands; it never creates or mutates a canonical board.
  */
-export const RACE_ENDURANCE_QA_LINES = 24;
+export const SURVIVAL_BEDROCK_QA_LINES = 24;
 
-export function createRaceEnduranceReplay(seed = 0x51a1f00d): readonly GameCommand[] {
+export function createSurvivalBedrockReplay(seed = 0x51a1f00d): readonly GameCommand[] {
   let state = dispatch(createInitialState(seed, 'race'), { type: 'start' }).state;
   const commands: GameCommand[] = [{ type: 'start' }];
 
-  for (let piece = 0; piece < 220 && state.status === 'playing' && state.lines < RACE_ENDURANCE_QA_LINES; piece += 1) {
+  for (let piece = 0; piece < 220 && state.status === 'playing' && state.lines < SURVIVAL_BEDROCK_QA_LINES; piece += 1) {
     const options = reachableLandings(state);
-    if (options.length === 0) throw new Error('Race replay planner found no legal landing.');
+    if (options.length === 0) throw new Error('Survival replay planner found no legal landing.');
     let selected = options[0]!;
     let selectedCost = boardCost(selected.state, selected.state.lines - state.lines);
     for (const candidate of options.slice(1)) {
@@ -116,14 +116,14 @@ export function createRaceEnduranceReplay(seed = 0x51a1f00d): readonly GameComma
     state = selected.state;
   }
 
-  if (state.status !== 'playing' || state.lines < RACE_ENDURANCE_QA_LINES) {
-    throw new Error(`Race endurance replay missed its live milestone: ${state.status} after ${state.lines} lines.`);
+  if (state.status !== 'playing' || state.lines < SURVIVAL_BEDROCK_QA_LINES) {
+    throw new Error(`Survival bedrock replay missed its live milestone: ${state.status} after ${state.lines} lines.`);
   }
   return commands;
 }
 
-export function replayRaceEndurance(seed = 0x51a1f00d): { commands: readonly GameCommand[]; state: GameState } {
-  const commands = createRaceEnduranceReplay(seed);
+export function replaySurvivalBedrock(seed = 0x51a1f00d): { commands: readonly GameCommand[]; state: GameState } {
+  const commands = createSurvivalBedrockReplay(seed);
   let state = createInitialState(seed, 'race');
   for (const command of commands) state = dispatch(state, command).state;
   return { commands, state };

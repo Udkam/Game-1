@@ -1,19 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { raceSpeedTier, stateHash } from '../core';
-import { RACE_ENDURANCE_QA_LINES, replayPuzzleChallenge, replayRaceEndurance } from './qaScenario';
+import { BEDROCK_CELL, BOARD_WIDTH, SURVIVAL_LINES_PER_BEDROCK, stateHash } from '../core';
+import { SURVIVAL_BEDROCK_QA_LINES, replayPuzzleChallenge, replaySurvivalBedrock } from './qaScenario';
 
-describe('Endless Race browser QA replay', () => {
-  it('reaches a deterministic live endurance milestone from public commands only', () => {
-    const first = replayRaceEndurance(0x51a1f00d);
-    const second = replayRaceEndurance(0x51a1f00d);
+describe('Survival bedrock browser QA replay', () => {
+  it('reaches a deterministic live bedrock milestone from public commands only', () => {
+    const first = replaySurvivalBedrock(0x51a1f00d);
+    const second = replaySurvivalBedrock(0x51a1f00d);
 
     expect(first.commands[0]).toEqual({ type: 'start' });
     expect(first.commands.some((command) => command.type === 'hard-drop')).toBe(true);
     expect(first.commands.some((command) => command.type === 'tick')).toBe(true);
+    expect(first.state.mode).toBe('race');
     expect(first.state.status).toBe('playing');
-    expect(first.state.lines).toBeGreaterThanOrEqual(RACE_ENDURANCE_QA_LINES);
+    expect(first.state.lines).toBeGreaterThanOrEqual(SURVIVAL_BEDROCK_QA_LINES);
     expect(first.state.active).not.toBeNull();
-    expect(raceSpeedTier(first.state.pieceCount, first.state.lines)).toBeGreaterThan(0);
+    expect(first.state.survivalBedrockRows).toBeGreaterThanOrEqual(1);
+    expect(first.state.survivalBedrockRows).toBe(Math.floor(first.state.lines / SURVIVAL_LINES_PER_BEDROCK));
+    expect(first.state.board.at(-1)).toEqual(Array.from({ length: BOARD_WIDTH }, () => BEDROCK_CELL));
     expect(stateHash(first.state)).toBe(stateHash(second.state));
     expect(first.commands).toEqual(second.commands);
   });

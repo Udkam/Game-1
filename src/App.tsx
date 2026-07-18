@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   PIECE_TYPES,
-  raceSpeedTier,
   type GameEvent,
   type GameMode,
   type GameState,
@@ -37,12 +36,12 @@ const MODE_COPY: Record<GameMode, {
 }> = {
   marathon: {
     label: '经典',
-    detail: '分数 · 消行 · 等级',
+    detail: '分数 · 消行 · 连消',
     action: '开始',
   },
   race: {
-    label: '竞速',
-    detail: '速度递增 · 无终点',
+    label: '生存',
+    detail: '每 5 行 · 基岩上升',
     action: '开始',
   },
   puzzle: {
@@ -76,7 +75,7 @@ function campaignLevel(id: PuzzleId | null) {
   return CAMPAIGN_LEVELS.find((level) => level.id === id) ?? CAMPAIGN_LEVELS[0]!;
 }
 
-function terminalCopy(state: GameState): { title: string; detail: string; success: boolean } | null {
+export function terminalCopy(state: GameState): { title: string; detail: string; success: boolean } | null {
   if (state.mode === 'puzzle') {
     if (state.puzzleCompletion === 'finished') {
       return { title: '棋盘已清空', detail: `${state.pieceCount} 方块 · ${state.lines} 消行`, success: true };
@@ -89,8 +88,8 @@ function terminalCopy(state: GameState): { title: string; detail: string; succes
   if (state.status !== 'game-over') return null;
   if (state.mode === 'race') {
     return {
-      title: '竞速结束',
-      detail: `${state.lines} 消行 · ${state.pieceCount} 方块 · 速度 ${raceSpeedTier(state.pieceCount, state.lines) + 1}`,
+      title: '生存结束',
+      detail: `${state.lines} 消行 · ${state.pieceCount} 方块 · ${state.survivalBedrockRows} 层基岩`,
       success: false,
     };
   }
@@ -110,7 +109,7 @@ function ModeGlyph({ mode }: { mode: GameMode }) {
     return <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 31h9V22h9v-9h8" /></svg>;
   }
   if (mode === 'race') {
-    return <svg viewBox="0 0 40 40" aria-hidden="true"><path className="mode-glyph__soft" d="M5 12h12M5 19h9M5 26h6" /><path d="M19 13h7v7h8v8H19z" /></svg>;
+    return <svg viewBox="0 0 40 40" aria-hidden="true"><path className="mode-glyph__soft" d="M5 31h30M5 25h30" /><path d="M10 25v-6h8v6m5 0V14h8v11M27 14V7m-4 4 4-4 4 4" /></svg>;
   }
   return <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 30h8v-8h7v8h7V14h8v16" /></svg>;
 }
@@ -311,10 +310,10 @@ function TouchButton({ action, label, glyph, runtime, disabled = false }: TouchB
 export function RunStats({ state }: { state: GameState }) {
   if (state.mode === 'race') {
     return (
-      <section className="run-stats" data-testid="stats" aria-label="竞速模式数据">
+      <section className="run-stats" data-testid="stats" aria-label="生存模式数据">
         <article data-stat-role="score"><span>分数</span><strong>{formatScore(state.score)}</strong></article>
         <article data-stat-role="lines"><span>消行</span><strong>{state.lines}</strong></article>
-        <article data-stat-role="race-speed"><span>速度档</span><strong>{raceSpeedTier(state.pieceCount, state.lines) + 1}</strong></article>
+        <article data-stat-role="survival-bedrock"><span>基岩</span><strong>{state.survivalBedrockRows}</strong></article>
       </section>
     );
   }
@@ -333,13 +332,14 @@ export function RunStats({ state }: { state: GameState }) {
     <section className="run-stats" data-testid="stats" aria-label="经典模式数据">
       <article data-stat-role="score"><span>分数</span><strong>{formatScore(state.score)}</strong></article>
       <article data-stat-role="lines"><span>消行</span><strong>{state.lines}</strong></article>
-      <article data-stat-role="classic-level"><span>等级</span><strong>{state.level}</strong></article>
+      <article data-stat-role="classic-combo"><span>连消</span><strong>{state.combo}</strong></article>
     </section>
   );
 }
 
-function eventMessage(event: GameEvent): string {
+export function eventMessage(event: GameEvent): string {
   if (event.type === 'lines-cleared') return `消除了 ${event.count} 行。`;
+  if (event.type === 'bedrock-raised') return `基岩升至 ${event.height} 层。`;
   if (event.type === 'paused') return '本局已暂停。';
   if (event.type === 'resumed') return '继续本局。';
   if (event.type === 'finished') return '棋盘已清空。';
@@ -403,6 +403,7 @@ export function GameSession({
         setState(nextState);
         const notable = [...events].reverse().find((event) => (
           event.type === 'lines-cleared'
+          || event.type === 'bedrock-raised'
           || event.type === 'paused'
           || event.type === 'resumed'
           || event.type === 'finished'
@@ -463,7 +464,8 @@ export function GameSession({
       puzzleCompletion: state.puzzleCompletion,
       score: state.score,
       lines: state.lines,
-      level: state.level,
+      combo: state.combo,
+      bedrockRows: state.survivalBedrockRows,
       placedPieces: state.pieceCount,
       active: state.active ? { type: state.active.type, x: state.active.x, y: state.active.y, rotation: state.active.rotation } : null,
       next: state.queue[0] ?? null,
